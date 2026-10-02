@@ -50,6 +50,7 @@ export default {
   '已中断': 'Interrupted',
   '未知状态': 'Unknown status',
   '上下文与工具': 'Context and tools',
+  '上下文': 'Context',
   '输入': 'Input',
   '输出': 'Output',
   '系统': 'System',

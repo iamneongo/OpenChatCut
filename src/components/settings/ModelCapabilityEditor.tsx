@@ -24,10 +24,10 @@ interface ModelCapabilityEditorProps {
 type OverridePatch = Parameters<typeof updateModelCapabilityOverride>[2];
 type CapabilityBoolean = 'supportsTools' | 'supportsImages' | 'supportsReasoning';
 
-function resolvedSummary(capabilities: ModelCapabilities): string {
+function resolvedSummary(capabilities: ModelCapabilities, t: ReturnType<typeof useT>): string {
   const context = capabilities.contextWindowTokens;
   const output = capabilities.maxOutputTokens;
-  return `Context ${context.value.toLocaleString()} · Output ${output.value.toLocaleString()}`;
+  return `${t('上下文')} ${context.value.toLocaleString()} · ${t('输出')} ${output.value.toLocaleString()}`;
 }
 
 function parseRecords(raw: string): readonly ModelCapabilityOverride[] {
@@ -109,7 +109,7 @@ export function ModelCapabilityEditor({
       <div style={{ display: 'flex', justifyContent: 'space-between', gap: 10 }}>
         <div style={{ minWidth: 0 }}>
           <b style={{ fontSize: 11.5 }}>{t('模型能力')}</b>
-          <div style={summaryStyle}>{modelId} · {resolvedSummary(resolved)}</div>
+          <div style={summaryStyle}>{modelId} · {resolvedSummary(resolved, t)}</div>
           {(resolved.contextWindowTokens.estimated || resolved.maxOutputTokens.estimated) && (
             <div style={{ fontSize: 10.5, lineHeight: 1.5, marginTop: 4, color: theme.textDim, maxWidth: 420 }}>
               {t('该模型不在内置目录，以上数值为估算（上下文 {context} / 输出 {output}）。若与实际不符，点「展开」手动修改。', {

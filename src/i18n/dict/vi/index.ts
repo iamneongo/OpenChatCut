@@ -372,6 +372,7 @@ export const VI: Record<string, string> = {
   '已中断': 'Đã gián đoạn',
   '未知状态': 'Trạng thái không xác định',
   '上下文与工具': 'Ngữ cảnh và công cụ',
+  '上下文': 'Ngữ cảnh',
   '输入': 'Đầu vào',
   '输出': 'Đầu ra',
   '系统': 'Hệ thống',
