@@ -6,6 +6,8 @@ export interface SkillDefinition {
   slug: string;
   name: string;
   nameZh: string;
+  /** Vietnamese catalog label for the localized picker; optional for legacy/custom skills. */
+  nameVi?: string;
   description: string;
   summary: string;
   scenarios: string[];

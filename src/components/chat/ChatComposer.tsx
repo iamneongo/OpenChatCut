@@ -34,8 +34,8 @@ export const WORKFLOW_POPOVER_WIDTH = 400;
 export function ChatComposer(props: ChatComposerProps) {
   const t = useT();
   // The skill catalog comes with its own official English name, which can be used directly in English without duplication in the dictionary; the summary is only in Chinese, so use t().
-  const skillName = (s: { name: string; nameZh: string }): string =>
-    localizedCatalogText(s.name, s.nameZh);
+  const skillName = (s: { name: string; nameZh: string; nameVi?: string }): string =>
+    localizedCatalogText(s.name, s.nameZh, undefined, s.nameVi);
   const {
     value, onChange, onSubmit, onStop, onEnhance, enhancing, running, mode, onModeChange,
     autoApply, onAutoApplyChange, contextUsage, selecting, onToggleSelecting,

@@ -17,8 +17,8 @@ export function WorkflowPickerContent({
 }: WorkflowPickerContentProps) {
   const t = useT();
   const builtinIds = new Set(CREATIVE_SKILLS.map((skill) => skill.id));
-  const skillName = (skill: { name: string; nameZh: string }) => (
-    localizedCatalogText(skill.name, skill.nameZh)
+  const skillName = (skill: { name: string; nameZh: string; nameVi?: string }) => (
+    localizedCatalogText(skill.name, skill.nameZh, undefined, skill.nameVi)
   );
 
   return (

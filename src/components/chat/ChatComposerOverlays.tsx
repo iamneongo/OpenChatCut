@@ -17,7 +17,7 @@ function ActiveSkillBadge({ skill, onCancel }: {
   onCancel: () => void;
 }) {
   const t = useT();
-  const name = localizedCatalogText(skill.name, skill.nameZh);
+  const name = localizedCatalogText(skill.name, skill.nameZh, undefined, skill.nameVi);
   return (
     <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4, marginBottom: 4 }} title={t('当前创作工作流，随消息发送')}>
       <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, maxWidth: '100%', fontSize: 11, lineHeight: 1.2, padding: '2px 6px', borderRadius: 999, background: theme.panel, border: `0.5px solid ${theme.accent}`, color: theme.text }}>
@@ -118,7 +118,7 @@ function SlashSkillRow({ skill, index, activeIndex, selected, onActivate, onHove
   onHover: (index: number) => void;
 }) {
   const t = useT();
-  const name = localizedCatalogText(skill.name, skill.nameZh);
+  const name = localizedCatalogText(skill.name, skill.nameZh, undefined, skill.nameVi);
   return (
     <button type="button" onClick={() => onActivate(skill)} onMouseEnter={() => onHover(index)}
       onMouseLeave={() => { if (activeIndex === index) onHover(-1); }}

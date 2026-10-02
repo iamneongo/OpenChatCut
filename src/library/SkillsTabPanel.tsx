@@ -29,7 +29,7 @@ export function SkillsTabPanel({
   }, []);
   const skills = allCreativeSkills();
   const active = findSkill(creativeMode);
-  const skillName = (s: SkillDefinition) => localizedCatalogText(s.name, s.nameZh);
+  const skillName = (s: SkillDefinition) => localizedCatalogText(s.name, s.nameZh, undefined, s.nameVi);
   const filtered = useMemo(() => {
     const needle = query.trim().toLowerCase();
     if (!needle) return skills;

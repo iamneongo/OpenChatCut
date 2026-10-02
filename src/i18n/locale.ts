@@ -72,8 +72,11 @@ export function localizedCatalogText(
   english: string,
   chinese: string,
   locale: Locale = current,
+  vietnamese?: string,
 ): string {
-  return locale === 'zh' ? chinese : english;
+  if (locale === 'zh') return chinese;
+  if (locale === 'vi') return vietnamese ?? english;
+  return english;
 }
 
 function notifySubscribers(): void {

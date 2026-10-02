@@ -6,6 +6,7 @@ interface CreativeSkillMetadata {
   slug: string;
   name: string;
   nameZh: string;
+  nameVi: string;
   summary: string;
   scenarios: string[];
 }
@@ -16,6 +17,7 @@ export const CREATIVE_SKILL_METADATA: CreativeSkillMetadata[] = [
     slug: 'livestream-to-clips',
     name: 'Livestream to Clips',
     nameZh: '直播智能切片',
+    nameVi: 'Cắt highlight livestream',
     summary: '把带货、游戏、访谈、教学、娱乐、体育、音乐或混合直播录屏剪成有证据、可发布的高光切片。',
     scenarios: [
       'livestream-to-clips',
@@ -31,6 +33,7 @@ export const CREATIVE_SKILL_METADATA: CreativeSkillMetadata[] = [
     slug: 'long-video-to-shorts',
     name: 'Long Video to Shorts',
     nameZh: '长视频转短视频',
+    nameVi: 'Chuyển video dài thành video ngắn',
     summary: '把一条长播客、访谈、课程或直播剪成适合社媒发布的短视频和高光。',
     scenarios: [
       'long-video-to-shorts',
@@ -46,6 +49,7 @@ export const CREATIVE_SKILL_METADATA: CreativeSkillMetadata[] = [
     slug: 'multi-clips-to-reels',
     name: 'Multi Clips to Reels',
     nameZh: '多素材剪 Reels',
+    nameVi: 'Dựng Reels từ nhiều clip',
     summary: '把产品、活动、旅行或游戏素材剪成适合社媒发布的 Reels。',
     scenarios: [
       'multi-clips-to-reels',
@@ -61,6 +65,7 @@ export const CREATIVE_SKILL_METADATA: CreativeSkillMetadata[] = [
     slug: 'ai-cinematic-short-film',
     name: 'AI Cinematic Short Film',
     nameZh: 'AI 电影感短片',
+    nameVi: 'Phim ngắn điện ảnh bằng AI',
     summary: '规划并制作 AI 电影感短片，覆盖故事、镜头、提示词、连续性和最终检查。',
     scenarios: [
       'ai-film',
@@ -76,6 +81,7 @@ export const CREATIVE_SKILL_METADATA: CreativeSkillMetadata[] = [
     slug: 'product-ad-video-script',
     name: 'Product Ad Video Script',
     nameZh: '产品广告脚本',
+    nameVi: 'Kịch bản video quảng cáo sản phẩm',
     summary: '把产品或页面转成广告角度、开头钩子、分镜、字幕、CTA 和视觉方向。',
     scenarios: [
       'ad',
@@ -91,6 +97,7 @@ export const CREATIVE_SKILL_METADATA: CreativeSkillMetadata[] = [
     slug: 'explainer-video',
     name: 'Explainer Video',
     nameZh: '解说视频制作',
+    nameVi: 'Sản xuất video giải thích',
     summary: '把主题、脚本、配音、产品逻辑或数据做成完整解说视频。',
     scenarios: [
       'concept',
@@ -106,6 +113,7 @@ export const CREATIVE_SKILL_METADATA: CreativeSkillMetadata[] = [
     slug: 'motion-graphic-placement',
     name: 'Motion Graphic Placement',
     nameZh: '动效点缀指南',
+    nameVi: 'Hướng dẫn bố trí motion graphic',
     summary: '在合适时机添加动效，强化表达且不遮挡内容。',
     scenarios: [
       'creator-video',
@@ -121,6 +129,7 @@ export const CREATIVE_SKILL_METADATA: CreativeSkillMetadata[] = [
     slug: 'storyboard-shot-breakdown',
     name: 'Storyboard Shot Breakdown',
     nameZh: '拉片分镜图',
+    nameVi: 'Phân tích shot và storyboard',
     summary: '逐镜拆解镜头语言，并生成分镜参考图。',
     scenarios: [
       'cinematography',
@@ -136,6 +145,7 @@ export const CREATIVE_SKILL_METADATA: CreativeSkillMetadata[] = [
     slug: 'video-thumbnail-generator',
     name: 'Video Thumbnail Generator',
     nameZh: '视频封面生成',
+    nameVi: 'Tạo thumbnail video',
     summary: '基于视频内容和真实画面生成适合平台的封面图。',
     scenarios: [
       'bilibili-cover',
@@ -151,6 +161,7 @@ export const CREATIVE_SKILL_METADATA: CreativeSkillMetadata[] = [
     slug: 'news-rough-cut',
     name: 'News Rough Cut',
     nameZh: '新闻智能粗剪',
+    nameVi: 'Dựng thô tin tức bằng AI',
     summary: '把新闻素材粗剪为一条内容完整、逻辑清晰、节奏紧凑的新闻短视频，不加任何外部声音。',
     scenarios: [
       'news-rough-cut',
@@ -166,6 +177,7 @@ export const CREATIVE_SKILL_METADATA: CreativeSkillMetadata[] = [
     slug: 'skill-creator',
     name: 'Skill Creator',
     nameZh: '技能创作器',
+    nameVi: 'Trình tạo skill',
     summary: '把重复流程或想法做成可复用的自定义技能（SKILL.md），并安装到本机技能目录。',
     scenarios: [
       'create-skill',
