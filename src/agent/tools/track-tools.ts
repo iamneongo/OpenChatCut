@@ -7,12 +7,12 @@ type Args = Record<string, unknown>;
 function payload(value: unknown): Args | { error: string } {
   if (value === undefined || value === null || value === '') return {};
   if (typeof value === 'object' && !Array.isArray(value)) return value as Args;
-  if (typeof value !== 'string') return { error: 'json must be a JSON object string' };
+  if (typeof value !== 'string') return { error: 'json phải là chuỗi đối tượng JSON' };
   try {
     const parsed = JSON.parse(value) as unknown;
-    return parsed && typeof parsed === 'object' && !Array.isArray(parsed) ? parsed as Args : { error: 'json must decode to an object' };
+    return parsed && typeof parsed === 'object' && !Array.isArray(parsed) ? parsed as Args : { error: 'json phải giải mã thành một đối tượng' };
   } catch (error) {
-    return { error: `invalid json: ${error instanceof Error ? error.message : String(error)}` };
+    return { error: `json không hợp lệ: ${error instanceof Error ? error.message : String(error)}` };
   }
 }
 
@@ -51,7 +51,7 @@ async function waitForTracks(ctx: AgentContext, ids: TrackId[]): Promise<Timelin
 }
 
 export async function execTrackTool(name: string, args: Args, ctx: AgentContext): Promise<unknown> {
-  if (name !== 'edit_track') return { error: `unknown tool ${name}` };
+  if (name !== 'edit_track') return { error: `Tool không xác định: ${name}` };
   const state = ctx.getState();
   switch (String(args.action)) {
     case 'list':
@@ -61,7 +61,7 @@ export async function execTrackTool(name: string, args: Args, ctx: AgentContext)
       const data = payload(args.json);
       if ('error' in data) return data;
       const kind = data.trackType as TrackKind;
-      if (kind !== 'video' && kind !== 'audio' && kind !== 'caption') return { error: 'create requires json.trackType = video, audio, or caption' };
+      if (kind !== 'video' && kind !== 'audio' && kind !== 'caption') return { error: 'create cần json.trackType = video, audio hoặc caption' };
       const count = Math.max(1, Math.min(32, Math.round(Number(data.count) || 1)));
       const role = data.role === 'anchor' || data.role === 'follower' ? data.role as TrackRole : undefined;
       const duckDepthDb = typeof (data.audioRouting as Args | undefined)?.duckDepthDb === 'number'
@@ -81,7 +81,7 @@ export async function execTrackTool(name: string, args: Args, ctx: AgentContext)
 
     case 'update': {
       const id = resolveTrackId(state, args.trackId);
-      if (!id) return { error: `no track ${args.trackId}`, tracks: list(state) };
+      if (!id) return { error: `Không tìm thấy track ${args.trackId}`, tracks: list(state) };
       const data = payload(args.json);
       if ('error' in data) return data;
       const patch: TrackUpdate = {};
@@ -95,7 +95,7 @@ export async function execTrackTool(name: string, args: Args, ctx: AgentContext)
       if (routing && (routing.duckDepthDb === null || typeof routing.duckDepthDb === 'number')) {
         patch.audioRouting = { duckDepthDb: routing.duckDepthDb === null ? null : Math.max(-60, Math.min(0, Number(routing.duckDepthDb))) };
       }
-      if (!Object.keys(patch).length) return { error: 'update json must include order, hidden, muted, locked, name, role, or audioRouting' };
+      if (!Object.keys(patch).length) return { error: 'update json phải có order, hidden, muted, locked, name, role hoặc audioRouting' };
       ctx.commands.updateTrack(id, patch);
       const after = ctx.getState();
       return { ok: true, track: describe(after, id), tracks: list(after) };
@@ -104,30 +104,30 @@ export async function execTrackTool(name: string, args: Args, ctx: AgentContext)
     case 'delete': {
       const refs = Array.isArray(args.trackIds) && args.trackIds.length ? args.trackIds : [args.trackId];
       const ids = refs.map((ref) => resolveTrackId(state, ref));
-      if (ids.some((id) => !id)) return { error: 'one or more tracks do not exist', tracks: list(state) };
+      if (ids.some((id) => !id)) return { error: 'Một hoặc nhiều track không tồn tại', tracks: list(state) };
       const unique = [...new Set(ids as TrackId[])];
       const busy = unique.filter((id) => state.items.some((item) => item.track === id)
         || (state.transitions ?? []).some((transition) => transition.trackId === id)
         || !!captionsOnTrack(state, id));
-      if (busy.length) return { error: 'track is not empty', tracks: busy.map((id) => describe(state, id)) };
+      if (busy.length) return { error: 'Track không trống', tracks: busy.map((id) => describe(state, id)) };
       ctx.commands.deleteTracks(unique);
       return { ok: true, deleted: unique, tracks: list(ctx.getState()) };
     }
 
     case 'tighten': {
       const id = resolveTrackId(state, args.trackId);
-      if (!id) return { error: `no track ${args.trackId}`, tracks: list(state) };
-      if (trackKind(state, id) === 'caption') return { error: 'caption tracks do not contain media clips' };
-      if (state.tracks?.[id]?.locked) return { error: 'track is locked' };
+      if (!id) return { error: `Không tìm thấy track ${args.trackId}`, tracks: list(state) };
+      if (trackKind(state, id) === 'caption') return { error: 'Track phụ đề không chứa clip media' };
+      if (state.tracks?.[id]?.locked) return { error: 'Track đang bị khóa' };
       ctx.commands.tightenTrack(id);
       return { ok: true, track: describe(ctx.getState(), id) };
     }
 
     case 'reorder_items': {
       const id = resolveTrackId(state, args.trackId);
-      if (!id) return { error: `no track ${args.trackId}`, tracks: list(state) };
-      if (trackKind(state, id) === 'caption') return { error: 'caption tracks do not contain media clips' };
-      if (state.tracks?.[id]?.locked) return { error: 'track is locked' };
+      if (!id) return { error: `Không tìm thấy track ${args.trackId}`, tracks: list(state) };
+      if (trackKind(state, id) === 'caption') return { error: 'Track phụ đề không chứa clip media' };
+      if (state.tracks?.[id]?.locked) return { error: 'Track đang bị khóa' };
       const data = payload(args.json);
       if ('error' in data) return data;
       const raw = data.itemIds ?? data.orderedIds;
@@ -136,7 +136,7 @@ export async function execTrackTool(name: string, args: Args, ctx: AgentContext)
         : typeof raw === 'string'
           ? raw.split(',').map((v) => v.trim()).filter(Boolean)
           : [];
-      if (refs.length < 2) return { error: 'reorder_items needs json.itemIds with at least 2 clip ids' };
+      if (refs.length < 2) return { error: 'reorder_items cần json.itemIds với ít nhất 2 clip id' };
       const onTrack = state.items.filter((item) => item.track === id);
       const orderedIds: string[] = [];
       for (const ref of refs) {
@@ -151,7 +151,7 @@ export async function execTrackTool(name: string, args: Args, ctx: AgentContext)
         orderedIds.push(hits[0]!.id);
       }
       const unique = new Set(orderedIds);
-      if (unique.size !== orderedIds.length) return { error: 'itemIds must be unique' };
+      if (unique.size !== orderedIds.length) return { error: 'itemIds phải là các giá trị duy nhất' };
       ctx.commands.reorderTrackItems(id, orderedIds);
       const after = ctx.getState().items
         .filter((item) => item.track === id)
@@ -161,6 +161,6 @@ export async function execTrackTool(name: string, args: Args, ctx: AgentContext)
     }
 
     default:
-      return { error: `unknown action ${args.action}; use list/create/update/delete/tighten/reorder_items` };
+      return { error: `Action không xác định: ${args.action}; dùng list/create/update/delete/tighten/reorder_items` };
   }
 }

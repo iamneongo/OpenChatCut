@@ -22,16 +22,16 @@ function targetItems(ctx: AgentContext, itemId: unknown): SilenceTargetItem[] | 
   );
   if (!q) return clips;
   const match = clips.find((it) => it.id === q || it.id.startsWith(q));
-  return match ? [match] : { error: `no audio/video clip ${q}` };
+  return match ? [match] : { error: `Không tìm thấy clip âm thanh/video ${q}` };
 }
 
 export async function execSilenceTool(name: string, args: Args, ctx: AgentContext): Promise<unknown> {
-  if (name !== 'remove_silence') return { error: `unknown tool ${name}` };
+  if (name !== 'remove_silence') return { error: `Tool không xác định: ${name}` };
   if (!vadSilenceRemovalEnabled()) {
     return {
       ok: true,
       edited: [],
-      note: 'VAD 静音删除未启用（设置 → 本地模型 → 本地转写 → 删除静音（本地 VAD））；为避免把音乐、噪声或低声讲话当静音，未执行删除。请告知用户在该开关启用后重试。',
+      note: 'Tính năng xóa khoảng lặng bằng VAD chưa được bật (Cài đặt → Model cục bộ → Chép lời cục bộ → Xóa khoảng lặng bằng VAD). Để tránh nhầm nhạc, tạp âm hoặc giọng nói nhỏ là khoảng lặng, thao tác chưa được thực hiện. Hãy bật tùy chọn rồi thử lại.',
     };
   }
   const params = {
@@ -95,7 +95,7 @@ export async function execSilenceTool(name: string, args: Args, ctx: AgentContex
         })),
       });
     } catch (e) {
-      skipped.push({ itemId: item.id, note: `分析失败: ${e instanceof Error ? e.message : String(e)}` });
+      skipped.push({ itemId: item.id, note: `Phân tích thất bại: ${e instanceof Error ? e.message : String(e)}` });
     }
   }
 
@@ -107,6 +107,6 @@ export async function execSilenceTool(name: string, args: Args, ctx: AgentContex
     ok: true,
     edited,
     ...(skipped.length ? { skipped } : {}),
-    ...(edited.length ? {} : { note: '未发现可删的死气段(阈值内没有足够长的静音)' }),
+    ...(edited.length ? {} : { note: 'Không phát hiện khoảng lặng đủ dài để xóa theo ngưỡng đã đặt' }),
   };
 }

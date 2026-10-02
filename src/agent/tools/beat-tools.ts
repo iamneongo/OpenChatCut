@@ -50,7 +50,7 @@ function markerActions(
 const listed = (times: readonly number[]): number[] => times.slice(0, MAX_LISTED);
 
 export async function execBeatTool(name: string, args: Args, ctx: AgentContext): Promise<unknown> {
-  if (name !== 'detect_beats') return { error: `unknown tool ${name}` };
+  if (name !== 'detect_beats') return { error: `Tool không xác định: ${name}` };
   try {
     const state = ctx.getState();
     let src = '';
@@ -58,16 +58,16 @@ export async function execBeatTool(name: string, args: Args, ctx: AgentContext):
     if (typeof args.itemId === 'string' && args.itemId.trim()) {
       const q = args.itemId.trim();
       item = state.items.find((it) => (it.id === q || it.id.startsWith(q)) && (it.kind === 'video' || it.kind === 'audio'));
-      if (!item) return { error: `no audio/video clip ${q}` };
-      if (!item.src) return { error: `clip ${item.id} has no media source` };
+      if (!item) return { error: `Không tìm thấy clip âm thanh/video ${q}` };
+      if (!item.src) return { error: `Clip ${item.id} không có nguồn media` };
       src = item.src;
     } else if (typeof args.assetId === 'string' && args.assetId.trim()) {
       const q = args.assetId.trim();
       const asset = ctx.getDoc().assets.find((a) => a.id === q || a.id.startsWith(q));
-      if (!asset) return { error: `no media-pool asset ${q}` };
+      if (!asset) return { error: `Không tìm thấy asset trong kho tư liệu ${q}` };
       src = asset.src;
     } else {
-      return { error: 'pass assetId (media pool) or itemId (timeline clip)' };
+      return { error: 'Hãy truyền assetId (kho tư liệu) hoặc itemId (clip trên dòng thời gian)' };
     }
 
     const analysis: BeatAnalysis = await analyzeAssetBeats(src);

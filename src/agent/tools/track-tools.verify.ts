@@ -31,7 +31,7 @@ assert.strictEqual(afterCreate.find((track) => track.id === oldV2)!.alias, 'V2',
 await execTrackTool('edit_track', { action: 'tighten', trackId: 'A1' }, ctx);
 assert.deepStrictEqual(draft.getState().items.filter((item) => item.track === draft.getState().items[0].track).map((item) => item.startFrame), [10, 20]);
 assert.deepStrictEqual(await execTrackTool('edit_track', { action: 'delete', trackId: 'A1' }, ctx), {
-  error: 'track is not empty', tracks: [(await execTrackTool('edit_track', { action: 'list' }, ctx) as { alias: string }[]).find((track) => track.alias === 'A1')],
+  error: 'Track không trống', tracks: [(await execTrackTool('edit_track', { action: 'list' }, ctx) as { alias: string }[]).find((track) => track.alias === 'A1')],
 });
 await execTrackTool('edit_track', { action: 'delete', trackId: made.created[0].id }, ctx);
 assert.ok(!(await execTrackTool('edit_track', { action: 'list' }, ctx) as { id: string }[]).some((track) => track.id === made.created[0].id));
@@ -51,7 +51,7 @@ assert.strictEqual(
   reduce(lockedState, { type: 'add', item: { id: 'n', track: lockedState.items[0].track, durationInFrames: 5, name: 'n', kind: 'audio', src: '/n.mp3' } }),
   lockedState, 'nothing new lands on a locked track',
 );
-assert.deepStrictEqual(await execTrackTool('edit_track', { action: 'tighten', trackId: 'A1' }, ctx), { error: 'track is locked' });
+assert.deepStrictEqual(await execTrackTool('edit_track', { action: 'tighten', trackId: 'A1' }, ctx), { error: 'Track đang bị khóa' });
 await execTrackTool('edit_track', { action: 'update', trackId: 'A1', json: '{"locked":false}' }, ctx);
 const unlockedList = await execTrackTool('edit_track', { action: 'list' }, ctx) as { alias: string; locked: boolean }[];
 assert.strictEqual(unlockedList.find((track) => track.alias === 'A1')!.locked, false, 'unlock lands + list carries locked');

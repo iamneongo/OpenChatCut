@@ -46,20 +46,20 @@ const describe = (it: TimelineItem) => {
 };
 
 export async function execEffectTool(name: string, args: Args, ctx: AgentContext): Promise<unknown> {
-  if (name !== 'manage_effects') return { error: `unknown tool ${name}` };
+  if (name !== 'manage_effects') return { error: `Tool không xác định: ${name}` };
   if (String(args.action) === 'list') return { effects: catalog() };
 
   const state = ctx.getState();
   const visual = state.items.filter((it) => it.kind === 'video' || it.kind === 'image');
   const it = findItem(visual, args.targetItemId);
   if (!it) {
-    return { error: `no video/image clip ${args.targetItemId ?? '(missing targetItemId)'}`, available: visual.map((x) => ({ itemId: x.id, kind: x.kind, name: x.name })) };
+    return { error: `Không tìm thấy clip video/ảnh ${args.targetItemId ?? '(thiếu targetItemId)'}`, available: visual.map((x) => ({ itemId: x.id, kind: x.kind, name: x.name })) };
   }
 
   switch (String(args.action)) {
     case 'add': {
       const assetId = String(args.assetId ?? '');
-      if (!(assetId in FX_EFFECTS)) return { error: `unknown effect ${assetId}`, available: FX_IDS };
+      if (!(assetId in FX_EFFECTS)) return { error: `Hiệu ứng không xác định: ${assetId}`, available: FX_IDS };
       const effect: ClipEffect = { id: `fx_${crypto.randomUUID()}`, assetId, overrides: cleanOverrides(args.propertyOverrides) };
       const nextEffects = [...(it.effects ?? []), effect];
       ctx.commands.setItemEffects(it.id, nextEffects, serializableDefsFor([effect]));
@@ -69,7 +69,7 @@ export async function execEffectTool(name: string, args: Args, ctx: AgentContext
       const effectId = String(args.effectId ?? '');
       const index = (it.effects ?? []).findIndex((e) => e.assetId in FX_EFFECTS && (!effectId || e.id === effectId || e.id.startsWith(effectId)));
       const cur = it.effects?.[index];
-      if (!cur) return { error: `clip ${it.id} has no effect to update — use action="add" first` };
+      if (!cur) return { error: `Clip ${it.id} chưa có hiệu ứng để cập nhật — hãy dùng action="add" trước` };
       const patch = cleanOverrides(args.propertyOverrides);
       const nextAsset = typeof args.assetId === 'string' && args.assetId in FX_EFFECTS ? args.assetId : cur.assetId;
       const next: ClipEffect = { ...cur, assetId: nextAsset, overrides: { ...cur.overrides, ...patch } };
@@ -87,6 +87,6 @@ export async function execEffectTool(name: string, args: Args, ctx: AgentContext
       return { ok: true, ...describe({ ...it, effects: next }) };
     }
     default:
-      return { error: `unknown action ${args.action}（可选 list/add/update/remove）` };
+      return { error: `Action không xác định: ${args.action} (có thể dùng list/add/update/remove)` };
   }
 }
