@@ -1,7 +1,7 @@
 import type { ProjectDoc, TimelineState } from '../editor/types';
 import { useT } from '../i18n/locale';
 import { ExportDestinationBar } from './ExportDestinationBar';
-import { ExportFooter } from './ExportDialogFooter';
+import { ExportFooter, PHASE_LABELS } from './ExportDialogFooter';
 import { ExportTabContent } from './ExportDialogTabs';
 import { EXPORT_TABS, type ExportDialogModel } from './useExportDialogModel';
 import type { ExportTab, RenderEngine } from './useExportWorkflow';
@@ -63,7 +63,7 @@ function BackgroundExportJobs({ model }: { model: ExportDialogModel }) {
           <div className="cc-export-progress-meta" key={job.id}>
             <button type="button" onClick={() => viewJob(job.id)}
               aria-pressed={selectedJobId === job.id}>
-              {job.label} · {job.progress.phase} · {job.progress.percent}%
+              {job.label} · {t(PHASE_LABELS[job.progress.phase])} · {job.progress.percent}%
             </button>
             {!terminal && (
               <button type="button" onClick={() => cancelJob(job.id)}>{t('取消')}</button>

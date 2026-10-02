@@ -16,7 +16,7 @@ function formatBytes(bytes: number): string {
   return `${(bytes / 1024 ** 3).toFixed(1)} GB`;
 }
 
-const PHASE_LABELS: Record<ExportPhase, string> = {
+export const PHASE_LABELS: Record<ExportPhase, string> = {
   queued: '等待渲染',
   preparing: '准备素材',
   rendering: '正在渲染',
