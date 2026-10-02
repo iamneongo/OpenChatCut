@@ -31,7 +31,7 @@ export function completeAbortedTurn(
       type: 'tool-result' as const,
       toolCallId,
       toolName,
-      output: { type: 'execution-denied' as const, reason: 'Stopped by the user before this tool finished.' },
+      output: { type: 'execution-denied' as const, reason: 'Người dùng đã dừng trước khi tool này hoàn tất.' },
     })),
   } as ModelMessage];
 }
