@@ -12,7 +12,7 @@ const ALL_OFF: Record<CapabilityKey, boolean> = {
 // ── all-off: every gated tool listed as 未配置, none marked available ──
 const off = capabilitiesPrompt(ALL_OFF);
 assert.ok(off.includes('submit_image') && off.includes('submit_voice') && off.includes('run_code'), 'lists gated tools');
-assert.ok(off.includes('(no key-gated capabilities)'), 'no capability marked available when all off');
+assert.ok(off.includes('(không có năng lực cần khóa)'), 'no capability marked available when all off');
 assert.ok(off.includes('push_asset'), 'includes a fallback hint for an off capability');
 
 // ── mixed: image + transcription on → they sit in the ✅ section, voice in the ⬜ section ──
@@ -29,17 +29,17 @@ assert.ok(mixed.slice(offIdx).includes('submit_voice'), 'unconfigured cap in ⬜
 // single configured vendor → named with its tool arg and "直接用"
 applyLiveKeyStatus({ KLING_API_KEY: { configured: true } });
 const vendored = capabilitiesPrompt({ ...ALL_OFF, video: true });
-assert.ok(vendored.includes('Kling(model=kling) — use it directly'), 'single vendor → use directly');
+assert.ok(vendored.includes('Kling(model=kling) — dùng trực tiếp'), 'single vendor → use directly');
 assert.ok(!vendored.includes('seedance2'), 'unconfigured vendor NOT listed');
 
 applyLiveKeyStatus({ FAL_KEY: { configured: true } });
 const falRouted = capabilitiesPrompt({ ...ALL_OFF, image: true, video: true });
 assert.ok(falRouted.includes('Fal.ai(model=fal)'), 'Fal key enables an explicit provider');
 assert.ok(!falRouted.includes('Seedance(model=seedance2)'), 'Fal does not impersonate native providers');
-assert.ok(falRouted.includes('No Fal model selected'), 'unset Fal default asks for a model');
+assert.ok(falRouted.includes('Chưa chọn mô hình Fal'), 'unset Fal default asks for a model');
 applyLiveModels({ FAL_IMAGE_MODEL: 'nano-banana-2' });
 const falDefault = capabilitiesPrompt({ ...ALL_OFF, image: true });
-assert.ok(falDefault.includes('Saved Fal default: nano-banana-2'), 'selected Fal model reaches the assistant');
+assert.ok(falDefault.includes('Mô hình Fal mặc định đã lưu: nano-banana-2'), 'selected Fal model reaches the assistant');
 applyLiveModels({});
 
 // one minimax key lights all its vendor rows
@@ -67,7 +67,7 @@ assert.ok(askFirst.includes('Seedance(model=seedance2)') && askFirst.includes('K
 // user default set → use it, never ask
 applyLiveModels({ PREFERRED_VIDEO_VENDOR: 'kling' });
 const preferred = capabilitiesPrompt({ ...ALL_OFF, video: true });
-assert.ok(preferred.includes('user default: Kling(model=kling) — use it without asking again'), 'user default honored');
+assert.ok(preferred.includes('mặc định người dùng: Kling(model=kling) — dùng mà không cần hỏi lại'), 'user default honored');
 assert.ok(!preferred.includes('ask_followup_questions'), 'no ask when default set');
 
 // default points at an UNCONFIGURED vendor → falls back to ask (not blindly honored)
@@ -80,17 +80,17 @@ applyLiveKeyStatus({ KLING_API_KEY: { configured: true }, SEEDANCE_API_KEY: { co
 applyLiveModels({});
 const autoMode = capabilitiesPrompt({ ...ALL_OFF, video: true }, 'auto');
 assert.ok(!autoMode.includes('ask_followup_questions'), 'auto mode → no forced ask before first use');
-assert.ok(autoMode.includes('pick the most suitable one yourself'), 'auto mode → agent picks and states the reason');
+assert.ok(autoMode.includes('tự chọn phương án phù hợp nhất'), 'auto mode → agent picks and states the reason');
 
 // several vendors + MANUAL mode → still asks (regression)
 const manualMode = capabilitiesPrompt({ ...ALL_OFF, video: true }, 'manual');
 assert.ok(manualMode.includes('ask_followup_questions'), 'manual mode → ask before first use');
 
 // the provider-choice rule names the routing ladder and pins choice to the list
-assert.ok(autoMode.includes('user default → single provider → ask once in manual mode → pick freely in auto mode'),
+assert.ok(autoMode.includes('mặc định người dùng → một nhà cung cấp → hỏi một lần ở chế độ thủ công → tự chọn ở chế độ tự động'),
   'provider-choice rule documents the routing ladder');
-assert.ok(autoMode.includes('Never use a provider that is not in the list above'), 'choice pinned to configured list');
-assert.ok(autoMode.includes('guide them to Settings'), 'unconfigured capability points to Settings');
+assert.ok(autoMode.includes('Không bao giờ dùng nhà cung cấp không có trong danh sách trên'), 'choice pinned to configured list');
+assert.ok(autoMode.includes('hướng dẫn họ vào Cài đặt'), 'unconfigured capability points to Settings');
 
 // ── tsx (no vite define): CONFIGURED_CAPS falls back to all-false without throwing ──
 assert.equal(typeof CONFIGURED_CAPS.image, 'boolean', 'CONFIGURED_CAPS resolves under tsx (all-false fallback, no ReferenceError)');
@@ -99,8 +99,8 @@ assert.equal(CONFIGURED_CAPS.image, false, 'fallback is all-false outside Vite')
 applyLiveKeyStatus({ LLM_OFOX_API_KEY: { configured: true }, IMAGE_API_KEY: { configured: true } });
 applyLiveModels({ PREFERRED_VIDEO_VENDOR: 'ofox' });
 const ofox = capabilitiesPrompt({ ...ALL_OFF, video: true, image: true });
-assert.ok(ofox.includes('Video generation(submit_video · user default: OFox(model=ofox)'));
-assert.ok(ofox.includes('Image generation(submit_image · available: gpt-image(model=gpt-image-2) — use it directly)'));
+assert.ok(ofox.includes('Tạo video(submit_video · mặc định người dùng: OFox(model=ofox)'));
+assert.ok(ofox.includes('Tạo ảnh(submit_image · khả dụng: gpt-image(model=gpt-image-2) — dùng trực tiếp)'));
 applyLiveKeyStatus({});
 assert.ok(!capabilitiesPrompt({ ...ALL_OFF, video: true }).includes('OFox(model=ofox)'), 'unconfigured OFox stays hidden');
 

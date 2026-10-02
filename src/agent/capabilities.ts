@@ -131,10 +131,10 @@ function falModelSuffix(cap: CapabilityKey): string {
   const models = FAL_MODELS.filter((model) => model.kind === cap);
   const preferred = liveModels?.[cap === 'image' ? 'FAL_IMAGE_MODEL' : 'FAL_VIDEO_MODEL'];
   const selected = models.find((model) => model.id === preferred);
-  return `\nFal ${cap} models (use model=fal and falModel=<id>): ${models.map((model) => `${model.label}=${model.id}`).join(', ')}. `
-    + (selected ? `Saved Fal default: ${selected.id}; honor it unless the user explicitly requests another model.`
-      : 'No Fal model selected: ask which model to use before submitting; do not silently default to Seedance.')
-    + ' Only the documented common inputs are supported; use the selected model constraints in the tool schema.';
+  return `\nCác mô hình Fal cho ${cap} (dùng model=fal và falModel=<id>): ${models.map((model) => `${model.label}=${model.id}`).join(', ')}. `
+    + (selected ? `Mô hình Fal mặc định đã lưu: ${selected.id}; hãy tôn trọng lựa chọn này trừ khi người dùng yêu cầu mô hình khác.`
+      : 'Chưa chọn mô hình Fal: hãy hỏi người dùng muốn dùng mô hình nào trước khi gửi; không tự âm thầm chọn Seedance.')
+    + ' Chỉ hỗ trợ các tham số chung đã được mô tả; dùng các ràng buộc của mô hình đã chọn trong lược đồ công cụ.';
 }
 
 /** Routing suffix for an ON capability, mode-aware:
@@ -152,27 +152,27 @@ function providerSuffix(cap: CapabilityKey, mode: ApprovalMode): string {
   const pref = savedPref || (cap === 'transcription' ? 'assemblyai' : '');
   const chosen = pref ? on.find((r) => r.arg === pref) : undefined;
   if (chosen) {
-    const source = savedPref ? 'user default' : 'default';
-    return ` · ${source}: ${rowTag(chosen)} — use it without asking again`;
+    const source = savedPref ? 'mặc định người dùng' : 'mặc định';
+    return ` · ${source}: ${rowTag(chosen)} — dùng mà không cần hỏi lại`;
   }
-  if (on.length === 1) return ` · available: ${rowTag(on[0])} — use it directly`;
+  if (on.length === 1) return ` · khả dụng: ${rowTag(on[0])} — dùng trực tiếp`;
   const names = on.map(rowTag).join(', ');
-  if (!prefKey) return ` · available: ${names}`;
-  if (mode === 'auto') return ` · available: ${names} — no user default; auto mode: pick the most suitable one yourself and state the reason`;
-  return ` · available: ${names} — no user default: before the first use of this capability in the session, use ask_followup_questions to select one provider, then keep using that choice`;
+  if (!prefKey) return ` · khả dụng: ${names}`;
+  if (mode === 'auto') return ` · khả dụng: ${names} — chưa có mặc định người dùng; tự chọn phương án phù hợp nhất và nêu lý do`;
+  return ` · khả dụng: ${names} — chưa có mặc định người dùng: trước lần đầu dùng năng lực này trong phiên, dùng ask_followup_questions để chọn một nhà cung cấp, sau đó tiếp tục dùng lựa chọn đó`;
 }
 
 // label + the primary tool + a fallback hint when the capability is off.
 const CAP_ROWS: { key: CapabilityKey; label: string; tool: string; fallback: string }[] = [
-  { key: 'image', label: 'Image generation', tool: 'submit_image', fallback: 'use push_asset/import_url_asset for a public image, or ask the user to upload/paste one' },
-  { key: 'voice', label: 'Voice/TTS', tool: 'submit_voice', fallback: 'ask the user to provide and upload/paste audio' },
-  { key: 'video', label: 'Video generation', tool: 'submit_video', fallback: 'use push_asset for a public video, or ask the user to upload one' },
-  { key: 'music', label: 'Music generation', tool: 'submit_music', fallback: 'use list_audio/add_audio from the library, or ask the user to upload audio' },
-  { key: 'sound', label: 'Sound generation', tool: 'submit_sound', fallback: 'use list_audio/add_audio from the sound-effects library' },
-  { key: 'stock', label: 'Stock-media search', tool: 'search_stock_media', fallback: 'use push_asset to import a known public URL directly' },
-  { key: 'transcription', label: 'Transcription/talking-head editing', tool: 'transcribe_track', fallback: 'word-level deletion, filler cleanup, and automatic captions are unavailable' },
-  { key: 'sandbox', label: 'Sandbox execution (ffmpeg/node/python)', tool: 'run_code', fallback: 'skip run_code steps; probe_media does not need the sandbox and stays available' },
-  { key: 'web', label: 'Web extraction', tool: 'web_browser', fallback: 'ask the user to paste the page content' },
+  { key: 'image', label: 'Tạo ảnh', tool: 'submit_image', fallback: 'dùng push_asset/import_url_asset cho ảnh công khai, hoặc yêu cầu người dùng tải lên/dán ảnh' },
+  { key: 'voice', label: 'Giọng nói/TTS', tool: 'submit_voice', fallback: 'yêu cầu người dùng cung cấp và tải lên/dán tệp âm thanh' },
+  { key: 'video', label: 'Tạo video', tool: 'submit_video', fallback: 'dùng push_asset cho video công khai, hoặc yêu cầu người dùng tải video lên' },
+  { key: 'music', label: 'Tạo nhạc', tool: 'submit_music', fallback: 'dùng list_audio/add_audio từ thư viện, hoặc yêu cầu người dùng tải âm thanh lên' },
+  { key: 'sound', label: 'Tạo hiệu ứng âm thanh', tool: 'submit_sound', fallback: 'dùng list_audio/add_audio từ thư viện hiệu ứng âm thanh' },
+  { key: 'stock', label: 'Tìm tư liệu thương mại', tool: 'search_stock_media', fallback: 'dùng push_asset để nhập trực tiếp một URL công khai đã biết' },
+  { key: 'transcription', label: 'Chép lời/chỉnh sửa video lời nói', tool: 'transcribe_track', fallback: 'không khả dụng việc xóa theo từng từ, dọn từ đệm và tạo phụ đề tự động' },
+  { key: 'sandbox', label: 'Chạy hộp cát (ffmpeg/node/python)', tool: 'run_code', fallback: 'bỏ qua các bước run_code; probe_media không cần hộp cát và vẫn khả dụng' },
+  { key: 'web', label: 'Trích xuất nội dung web', tool: 'web_browser', fallback: 'yêu cầu người dùng dán nội dung trang web' },
 ];
 
 /** System-prompt section listing which key-gated tools are on/off (local editing —
@@ -189,14 +189,14 @@ export function capabilitiesPrompt(
     if (caps[r.key]) on.push(`${r.label}(${r.tool}${providerSuffix(r.key, mode)})`);
     else off.push(`${r.label} (${r.tool}) — ${r.fallback}`);
   }
-  return `\n\n# Available capabilities (based on configured API keys; local editing is always available without keys)\n`
-    + `✅ Configured: ${on.length ? on.join(', ') : '(no key-gated capabilities)'}.\n`
+  return `\n\n# Năng lực khả dụng (dựa trên khóa API đã cấu hình; chỉnh sửa cục bộ luôn khả dụng mà không cần khóa)\n`
+    + `✅ Đã cấu hình: ${on.length ? on.join(', ') : '(không có năng lực cần khóa)'}.\n`
     + falModelSuffix('image') + falModelSuffix('video') + '\n'
-    + `⬜ Not configured — do not promise these in a plan or call them; they return "not configured" and waste a turn:\n`
+    + `⬜ Chưa cấu hình — không hứa đưa các năng lực này vào kế hoạch hoặc gọi chúng; chúng sẽ trả về "chưa cấu hình" và làm mất một lượt:\n`
     + (off.length ? off.map((s) => `  - ${s}`).join('\n') : '  (none)')
-    + '\nWhen an unavailable capability is needed, follow its fallback above or tell the user that the capability is not configured'
-    + ' (guide them to Settings → the matching capability page to add a provider).'
-    + '\nProvider choice: skill files only document per-provider usage details; the actual provider is decided by THIS list'
-    + ' and its routing suffix (user default → single provider → ask once in manual mode → pick freely in auto mode).'
-    + ' Never use a provider that is not in the list above.';
+    + '\nKhi cần một năng lực chưa khả dụng, hãy làm theo phương án dự phòng ở trên hoặc báo người dùng rằng năng lực này chưa được cấu hình'
+    + ' (hướng dẫn họ vào Cài đặt → trang tương ứng để thêm nhà cung cấp).'
+    + '\nChọn nhà cung cấp: tệp kỹ năng chỉ mô tả chi tiết cách dùng từng nhà cung cấp; nhà cung cấp thực tế được quyết định bởi danh sách NÀY'
+    + ' và hậu tố định tuyến của nó (mặc định người dùng → một nhà cung cấp → hỏi một lần ở chế độ thủ công → tự chọn ở chế độ tự động).'
+    + ' Không bao giờ dùng nhà cung cấp không có trong danh sách trên.';
 }
