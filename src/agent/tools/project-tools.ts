@@ -101,7 +101,7 @@ export async function execProjectTool(name: string, args: Args, ctx: AgentContex
     case 'get_editor_url':
       return execGetUrl(args, ctx);
     default:
-      return { error: `unknown tool ${name}` };
+      return { error: `Tool không xác định: ${name}` };
   }
 }
 
@@ -119,7 +119,7 @@ async function execList(args: Args): Promise<unknown> {
 async function execCreate(args: Args): Promise<unknown> {
   const name = typeof args.name === 'string' && args.name.trim()
     ? args.name.trim()
-    : '新工程';
+    : 'Dự án mới';
   const description = typeof args.description === 'string' ? args.description : undefined;
   const doc = emptyProjectDoc({
     width: typeof args.compositionWidth === 'number' ? args.compositionWidth : undefined,
@@ -134,15 +134,15 @@ async function execCreate(args: Args): Promise<unknown> {
     name: meta.name,
     editorUrl: buildEditorUrl(meta.id, base),
     timelineId: doc.activeTimelineId,
-    note: 'Project created. Call target_project to open it in the editor.',
+    note: 'Đã tạo dự án. Gọi target_project để mở trong trình chỉnh sửa.',
   };
 }
 
 async function execDelete(args: Args, ctx: AgentContext): Promise<unknown> {
   const projectId = String(args.projectId ?? '').trim();
-  if (!projectId) return { error: 'projectId is required (never defaults to the current project)' };
+  if (!projectId) return { error: 'Cần có projectId (không tự mặc định về dự án hiện tại)' };
   const meta = await resolveMeta(projectId, { includeDeleted: true });
-  if (!meta) return { error: `project not found: ${projectId}` };
+  if (!meta) return { error: `Không tìm thấy dự án: ${projectId}` };
   if (meta.deletedAt) return { ok: true, projectId: meta.id, alreadyDeleted: true };
   await deleteProject(meta.id);
   const current = currentProjectId(ctx);
@@ -152,18 +152,18 @@ async function execDelete(args: Args, ctx: AgentContext): Promise<unknown> {
     softDeleted: true,
     wasCurrent: current === meta.id,
     note: current === meta.id
-      ? 'Current project soft-deleted; navigate home or target another project.'
-      : 'Soft-deleted. restore_project undoes this.',
+      ? 'Dự án hiện tại đã được xóa mềm; hãy về trang chủ hoặc chọn dự án khác.'
+      : 'Đã xóa mềm. restore_project sẽ hoàn tác thao tác này.',
   };
 }
 
 async function execRestore(args: Args): Promise<unknown> {
   const projectId = String(args.projectId ?? '').trim();
-  if (!projectId) return { error: 'projectId is required' };
+  if (!projectId) return { error: 'Cần có projectId' };
   const meta = await resolveMeta(projectId, { includeDeleted: true });
-  if (!meta) return { error: `project not found: ${projectId}` };
+  if (!meta) return { error: `Không tìm thấy dự án: ${projectId}` };
   const restored = await restoreProject(meta.id);
-  if (!restored) return { error: 'restore failed' };
+  if (!restored) return { error: 'Khôi phục thất bại' };
   const base = typeof args.editorBaseUrl === 'string' ? args.editorBaseUrl : undefined;
   return {
     ok: true,
@@ -175,12 +175,12 @@ async function execRestore(args: Args): Promise<unknown> {
 
 async function execDuplicate(args: Args, ctx: AgentContext): Promise<unknown> {
   const srcId = String(args.projectId ?? currentProjectId(ctx) ?? '').trim();
-  if (!srcId) return { error: 'projectId is required (or open a project first)' };
+  if (!srcId) return { error: 'Cần có projectId (hoặc hãy mở một dự án trước)' };
   const src = await resolveMeta(srcId, { includeDeleted: true });
-  if (!src) return { error: `project not found: ${srcId}` };
+  if (!src) return { error: `Không tìm thấy dự án: ${srcId}` };
   const name = typeof args.name === 'string' ? args.name : undefined;
   const copy = await duplicateProject(src.id, name);
-  if (!copy) return { error: 'duplicate failed (project document missing?)' };
+  if (!copy) return { error: 'Nhân bản thất bại (có thể thiếu tài liệu dự án?)' };
   const activate = args.activate !== false;
   const base = typeof args.editorBaseUrl === 'string' ? args.editorBaseUrl : undefined;
   let opened = false;
@@ -196,10 +196,10 @@ async function execDuplicate(args: Args, ctx: AgentContext): Promise<unknown> {
     editorUrl: buildEditorUrl(copy.id, base),
     activated: opened,
     note: opened
-      ? 'Copy opened in editor.'
+      ? 'Đã mở bản sao trong trình chỉnh sửa.'
       : activate
-        ? 'Copy created; open editorUrl or call target_project to switch.'
-        : 'Copy created; session still on source project.',
+        ? 'Đã tạo bản sao; hãy mở editorUrl hoặc gọi target_project để chuyển sang đó.'
+        : 'Đã tạo bản sao; phiên hiện vẫn ở dự án nguồn.',
   };
 }
 
@@ -211,7 +211,7 @@ function execSpeakerUpdate(args: Args, ctx: AgentContext): unknown {
   const projectId = String(args.projectId ?? '').trim();
   const open = currentProjectId(ctx);
   if (projectId && open && projectId !== open) {
-    return { error: "speaker-update relabels the OPEN project's transcripts; call target_project first (or omit projectId)." };
+    return { error: 'speaker-update đổi nhãn transcript của dự án ĐANG MỞ; hãy gọi target_project trước (hoặc bỏ qua projectId).' };
   }
   let json: Record<string, unknown> = {};
   if (typeof args.json === 'string' && args.json.trim()) {
@@ -221,15 +221,15 @@ function execSpeakerUpdate(args: Args, ctx: AgentContext): unknown {
   // Top-level `id` is the speaker locator, equivalent to json.id.
   const from = String(args.from ?? args.id ?? json.from ?? json.speaker ?? json.id ?? '').trim();
   const to = String(args.to ?? json.to ?? json.name ?? json.newName ?? '').trim();
-  if (!from || !to) return { error: 'speaker-update needs {from:"A", to:"新名字"} — from = existing speaker label, to = new name' };
+  if (!from || !to) return { error: 'speaker-update cần {from:"A", to:"Tên mới"} — from = nhãn người nói hiện tại, to = tên mới' };
   const items = ctx.getState().items.filter((it) => hasOperationalTranscript(it) && it.transcript.some((w) => w.speaker === from));
-  if (!items.length) return { error: `no word labeled speaker "${from}" in this project`, hint: 'read_captions {words:true} / read_script show speaker labels' };
+  if (!items.length) return { error: `Không có từ nào mang nhãn người nói "${from}" trong dự án`, hint: 'read_captions {words:true} / read_script sẽ hiển thị nhãn người nói' };
   let wordsChanged = 0;
   for (const it of items) {
     wordsChanged += it.transcript!.filter((w) => w.speaker === from).length;
     ctx.commands.renameSpeaker(it.id, from, to);
   }
-  return { ok: true, action: 'speaker-update', from, to, itemsChanged: items.length, wordsChanged, note: 'project-wide relabel; only word.speaker changed.' };
+  return { ok: true, action: 'speaker-update', from, to, itemsChanged: items.length, wordsChanged, note: 'Đã đổi nhãn trên toàn dự án; chỉ word.speaker được thay đổi.' };
 }
 
 async function execEdit(args: Args, ctx: AgentContext): Promise<unknown> {
@@ -239,17 +239,17 @@ async function execEdit(args: Args, ctx: AgentContext): Promise<unknown> {
     return {
       unsupported: true,
       action,
-      note: 'this build has no project speaker roster — speakers are per-word diarization labels (A/B/…), not a managed list. A speaker with no words cannot be created, and delete would be an ambiguous destructive relabel. Use speaker-update {from,to} to rename/merge a speaker across the whole project, or manage_transcript action=fix {from,to} for one clip.',
+      note: 'Bản này không có danh sách người nói cấp dự án — người nói là nhãn diarization trên từng từ (A/B/…), không phải danh sách quản lý riêng. Không thể tạo người nói chưa có từ; xóa cũng sẽ là thao tác đổi nhãn phá hủy và không rõ ràng. Dùng speaker-update {from,to} để đổi/gộp người nói trên toàn dự án, hoặc manage_transcript action=fix {from,to} cho một clip.',
     };
   }
-  if (action.startsWith('speaker-')) return { error: `unknown speaker action ${action}`, supported: ['speaker-update'] };
-  if (action !== 'update') return { error: `unknown action ${action}` };
+  if (action.startsWith('speaker-')) return { error: `Action người nói không xác định: ${action}`, supported: ['speaker-update'] };
+  if (action !== 'update') return { error: `Action không xác định: ${action}` };
 
   const projectId = String(args.projectId ?? currentProjectId(ctx) ?? '').trim();
-  if (!projectId) return { error: 'projectId is required (or open a project first)' };
+  if (!projectId) return { error: 'Cần có projectId (hoặc hãy mở một dự án trước)' };
   const meta = await resolveMeta(projectId, { includeDeleted: true });
-  if (!meta) return { error: `project not found: ${projectId}` };
-  if (meta.deletedAt) return { error: 'project is soft-deleted; restore_project first' };
+  if (!meta) return { error: `Không tìm thấy dự án: ${projectId}` };
+  if (meta.deletedAt) return { error: 'Dự án đã bị xóa mềm; hãy restore_project trước' };
 
   let patch: { name?: string; description?: string | null } = {};
   if (typeof args.json === 'string' && args.json.trim()) {
@@ -259,17 +259,17 @@ async function execEdit(args: Args, ctx: AgentContext): Promise<unknown> {
       if (parsed.description === null) patch.description = null;
       else if (typeof parsed.description === 'string') patch.description = parsed.description;
     } catch {
-      return { error: 'json must be valid JSON object' };
+      return { error: 'json phải là đối tượng JSON hợp lệ' };
     }
   }
   // also accept top-level name for convenience
   if (typeof args.name === 'string') patch.name = args.name;
   if (!patch.name && patch.description === undefined) {
-    return { error: 'update requires json {name?, description?} or name' };
+    return { error: 'update cần json {name?, description?} hoặc name' };
   }
 
   const next = await updateProjectMeta(meta.id, patch);
-  if (!next) return { error: 'update failed' };
+  if (!next) return { error: 'Cập nhật thất bại' };
   // Notify live editor title if this is the open project
   if (currentProjectId(ctx) === next.id && patch.name && ctx.onProjectRenamed) {
     ctx.onProjectRenamed(patch.name);
@@ -279,11 +279,11 @@ async function execEdit(args: Args, ctx: AgentContext): Promise<unknown> {
 
 async function execTarget(args: Args, ctx: AgentContext): Promise<unknown> {
   const q = String(args.projectId ?? '').trim();
-  if (!q) return { error: 'projectId is required' };
+  if (!q) return { error: 'Cần có projectId' };
   const meta = await resolveMeta(q);
-  if (!meta) return { error: `project not found or deleted: ${q}` };
+  if (!meta) return { error: `Không tìm thấy dự án hoặc dự án đã bị xóa: ${q}` };
   const doc = await loadProject(meta.id);
-  if (!doc) return { error: 'project document missing' };
+  if (!doc) return { error: 'Thiếu tài liệu dự án' };
   const base = typeof args.editorBaseUrl === 'string' ? args.editorBaseUrl : undefined;
   let opened = false;
   if (ctx.openProject) {
@@ -298,8 +298,8 @@ async function execTarget(args: Args, ctx: AgentContext): Promise<unknown> {
     editorUrl: buildEditorUrl(meta.id, base),
     opened,
     note: opened
-      ? 'Editor navigating to project (chat will rehydrate for that project).'
-      : 'Target recorded via editorUrl; host should open the URL if navigation is unavailable.',
+      ? 'Trình chỉnh sửa đang chuyển đến dự án (chat sẽ nạp lại theo dự án đó).'
+      : 'Đã ghi nhận project đích qua editorUrl; host nên mở URL nếu không thể điều hướng.',
   };
 }
 
@@ -307,11 +307,11 @@ async function execGetUrl(args: Args, ctx: AgentContext): Promise<unknown> {
   const q = String(args.projectId ?? currentProjectId(ctx) ?? '').trim();
   if (!q) {
     return {
-      error: 'no project targeted — pass projectId or call list_projects / create_project first',
+      error: 'Chưa chọn dự án — hãy truyền projectId hoặc gọi list_projects / create_project trước',
     };
   }
   const meta = await resolveMeta(q, { includeDeleted: true });
-  if (!meta) return { error: `project not found: ${q}` };
+  if (!meta) return { error: `Không tìm thấy dự án: ${q}` };
   const base = typeof args.editorBaseUrl === 'string' ? args.editorBaseUrl : undefined;
   return {
     ok: true,
