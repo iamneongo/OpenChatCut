@@ -26,7 +26,7 @@ interface Rule {
 const RULES: Rule[] = [
   {
     kind: 'image',
-    service: 'image generation (still keyframes / 图片生成)',
+    service: 'tạo hình ảnh (keyframe tĩnh)',
     keywords: [
       'dall-e', 'dalle', 'midjourney', 'stable diffusion', 'sdxl', 'flux',
       'image generation', 'imagegen', 'text-to-image', '文生图', '生图', '图像生成', '图片生成',
@@ -35,7 +35,7 @@ const RULES: Rule[] = [
   },
   {
     kind: 'video',
-    service: 'video generation (视频生成)',
+    service: 'tạo video',
     keywords: [
       'sora', 'kling', '可灵', 'seedance', 'runway', 'hailuo', '海螺', 'veo',
       'gemini omni', 'text-to-video', '文生视频', '视频生成',
@@ -43,7 +43,7 @@ const RULES: Rule[] = [
   },
   {
     kind: 'voice',
-    service: 'voice / TTS (配音/语音合成)',
+    service: 'giọng nói / TTS',
     keywords: [
       'elevenlabs', 'doubao tts', 'minimax tts', 'inworld tts', 'fish audio tts',
       'speechify tts', 'openai tts', 'gemini tts', 'mistral tts', 'cartesia tts',
@@ -53,17 +53,17 @@ const RULES: Rule[] = [
   },
   {
     kind: 'music',
-    service: 'music generation (音乐生成)',
+    service: 'tạo nhạc',
     keywords: ['suno', 'music generation', '作曲', '音乐生成', 'bgm generation'],
   },
   {
     kind: 'sound',
-    service: 'sound effects (音效)',
+    service: 'hiệu ứng âm thanh',
     keywords: ['sound effects', 'sfx', '音效'],
   },
   {
     kind: 'transcription',
-    service: 'transcription via the configured provider (语音转写)',
+    service: 'chuyển lời nói thành văn bản qua nhà cung cấp đã cấu hình',
     keywords: [
       'assemblyai', 'whisper', 'openai transcription', 'deepgram', 'groq transcription',
       'elevenlabs scribe', 'cartesia ink', 'transcription', '转写',
@@ -71,7 +71,7 @@ const RULES: Rule[] = [
   },
   {
     kind: 'web',
-    service: 'web extraction (网页抓取/搜索)',
+    service: 'trích xuất web',
     keywords: ['firecrawl', 'web search', '网页搜索', 'web scraper', '爬取', 'web_browser'],
   },
   {
