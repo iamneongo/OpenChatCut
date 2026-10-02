@@ -87,18 +87,18 @@ async function settleStaleRecovery(
     releaseServerRunOwnership(projectId, runId);
     resetAbandonedRun(state);
     const friendlyDetail = /^server run metadata failed: HTTP 404$/.test(detail)
-      ? '服务端任务记录已不存在（编辑器服务可能已重启）'
+      ? 'Bản ghi tác vụ máy chủ không còn tồn tại (dịch vụ trình chỉnh sửa có thể đã khởi động lại)'
       : detail;
     state.appendMessage({
       role: 'error',
-      text: `之前的服务端任务已安全中断并清除恢复状态。${friendlyDetail
-        ? ` ${friendlyDetail}` : ''}${transportWarning ? ` 传输清理警告：${transportWarning}` : ''}`,
+      text: `Tác vụ máy chủ trước đó đã được dừng an toàn và xóa trạng thái khôi phục.${friendlyDetail
+        ? ` ${friendlyDetail}` : ''}${transportWarning ? ` Cảnh báo dọn dẹp kết nối: ${transportWarning}` : ''}`,
     });
   } catch (error) {
     state.refs.staleRecoveryRun.current = null;
     state.appendMessage({
       role: 'error',
-      text: `服务端任务无法安全恢复，恢复凭据已保留：${error instanceof Error
+      text: `Không thể khôi phục an toàn tác vụ máy chủ; thông tin xác thực khôi phục vẫn được giữ lại: ${error instanceof Error
         ? error.message : String(error)}`,
     });
   } finally {
@@ -242,7 +242,7 @@ async function openSubscription(
     || !state.refs.enabled.current || !state.refs.ready.current) return;
   const cursor = state.refs.cursor.current;
   if (typeof metadata.firstEventId === 'number' && cursor < metadata.firstEventId - 1) {
-    throw permanentServerRunRecoveryError('服务端任务事件已超出可恢复窗口。');
+    throw permanentServerRunRecoveryError('Sự kiện của tác vụ máy chủ đã vượt quá khoảng thời gian có thể khôi phục.');
   }
   const terminalStatus = recoveredServerRunTerminal(metadata, cursor);
   if (terminalStatus) {

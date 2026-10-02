@@ -114,7 +114,7 @@ async function prepareServerRunPayload(
       && choice.backend !== 'codex'
       && choice.backend !== 'copilot'
       && choice.backend !== 'claude-code')) {
-    environment.appendMessage({ role: 'error', text: '服务端运行仅支持已配置的 API / Codex / Copilot / Claude Code 模型。' });
+    environment.appendMessage({ role: 'error', text: 'Tác vụ máy chủ chỉ hỗ trợ các model API / Codex / Copilot / Claude Code đã được cấu hình.' });
     return null;
   }
   return buildPreparedServerRun({
@@ -362,7 +362,7 @@ async function confirmUncertainAdmission(
       if (!active.abort.signal.aborted) {
         surfaceAdmissionFailure(
           environment,
-          `服务端任务未能启动：${error instanceof Error ? error.message : String(error)}`,
+          `Không thể khởi động tác vụ máy chủ: ${error instanceof Error ? error.message : String(error)}`,
         );
       }
       settleUnacceptedFailure(environment, active, true);
@@ -442,7 +442,7 @@ export async function sendServerRun(
   if (!await acquireServerRunOwnership(environment.projectId, prepared.payload.runId)) {
     environment.appendMessage({
       role: 'error',
-      text: '服务端任务已由另一个页面接管，本页不会重复执行。',
+      text: 'Tác vụ máy chủ đã được một trang khác tiếp quản; trang này sẽ không chạy lặp lại.',
     });
     return;
   }

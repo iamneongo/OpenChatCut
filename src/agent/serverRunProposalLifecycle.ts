@@ -134,7 +134,7 @@ function applyToolActions(
     const observed = turn.state.ctxRef.current.getDoc();
     if (!turn.persistentBeforeDoc) {
       turn.persistentBeforeDoc = turn.baseDoc;
-      turn.persistentSnapshot = saveAutomaticVersion(projectId, 'Agent 修改前', turn.baseDoc).then(
+      turn.persistentSnapshot = saveAutomaticVersion(projectId, 'Trước khi Agent chỉnh sửa', turn.baseDoc).then(
         () => undefined,
         (error) => { turn.persistentSaveError = error; },
       );
@@ -327,7 +327,7 @@ async function finalizeCompletedTurn(
     const summary = error instanceof Error ? error.message : String(error);
     turn.state.setMessages((messages) => [
       ...messages,
-      { role: 'error', text: `Agent 已停止，但素材池改动提交失败：${summary}` },
+      { role: 'error', text: `Agent đã dừng, nhưng không thể lưu thay đổi trong kho media: ${summary}` },
     ]);
     await settleServerRun(turn.projectId, input.runId, {
       status: 'failed',
@@ -360,7 +360,7 @@ async function finalizeCompletedTurn(
         ...messages,
         {
           role: 'error',
-          text: 'Agent 已完成运行，但本次编辑未被记录为可应用的操作（提案为空），时间线未改动。请重试，或打开运行检查器查看详情。',
+          text: 'Agent đã chạy xong nhưng chỉnh sửa lần này không được ghi nhận thành thao tác có thể áp dụng (proposal trống), nên timeline không thay đổi. Hãy thử lại hoặc mở trình kiểm tra lần chạy để xem chi tiết.',
         },
       ]);
       await settleServerRun(turn.projectId, input.runId, {
@@ -382,7 +382,7 @@ async function finalizeCompletedTurn(
     const summary = error instanceof Error ? error.message : String(error);
     turn.state.setMessages((messages) => [
       ...messages,
-      { role: 'error', text: `Agent 已停止，但提案生成失败，编辑未应用：${summary}` },
+      { role: 'error', text: `Agent đã dừng, nhưng tạo proposal thất bại nên chỉnh sửa chưa được áp dụng: ${summary}` },
     ]);
     await settleServerRun(turn.projectId, input.runId, {
       status: 'failed',
