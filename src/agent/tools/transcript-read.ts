@@ -100,7 +100,7 @@ export function execReadTranscript(args: Args, ctx: AgentContext): unknown {
   const itemQuery = typeof args.itemId === 'string' ? args.itemId.trim() : '';
   if (itemQuery) {
     const item = matchingItem(mediaItems, itemQuery);
-    if (!item) return { error: `no audio/video item matching "${itemQuery}"` };
+    if (!item) return { error: `Không có item âm thanh/video nào khớp với "${itemQuery}"` };
     if ('error' in item) return item;
     if (!hasOperationalTranscript(item)) return transcriptUnavailable([item], item.id);
     items = [item];
@@ -108,7 +108,7 @@ export function execReadTranscript(args: Args, ctx: AgentContext): unknown {
     const trackQuery = typeof args.track === 'string' ? args.track.trim() : '';
     if (trackQuery) {
       const trackId = resolveTrackId(state, trackQuery);
-      if (!trackId) return { error: `no track "${trackQuery}"` };
+      if (!trackId) return { error: `Không tìm thấy track "${trackQuery}"` };
       items = items.filter((item) => item.track === trackId);
       if (!items.length) return transcriptUnavailable(mediaItems.filter((item) => item.track === trackId), undefined, trackAlias(state, trackId));
     }

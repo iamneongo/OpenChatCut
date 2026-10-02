@@ -88,7 +88,7 @@ assert.deepEqual(
 assert.equal(isFailedToolResult(unavailable), false, 'optional transcript discovery must not poison final Agent completion');
 assert.match(
   String((execReadTranscript({ itemId: 'missing' }, ctx) as { error: string }).error),
-  /no audio\/video item/,
+  /Không có item âm thanh\/video nào khớp/,
   'a bad item id remains a real tool failure',
 );
 

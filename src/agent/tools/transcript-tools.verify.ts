@@ -302,6 +302,6 @@ const invalidProvider = await execTranscriptTool(
   { track: 'A1', provider: 'unknown-provider' },
   ctx,
 ) as { error?: string };
-assert.match(invalidProvider.error ?? '', /unsupported transcription provider/);
+assert.match(invalidProvider.error ?? '', /Nhà cung cấp chép lời không được hỗ trợ/);
 
 console.log('transcript-tools.check: ok');

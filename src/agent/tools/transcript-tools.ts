@@ -110,16 +110,16 @@ async function manageTranscript(args: Args, ctx: AgentContext, track: TrackId, a
   if (!it) {
     return {
       error: args.itemId
-        ? `no item ${String(args.itemId)}`
+        ? `Không tìm thấy item ${String(args.itemId)}`
         : action === 'retry_transcription'
-          ? `no audio/video clip on ${alias}`
-          : `no transcribed clip on ${alias}; call transcribe_track first`,
+          ? `Không có clip âm thanh/video trên ${alias}`
+          : `Không có clip đã chép lời trên ${alias}; hãy gọi transcribe_track trước`,
     };
   }
 
   // retry_transcription: force a fresh ASR run (the only action that doesn't need an existing transcript).
   if (action === 'retry_transcription') {
-    if (!it.src) return { error: `item ${it.id} has no media to transcribe` };
+    if (!it.src) return { error: `Item ${it.id} không có media để chép lời` };
     // Honor the same provider override transcribe_track accepts. Without it a
     // retry always fell back to the default provider, so on a setup configured
     // for (say) Groq the only way to redo a transcript failed with
@@ -129,7 +129,7 @@ async function manageTranscript(args: Args, ctx: AgentContext, track: TrackId, a
       ? undefined
       : isTranscriptionProviderId(args.provider) ? args.provider : undefined;
     if (args.provider !== undefined && provider === undefined) {
-      return { error: `unsupported transcription provider: ${String(args.provider)}` };
+      return { error: `Nhà cung cấp chép lời không được hỗ trợ: ${String(args.provider)}` };
     }
     try {
       const r = await transcribePath(
@@ -141,11 +141,11 @@ async function manageTranscript(args: Args, ctx: AgentContext, track: TrackId, a
       ctx.commands.setItemTranscript(it.id, r.words);
       return { ok: true, action, itemId: it.id, words: r.words.length, text: r.text.slice(0, 200), retried: true };
     } catch (e) {
-      return { error: `transcription failed: ${e instanceof Error ? e.message : String(e)}` };
+      return { error: `Chép lời thất bại: ${e instanceof Error ? e.message : String(e)}` };
     }
   }
 
-  if (!hasOperationalTranscript(it)) return { error: `item ${it.id} has no current transcript; call transcribe_track first` };
+  if (!hasOperationalTranscript(it)) return { error: `Item ${it.id} chưa có transcript hiện tại; hãy gọi transcribe_track trước` };
 
   if (action === 'clear_edits') {
     const deletedWords = (it.deletedWordIdx ?? []).length;
@@ -243,7 +243,7 @@ async function manageTranscript(args: Args, ctx: AgentContext, track: TrackId, a
   // translation_create (always (re)translate + overwrite) / translation_ensure (idempotent: reuse if present).
   if (action === 'translation_create' || action === 'translation_ensure') {
     const lang = String(args.lang ?? '').trim();
-    if (!lang) return { error: `${action} needs lang (target language, e.g. "English")` };
+    if (!lang) return { error: `${action} cần lang (ngôn ngữ đích, ví dụ "English")` };
     const existing = findVariantByLang(it.variants, lang, 'translation');
     if (existing && action === 'translation_ensure') {
       return { ok: true, action, itemId: it.id, variantId: existing.id, lang: existing.lang, words: existing.words.length, reused: true };
@@ -256,11 +256,11 @@ async function manageTranscript(args: Args, ctx: AgentContext, track: TrackId, a
       ctx.commands.setItemVariants(it.id, upsertVariant(it.variants, variant));
       return { ok: true, action, itemId: it.id, variantId: variant.id, lang: variant.lang, words: variant.words.length, reused: false };
     } catch (e) {
-      return { error: `translation failed: ${e instanceof Error ? e.message : String(e)}` };
+      return { error: `Dịch thất bại: ${e instanceof Error ? e.message : String(e)}` };
     }
   }
 
-  return { error: `unsupported action "${action}"; use fix / clear_edits / set_play_order / retry_transcription / translation_create / translation_ensure / translation_list / translation_read` };
+  return { error: `Action không được hỗ trợ: "${action}"; dùng fix / clear_edits / set_play_order / retry_transcription / translation_create / translation_ensure / translation_list / translation_read` };
 }
 
 // Execute a transcript/caption tool. Returns undefined if `name` isn't one of ours.
@@ -269,7 +269,7 @@ export async function execTranscriptTool(name: string, args: Args, ctx: AgentCon
   if (name === 'search_media') return execSearchMedia(args, ctx);
   const state = ctx.getState();
   const track = resolveTrackId(state, args.track ?? 'A1') ?? defaultTrackId(state, 'audio');
-  if (!track) return { error: 'no track available; create one with edit_track first' };
+  if (!track) return { error: 'Không có track khả dụng; hãy tạo bằng edit_track trước' };
   const alias = trackAlias(state, track);
   switch (name) {
     case 'transcribe_track': {
@@ -277,13 +277,13 @@ export async function execTranscriptTool(name: string, args: Args, ctx: AgentCon
         ? undefined
         : isTranscriptionProviderId(args.provider) ? args.provider : undefined;
       if (args.provider !== undefined && provider === undefined) {
-        return { error: `unsupported transcription provider: ${String(args.provider)}` };
+        return { error: `Nhà cung cấp chép lời không được hỗ trợ: ${String(args.provider)}` };
       }
       // Transcribe ALL audio/video clips on the track (not just the first).
       const clips = ctx.getState().items
         .filter((it) => (it.kind === 'audio' || it.kind === 'video') && it.track === track && it.src)
         .sort((a, b) => a.startFrame - b.startFrame);
-      if (!clips.length) return { error: `no audio/video clip on ${alias}` };
+      if (!clips.length) return { error: `Không có clip âm thanh/video trên ${alias}` };
       const results: { itemId: string; words: number; text: string; skipped?: boolean; skippedReason?: string }[] = [];
       try {
         for (const it of clips) {
@@ -308,7 +308,7 @@ export async function execTranscriptTool(name: string, args: Args, ctx: AgentCon
         return { ok: true, track: alias, provider: provider ?? 'settings-default', clips: results.length, results };
       } catch (e) {
         const base = e instanceof Error ? e.message : String(e);
-        return { error: `transcription failed: ${base}`, partial: results };
+        return { error: `Chép lời thất bại: ${base}`, partial: results };
       }
     }
     case 'find_transcript':
@@ -321,7 +321,7 @@ export async function execTranscriptTool(name: string, args: Args, ctx: AgentCon
       const clips = targetId
         ? state.items.filter((x) => (x.id === targetId || x.id.startsWith(targetId)) && hasOperationalTranscript(x))
         : state.items.filter((x) => x.track === track && hasOperationalTranscript(x));
-      if (!clips.length) return { error: targetId ? `no transcribed item ${targetId}` : `no transcript on ${alias}; call transcribe_track first` };
+      if (!clips.length) return { error: targetId ? `Không tìm thấy item đã chép lời ${targetId}` : `Chưa có transcript trên ${alias}; hãy gọi transcribe_track trước` };
       const fps = state.fps;
       const usesTypedArgs = args.only != null || args.silence != null || args.longSilence != null;
       let selection: { fillers: boolean; silence: boolean };
@@ -388,7 +388,7 @@ export async function execTranscriptTool(name: string, args: Args, ctx: AgentCon
       const action = String(args.action ?? '');
       const it = resolveClip(ctx, track, args.itemId, true);
       if (!hasOperationalTranscript(it)) {
-        return { error: args.itemId ? `no transcribed item ${String(args.itemId)}` : `no transcript on ${alias}; call transcribe_track first` };
+        return { error: args.itemId ? `Không tìm thấy item đã chép lời ${String(args.itemId)}` : `Chưa có transcript trên ${alias}; hãy gọi transcribe_track trước` };
       }
       const minGap = typeof args.minGapSeconds === 'number' ? args.minGapSeconds : 0.25;
       const gaps = listGapsOnClip(it, minGap);
@@ -453,11 +453,11 @@ export async function execTranscriptTool(name: string, args: Args, ctx: AgentCon
           maxSeconds: args.maxSeconds,
         };
       }
-      return { error: `unknown edit_gap action "${action}" (use list|delete|cap|restore)` };
+      return { error: `Action edit_gap không xác định: "${action}" (dùng list|delete|cap|restore)` };
     }
     case 'delete_text': {
       const it = trackClip(ctx, track, true);
-      if (!hasOperationalTranscript(it)) return { error: `no current transcript on ${alias}; call transcribe_track first` };
+      if (!hasOperationalTranscript(it)) return { error: `Chưa có transcript hiện tại trên ${alias}; hãy gọi transcribe_track trước` };
       const m = findPhrase(it.transcript, String(args.query ?? ''));
       if (!m) return { deleted: false, query: args.query, note: 'phrase not found' };
       const idxs = Array.from({ length: m.count }, (_, k) => m.start + k);
