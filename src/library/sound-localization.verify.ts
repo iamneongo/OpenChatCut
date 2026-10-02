@@ -30,6 +30,7 @@ assert.match(browserSource, /\{t\(g\.name\)\}/, 'sound group chips must render t
 assert.doesNotMatch(browserSource, /\{g\.name\}/, 'sound group chips must not render the Chinese data name directly');
 assert.match(browserSource, /tData\(s\.name\)/, 'Chinese sound names must participate in search');
 assert.match(browserSource, /const displayName = tData\(sound\.name\)/, 'sound rows must derive a localized display name');
+assert.match(browserSource, /desc: t\(sound\.desc\)/, 'sound descriptions must render through the active locale');
 assert.match(browserSource, /cc-sound-name[^>]*>\{displayName\}/, 'sound rows must render the localized display name');
 assert.match(browserSource, /\{ n: list\.length \}/, 'the footer must report the active search/category result count');
 assert.doesNotMatch(
