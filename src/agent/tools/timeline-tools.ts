@@ -15,7 +15,7 @@ type Args = Record<string, unknown>;
 function resolveDims(a: { ratio?: unknown; width?: unknown; height?: unknown }): { width: number; height: number } | null | { error: string } {
   if (typeof a.ratio === 'string' && a.ratio) {
     const preset = ASPECT_PRESETS.find((p) => p.label === a.ratio);
-    return preset ? { width: preset.width, height: preset.height } : { error: `unknown ratio ${a.ratio}（可选 ${ASPECT_PRESETS.map((p) => p.label).join('/')}）` };
+    return preset ? { width: preset.width, height: preset.height } : { error: `Tỷ lệ khung hình không được hỗ trợ: ${a.ratio} (có thể dùng ${ASPECT_PRESETS.map((p) => p.label).join('/')})` };
   }
   if (typeof a.width === 'number' && typeof a.height === 'number' && a.width > 0 && a.height > 0) {
     return { width: Math.round(a.width), height: Math.round(a.height) };
@@ -38,7 +38,7 @@ const describe = (t: Timeline, doc: ProjectDoc) => ({
 });
 
 export async function execTimelineTool(name: string, args: Args, ctx: AgentContext): Promise<unknown> {
-  if (name !== 'manage_timelines') return { error: `unknown tool ${name}` };
+  if (name !== 'manage_timelines') return { error: `Tool không xác định: ${name}` };
   const doc = ctx.getDoc();
   switch (String(args.action)) {
     case 'list':
@@ -66,7 +66,7 @@ export async function execTimelineTool(name: string, args: Args, ctx: AgentConte
 
     case 'duplicate': {
       const src = findTimeline(doc, args.timelineId);
-      if (!src) return { error: `no timeline ${args.timelineId}`, available: doc.timelines.map((t) => ({ id: t.id, name: t.name })) };
+      if (!src) return { error: `Không tìm thấy timeline ${args.timelineId}`, available: doc.timelines.map((t) => ({ id: t.id, name: t.name })) };
       const newId = ctx.commands.duplicateTimeline(src.id, {
         name: typeof args.name === 'string' ? args.name : undefined,
         activate: args.activate !== false,
@@ -78,14 +78,14 @@ export async function execTimelineTool(name: string, args: Args, ctx: AgentConte
 
     case 'switch': {
       const t = findTimeline(doc, args.timelineId);
-      if (!t) return { error: `no timeline ${args.timelineId}`, available: doc.timelines.map((x) => ({ id: x.id, name: x.name })) };
+      if (!t) return { error: `Không tìm thấy timeline ${args.timelineId}`, available: doc.timelines.map((x) => ({ id: x.id, name: x.name })) };
       ctx.commands.switchTimeline(t.id);
       return { ok: true, active: describe(t, ctx.getDoc()) };
     }
 
     case 'update': {
       const t = args.timelineId ? findTimeline(doc, args.timelineId) : findTimeline(doc, doc.activeTimelineId);
-      if (!t) return { error: `no timeline ${args.timelineId}` };
+      if (!t) return { error: `Không tìm thấy timeline ${args.timelineId}` };
       const changed: string[] = [];
       if (typeof args.name === 'string' && args.name.trim()) {
         ctx.commands.renameTimeline(t.id, args.name.trim());
@@ -105,7 +105,7 @@ export async function execTimelineTool(name: string, args: Args, ctx: AgentConte
         ctx.commands.setTimelineHidden(t.id, args.hidden);
         changed.push('hidden');
       }
-      if (!changed.length) return { error: 'update 需要 name / ratio / width+height / fit / hidden 至少一项' };
+      if (!changed.length) return { error: 'update cần ít nhất một trong các trường name / ratio / width+height / fit / hidden' };
       const after = ctx.getDoc();
       const updated = findTimeline(after, t.id);
       return { ok: true, changed, timeline: updated ? describe(updated, after) : t.id };
@@ -113,9 +113,9 @@ export async function execTimelineTool(name: string, args: Args, ctx: AgentConte
 
     case 'insert': {
       const target = findTimeline(doc, args.timelineId);
-      if (!target) return { error: `no timeline ${args.timelineId}`, available: doc.timelines.map((t) => ({ id: t.id, name: t.name })) };
+      if (!target) return { error: `Không tìm thấy timeline ${args.timelineId}`, available: doc.timelines.map((t) => ({ id: t.id, name: t.name })) };
       const owner = findTimeline(doc, doc.activeTimelineId);
-      if (!owner) return { error: `no active timeline ${doc.activeTimelineId}` };
+      if (!owner) return { error: `Không tìm thấy timeline đang hoạt động ${doc.activeTimelineId}` };
       const referenceError = sequenceReferenceError(doc, owner.id, target.id);
       if (referenceError) return { error: referenceError.message, sequenceError: referenceError.toJSON() };
       const addResult = ctx.commands.addSequence(target.id, {
@@ -155,6 +155,6 @@ export async function execTimelineTool(name: string, args: Args, ctx: AgentConte
     }
 
     default:
-      return { error: `unknown action ${args.action}（可选 list/create/duplicate/switch/update/delete/insert）` };
+      return { error: `Action không xác định: ${args.action} (có thể dùng list/create/duplicate/switch/update/delete/insert)` };
   }
 }

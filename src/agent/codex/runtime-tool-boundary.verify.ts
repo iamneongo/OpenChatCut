@@ -28,7 +28,7 @@ const rejectedMutation = await executeOpenChatCutTool(
   },
 );
 assert.equal(rejectedMutation.success, false);
-assert.match(JSON.stringify(rejectedMutation.result), /no item missing/);
+assert.match(JSON.stringify(rejectedMutation.result), /Không tìm thấy item missing/);
 
 const followupSchema = TOOL_SCHEMAS.find((schema) => schema.name === 'ask_followup_questions');
 assert.ok(followupSchema);

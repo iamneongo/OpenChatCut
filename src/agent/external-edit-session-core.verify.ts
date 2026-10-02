@@ -132,7 +132,7 @@ const coreContext = {
 } as unknown as AgentContext;
 assert.deepEqual(
   execCoreDataTool('update_item_props', { itemId: '', props: { text: 'wrong' } }, coreContext),
-  { error: 'no item ' },
+  { error: 'Không tìm thấy item ' },
   'an empty item id must not prefix-match the first timeline item',
 );
 assert.equal(updatedItemId, '');

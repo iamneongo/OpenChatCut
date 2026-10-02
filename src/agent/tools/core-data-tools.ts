@@ -62,7 +62,7 @@ function readTimeline(ctx: AgentContext): unknown {
 
 function setItemTiming(args: Args, ctx: AgentContext): unknown {
   const item = findItem(ctx, args.itemId);
-  if (!item) return { error: `no item ${args.itemId}` };
+  if (!item) return { error: `Không tìm thấy item ${args.itemId}` };
   if (args.startFrame !== undefined || args.durationInFrames !== undefined) {
     ctx.commands.setItemTiming(item.id, {
       startFrame: args.startFrame as number,
@@ -91,7 +91,7 @@ function setItemTiming(args: Args, ctx: AgentContext): unknown {
 function mutateItem(name: string, args: Args, ctx: AgentContext): unknown {
   if (name === 'set_item_timing') return setItemTiming(args, ctx);
   const item = findItem(ctx, args.itemId);
-  if (!item) return { error: `no item ${args.itemId}` };
+  if (!item) return { error: `Không tìm thấy item ${args.itemId}` };
   if (name === 'update_item_props') {
     ctx.commands.updateItemProps(item.id, (args.props ?? {}) as Args);
     return { ok: true, itemId: item.id, updated: Object.keys((args.props ?? {}) as Args) };
@@ -99,7 +99,7 @@ function mutateItem(name: string, args: Args, ctx: AgentContext): unknown {
   if (name === 'move_item') {
     const kind = item.kind === 'audio' ? 'audio' : 'video';
     const track = args.track === undefined ? undefined : resolveTrackId(ctx.getState(), args.track, kind);
-    if (args.track !== undefined && !track) return { error: `no compatible track ${args.track}` };
+    if (args.track !== undefined && !track) return { error: `Không có track tương thích với ${args.track}` };
     ctx.commands.moveItem(item.id, { track: track ?? undefined, startFrame: args.startFrame as number });
     return { ok: true, itemId: item.id };
   }
@@ -118,7 +118,7 @@ function mutateProject(name: string, args: Args, ctx: AgentContext): unknown {
     return { ok: true };
   }
   const preset = ASPECT_PRESETS.find((candidate) => candidate.label === String(args.ratio));
-  if (!preset) return { error: `unknown ratio ${args.ratio}` };
+  if (!preset) return { error: `Tỷ lệ khung hình không được hỗ trợ: ${args.ratio}` };
   const fit = (args.fit as AspectFit) ?? ctx.getState().fit ?? 'contain';
   ctx.commands.setAspect(preset.width, preset.height, fit);
   return { ok: true, ratio: preset.label, width: preset.width, height: preset.height, fit };

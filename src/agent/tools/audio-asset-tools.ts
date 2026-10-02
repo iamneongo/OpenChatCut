@@ -39,21 +39,21 @@ export function execAudioAssetTool(name: string, args: Args, ctx: AgentContext):
     }));
   }
   const q = String(args.audioName ?? '').trim().toLowerCase();
-  if (!q) return { error: 'audioName is required; call list_audio to choose an asset' };
+  if (!q) return { error: 'Cần có audioName; hãy gọi list_audio để chọn một tài sản' };
   const asset = choices.find((candidate) => candidate.id.toLowerCase() === q)
     ?? choices.find((candidate) => candidate.id.toLowerCase().startsWith(q))
     ?? choices.find((candidate) => candidate.name.toLowerCase().includes(q));
-  if (!asset) return { error: `no audio matching "${args.audioName}"`, available: choices.map((a) => a.name) };
+  if (!asset) return { error: `Không có âm thanh nào khớp với "${args.audioName}"`, available: choices.map((a) => a.name) };
   const state = ctx.getState();
   const requestedTrack = args.track ?? 'A1';
   const resolvedTrack = resolveTrackId(state, requestedTrack, 'audio');
   if (args.track != null && !resolvedTrack) {
     return {
-      error: `audio track "${String(args.track)}" does not exist yet. Create it first with edit_track action=create json={"trackType":"audio","name":"${String(args.track)}"} (or omit track to place on the default audio track).`,
+      error: `Track âm thanh "${String(args.track)}" chưa tồn tại. Hãy tạo trước bằng edit_track action=create json={"trackType":"audio","name":"${String(args.track)}"} (hoặc bỏ qua track để đặt lên track âm thanh mặc định).`,
     };
   }
   const track = resolvedTrack ?? defaultTrackId(state, 'audio');
-  if (!track) return { error: 'no audio track exists; create one with edit_track action=create json={"trackType":"audio"}' };
+  if (!track) return { error: 'Chưa có track âm thanh; hãy tạo bằng edit_track action=create json={"trackType":"audio"}' };
   const placed = ctx.commands.addAudio(commandAudio(asset), {
     track,
     startFrame: typeof args.startFrame === 'number' ? args.startFrame : undefined,
