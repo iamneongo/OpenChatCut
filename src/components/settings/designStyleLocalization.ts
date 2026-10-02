@@ -28,6 +28,33 @@ const PRESET_NAME_ZH: Record<string, string> = {
   'Jewel Deco': '宝石装饰艺术',
 };
 
+const PRESET_NAME_VI: Record<string, string> = {
+  'Terracotta Editorial': 'Biên tập đất nung',
+  'Retro Duotone Print': 'In hai màu hoài cổ',
+  'Highlighter Notebook': 'Sổ tay bút nhớ',
+  'Soft Organic Gradient': 'Chuyển màu hữu cơ mềm mại',
+  'Doodle Explainer': 'Minh họa nguệch ngoạc',
+  'Emerald Deco': 'Trang trí ngọc lục bảo',
+  'Black Yellow Type': 'Kiểu chữ đen vàng',
+  'Electric Impact Type': 'Kiểu chữ điện quang',
+  'Acid Script Poster': 'Áp-phích chữ viết tay nổi bật',
+  'Neon Grid Commerce': 'Thương mại lưới neon',
+  'Pale Tech Dashboard': 'Bảng điều khiển công nghệ sáng',
+  'Liquid Aura': 'Hào quang chất lỏng',
+  'Grainy Heatwave': 'Sóng nhiệt nhiễu hạt',
+  'Blush Watercolor': 'Màu nước hồng phấn',
+  'Archive Typewriter': 'Máy đánh chữ lưu trữ',
+  'Cubist Collage': 'Tranh ghép lập thể',
+  'Redline Tech': 'Công nghệ đường đỏ',
+  'Black & White Neon': 'Neon đen trắng',
+  'Violet Aura': 'Hào quang tím',
+  'Warm Paper': 'Giấy tông ấm',
+  'Modern Editorial': 'Biên tập hiện đại',
+  'Orange Minimal': 'Tối giản cam',
+  'Crimson Night Glass': 'Kính đêm đỏ thẫm',
+  'Jewel Deco': 'Trang trí đá quý',
+};
+
 const PRESET_GUIDE_ZH: Record<string, string> = {
   'Terracotta Editorial': '陶土杂志风：沉稳的弹簧入场与分组错峰动画，标题、姓名、要点和时间轴分别从不同方向轻缓进入。以陶土红、铜色和琥珀色为主，搭配白色文字与优雅衬线强调。',
   'Retro Duotone Print': '复古双色印刷：文字采用打字机式逐字出现，图表和时间轴线性生长，不使用透明度或缩放动画。以暖米色为底，只使用深蓝与橙红两种主色。',
@@ -136,6 +163,33 @@ const ROLE_ZH: Record<string, string> = {
   yellow: '黄色',
 };
 
+const ROLE_VI: Record<string, string> = {
+  primary: 'màu chính', secondary: 'màu phụ', accent: 'màu nhấn', background: 'nền', text: 'chữ',
+  'text secondary': 'chữ phụ', 'text-secondary': 'chữ phụ', 'text-on-dark': 'chữ trên nền tối',
+  heading: 'font tiêu đề', body: 'font nội dung', quote: 'font trích dẫn', display: 'font trình bày',
+  'display number': 'font số trình bày', mono: 'font đơn cách', script: 'font chữ viết tay',
+  'heading serif': 'font serif tiêu đề', Chinese: 'font tiếng Trung', 'Chinese heading': 'font tiêu đề tiếng Trung',
+  'Chinese body': 'font nội dung tiếng Trung', 'Chinese accent': 'font nhấn tiếng Trung', 'Chinese quote': 'font trích dẫn tiếng Trung',
+  'accent copper': 'màu nhấn đồng', 'accent amber': 'màu nhấn hổ phách', 'accent tan': 'màu nhấn nâu vàng',
+  'accent gradient start': 'đầu chuyển màu nhấn', 'accent gradient end': 'cuối chuyển màu nhấn',
+  'accent-red': 'màu nhấn đỏ', 'accent-red-dark': 'màu nhấn đỏ sẫm', 'accent-red-panel': 'màu nhấn đỏ cho bảng',
+  'accent-red-vivid': 'màu nhấn đỏ tươi', axis: 'trục', 'background-chart': 'nền biểu đồ',
+  'background-neutral': 'nền trung tính', 'background-warm': 'nền tông ấm',
+  'background gradient start': 'đầu chuyển màu nền', 'background gradient end': 'cuối chuyển màu nền',
+  'chart-warm-light': 'màu ấm sáng của biểu đồ', 'chart-warm-mid': 'màu ấm giữa của biểu đồ',
+  'chart-warm-dark': 'màu ấm tối của biểu đồ', 'chart-warm-deep': 'màu ấm rất tối của biểu đồ',
+  'chart accent 1': 'màu nhấn biểu đồ 1', 'chart accent 2': 'màu nhấn biểu đồ 2', 'chart accent 3': 'màu nhấn biểu đồ 3',
+  highlight: 'màu tô sáng', badge: 'màu huy hiệu', callout: 'màu chú thích', divider: 'màu đường phân cách',
+  grid: 'màu đường lưới', paper: 'màu giấy', sticky: 'màu giấy ghi chú', texture: 'màu họa tiết', glow: 'màu quầng sáng',
+  'glow-main': 'quầng sáng chính', 'glow-soft': 'quầng sáng mềm', 'inner-glow': 'quầng sáng bên trong',
+  'meta-text': 'chữ phụ trợ', impact: 'màu tương phản', neon: 'màu neon', 'price-card': 'thẻ giá',
+  'blob blue': 'mảng xanh dương', 'blob deep purple': 'mảng tím đậm', 'blob green': 'mảng xanh lá',
+  'blob magenta': 'mảng đỏ tươi', 'blob purple': 'mảng tím', 'blob warm': 'mảng tông ấm',
+  'wash blue': 'màu nước xanh dương', 'wash flower': 'màu nước hoa', 'wash peach': 'màu nước đào',
+  'wash pink': 'màu nước hồng', burgundy: 'đỏ rượu', cobalt: 'xanh cobalt', coral: 'san hô', gold: 'vàng kim',
+  orange: 'cam', pink: 'hồng', red: 'đỏ', teal: 'xanh ngọc', yellow: 'vàng',
+};
+
 const FONT_ROLE_ZH: Record<string, string> = {
   ...ROLE_ZH,
   accent: '强调字体',
@@ -150,14 +204,20 @@ const GUIDE_ZH_BY_SOURCE = new Map(
 );
 
 export function localizeDesignPresetName(name: string, locale: Locale): string {
-  return locale === 'zh' ? (PRESET_NAME_ZH[name] ?? name) : name;
+  if (locale === 'zh') return PRESET_NAME_ZH[name] ?? name;
+  if (locale === 'vi') return PRESET_NAME_VI[name] ?? name;
+  return name;
 }
 export function localizeDesignRole(role: string, locale: Locale): string {
-  return locale === 'zh' ? (ROLE_ZH[role] ?? role) : role;
+  if (locale === 'zh') return ROLE_ZH[role] ?? role;
+  if (locale === 'vi') return ROLE_VI[role] ?? role;
+  return role;
 }
 
 export function localizeDesignFontRole(role: string, locale: Locale): string {
-  return locale === 'zh' ? (FONT_ROLE_ZH[role] ?? role) : role;
+  if (locale === 'zh') return FONT_ROLE_ZH[role] ?? role;
+  if (locale === 'vi') return ROLE_VI[role] ?? role;
+  return role;
 }
 
 export function localizeDesignStyleGuide(guide: string, locale: Locale): string {
