@@ -51,7 +51,7 @@ interface MobileUploadSession extends MobileUploadSessionSnapshot {
   activeUploads: Set<Promise<void>>;
 }
 
-export type MobilePageLocale = 'zh' | 'en' | 'it' | 'ru';
+export type MobilePageLocale = 'zh' | 'en' | 'it' | 'ru' | 'vi';
 
 interface MobileUploadServiceOptions {
   bindHost?: string;
@@ -152,7 +152,7 @@ async function validateMediaSignature(path: string, mime: string): Promise<boole
 }
 
 function mobilePage(locale: MobilePageLocale): string {
-  const copyLocale = locale === 'it' ? 'en' : locale;
+  const copyLocale = locale === 'it' || locale === 'vi' ? 'en' : locale;
   const copy = {
     en: {
       pageTitle: 'Upload from phone', title: 'Send media to OpenChatCut',

@@ -51,6 +51,12 @@ async function fetchDicts(locale: Locale): Promise<LocaleDicts> {
     ]);
     return { ui: ru.RU, uiFallback: EMPTY, data: enData.default, dataFallback: EMPTY };
   }
+  if (locale === 'vi') {
+    const [vi, en, enData] = await Promise.all([
+      import('./dict/vi'), import('./dict/en'), import('./dict/en/templates-data'),
+    ]);
+    return { ui: vi.VI, uiFallback: en.EN, data: enData.default, dataFallback: EMPTY };
+  }
   const [it, itData, en, enData] = await Promise.all([
     import('./dict/it'), import('./dict/it/templates-data'),
     import('./dict/en'), import('./dict/en/templates-data'),
