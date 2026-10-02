@@ -2,9 +2,11 @@ import { useEffect, useState } from 'react';
 import { theme, themeAlpha } from '../theme';
 import { Icon } from '../components/icons';
 import { clearAppToast, subscribeAppToast, type AppToast } from './appToast';
+import { useT } from '../i18n/locale';
 
 /** Fixed bottom-center toast; mirrors Timeline clipJob chrome. */
 export function AppToastHost() {
+  const t = useT();
   const [toast, setToast] = useState<AppToast | null>(null);
 
   useEffect(() => {
@@ -61,7 +63,7 @@ export function AppToastHost() {
             display: 'grid',
             placeItems: 'center',
           }}
-          aria-label="dismiss"
+          aria-label={t('关闭')}
         >
           <Icon name="x" size={14} />
         </button>

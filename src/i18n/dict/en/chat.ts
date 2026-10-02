@@ -220,6 +220,7 @@ export default {
 
   // ── ChatComposer:mode / settings popover ──
   '模式': 'Mode',
+  'Q&A': 'Q&A',
   '代理模式': 'Agent mode',
   '可编辑时间线，改动可撤销': 'Can edit the timeline; changes are undoable',
   '模型': 'Model',
