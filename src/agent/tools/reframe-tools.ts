@@ -42,7 +42,7 @@ function loadVideo(src: string): Promise<HTMLVideoElement> {
     };
     const onErr = (): void => {
       cleanup();
-      reject(new Error(`auto_reframe: 视频加载失败 (${src})`));
+      reject(new Error(`auto_reframe: tải video thất bại (${src})`));
     };
     video.addEventListener('loadedmetadata', onOk, { once: true });
     video.addEventListener('error', onErr, { once: true });
@@ -65,16 +65,16 @@ export async function execReframeTool(name: string, args: Args, ctx: AgentContex
 
   // —— Boundary verification: environment (pixel sampling requires a browser) ——
   if (typeof document === 'undefined' || typeof HTMLVideoElement === 'undefined') {
-    return { error: 'auto_reframe 需要浏览器环境(视频像素采样),当前无 DOM,无法运行。' };
+    return { error: 'auto_reframe cần môi trường trình duyệt để lấy mẫu pixel video; hiện không có DOM nên không thể chạy.' };
   }
 
   const state: TimelineState = ctx.getState();
   const videos = state.items.filter((it) => it.kind === 'video');
   const item = findItem(videos, args.itemId);
   if (!item) {
-    return { error: `找不到视频 clip ${args.itemId ?? '(缺 itemId)'}`, available: videos.map((v) => ({ itemId: v.id, name: v.name })) };
+    return { error: `Không tìm thấy clip video ${args.itemId ?? '(thiếu itemId)'}`, available: videos.map((v) => ({ itemId: v.id, name: v.name })) };
   }
-  if (!item.src) return { error: `clip ${item.id} 没有可采样的视频源(src 缺失)` };
+  if (!item.src) return { error: `clip ${item.id} không có nguồn video để lấy mẫu (thiếu src)` };
 
   // ——Parameter cleaning——
   const intervalFrames = Number.isFinite(Number(args.intervalFrames)) ? Math.max(1, Math.floor(Number(args.intervalFrames))) : undefined;
@@ -124,7 +124,7 @@ export async function execReframeTool(name: string, args: Args, ctx: AgentContex
       });
 
     if (!keyframes.length) {
-      return { error: `auto_reframe: 未能从 clip ${item.id} 采到任何帧(视频可能不可读)`, keyframes: 0 };
+      return { error: `auto_reframe: không lấy được frame nào từ clip ${item.id} (video có thể không đọc được)`, keyframes: 0 };
     }
 
     clearReframe(ctx, item);
@@ -139,12 +139,12 @@ export async function execReframeTool(name: string, args: Args, ctx: AgentContex
       smooth: smooth ?? DEFAULT_REFRAME_SMOOTH,
       source: usedGeometry ? 'geometry' : 'energy-grid',
       note: usedGeometry
-        ? '基于人像/人脸几何生成焦点（无需像素采样）。'
+        ? 'Tạo tiêu điểm dựa trên hình học người/khuôn mặt (không cần lấy mẫu pixel).'
         : magnification <= 1.05
-          ? '画布与源画幅接近，裁切倍率≈1；关键帧已写入，换竖屏画布后更明显。'
-          : 'reframe 关键帧已写入；用 view_timeline_frames 自检裁切是否跟主体。',
+          ? 'Canvas gần với tỷ lệ nguồn, hệ số cắt ≈1; keyframe đã được ghi, hiệu ứng sẽ rõ hơn trên canvas dọc.'
+          : 'Đã ghi keyframe reframe; dùng view_timeline_frames để kiểm tra vùng cắt có bám theo chủ thể hay không.',
     };
   } catch (err: unknown) {
-    return { error: err instanceof Error ? err.message : 'auto_reframe 失败' };
+    return { error: err instanceof Error ? err.message : 'auto_reframe thất bại' };
   }
 }

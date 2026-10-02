@@ -126,10 +126,10 @@ export async function execPlaceGraphicsTool(name: string, args: Args, ctx: Agent
     })()
     : graphics;
   if (requested && !targets.length) {
-    return { error: `没有找到图形类 clip ${requested}（可用类型：motion-graphic/text/solid）`, available: graphics.map((g) => ({ itemId: g.id, name: g.name, kind: g.kind })) };
+    return { error: `Không tìm thấy clip đồ họa ${requested} (các loại khả dụng: motion-graphic/text/solid)`, available: graphics.map((g) => ({ itemId: g.id, name: g.name, kind: g.kind })) };
   }
   if (!targets.length) {
-    return { ok: true, adjusted: 0, note: '时间线上没有可摆放的叠加图形（motion-graphic/text/solid）。' };
+    return { ok: true, adjusted: 0, note: 'Timeline không có đồ họa phủ nào có thể sắp xếp (motion-graphic/text/solid).' };
   }
 
   const geometryBySrc = new Map<string, VisualGeometryAsset | null>();
@@ -137,21 +137,21 @@ export async function execPlaceGraphicsTool(name: string, args: Args, ctx: Agent
   const skipped: string[] = [];
   for (const item of targets) {
     if (!canPlaceGraphic(state, item)) {
-      skipped.push(`${item.name}（轨道已隐藏或锁定）`);
+      skipped.push(`${item.name} (track đã bị ẩn hoặc khóa)`);
       continue;
     }
     const from = item.startFrame;
     const to = item.startFrame + item.durationInFrames;
     const video = pickUnderlyingVideo(state, item, from, to);
     if (!video?.src) {
-      skipped.push(`${item.name}（下方无视频素材）`);
+      skipped.push(`${item.name} (không có video bên dưới)`);
       continue;
     }
     let geometry = geometryBySrc.get(video.src);
     if (geometry === undefined) {
       const asset = doc.assets.find((candidate) => candidate.src === video.src);
       if (!asset) {
-        skipped.push(`${item.name}（视频素材不在媒体池）`);
+        skipped.push(`${item.name} (video không có trong kho media)`);
         continue;
       }
       const result = await analyzeAssetGeometry(asset);
@@ -159,19 +159,19 @@ export async function execPlaceGraphicsTool(name: string, args: Args, ctx: Agent
       geometryBySrc.set(video.src, geometry);
     }
     if (!geometry) {
-      skipped.push(`${item.name}（几何不可用）`);
+      skipped.push(`${item.name} (không có dữ liệu hình học khả dụng)`);
       continue;
     }
     const window = sourceWindowOf(video, from, to, fps);
     if (!window) {
-      skipped.push(`${item.name}（与视频无时间重叠）`);
+      skipped.push(`${item.name} (không chồng thời gian với video)`);
       continue;
     }
     const projectedGeometry = projectGeometryThroughItem(geometry, state, video);
     const box = safeBoxForRange(projectedGeometry, window.startSec, window.endSec);
     const transform = box ? transformFromSafeBox(box, graphicAspectOf(item)) : null;
     if (!transform) {
-      skipped.push(`${item.name}（安全区不足以容纳）`);
+      skipped.push(`${item.name} (vùng an toàn không đủ chỗ)`);
       continue;
     }
     ctx.commands.setItemTransform(item.id, { x: transform.x, y: transform.y, scale: transform.scale });
@@ -184,7 +184,7 @@ export async function execPlaceGraphicsTool(name: string, args: Args, ctx: Agent
     placed,
     ...(skipped.length ? { skipped } : {}),
     note: placed.length
-      ? `已将 ${placed.length} 个图形移动到安全区（避开人脸/主体）。`
-      : '没有图形被移动；' + (skipped.length ? `跳过：${skipped.join('；')}` : '安全区均已可用。'),
+      ? `Đã chuyển ${placed.length} đồ họa vào vùng an toàn (tránh khuôn mặt/chủ thể).`
+      : 'Không có đồ họa nào được di chuyển; ' + (skipped.length ? `bỏ qua: ${skipped.join('; ')}` : 'tất cả vùng an toàn đều khả dụng.'),
   };
 }

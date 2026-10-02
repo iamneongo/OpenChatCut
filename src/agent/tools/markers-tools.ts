@@ -45,10 +45,10 @@ interface SegmentAnchor { fromFrame: number; durationFrames: number; note: strin
  *  Keep the word frame consistent); note = keptText of the selected segment (that is, the text displayed by read_script).*/
 function resolveTranscriptSegments(state: TimelineState, spec: string, trackFilter?: string): SegmentAnchor | { error: string } {
   const sns = parseSegmentSpec(spec);
-  if (!sns) return { error: `transcriptSegments "${spec}" 无法解析——用 read_script 输出的 [sN] 编号,如 "3"、"3-5" 或 "2,4-6"` };
+  if (!sns) return { error: `Không thể phân tích transcriptSegments "${spec}" — dùng số [sN] từ read_script, ví dụ "3", "3-5" hoặc "2,4-6"` };
   const model = buildModel(state);
   const tracks = trackFilter ? model.filter((t) => t.track.toLowerCase() === trackFilter.toLowerCase()) : model;
-  if (trackFilter && !tracks.length) return { error: `transcriptTrack "${trackFilter}" 不存在或该轨无内容` };
+  if (trackFilter && !tracks.length) return { error: `transcriptTrack "${trackFilter}" không tồn tại hoặc track này không có nội dung` };
 
   // Each transcribed region (= a transcribed clip) is indexed by sn; candidate = region containing all selected segments
   const candidates: { track: string; itemId: string; rows: Map<number, SegRow> }[] = [];
@@ -61,15 +61,15 @@ function resolveTranscriptSegments(state: TimelineState, spec: string, trackFilt
     }
   }
   if (!candidates.length) {
-    return { error: `找不到同时包含段 ${sns.join(',')} 的转写区域——先 read_script 核对 [sN] 编号${trackFilter ? '' : ',或传 transcriptTrack 缩小范围'}` };
+    return { error: `Không tìm thấy vùng transcript chứa đồng thời các đoạn ${sns.join(',')} — hãy dùng read_script kiểm tra số [sN]${trackFilter ? '' : ' hoặc truyền transcriptTrack để thu hẹp phạm vi'}` };
   }
   if (candidates.length > 1) {
-    return { error: `段 ${sns.join(',')} 在多个转写区域出现(${candidates.map((c) => `${c.track}:${c.itemId.slice(0, 8)}`).join(' / ')})——传 transcriptTrack 消歧,或直接给 fromFrame` };
+    return { error: `Các đoạn ${sns.join(',')} xuất hiện trong nhiều vùng transcript (${candidates.map((c) => `${c.track}:${c.itemId.slice(0, 8)}`).join(' / ')}) — truyền transcriptTrack để phân biệt hoặc cung cấp fromFrame trực tiếp` };
   }
 
   const cand = candidates[0]!;
   const item = state.items.find((it) => it.id === cand.itemId);
-  if (!hasOperationalTranscript(item)) return { error: `转写区域对应的 clip ${cand.itemId} 已无当前转写,请重新 read_script` };
+  if (!hasOperationalTranscript(item)) return { error: `clip ${cand.itemId} tương ứng với vùng transcript không còn transcript hiện tại; hãy chạy lại read_script` };
   const deleted = new Set(item.deletedWordIdx ?? []);
   const mapper = makeWordFrameMapper(item, state.fps);
   const firstRow = cand.rows.get(sns[0]!)!;
@@ -78,7 +78,7 @@ function resolveTranscriptSegments(state: TimelineState, spec: string, trackFilt
   const lastGi = [...lastRow.wordGis].reverse().find((g) => !deleted.has(g));
   const f0 = firstGi === undefined ? null : mapper(firstGi);
   const f1 = lastGi === undefined ? null : mapper(lastGi);
-  if (!f0 || !f1) return { error: `段 ${sns.join(',')} 的词已被删除或不在播放范围内,无法定位帧——read_script 核对后重试` };
+  if (!f0 || !f1) return { error: `Các từ trong đoạn ${sns.join(',')} đã bị xóa hoặc nằm ngoài phạm vi phát nên không thể xác định frame — kiểm tra bằng read_script rồi thử lại` };
   const note = sns.map((n) => cand.rows.get(n)!.keptText).join(' ');
   return { fromFrame: f0.fromFrame, durationFrames: Math.max(0, f1.toFrame - f0.fromFrame), note };
 }
