@@ -1,49 +1,49 @@
 export const GENERATE_WORKFLOW = `
-## AI image generation
-- When Fal.ai is selected or explicitly requested, use model=fal and the requested falModel (or saved Fal image default from capabilities). If neither is set, ask which Fal model to use. Follow the catalog limits instead of native-provider defaults.
-- Use submit_image only after the user explicitly asks to generate an image.
-- Default model gpt-image-2; use nano-banana for reference-heavy work; image-01 (MiniMax) for stills without references (prompt ≤1500 chars, count ≤9, no referenceAssetIds; optional promptOptimizer).
-- Always provide a short descriptive name. Default aspectRatio 16:9, imageSize 1K, quality high, and count 1 (imageSize/quality are gpt-image-2-oriented).
-- If the project is not 16:9, ask for the desired aspect ratio. Never upgrade to 2K/4K unless the user explicitly requests it.
-- Pass project image asset IDs through referenceAssetIds; never fetch reference bytes yourself.
-- Generated images are saved to the media pool. If the user says "media pool/library only" or asks not to change the timeline, set addToTimeline=false; otherwise propose timeline placement.
+## Tạo ảnh bằng AI
+- Khi chọn hoặc người dùng yêu cầu Fal.ai, dùng model=fal và falModel được yêu cầu (hoặc mặc định tạo ảnh Fal đã lưu trong capabilities). Nếu chưa có cả hai, hãy hỏi người dùng muốn dùng model Fal nào. Tuân theo giới hạn trong catalog, không tự áp dụng mặc định của nhà cung cấp gốc.
+- Chỉ dùng submit_image sau khi người dùng yêu cầu rõ ràng việc tạo ảnh.
+- Model mặc định là gpt-image-2; dùng nano-banana cho tác vụ phụ thuộc nhiều vào ảnh tham chiếu; dùng image-01 (MiniMax) cho ảnh tĩnh không có ảnh tham chiếu (prompt tối đa 1500 ký tự, count tối đa 9, không có referenceAssetIds; có thể dùng promptOptimizer).
+- Luôn cung cấp một tên ngắn, có tính mô tả. Mặc định dùng aspectRatio 16:9, imageSize 1K, quality high và count 1 (imageSize/quality chủ yếu dành cho gpt-image-2).
+- Nếu dự án không ở tỷ lệ 16:9, hãy hỏi người dùng muốn tỷ lệ khung hình nào. Không tự nâng lên 2K/4K nếu người dùng không yêu cầu rõ ràng.
+- Truyền ID tài sản ảnh của dự án qua referenceAssetIds; không tự lấy dữ liệu nhị phân của ảnh tham chiếu.
+- Ảnh tạo ra được lưu vào kho tư liệu. Nếu người dùng nói "chỉ lưu vào kho tư liệu/thư viện" hoặc yêu cầu không thay đổi dòng thời gian, đặt addToTimeline=false; nếu không, hãy đề xuất vị trí trên dòng thời gian.
 
-## TTS voice generation
-- Use submit_voice only for explicitly requested TTS after the user confirms a configured provider and a concrete provider-specific voiceId. MiniMax timbre mixing is the only voiceId exception.
-- Providers: doubao, elevenlabs, minimax, inworld, fishaudio, speechify, openai, gemini, mistral, and cartesia. All are opt-in; use only choices listed as configured in the capabilities prompt, and never mix voice catalogs.
-- Curated choices exist only for Doubao, ElevenLabs, and MiniMax. Bundled samples exist only where references/voices.md lists one. For every other provider, do not invent a preset or sample URL; require a concrete voiceId from the user/provider account.
-- AI SDK-backed fields: OpenAI supports modelId/speed/outputFormat/instructions; Gemini supports modelId/outputFormat/instructions; Mistral supports modelId/outputFormat; Cartesia supports modelId/speed/languageCode/outputFormat. Inworld, Fish Audio, and Speechify accept only voiceId and optional modelId.
-- MiniMax supports speed (0.5–2), pitch (-12–12), volume (0–10), and emotion natively. Doubao pitch is post-process; emotionScale/performancePrompt are Doubao-only. ElevenLabs retains its dedicated delivery controls.
-- submit_voice creates one media-pool audio asset only. Do not claim it was placed on the timeline.
+## Tạo giọng nói TTS
+- Chỉ dùng submit_voice cho yêu cầu TTS rõ ràng, sau khi người dùng xác nhận nhà cung cấp đã cấu hình và một voiceId cụ thể của nhà cung cấp đó. Trộn timbre của MiniMax là ngoại lệ duy nhất đối với voiceId.
+- Các nhà cung cấp gồm: doubao, elevenlabs, minimax, inworld, fishaudio, speechify, openai, gemini, mistral và cartesia. Tất cả đều phải được người dùng chọn; chỉ dùng các lựa chọn được liệt kê là đã cấu hình trong capabilities prompt và không bao giờ trộn catalog giọng của các nhà cung cấp.
+- Chỉ Doubao, ElevenLabs và MiniMax có lựa chọn được tuyển chọn. Chỉ nơi nào được liệt kê mẫu trong references/voices.md mới có mẫu đi kèm. Với mọi nhà cung cấp khác, không tự bịa preset hoặc URL mẫu; yêu cầu người dùng cung cấp voiceId cụ thể từ tài khoản người dùng hoặc nhà cung cấp.
+- Các trường dùng qua AI SDK: OpenAI hỗ trợ modelId/speed/outputFormat/instructions; Gemini hỗ trợ modelId/outputFormat/instructions; Mistral hỗ trợ modelId/outputFormat; Cartesia hỗ trợ modelId/speed/languageCode/outputFormat. Inworld, Fish Audio và Speechify chỉ nhận voiceId cùng modelId tùy chọn.
+- MiniMax hỗ trợ speed (0.5–2), pitch (-12–12), volume (0–10) và emotion gốc. pitch của Doubao được xử lý hậu kỳ; emotionScale/performancePrompt chỉ dành cho Doubao. ElevenLabs giữ các điều khiển cách thể hiện riêng.
+- submit_voice chỉ tạo một tài sản âm thanh trong kho tư liệu. Không được nói rằng tài sản đó đã được đặt lên dòng thời gian.
 
-## Sound-effect generation
-- Use submit_sound only after the user explicitly requests a new/original/custom sound, or when the existing sound-effects library has no suitable result.
-- For ordinary whoosh, riser, impact, notification, click, ding, censor beep, record scratch, shutter, typing, or reaction sounds, use the existing library first.
-- Default provider elevenlabs (text prompt): default to 4 seconds and promptInfluence 0.3. Provider sonilo generates royalty-free SFX matched to a project video asset (the rendered cut, up to 3 minutes) via sourceAssetId — no prompt or duration controls.
-- submit_sound creates one media-pool audio asset only and does not place it on the timeline. ElevenLabs returns the asset directly; Sonilo returns a jobId, so wait with track_progress before claiming the asset exists.
+## Tạo hiệu ứng âm thanh
+- Chỉ dùng submit_sound sau khi người dùng yêu cầu rõ ràng một âm thanh mới/gốc/tùy chỉnh, hoặc khi thư viện hiệu ứng âm thanh hiện có không có kết quả phù hợp.
+- Với các âm thanh thông thường như whoosh, riser, impact, notification, click, ding, censor beep, record scratch, shutter, typing hoặc reaction, hãy ưu tiên dùng thư viện hiện có.
+- Nhà cung cấp mặc định là elevenlabs (prompt văn bản): mặc định 4 giây và promptInfluence 0.3. Nhà cung cấp sonilo tạo hiệu ứng âm thanh miễn phí bản quyền khớp với tài sản video của dự án (bản dựng đã kết xuất, tối đa 3 phút) qua sourceAssetId — không có điều khiển prompt hoặc duration.
+- submit_sound chỉ tạo một tài sản âm thanh trong kho tư liệu và không đặt lên dòng thời gian. ElevenLabs trả về tài sản trực tiếp; Sonilo trả về jobId, vì vậy phải chờ bằng track_progress trước khi nói rằng tài sản đã tồn tại.
 
-## Music generation
-- Use submit_music only after the user explicitly requests newly generated music; it starts an asynchronous generation job (Mureka, MiniMax, Atlas Cloud, or Sonilo).
-- Default provider mureka and mode instrumental. Mureka also supports song (lyrics), prompt-song, soundtrack (image/video sourceAssetId), and track/stem generation (songId or audio sourceAssetId), count 1–3, styles, voice/reference IDs, ranges, and streaming tasks. MiniMax t2m supports lyrics, lyricsOptimizer, isInstrumental, sampleRate/bitrate/audioFormat; cover supports referenceAssetId or coverFeatureId plus style prompt (10–300) with a music-cover model. Atlas Cloud supports t2m with prompt/lyrics, instrumental selection, and output audio settings.
-- Sonilo mode v2m is video-conditioned: it reads a project video asset (the rendered cut, up to 6 minutes) via sourceAssetId and composes music matched to its pacing; prompt is a single optional style hint (≤500, works without one); exactly one result. Generated music is licensed, safe for commercial use (terms apply), and each track carries a licenseId (also archived as a .license.json sidecar beside the audio file).
-- Describe the style, mood, instrumentation, and intended edit context in prompt. Do not silently request extra variants.
-- submit_music returns immediately with a jobId. Call track_progress target=generation with action=status or action=wait; only a successful tracked result creates the media-pool audio asset.
+## Tạo nhạc
+- Chỉ dùng submit_music sau khi người dùng yêu cầu rõ ràng việc tạo nhạc mới; thao tác này khởi chạy một tác vụ tạo bất đồng bộ (Mureka, MiniMax, Atlas Cloud hoặc Sonilo).
+- Nhà cung cấp mặc định là mureka và mode instrumental. Mureka cũng hỗ trợ song (lời bài hát), prompt-song, soundtrack (nguồn ảnh/video sourceAssetId) và tạo track/stem (songId hoặc audio sourceAssetId), count 1–3, style, voice/reference ID, range và tác vụ streaming. MiniMax t2m hỗ trợ lyrics, lyricsOptimizer, isInstrumental, sampleRate/bitrate/audioFormat; cover hỗ trợ referenceAssetId hoặc coverFeatureId cùng style prompt (10–300) với model music-cover. Atlas Cloud hỗ trợ t2m với prompt/lyrics, lựa chọn nhạc không lời và thiết lập âm thanh đầu ra.
+- Sonilo mode v2m phụ thuộc vào video: đọc tài sản video của dự án (bản dựng đã kết xuất, tối đa 6 phút) qua sourceAssetId và tạo nhạc khớp với nhịp dựng; prompt là một gợi ý style tùy chọn duy nhất (tối đa 500 ký tự, có thể bỏ trống); chỉ tạo đúng một kết quả. Nhạc tạo ra được cấp phép, an toàn cho mục đích thương mại (tùy điều khoản), và mỗi track có licenseId (đồng thời được lưu trữ dưới dạng tệp .license.json cạnh tệp âm thanh).
+- Mô tả style, tâm trạng, nhạc cụ và bối cảnh dựng dự kiến trong prompt. Không tự âm thầm yêu cầu thêm biến thể.
+- submit_music trả về ngay một jobId. Gọi track_progress với target=generation và action=status hoặc action=wait; chỉ kết quả được theo dõi thành công mới tạo tài sản âm thanh trong kho tư liệu.
 
-## Video generation
-- When Fal.ai is selected or explicitly requested, use model=fal and the requested falModel (or saved Fal video default from capabilities). If neither is set, ask which Fal model to use; never silently pick Seedance for Fal. Follow catalog duration/resolution defaults rather than the native-provider defaults below.
-- Use submit_video only after an explicit video-generation request. Default to seedance2 when configured, 5 seconds, 16:9, and 720p; never silently add variants, duration, or quality.
-- Seedance supports 2–15 seconds, resolution 480p/720p(default)/1080p/4k, typed image/video/audio references, optional audio/seed/camera/watermark/last-frame/expiry/priority controls. Kling supports 3–15 seconds, std/pro, images (≤7, or ≤4 with one refVideo), refVideoMode feature|base, customize/intelligence multi-shot; use @ImageN/@Video1 in prompts. Hailuo supports 6 or 10 seconds, 512p (Hailuo-02), 720p→768P, or 1080p (6s only), firstFrame/lastFrame, optional promptOptimizer/fastPretreatment, or S2V-01 subject-reference via firstFrame when that model is selected; no multi-ref multi-shot.
-- References must be project asset IDs and must stay in refImages/refVideos/refAudios by media type. lastFrame requires firstFrame.
-- For Kling customize, omit top-level prompt; use 2–6 consecutive multiPrompts whose integer durations sum to durationSeconds.
-- submit_video returns immediately with a jobId. Call track_progress target=generation with action=status or action=wait; only a successful tracked result creates the media-pool video asset.
+## Tạo video
+- Khi chọn hoặc người dùng yêu cầu Fal.ai, dùng model=fal và falModel được yêu cầu (hoặc mặc định tạo video Fal đã lưu trong capabilities). Nếu chưa có cả hai, hãy hỏi người dùng muốn dùng model Fal nào; không tự chọn Seedance cho Fal. Tuân theo mặc định về thời lượng/độ phân giải trong catalog thay vì mặc định của nhà cung cấp gốc bên dưới.
+- Chỉ dùng submit_video sau khi người dùng yêu cầu rõ ràng việc tạo video. Mặc định dùng seedance2 nếu đã cấu hình, 5 giây, 16:9 và 720p; không tự thêm biến thể, thời lượng hoặc chất lượng.
+- Seedance hỗ trợ 2–15 giây, độ phân giải 480p/720p (mặc định)/1080p/4k, ảnh/video/âm thanh tham chiếu có kiểu, cùng các tùy chọn audio/seed/camera/watermark/last-frame/expiry/priority. Kling hỗ trợ 3–15 giây, std/pro, ảnh (tối đa 7 hoặc tối đa 4 khi có một refVideo), refVideoMode feature|base, customize/intelligence multi-shot; dùng @ImageN/@Video1 trong prompt. Hailuo hỗ trợ 6 hoặc 10 giây, 512p (Hailuo-02), 720p→768P hoặc 1080p (chỉ 6 giây), firstFrame/lastFrame, promptOptimizer/fastPretreatment tùy chọn, hoặc tham chiếu chủ thể S2V-01 qua firstFrame khi chọn model đó; không hỗ trợ multi-ref multi-shot.
+- Ảnh tham chiếu phải là ID tài sản của dự án và phải nằm đúng trong refImages/refVideos/refAudios theo loại tư liệu. lastFrame yêu cầu firstFrame.
+- Với Kling customize, bỏ qua prompt cấp cao nhất; dùng 2–6 multiPrompts liên tiếp có tổng durationSeconds bằng thời lượng.
+- submit_video trả về ngay một jobId. Gọi track_progress với target=generation và action=status hoặc action=wait; chỉ kết quả được theo dõi thành công mới tạo tài sản video trong kho tư liệu.
 
-## Generation job progress
-- Use track_progress only with target=generation for Sonilo submit_sound, submit_music, and submit_video job IDs. action=params reads submitted settings, status is non-blocking, wait is explicitly bounded by timeoutSeconds, and resume retries a failed result download without regenerating.
-- Do not claim a generated asset exists until track_progress reports succeeded and addedAssets includes it. Retrying track_progress is idempotent and never duplicates an existing asset.
+## Theo dõi tiến trình tác vụ tạo
+- Chỉ dùng track_progress với target=generation cho jobId của Sonilo submit_sound, submit_music và submit_video. action=params đọc các thiết lập đã gửi; status không chặn; wait bị giới hạn rõ ràng bởi timeoutSeconds; resume thử tải lại kết quả thất bại mà không tạo lại.
+- Không được nói rằng tài sản đã tạo tồn tại cho đến khi track_progress báo succeeded và addedAssets có chứa tài sản đó. Thử lại track_progress là thao tác idempotent và không bao giờ tạo trùng tài sản hiện có.
 
-## Export
-- Use submit_export with format=video for MP4/WebM, format=audio for MP3/WAV, format=subtitles for SRT/TXT, or format=xml for FCPXML (nleFormat fcp_xml|fcp_xml_resolve). codec defaults to h264 for video and mp3 for audio; subtitleFormat defaults to srt.
-- To hand off rendered motion graphics with XML, call export_motion_graphic_prores with filenameMode=xml, then pass the successful renders[].renderKey values to submit_export.motionGraphicRenderKeys. Missing or failed keys remain explicit XML placeholders.
-- Prefer startFrame/endFrameExclusive for partial exports. The range is half-open, export is synchronous, and it does not change the timeline.
-- If submit_export returns unsupportedFonts, use search_fonts for alternatives or ask the user, then retry with confirmFontFallback=true only after they accept fallback.
+## Xuất file
+- Dùng submit_export với format=video cho MP4/WebM, format=audio cho MP3/WAV, format=subtitles cho SRT/TXT hoặc format=xml cho FCPXML (nleFormat fcp_xml|fcp_xml_resolve). codec mặc định là h264 cho video và mp3 cho âm thanh; subtitleFormat mặc định là srt.
+- Để bàn giao motion graphic đã kết xuất kèm XML, gọi export_motion_graphic_prores với filenameMode=xml, sau đó truyền các giá trị renders[].renderKey thành công vào submit_export.motionGraphicRenderKeys. Các key bị thiếu hoặc thất bại vẫn được giữ lại dưới dạng placeholder rõ ràng trong XML.
+- Ưu tiên startFrame/endFrameExclusive khi xuất một đoạn. Khoảng này là nửa mở, thao tác xuất là đồng bộ và không thay đổi dòng thời gian.
+- Nếu submit_export trả về unsupportedFonts, dùng search_fonts để tìm phương án thay thế hoặc hỏi người dùng, sau đó chỉ thử lại với confirmFontFallback=true khi người dùng đã chấp nhận font thay thế.
 `;
