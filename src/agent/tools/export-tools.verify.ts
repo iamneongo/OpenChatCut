@@ -328,7 +328,7 @@ assert.ok(!('ok' in missing), 'a transport error should not claim ok:true');
 
   // ambiguous prefix → clear error
   const ambiguous = await execExportTool('track_export', { action: 'status', renderIds: 'render-' }, ctx) as { error?: string };
-  assert.ok(ambiguous.error?.includes('ambiguous'), 'ambiguous prefix errors');
+  assert.ok(ambiguous.error?.includes('không đủ rõ ràng'), 'ambiguous prefix errors');
 
   // ── latest semantics: renderIds omitted → newest job of this session ──
   const latest = await execExportTool('track_export', { action: 'status' }, ctx) as { renderId?: string; status?: string };
@@ -357,7 +357,7 @@ assert.ok(!('ok' in missing), 'a transport error should not claim ok:true');
   assert.strictEqual(waited2.status, 'running', 'wait returns latest snapshot at timeout');
   assert.strictEqual(waited2.waitExpired, true, 'timed wait identifies a still-running background render');
   assert.strictEqual(waited2.background, true);
-  assert.match(waited2.next ?? '', /end this turn/i, 'agent must stop blocking after one bounded wait');
+  assert.match(waited2.next ?? '', /kết thúc lượt/i, 'agent must stop blocking after one bounded wait');
   assert.ok(Date.now() - t0 < 5000, 'tiny timeout returns promptly');
 }
 

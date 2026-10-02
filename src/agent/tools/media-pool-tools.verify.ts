@@ -16,7 +16,7 @@ assert.ok(created.folder.id);
 assert.deepStrictEqual(await execMediaPoolTool('manage_media_pool', { action: 'move_assets', assetIds: 'asset_hero', targetPath: 'Master/B-roll' }, ctx), {
   ok: true, moved: ['asset_hero'], target: 'Master/B-roll',
 });
-assert.deepStrictEqual(await execMediaPoolTool('manage_media_pool', { action: 'delete_empty_folder', folderPath: 'Master/B-roll' }, ctx), { error: 'folder is not empty' });
+assert.deepStrictEqual(await execMediaPoolTool('manage_media_pool', { action: 'delete_empty_folder', folderPath: 'Master/B-roll' }, ctx), { error: 'Thư mục không trống' });
 await execMediaPoolTool('manage_media_pool', { action: 'rename_asset', assetIds: 'asset_hero', newName: 'Hero shot' }, ctx);
 await execMediaPoolTool('manage_media_pool', { action: 'move_assets', assetIds: 'asset_hero', targetPath: 'Master' }, ctx);
 assert.deepStrictEqual(await execMediaPoolTool('manage_media_pool', { action: 'delete_empty_folder', folderPath: created.folder.id.slice(0, 12) }, ctx), { ok: true, deleted: 'Master/B-roll' });

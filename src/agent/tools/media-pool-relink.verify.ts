@@ -53,7 +53,7 @@ const bad = await execMediaPoolTool(
   { action: 'relink_asset', assetIds: 'asset_offline' },
   ctx,
 ) as { error?: string };
-assert.match(bad.error ?? '', /requires src/);
+assert.match(bad.error ?? '', /cần src/);
 
 const result = await execMediaPoolTool(
   'manage_media_pool',
@@ -115,6 +115,6 @@ const mgReject = await execMediaPoolTool(
   { action: 'relink_asset', assetIds: 'asset_mg', src: '/media/uploads/x.mp4' },
   ctx,
 ) as { error?: string };
-assert.match(mgReject.error ?? '', /motion graphics/i);
+assert.match(mgReject.error ?? '', /motion graphic/i);
 
 console.log('media-pool-relink.verify: ok');

@@ -53,7 +53,7 @@ function referencingClipCount(items: { templateId?: string; src?: string }[], as
 }
 
 export async function execMediaPoolTool(name: string, args: Args, ctx: AgentContext): Promise<unknown> {
-  if (name !== 'manage_media_pool') return { error: `unknown tool ${name}` };
+  if (name !== 'manage_media_pool') return { error: `Tool không xác định: ${name}` };
   const doc = ctx.getDoc();
   switch (String(args.action)) {
     case 'list':
@@ -66,9 +66,9 @@ export async function execMediaPoolTool(name: string, args: Args, ctx: AgentCont
       };
     case 'create_folder': {
       const folderName = validName(args.name);
-      if (!folderName) return { error: 'name is required and cannot contain /' };
+      if (!folderName) return { error: 'Cần có name và name không được chứa /' };
       const parent = findFolder(doc, args.parentPath);
-      if (parent === null) return { error: `parent folder not found: ${args.parentPath}` };
+      if (parent === null) return { error: `Không tìm thấy thư mục cha: ${args.parentPath}` };
       const existing = doc.mediaFolders.find((folder) => folder.parentId === parent?.id && folder.name === folderName);
       if (existing) return { ok: true, created: false, folder: { id: existing.id, path: pathOf(existing, doc) } };
       const id = ctx.commands.createMediaFolder(folderName, parent?.id);
@@ -78,27 +78,27 @@ export async function execMediaPoolTool(name: string, args: Args, ctx: AgentCont
     case 'rename_folder': {
       const folder = findFolder(doc, args.folderPath);
       const newName = validName(args.newName);
-      if (!folder) return { error: `folder not found: ${args.folderPath}` };
-      if (!newName) return { error: 'newName is required and cannot contain /' };
-      if (doc.mediaFolders.some((item) => item.id !== folder.id && item.parentId === folder.parentId && item.name === newName)) return { error: `folder already exists: ${newName}` };
+      if (!folder) return { error: `Không tìm thấy thư mục: ${args.folderPath}` };
+      if (!newName) return { error: 'Cần có newName và newName không được chứa /' };
+      if (doc.mediaFolders.some((item) => item.id !== folder.id && item.parentId === folder.parentId && item.name === newName)) return { error: `Thư mục đã tồn tại: ${newName}` };
       ctx.commands.renameMediaFolder(folder.id, newName);
       const updated = ctx.getDoc().mediaFolders.find((item) => item.id === folder.id)!;
       return { ok: true, folder: { id: updated.id, path: pathOf(updated, ctx.getDoc()) } };
     }
     case 'delete_empty_folder': {
       const folder = findFolder(doc, args.folderPath);
-      if (!folder) return { error: `folder not found: ${args.folderPath}` };
-      if (doc.assets.some((asset) => asset.folderId === folder.id) || doc.mediaFolders.some((item) => item.parentId === folder.id)) return { error: 'folder is not empty' };
+      if (!folder) return { error: `Không tìm thấy thư mục: ${args.folderPath}` };
+      if (doc.assets.some((asset) => asset.folderId === folder.id) || doc.mediaFolders.some((item) => item.parentId === folder.id)) return { error: 'Thư mục không trống' };
       ctx.commands.deleteMediaFolder(folder.id);
       return { ok: true, deleted: pathOf(folder, doc) };
     }
     case 'move_assets': {
       const refs = parseAssetRefs(args);
-      if (!refs.length) return { error: 'assetIds is required' };
+      if (!refs.length) return { error: 'Cần có assetIds' };
       const { found, missing } = resolveAssets(doc, refs);
-      if (missing.length) return { error: `assets not found: ${missing.join(', ')}` };
+      if (missing.length) return { error: `Không tìm thấy asset: ${missing.join(', ')}` };
       const target = findFolder(doc, args.targetPath);
-      if (target === null) return { error: `target folder not found: ${args.targetPath}` };
+      if (target === null) return { error: `Không tìm thấy thư mục đích: ${args.targetPath}` };
       const ids = found.map((asset) => asset.id);
       ctx.commands.moveMediaAssets(ids, target?.id);
       return { ok: true, moved: ids, target: target ? pathOf(target, doc) : 'Master' };
@@ -106,18 +106,18 @@ export async function execMediaPoolTool(name: string, args: Args, ctx: AgentCont
     case 'rename_asset': {
       const refs = parseAssetRefs(args);
       const newName = String(args.newName ?? '').trim();
-      if (refs.length !== 1 || !newName) return { error: 'rename_asset requires one assetIds value and newName' };
+      if (refs.length !== 1 || !newName) return { error: 'rename_asset cần đúng một assetIds và newName' };
       const asset = findAsset(doc, refs[0]!);
-      if (!asset) return { error: `asset not found: ${refs[0]}` };
+      if (!asset) return { error: `Không tìm thấy asset: ${refs[0]}` };
       ctx.commands.renameMediaAsset(asset.id, newName);
       return { ok: true, assetId: asset.id, name: newName };
     }
     case 'favorite_assets':
     case 'unfavorite_assets': {
       const refs = parseAssetRefs(args);
-      if (!refs.length) return { error: 'assetIds is required' };
+      if (!refs.length) return { error: 'Cần có assetIds' };
       const { found, missing } = resolveAssets(doc, refs);
-      if (missing.length) return { error: `assets not found: ${missing.join(', ')}` };
+      if (missing.length) return { error: `Không tìm thấy asset: ${missing.join(', ')}` };
       const favorite = String(args.action) === 'favorite_assets';
       const ids = found.map((asset) => asset.id);
       if (ids.length === 1) ctx.commands.setMediaAssetFavorite(ids[0]!, favorite);
@@ -126,9 +126,9 @@ export async function execMediaPoolTool(name: string, args: Args, ctx: AgentCont
     }
     case 'delete_assets': {
       const refs = parseAssetRefs(args);
-      if (!refs.length) return { error: 'assetIds is required' };
+      if (!refs.length) return { error: 'Cần có assetIds' };
       const { found, missing } = resolveAssets(doc, refs);
-      if (missing.length) return { error: `assets not found: ${missing.join(', ')}` };
+      if (missing.length) return { error: `Không tìm thấy asset: ${missing.join(', ')}` };
       const items = ctx.getState().items;
       const referenced = found
         .map((asset) => ({ id: asset.id, name: asset.name, referencedBy: referencingClipCount(items, asset) }))
@@ -137,7 +137,7 @@ export async function execMediaPoolTool(name: string, args: Args, ctx: AgentCont
         return {
           needsConfirm: true,
           referenced,
-          note: 'Deleting only removes pool entries; placed timeline clips keep their media. Resend with confirm:true to proceed.',
+          note: 'Xóa chỉ loại bỏ mục trong kho; clip đã đặt trên timeline vẫn giữ media. Gửi lại với confirm:true để tiếp tục.',
         };
       }
       const ids = found.map((asset) => asset.id);
@@ -147,20 +147,20 @@ export async function execMediaPoolTool(name: string, args: Args, ctx: AgentCont
     }
     case 'relink_asset': {
       const refs = parseAssetRefs(args);
-      if (refs.length !== 1) return { error: 'relink_asset requires exactly one assetIds value' };
+      if (refs.length !== 1) return { error: 'relink_asset cần đúng một giá trị assetIds' };
       const asset = findAsset(doc, refs[0]!);
-      if (!asset) return { error: `asset not found: ${refs[0]}` };
+      if (!asset) return { error: `Không tìm thấy asset: ${refs[0]}` };
       if (asset.kind === 'motion-graphic') {
-        return { error: 'relink_asset is for file-backed media (video/audio/image); use edit_asset for motion graphics' };
+        return { error: 'relink_asset dành cho media có tệp (video/audio/image); dùng edit_asset cho motion graphic' };
       }
       const src = String(args.src ?? '').trim();
       if (!src) {
         return {
-          error: 'relink_asset requires src (replacement path under /media/uploads/… or another reachable media URL)',
+          error: 'relink_asset cần src (đường dẫn thay thế dưới /media/uploads/… hoặc URL media có thể truy cập)',
         };
       }
       if (src.startsWith('blob:') || src.startsWith('file:')) {
-        return { error: 'src must be a project media path or https URL, not a blob:/file: URL' };
+        return { error: 'src phải là đường dẫn media của dự án hoặc URL https, không phải URL blob:/file:' };
       }
       const name = typeof args.name === 'string' && args.name.trim() ? args.name.trim() : undefined;
       const sourceFilename = typeof args.sourceFilename === 'string' && args.sourceFilename.trim()
@@ -205,12 +205,12 @@ export async function execMediaPoolTool(name: string, args: Args, ctx: AgentCont
         sourceRevision: next?.sourceRevision ?? sourceRevision,
         transcriptStale: next?.transcriptStale ?? false,
         clipsLinked: clipsBefore,
-        note: 'Pool master and linked timeline clips now point at the new source. Existing transcript is kept but may be marked stale; re-transcribe if the media content changed.',
+        note: 'Asset gốc trong kho và các clip liên kết trên timeline giờ trỏ đến nguồn mới. Transcript hiện tại được giữ nhưng có thể bị đánh dấu cũ; hãy chép lời lại nếu nội dung media đã thay đổi.',
       };
     }
     default:
       return {
-        error: `unknown action ${args.action}; use list/create_folder/rename_folder/delete_empty_folder/move_assets/rename_asset/favorite_assets/unfavorite_assets/delete_assets/relink_asset`,
+        error: `Action không xác định: ${args.action}; dùng list/create_folder/rename_folder/delete_empty_folder/move_assets/rename_asset/favorite_assets/unfavorite_assets/delete_assets/relink_asset`,
       };
   }
 }

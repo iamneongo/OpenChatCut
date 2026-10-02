@@ -123,7 +123,7 @@ function mediaPoolPlan(
   format: 'video' | 'audio',
 ): AgentExportMediaPoolPlan {
   const timeline = project.timelines.find((candidate) => candidate.id === timelineId);
-  if (!timeline) throw new Error(`timeline ${timelineId} not found`);
+  if (!timeline) throw new Error(`Không tìm thấy timeline ${timelineId}`);
   return {
     format,
     timelineId,
@@ -160,11 +160,11 @@ export async function fetchRenderJob(renderId: string): Promise<PollResult> {
 
 async function pollOnce(renderId: string): Promise<PollResult> {
   const response = await fetch(`/export/job/${encodeURIComponent(renderId)}`, { method: 'GET' });
-  if (response.status === 404) return { error: `render job ${renderId} not found` };
+  if (response.status === 404) return { error: `Không tìm thấy tác vụ kết xuất ${renderId}` };
   const snapshot = (await response.json().catch(() => null)) as JobSnapshot | { error?: string } | null;
   if (!response.ok || !snapshot || !('status' in snapshot)) {
     const message = snapshot && 'error' in snapshot ? snapshot.error : undefined;
-    return { error: message ?? `track_export failed (${response.status})` };
+    return { error: message ?? `track_export thất bại (${response.status})` };
   }
   const completed = isComplete(snapshot.status);
   const result = snapshot.result;
@@ -197,7 +197,7 @@ async function submitRenderJob(args: Args, ctx: AgentContext): Promise<unknown> 
     const savePlan = args.saveToMediaPool === true
       ? mediaPoolPlan(project, timelineId, format)
       : undefined;
-    if (savePlan && !projectId) return { error: 'saveToMediaPool requires an open project' };
+    if (savePlan && !projectId) return { error: 'saveToMediaPool cần một dự án đang mở' };
     const snapshot = await materializeTimelineExport(project, timelineId);
     const body: Record<string, unknown> = {
       state: snapshot.state,
@@ -221,7 +221,7 @@ async function submitRenderJob(args: Args, ctx: AgentContext): Promise<unknown> 
       body: JSON.stringify(body),
     });
     const data = (await response.json().catch(() => ({}))) as { renderId?: string; error?: string };
-    if (!response.ok || !data.renderId) return { error: data.error ?? `render job submit failed (${response.status})` };
+    if (!response.ok || !data.renderId) return { error: data.error ?? `Gửi tác vụ kết xuất thất bại (${response.status})` };
     sessionJobs.push({ renderId: data.renderId, timelineId, saveToMediaPool: !!savePlan });
     if (projectId) {
       const codec = format === 'audio' ? 'mp3' : args.codec === 'vp8' ? 'vp8' : 'h264';
@@ -243,7 +243,7 @@ async function submitRenderJob(args: Args, ctx: AgentContext): Promise<unknown> 
       renderId: data.renderId,
       format,
       ...(savePlan ? { mediaPoolStatus: 'pending' } : {}),
-      next: `This job is visible in the editor's top-right export queue. Call track_export once with renderIds=${data.renderId}, action=wait, timeoutSeconds=20. If it is still queued/running, report its background progress and end this turn; do not start another export for the same timeline.`,
+      next: `Tác vụ này hiển thị trong hàng đợi xuất ở góc trên bên phải trình chỉnh sửa. Gọi track_export một lần với renderIds=${data.renderId}, action=wait, timeoutSeconds=20. Nếu vẫn đang chờ/chạy, hãy báo tiến trình nền rồi kết thúc lượt; không bắt đầu thêm tác vụ xuất cho cùng timeline.`,
     };
   } catch (error) {
     const failure = exportFailureFrom(error);
@@ -262,12 +262,12 @@ async function submitRenderJob(args: Args, ctx: AgentContext): Promise<unknown> 
  *  The token is transparently transmitted to the server as it is (it may be the complete ID obtained elsewhere). Ambiguous prefixes report clarity errors.*/
 function resolveRenderIds(raw: string): { ids: string[] } | { error: string } {
   const tokens = raw.split(',').map((t) => t.trim()).filter(Boolean);
-  if (!tokens.length) return { error: 'renderIds is empty — pass comma-separated render job IDs or prefixes' };
+  if (!tokens.length) return { error: 'renderIds đang trống — hãy truyền ID hoặc tiền tố tác vụ kết xuất, phân tách bằng dấu phẩy' };
   const ids: string[] = [];
   for (const token of tokens) {
     if (sessionJobs.some((j) => j.renderId === token)) { ids.push(token); continue; }
     const matches = sessionJobs.filter((j) => j.renderId.startsWith(token));
-    if (matches.length > 1) return { error: `renderIds prefix "${token}" is ambiguous (${matches.map((m) => m.renderId).join(', ')})` };
+    if (matches.length > 1) return { error: `Tiền tố renderIds "${token}" không đủ rõ ràng (${matches.map((m) => m.renderId).join(', ')})` };
     ids.push(matches.length === 1 ? matches[0]!.renderId : token);
   }
   return { ids: [...new Set(ids)] };
@@ -282,16 +282,16 @@ async function selectLatestJobs(args: Args): Promise<{ ids: string[]; note?: str
     .reverse(); // newest (last submitted) first — filter() copies, reverse is safe
   if (!candidates.length) {
     return { error: timelineQ
-      ? `no render jobs recorded this session for timeline "${timelineQ}"`
-      : 'no render jobs recorded this session — pass renderIds from submit_render_job' };
+      ? `Không có tác vụ kết xuất nào trong phiên này cho timeline "${timelineQ}"`
+      : 'Không có tác vụ kết xuất nào được ghi trong phiên này — hãy truyền renderIds từ submit_render_job' };
   }
-  if (args.latest === false) return { ids: candidates.map((j) => j.renderId), note: 'latest=false: all recent render jobs this session, newest first' };
+  if (args.latest === false) return { ids: candidates.map((j) => j.renderId), note: 'latest=false: tất cả tác vụ kết xuất gần đây trong phiên này, mới nhất trước' };
   if (args.onlyActive === true) {
     for (const j of candidates) {
       const r = await pollOnce(j.renderId);
       if ('ok' in r && !isTerminal(r.status)) return { ids: [j.renderId] };
     }
-    return { ids: [], note: 'no currently rendering job (onlyActive=true); use onlyActive=false to include completed/failed renders' };
+    return { ids: [], note: 'Không có tác vụ nào đang kết xuất (onlyActive=true); dùng onlyActive=false để gồm cả tác vụ đã xong/thất bại' };
   }
   return { ids: [candidates[0]!.renderId] };
 }
@@ -339,7 +339,7 @@ function presentJobs(results: PollResult[], note?: string): Record<string, unkno
 async function trackExport(args: Args, ctx: AgentContext): Promise<unknown> {
   try {
     const action = args.action === 'wait' ? 'wait' : args.action === 'status' ? 'status' : null;
-    if (!action) return { error: 'action is required: "status" or "wait"' };
+    if (!action) return { error: 'Cần có action: "status" hoặc "wait"' };
 
     // renderIds (comma separated) take precedence; old singular renderIds are still compatible; both lack → latest semantics.
     const rawIds = typeof args.renderIds === 'string' && args.renderIds.trim()
@@ -373,7 +373,7 @@ async function trackExport(args: Args, ctx: AgentContext): Promise<unknown> {
         ...presentJobs(results, note),
         waitExpired: true,
         background: true,
-        next: 'The render continues in the background. Report renderId, status, and progress now and end this turn. Do not submit another render or direct the user to the Export button for the same timeline.',
+        next: 'Tác vụ kết xuất tiếp tục chạy nền. Hãy báo renderId, status và progress rồi kết thúc lượt. Không gửi thêm tác vụ kết xuất hoặc hướng dẫn người dùng bấm nút Export cho cùng timeline.',
       };
       await sleep(POLL_INTERVAL_MS);
     }
@@ -396,6 +396,6 @@ export async function execExportTool(name: string, args: Args, ctx: AgentContext
       return { ok: true, count: history.length, history };
     }
     default:
-      return { error: `export tool not implemented: ${name}` };
+      return { error: `Tool export chưa được triển khai: ${name}` };
   }
 }
