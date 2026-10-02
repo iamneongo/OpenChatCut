@@ -260,14 +260,14 @@ function SearchResults({ state, names, t }: ViewProps & { names: Map<string, str
   </div>;
 }
 
-function describeTextHit(ref: string): string {
+function describeTextHit(ref: string, t: ViewProps['t']): string {
   const separator = ref.lastIndexOf(':');
   if (separator <= 0) return ref;
   const prefix = ref.slice(0, separator);
   const tail = ref.slice(separator + 1);
-  if (prefix.startsWith('chat:')) return `聊天第 ${Number(tail) + 1} 条`;
-  if (tail === 'captions') return '字幕';
-  if (tail === 'transcript') return '转写';
+  if (prefix.startsWith('chat:')) return t('聊天第 {n} 条', { n: Number(tail) + 1 });
+  if (tail === 'captions') return t('字幕');
+  if (tail === 'transcript') return t('转写');
   return ref;
 }
 
@@ -276,7 +276,7 @@ function TextResults({ state, t }: ViewProps & { names: Map<string, string> }) {
   return <div className="cc-semantic-results">
     <strong>{t('相关文本 {n} 处', { n: state.textHits.length })}</strong>
     {state.textHits.slice(0, 5).map((hit) => <span key={`${hit.kind}:${hit.ref}`}>
-      <b>{describeTextHit(hit.ref)}</b>
+      <b>{describeTextHit(hit.ref, t)}</b>
       <em>{hit.kind}</em>
     </span>)}
   </div>;

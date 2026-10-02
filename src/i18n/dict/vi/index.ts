@@ -2550,6 +2550,7 @@ export const VI: Record<string, string> = {
   '切换 WebCodecs…': 'Đang chuyển sang WebCodecs…',
   '已选 {n} 项': 'Đã chọn {n} mục',
   '无法将此属性应用到全部选中片段。': 'Không thể áp dụng thuộc tính này cho toàn bộ clip đã chọn.',
+  '聊天第 {n} 条': 'Tin nhắn chat số {n}',
   '短促干净的飞入/切换扫过声，适合卡片、字幕、镜头或元素快速移动时做转场强调。': 'Âm thanh bay/quét chuyển cảnh ngắn và sạch, phù hợp để nhấn chuyển cảnh khi thẻ, phụ đề, cảnh hoặc phần tử di chuyển nhanh.',
   '偏低沉、干声的短 whoosh，适合更有重量感的镜头切换、元素入场或重点信息出现。': 'Whoosh ngắn, trầm và khô, phù hợp chuyển cảnh nặng, phần tử xuất hiện hoặc thông tin quan trọng hiện ra.',
   '较轻、偏空气感的短 whoosh，适合转场、轻量卡片、贴纸、字幕或 UI 元素滑入滑出。': 'Whoosh ngắn nhẹ, có cảm giác không khí, phù hợp chuyển cảnh, thẻ, sticker, phụ đề hoặc phần tử UI trượt vào/ra.',
