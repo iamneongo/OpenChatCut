@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { theme, themeAlpha } from '../theme';
 import { getLocale, localizedCatalogText, useT } from '../i18n/locale';
-import { SHORTCUT_GROUPS, type ShortcutAction } from './catalog';
+import { SHORTCUT_GROUPS, SHORTCUT_GROUP_LABELS_VI, SHORTCUT_LABELS_VI, type ShortcutAction } from './catalog';
 import { Icon } from '../components/icons';
 import {
   effectiveCatalog, subscribeKeymap, isCustomized, customizedCount,
@@ -24,8 +24,8 @@ export function ShortcutsDialog({ onClose }: ShortcutsDialogProps) {
   // The shortcut key directory comes with the official English label. Use it directly in English mode without entering the dictionary and repeating it.
   const locale = getLocale();
   const zh = locale === 'zh';
-  const actionLabel = (a: Pick<ShortcutAction, 'label' | 'labelZh'>): string =>
-    localizedCatalogText(a.label, a.labelZh, locale);
+  const actionLabel = (a: Pick<ShortcutAction, 'id' | 'label' | 'labelZh'>): string =>
+    localizedCatalogText(a.label, a.labelZh, locale, SHORTCUT_LABELS_VI[a.id]);
   const [, bump] = useState(0);
   const [capturingId, setCapturingId] = useState<string | null>(null);
   const [pending, setPending] = useState<Pending | null>(null);
@@ -95,7 +95,9 @@ export function ShortcutsDialog({ onClose }: ShortcutsDialogProps) {
             return (
               <div key={g.id} style={{ marginTop: 12 }}>
                 <div style={{ fontSize: 11, color: theme.textDim, letterSpacing: 0.4, margin: '0 4px 6px' }}>
-                  {locale === 'zh' ? `${g.labelZh} · ${g.label}` : g.label}
+                  {locale === 'zh'
+                    ? `${g.labelZh} · ${g.label}`
+                    : locale === 'vi' ? SHORTCUT_GROUP_LABELS_VI[g.id] : g.label}
                 </div>
                 <div style={{ display: 'grid', gap: 2 }}>
                   {rows.map((a) => {

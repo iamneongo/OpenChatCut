@@ -28,6 +28,15 @@ export const SHORTCUT_GROUPS: { id: ShortcutGroup; label: string; labelZh: strin
   { id: 'ai', label: 'AI', labelZh: 'AI' },
 ];
 
+export const SHORTCUT_GROUP_LABELS_VI: Record<ShortcutGroup, string> = {
+  playback: 'Phát lại',
+  edit: 'Chỉnh sửa',
+  navigation: 'Điều hướng',
+  markers: 'Marker',
+  view: 'Hiển thị',
+  ai: 'AI',
+};
+
 /** Canonical 56 actions — source of truth for help UI + matcher. */
 export const SHORTCUT_CATALOG: ShortcutAction[] = [
   { id: 'play-pause', label: 'Play / Pause', labelZh: '播放/暂停', group: 'playback', keys: 'Space' },
@@ -93,6 +102,29 @@ export const SHORTCUT_CATALOG: ShortcutAction[] = [
 
   { id: 'ask-ai', label: 'Add to AI chat', labelZh: '聚焦 AI 对话', group: 'ai', keys: 'Tab' },
 ];
+
+/** Vietnamese labels kept separately so the canonical shortcut contract stays stable. */
+export const SHORTCUT_LABELS_VI: Record<string, string> = {
+  'play-pause': 'Phát / Tạm dừng', 'seek-back': 'Frame trước', 'seek-fwd': 'Frame tiếp theo',
+  'seek-back-sec': 'Lùi 1 giây', 'seek-fwd-sec': 'Tiến 1 giây', 'shuttle-back': 'Chạy ngược (J)',
+  'shuttle-fwd': 'Chạy xuôi (L)', 'shuttle-pause': 'Tạm dừng shuttle (K)', 'shuttle-jog-back': 'Lùi từng frame (K+J)',
+  'shuttle-jog-fwd': 'Tiến từng frame (K+L)', 'undo': 'Hoàn tác', 'redo': 'Làm lại', 'copy': 'Sao chép',
+  'cut': 'Cắt', 'paste': 'Dán', 'paste-effects': 'Dán hiệu ứng', 'duplicate': 'Nhân bản', 'delete': 'Xóa',
+  'split': 'Tách', 'interaction-mode-selection': 'Chế độ chọn', 'interaction-mode-trim': 'Chế độ cắt',
+  'interaction-mode-slip': 'Chế độ slip', 'interaction-mode-blade': 'Chế độ lưỡi cắt', 'interaction-mode-pen': 'Chế độ bút',
+  'nudge-left': 'Dịch trái 1 / 5 frame', 'nudge-right': 'Dịch phải 1 / 5 frame', 'trim-start': 'Cắt đến điểm vào',
+  'trim-end': 'Cắt đến điểm ra', 'select-all': 'Chọn tất cả', 'select-after': 'Chọn các clip phía sau',
+  'move-up': 'Đưa clip lên track', 'move-down': 'Đưa clip xuống track', 'move-left-boundary': 'Kéo trái sát biên',
+  'move-right-boundary': 'Kéo phải sát biên', 'save-version': 'Lưu phiên bản', 'prev-edit': 'Điểm cắt trước',
+  'next-edit': 'Điểm cắt tiếp theo', 'zone-in': 'Đánh dấu điểm vào', 'zone-out': 'Đánh dấu điểm ra',
+  'zone-clear': 'Xóa điểm vào/ra', 'zone-clip': 'Đánh dấu điểm vào/ra theo clip', 'zone-selection': 'Đánh dấu vùng chọn',
+  'marker-add': 'Thêm marker', 'marker-shortcut-add-and-open': 'Thêm và mở marker',
+  'marker-modify-at-playhead': 'Sửa marker tại playhead', 'marker-delete-at-playhead': 'Xóa marker tại playhead',
+  'marker-prev': 'Marker trước', 'marker-next': 'Marker tiếp theo', 'snapping': 'Bám dính',
+  'selection-mode': 'Chế độ chọn (Alt)', 'zoom-in': 'Phóng to timeline', 'zoom-out': 'Thu nhỏ timeline',
+  'zoom-fit': 'Vừa timeline vào khung', 'fullscreen': 'Xem trước toàn màn hình', 'keyboard-shortcuts': 'Phím tắt',
+  'ask-ai': 'Thêm vào chat AI',
+};
 
 export const SHORTCUT_BY_ID = Object.fromEntries(
   SHORTCUT_CATALOG.map((a) => [a.id, a]),
