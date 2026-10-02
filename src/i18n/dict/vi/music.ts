@@ -1,5 +1,8 @@
 // Vietnamese display names for music intelligence tags.
 export default {
+  'Ambient Groove': 'Nhịp điệu ambient',
+  'Upbeat Drive': 'Nhịp điệu sôi động',
+  'Cinematic Pulse': 'Nhịp đập điện ảnh',
   electronic: 'Điện tử',
   rock: 'Rock',
   'hip-hop': 'Hip-hop',
