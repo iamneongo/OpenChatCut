@@ -13,9 +13,9 @@ export interface WordGroup {
 
 // 'A' → 'Speaker 1', 'B' → 'Speaker 2', … (AssemblyAI diarization codes).
 export function speakerLabel(code: string | null | undefined): string {
-  if (!code) return '说话人';
+  if (!code) return 'Người nói';
   const n = code.charCodeAt(0) - 65;
-  return Number.isFinite(n) && n >= 0 ? `说话人 ${n + 1}` : `说话人 ${code}`;
+  return Number.isFinite(n) && n >= 0 ? `Người nói ${n + 1}` : `Người nói ${code}`;
 }
 
 /** Whether a string is mostly CJK (no space between word chips). */

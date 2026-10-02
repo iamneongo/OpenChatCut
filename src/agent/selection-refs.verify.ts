@@ -125,7 +125,7 @@ assert.equal(ts1.metadata.sourceMediaStartMs, 0);
 assert.equal(ts1.metadata.sourceMediaEndMs, 1000);
 assert.equal(ts1.metadata.timelineFrameStart, 90, 'clip offset applies');
 assert.equal(ts1.metadata.timelineFrameEnd, 120, '1000ms @30fps = 30f after clip start');
-assert.equal(ts1.metadata.speakerName, '说话人 1');
+assert.equal(ts1.metadata.speakerName, 'Người nói 1');
 assert.equal(ts1.id, 'transcript:item_t:0-1', 'deterministic id dedupes repeat picks');
 
 // deleting the middle word compresses the edited timeline — the mapper must follow
