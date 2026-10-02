@@ -48,7 +48,7 @@ const invalid = await execCaptionsTool(
   { action: 'animation', motionPreset: 'spin-forever' },
   ctx,
 ) as { error?: string };
-assert.match(invalid.error ?? '', /animation needs motionPreset/);
+assert.match(invalid.error ?? '', /animation cần motionPreset/);
 assert.deepEqual(draft.getDoc(), beforeInvalid, 'invalid motion must not mutate the project');
 
 const read = await execCaptionsTool('read_captions', {}, ctx) as { motionPreset?: string };

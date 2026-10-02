@@ -71,11 +71,11 @@ function displayText(json: Record<string, unknown>, c: CaptionsData, ctx: AgentC
   }
   const raw = json.overrides;
   if (!Array.isArray(raw) || raw.length === 0) {
-    return { error: 'display_text needs {overrides:[{wordRef,...}]} or {clearOverrides:true}' };
+    return { error: 'display_text cần {overrides:[{wordRef,...}]} hoặc {clearOverrides:true}' };
   }
   const item = c.sourceItemId ? s.items.find((candidate) => candidate.id === c.sourceItemId) : undefined;
   if (c.sourceItemId && !hasOperationalTranscript(item)) {
-    return { error: `caption source ${c.sourceItemId} has no current transcript; transcribe it again` };
+    return { error: `Nguồn phụ đề ${c.sourceItemId} chưa có transcript hiện tại; hãy chép lời lại` };
   }
   const result = applyDisplayTextEntries(raw, c, s.items, s.fps);
   ctx.commands.updateCaptions({ wordOverrides: result.wordOverrides });
@@ -95,11 +95,11 @@ async function findPreset(args: Args, json: Record<string, unknown>): Promise<Ca
 
 export async function editCaptions(args: Args, ctx: AgentContext): Promise<Result> {
   const action = str(args.action);
-  if (!action) return { error: 'edit_captions needs an action' };
+  if (!action) return { error: 'edit_captions cần có action' };
   const s = ctx.getState();
   const requested = str(args.captionTrackId) || str(args.captionsItemId);
   const target = requested ? resolveTrackId(s, requested, 'caption') : defaultTrackId(s, 'caption');
-  if (requested && !target) return { error: `no caption track ${requested}` };
+  if (requested && !target) return { error: `Không tìm thấy track phụ đề ${requested}` };
   const c = target ? captionsOnTrack(s, target) : s.captions ?? null;
   if (target) {
     const commands = ctx.commands;
@@ -118,8 +118,8 @@ export async function editCaptions(args: Args, ctx: AgentContext): Promise<Resul
   if (action === 'template') {
     const pick = str(args.templatePreset) || str(args.preset);
     if (!pick) return { ok: true, presets: CAPTION_STYLES.map((p) => ({ id: p.id, name: p.label, nameZh: p.labelZh, styleProfile: p.hint })) };
-    if (!isTemplate(pick)) return { error: `unknown caption preset "${pick}"`, presets: CAPTION_STYLES.map((p) => p.id) };
-    if (!c) return { error: 'captions are off; action=enable first' };
+    if (!isTemplate(pick)) return { error: `Preset phụ đề không xác định: "${pick}"`, presets: CAPTION_STYLES.map((p) => p.id) };
+    if (!c) return { error: 'Phụ đề đang tắt; hãy gọi action=enable trước' };
     ctx.commands.updateCaptions({ template: pick }); // size/position preserved (styleOverride/layout untouched)
     return { ok: true, template: pick };
   }
@@ -128,7 +128,7 @@ export async function editCaptions(args: Args, ctx: AgentContext): Promise<Resul
   if (action === 'enable') {
     const transcribed = s.items.filter((it) => hasOperationalTranscript(it));
     const hasManualWords = !!c?.words?.length || !!c?.sourceEntries?.some((entry) => entry.words !== undefined);
-    if (!transcribed.length && !hasManualWords) return { error: 'no current transcript to caption; run transcribe_track first' };
+    if (!transcribed.length && !hasManualWords) return { error: 'Chưa có transcript hiện tại để tạo phụ đề; hãy chạy transcribe_track trước' };
     const presetArg = str(args.preset);
     const template: CaptionTemplate = presetArg && presetArg !== 'auto' && isTemplate(presetArg) ? presetArg : (c?.template ?? 'plain');
     const pacing: CaptionPacing = c?.pacing ?? 'phrase';
@@ -136,7 +136,7 @@ export async function editCaptions(args: Args, ctx: AgentContext): Promise<Resul
     const currentSource = c?.sourceItemId ? s.items.find((item) => item.id === c.sourceItemId) : undefined;
     if (!hasOperationalTranscript(currentSource) && transcribed[0]) base.sourceItemId = transcribed[0].id;
     if (c) ctx.commands.updateCaptions(base); else ctx.commands.setCaptions(base);
-    return { ok: true, enabled: true, template, pacing, note: 'captions read the anchored source; for ALL audible tracks use action=source_set {mode:"timeline"}.' };
+    return { ok: true, enabled: true, template, pacing, note: 'Phụ đề đọc từ nguồn đã neo; để dùng TẤT CẢ track có âm thanh, hãy dùng action=source_set {mode:"timeline"}.' };
   }
   if (action === 'disable') {
     if (c) ctx.commands.updateCaptions({ enabled: false });
@@ -148,7 +148,7 @@ export async function editCaptions(args: Args, ctx: AgentContext): Promise<Resul
       ok: true,
       action,
       captionsHidden: true,
-      note: 'Overlay hidden (captionsHidden). Caption track data is kept; use show_overlay to restore.',
+      note: 'Lớp phủ đã ẩn (captionsHidden). Dữ liệu track phụ đề vẫn được giữ; dùng show_overlay để khôi phục.',
     };
   }
   if (action === 'show_overlay') {
@@ -157,18 +157,18 @@ export async function editCaptions(args: Args, ctx: AgentContext): Promise<Resul
       ok: true,
       action,
       captionsHidden: false,
-      note: 'Overlay visible. If a track was disabled via action=disable, enable it first.',
+      note: 'Lớp phủ đang hiển thị. Nếu track đã bị tắt bằng action=disable, hãy bật lại trước.',
     };
   }
 
-  if (!c) return { error: `captions are off; action=enable first (then ${action})` };
+  if (!c) return { error: `Phụ đề đang tắt; hãy gọi action=enable trước (sau đó mới dùng ${action})` };
 
   // ── style / layout / display / track ──
   if (action === 'style') {
     const { styleOverride, pacing, ignored } = mapCaptionStyle(json, s.height);
     const patch: Partial<CaptionsData> = { styleOverride: { ...(c.styleOverride ?? {}), ...styleOverride } };
     if (pacing) patch.pacing = pacing;
-    if (!Object.keys(styleOverride).length && !pacing) return { error: 'style needs at least one recognized field in json', ...(ignored.length ? { ignored } : {}) };
+    if (!Object.keys(styleOverride).length && !pacing) return { error: 'style cần ít nhất một trường được hỗ trợ trong json', ...(ignored.length ? { ignored } : {}) };
     ctx.commands.updateCaptions(patch);
     return { ok: true, applied: Object.keys(styleOverride), ...(pacing ? { pacing } : {}), ...(ignored.length ? { ignored } : {}) };
   }
@@ -176,7 +176,7 @@ export async function editCaptions(args: Args, ctx: AgentContext): Promise<Resul
     const requestedPreset = str(args.motionPreset) || str(json.preset);
     if (!isCaptionMotionPreset(requestedPreset)) {
       return {
-        error: 'animation needs motionPreset: none|fade-up|pop|word-pop|karaoke-pulse',
+        error: 'animation cần motionPreset: none|fade-up|pop|word-pop|karaoke-pulse',
       };
     }
     const motionPreset: CaptionMotionPreset = requestedPreset;
@@ -185,7 +185,7 @@ export async function editCaptions(args: Args, ctx: AgentContext): Promise<Resul
   }
   if (action === 'layout') {
     const layout = toLayout(json, s.width, s.height);
-    if (!layout) return { error: 'layout 移动整块字幕,参数例:{"preset":"bottom-center"}(3×3 锚点/top/bottom/center)或 {"offsetXRatio":0.1,"offsetYRatio":-0.05} 微调;要把多条字幕分开摆(如英文上/中文下)用 action=positions,不是 layout' };
+    if (!layout) return { error: 'layout di chuyển cả khối phụ đề. Ví dụ: {"preset":"bottom-center"} (neo 3×3) hoặc {"offsetXRatio":0.1,"offsetYRatio":-0.05} để tinh chỉnh; muốn tách nhiều phụ đề (ví dụ tiếng Anh ở trên, tiếng Việt ở dưới) hãy dùng action=positions, không dùng layout' };
     ctx.commands.updateCaptions({ layout });
     return { ok: true, layout };
   }
@@ -204,18 +204,18 @@ export async function editCaptions(args: Args, ctx: AgentContext): Promise<Resul
       };
     }
     const requestedOrder = args.trackOrder === undefined ? undefined : orderNum(args.trackOrder);
-    if (args.trackOrder !== undefined && requestedOrder === undefined) return { error: 'trackOrder must be a non-negative 0-based integer' };
+    if (args.trackOrder !== undefined && requestedOrder === undefined) return { error: 'trackOrder phải là số nguyên không âm, bắt đầu từ 0' };
     const requestedTrack = str(args.trackId);
     const stableTrackId = requestedTrack
       ? resolveTrackId(s, requestedTrack)
       : requestedOrder === undefined ? null : trackIds[requestedOrder] ?? null;
     if (!stableTrackId) {
       return { error: requestedOrder === undefined
-        ? 'track needs trackId or trackOrder (or list:true). To choose visible caption text, prefer source_set.'
-        : `trackOrder ${requestedOrder} out of range (0..${Math.max(0, trackIds.length - 1)})` };
+        ? 'track cần trackId hoặc trackOrder (hoặc list:true). Để chọn nội dung phụ đề hiển thị, nên dùng source_set.'
+        : `trackOrder ${requestedOrder} nằm ngoài phạm vi (0..${Math.max(0, trackIds.length - 1)})` };
     }
     const it = firstTranscribedOnTrack(s, stableTrackId);
-    if (!it) return { error: `no transcribed clip on track ${trackAlias(s, stableTrackId)}` };
+    if (!it) return { error: `Không có clip đã chép lời trên track ${trackAlias(s, stableTrackId)}` };
     ctx.commands.updateCaptions({ sourceItemId: it.id, sources: undefined, sourceMode: 'item' });
     return { ok: true, trackId: trackAlias(s, stableTrackId), trackOrder: trackIds.indexOf(stableTrackId), sourceItemId: it.id };
   }
@@ -234,7 +234,7 @@ export async function editCaptions(args: Args, ctx: AgentContext): Promise<Resul
   // ── IDB-backed user style presets: save/apply/list/rename/delete ─────────
   if (action === 'preset_save') {
     const name = str(args.presetName) || str(json.name) || str(json.presetName);
-    if (!name) return { error: 'preset_save needs presetName (or json.name)' };
+    if (!name) return { error: 'preset_save cần presetName (hoặc json.name)' };
     const preset: CaptionPreset = {
       id: `cp_${crypto.randomUUID()}`,
       name,
@@ -253,7 +253,7 @@ export async function editCaptions(args: Args, ctx: AgentContext): Promise<Resul
   }
   if (action === 'preset_apply') {
     const preset = await findPreset(args, json);
-    if (!preset) return { error: 'preset_apply needs presetId or presetName of a saved preset (see preset_list)' };
+    if (!preset) return { error: 'preset_apply cần presetId hoặc presetName của preset đã lưu (xem preset_list)' };
     ctx.commands.updateCaptions({
       template: preset.template ?? c.template,
       styleOverride: preset.styleOverride ?? {},
@@ -264,19 +264,19 @@ export async function editCaptions(args: Args, ctx: AgentContext): Promise<Resul
   }
   if (action === 'preset_rename') {
     const preset = await findPreset(args, json);
-    if (!preset) return { error: 'preset_rename needs presetId (see preset_list)' };
+    if (!preset) return { error: 'preset_rename cần presetId (xem preset_list)' };
     const name = str(args.newName) || str(json.newName) || str(json.name);
-    if (!name) return { error: 'preset_rename needs a new name (newName / json.name)' };
+    if (!name) return { error: 'preset_rename cần tên mới (newName / json.name)' };
     await saveCaptionPreset({ ...preset, name });
     return { ok: true, presetId: preset.id, name };
   }
   if (action === 'preset_delete') {
     const preset = await findPreset(args, json);
-    if (!preset) return { error: 'preset_delete needs presetId (see preset_list)' };
+    if (!preset) return { error: 'preset_delete cần presetId (xem preset_list)' };
     await deleteCaptionPreset(preset.id);
     return { ok: true, deleted: preset.name, presetId: preset.id };
   }
 
 
-  return { error: `unknown action "${action}"` };
+  return { error: `Action không xác định: "${action}"` };
 }

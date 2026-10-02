@@ -146,7 +146,7 @@ const selectedByOrder = await execCaptionsTool('edit_captions', { action: 'track
 };
 assert.equal(selectedByOrder.trackOrder, 1);
 assert.equal(selectedByOrder.sourceItemId, 'item_b');
-assert.match(String((await execCaptionsTool('edit_captions', { action: 'track', trackOrder: 99 }, ctx) as { error: string }).error), /out of range/);
+assert.match(String((await execCaptionsTool('edit_captions', { action: 'track', trackOrder: 99 }, ctx) as { error: string }).error), /nằm ngoài phạm vi/);
 
 const schema = CAPTIONS_TOOL_SCHEMAS.find((tool) => tool.name === 'edit_captions')!;
 assert('trackOrder' in (schema.input_schema.properties ?? {}));
