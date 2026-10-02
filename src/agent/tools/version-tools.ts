@@ -30,9 +30,9 @@ function findVersion(versions: ProjectVersion[], ref: string): ProjectVersion | 
 }
 
 export async function execVersionTool(name: string, args: Args, ctx: AgentContext): Promise<unknown> {
-  if (name !== 'manage_versions') return { error: `unknown tool ${name}` };
+  if (name !== 'manage_versions') return { error: `Tool không xác định: ${name}` };
   const projectId = ctx.getProjectId?.();
-  if (!projectId) return { error: 'manage_versions requires an open persisted project id' };
+  if (!projectId) return { error: 'manage_versions cần project id đã lưu và đang mở' };
 
   const action = String(args.action ?? '');
   switch (action) {
@@ -42,32 +42,32 @@ export async function execVersionTool(name: string, args: Args, ctx: AgentContex
         ok: true,
         count: versions.length,
         versions: versions.map(slimVersion),
-        note: 'Use versionId from this list with restore or delete. Full project bodies are not listed.',
+        note: 'Dùng versionId trong danh sách này với restore hoặc delete. Không liệt kê toàn bộ nội dung dự án.',
       };
     }
     case 'save': {
       const name = String(args.name ?? '').trim();
-      if (!name) return { error: 'save requires name (checkpoint label)' };
+      if (!name) return { error: 'save cần name (nhãn checkpoint)' };
       const version = await saveVersion(projectId, name, ctx.getDoc());
       return { ok: true, saved: slimVersion(version) };
     }
     case 'restore': {
       const ref = String(args.versionId ?? '').trim();
-      if (!ref) return { error: 'restore requires versionId from list' };
+      if (!ref) return { error: 'restore cần versionId lấy từ list' };
       const versions = await listVersions(projectId);
       const version = findVersion(versions, ref);
       if (!version) {
         const ambiguous = versions.filter((v) => v.id.startsWith(ref) || v.name === ref);
         if (ambiguous.length > 1) {
-          return { error: `ambiguous versionId ${ref}`, candidates: ambiguous.slice(0, 6).map(slimVersion) };
+          return { error: `versionId ${ref} không đủ rõ ràng`, candidates: ambiguous.slice(0, 6).map(slimVersion) };
         }
-        return { error: `version not found: ${ref}`, available: versions.slice(0, 12).map(slimVersion) };
+        return { error: `Không tìm thấy version: ${ref}`, available: versions.slice(0, 12).map(slimVersion) };
       }
       if (args.confirm !== true) {
         return {
           needsConfirm: true,
           version: slimVersion(version),
-          note: 'Restoring replaces the entire open project with this snapshot. Resend with confirm:true to apply.',
+          note: 'Khôi phục sẽ thay thế toàn bộ dự án đang mở bằng snapshot này. Gửi lại với confirm:true để áp dụng.',
         };
       }
       const before = ctx.getDoc();
@@ -76,20 +76,20 @@ export async function execVersionTool(name: string, args: Args, ctx: AgentContex
         ok: true,
         restored: slimVersion(version),
         note: before.activeTimelineId !== version.doc.activeTimelineId
-          ? 'Active timeline switched to the snapshot\'s active sequence.'
-          : 'Project document replaced with the named version.',
+          ? 'Dòng thời gian đang hoạt động đã chuyển sang sequence đang hoạt động trong snapshot.'
+          : 'Tài liệu dự án đã được thay bằng version được chọn.',
       };
     }
     case 'delete': {
       const ref = String(args.versionId ?? '').trim();
-      if (!ref) return { error: 'delete requires versionId from list' };
+      if (!ref) return { error: 'delete cần versionId lấy từ list' };
       const versions = await listVersions(projectId);
       const version = findVersion(versions, ref);
-      if (!version) return { error: `version not found: ${ref}` };
+      if (!version) return { error: `Không tìm thấy version: ${ref}` };
       await deleteVersion(projectId, version.id);
       return { ok: true, deleted: slimVersion(version) };
     }
     default:
-      return { error: `unknown action ${action}; use list/save/restore/delete` };
+      return { error: `Action không xác định: ${action}; dùng list/save/restore/delete` };
   }
 }
