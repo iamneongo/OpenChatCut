@@ -180,7 +180,7 @@ export function applyPlacement(active: Timeline, tplActive: Timeline, keptItems:
       ? resolvePlacementTrack(active, placement.targetTrackId, sourceKind)
       : undefined;
     if (placement.targetTrackId && !targetTrack) {
-      throw new Error(`target track "${placement.targetTrackId}" not found or has the wrong kind`);
+      throw new Error(`Không tìm thấy track đích "${placement.targetTrackId}" hoặc track có sai loại`);
     }
     const { items, map, scale } = exactItems(keptItems, placement, sourceTrack, targetTrack ?? undefined, end);
     const remapTrack = (id: TrackId): TrackId => sourceTrack && targetTrack && id === sourceTrack ? targetTrack : id;
@@ -265,16 +265,16 @@ export function copyTemplateAssets(current: ProjectDoc, tpl: ProjectTemplate) {
 function parsePlacement(value: unknown): { placement?: TemplatePlacement; error?: string } {
   if (value === undefined || value === 'append') return { placement: 'append' };
   if (value === 'replace') return { placement: 'replace' };
-  if (!value || typeof value !== 'object' || Array.isArray(value)) return { error: 'placement must be append, replace, or an object' };
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return { error: 'placement phải là append, replace hoặc một đối tượng' };
   const raw = value as Record<string, unknown>;
   if (raw.startFrame !== undefined && (!Number.isSafeInteger(raw.startFrame) || Number(raw.startFrame) < 0)) {
-    return { error: 'placement.startFrame must be a non-negative integer' };
+    return { error: 'placement.startFrame phải là số nguyên không âm' };
   }
   if (raw.durationInFrames !== undefined && (!Number.isSafeInteger(raw.durationInFrames) || Number(raw.durationInFrames) <= 0)) {
-    return { error: 'placement.durationInFrames must be a positive integer' };
+    return { error: 'placement.durationInFrames phải là số nguyên dương' };
   }
   if (raw.targetTrackId !== undefined && (typeof raw.targetTrackId !== 'string' || !raw.targetTrackId.trim())) {
-    return { error: 'placement.targetTrackId must be a non-empty string' };
+    return { error: 'placement.targetTrackId phải là chuỗi không rỗng' };
   }
   return { placement: {
     ...(raw.startFrame !== undefined ? { startFrame: Number(raw.startFrame) } : {}),
@@ -286,7 +286,7 @@ function parsePlacement(value: unknown): { placement?: TemplatePlacement; error?
 const strArg = (v: unknown): string => (typeof v === 'string' ? v.trim() : '');
 
 export async function execTemplateTool(name: string, args: Args, ctx: AgentContext): Promise<unknown> {
-  if (name !== 'manage_template') return { error: `unknown tool ${name}` };
+  if (name !== 'manage_template') return { error: `Tool không xác định: ${name}` };
   const action = String(args.action ?? '');
 
   switch (action) {
@@ -297,15 +297,15 @@ export async function execTemplateTool(name: string, args: Args, ctx: AgentConte
         return { templates: all.map((t) => ({ id: t.id, name: t.name, assetCount: t.assetIds.length })) };
       }
       const tpl = await getTemplate(id);
-      if (!tpl) return { error: `no template "${id}"` };
+      if (!tpl) return { error: `Không tìm thấy template "${id}"` };
       return { template: templateDetail(tpl) };
     }
 
     case 'list_assets': {
       const id = strArg(args.templateId);
-      if (!id) return { error: 'list_assets requires "templateId"' };
+      if (!id) return { error: 'list_assets cần có "templateId"' };
       const tpl = await getTemplate(id);
-      if (!tpl) return { error: `no template "${id}"` };
+      if (!tpl) return { error: `Không tìm thấy template "${id}"` };
       const carried = new Set(tpl.assetIds);
       const assets = tpl.doc.assets
         .filter((a) => carried.has(a.id))
@@ -315,9 +315,9 @@ export async function execTemplateTool(name: string, args: Args, ctx: AgentConte
 
     case 'apply': {
       const id = strArg(args.templateId);
-      if (!id) return { error: 'apply requires "templateId"' };
+      if (!id) return { error: 'apply cần có "templateId"' };
       const tpl = await getTemplate(id);
-      if (!tpl) return { error: `no template "${id}"` };
+      if (!tpl) return { error: `Không tìm thấy template "${id}"` };
       const parsed = parsePlacement(args.placement);
       if (!parsed.placement) return { error: parsed.error };
       const placement = parsed.placement;
@@ -327,35 +327,35 @@ export async function execTemplateTool(name: string, args: Args, ctx: AgentConte
       try {
         merged = mergeTemplate(ctx.getDoc(), tpl, placement, omit);
       } catch (error) {
-        return { error: error instanceof Error ? error.message : 'template placement failed' };
+        return { error: error instanceof Error ? error.message : 'Áp template thất bại' };
       }
       const clean = migrateProjectDoc(merged);
-      if (!clean) return { error: 'template produced an invalid project doc' };
+      if (!clean) return { error: 'Template tạo ra tài liệu dự án không hợp lệ' };
       ctx.commands.applyDoc(clean); // An atomic, undoable change to the entire timeline.
       return { ok: true, applied: true, templateId: id, placement };
     }
 
     case 'copy_assets': {
       const id = strArg(args.templateId);
-      if (!id) return { error: 'copy_assets requires "templateId"' };
+      if (!id) return { error: 'copy_assets cần có "templateId"' };
       const tpl = await getTemplate(id);
-      if (!tpl) return { error: `no template "${id}"` };
+      if (!tpl) return { error: `Không tìm thấy template "${id}"` };
       const copied = copyTemplateAssets(ctx.getDoc(), tpl);
       const clean = migrateProjectDoc(copied.doc);
-      if (!clean) return { error: 'template assets produced an invalid project doc' };
+      if (!clean) return { error: 'Asset của template tạo ra tài liệu dự án không hợp lệ' };
       if (copied.assets.length) ctx.commands.applyDoc(clean);
       return { ok: true, templateId: id, assets: copied.assets };
     }
 
     case 'save': {
       const styleName = strArg(args.name);
-      if (!styleName) return { error: 'save requires a non-empty "name"' };
+      if (!styleName) return { error: 'save cần "name" không rỗng' };
       // The template is packaged with the entire ProjectDoc (timeline including MG + designStyle + asset pool) = ctx.getDoc()
       const saved = await saveTemplate(styleName, ctx.getDoc());
       return { ok: true, saved: { id: saved.id, name: saved.name, assetCount: saved.assetIds.length } };
     }
 
     default:
-      return { error: `unknown action "${action}"; use get|list_assets|apply|copy_assets|save` };
+      return { error: `Action không xác định: "${action}"; dùng get|list_assets|apply|copy_assets|save` };
   }
 }
