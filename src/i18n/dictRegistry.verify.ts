@@ -22,6 +22,7 @@ const { EN } = await import('./dict/en');
 const { IT } = await import('./dict/it');
 const { RU } = await import('./dict/ru');
 const { ZH_DATA } = await import('./dict/zh');
+const { VI } = await import('./dict/vi');
 const EN_DATA = (await import('./dict/en/templates-data')).default;
 const IT_DATA = (await import('./dict/it/templates-data')).default;
 
@@ -91,6 +92,20 @@ function onlyIn(has: Record<string, string>, lacks: Record<string, string>): str
   assert.equal(t(english), english, 'zh returns the key verbatim');
   const dataKey = Object.keys(ZH_DATA)[0]!;
   assert.equal(tData(dataKey), ZH_DATA[dataKey], 'zh data names read ZH_DATA');
+}
+
+// ── vi: the Vietnamese fork translates UI and every bundled data catalog ────
+{
+  setLocale('vi');
+  await ensureLocaleDict('vi');
+  assert.equal(t('导出'), VI['导出'], 'vi reads the Vietnamese UI dictionary');
+  assert.equal(t('导出'), 'Xuất', 'the Vietnamese UI fixture is actually translated');
+  assert.equal(tData('竖屏·重点词弹出'), 'Dọc · từ khóa bật lên',
+    'vi reads Vietnamese template names');
+  assert.equal(tData('Simple Whoosh'), 'Whoosh đơn giản',
+    'vi reads Vietnamese sound names');
+  assert.equal(tData('electronic'), 'Điện tử',
+    'vi reads Vietnamese music metadata');
 }
 
 // ── placeholders survive the table swap ─────────────────────────────────────
