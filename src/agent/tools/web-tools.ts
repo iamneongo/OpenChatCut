@@ -37,8 +37,8 @@ async function postApi(path: string, body: Record<string, unknown>): Promise<Rec
     });
   } catch (e) {
     return {
-      error: `request failed: ${e instanceof Error ? e.message : String(e)}`,
-      hint: 'Is the Vite dev server running with FIRECRAWL_API_KEY?',
+      error: `Yêu cầu thất bại: ${e instanceof Error ? e.message : String(e)}`,
+      hint: 'Vite dev server có đang chạy với FIRECRAWL_API_KEY không?',
     };
   }
   return (await res.json().catch(() => ({}))) as Record<string, unknown>;
@@ -47,16 +47,16 @@ async function postApi(path: string, body: Record<string, unknown>): Promise<Rec
 function configError(data: Record<string, unknown>): unknown | null {
   if (data.configured === false) {
     return {
-      error: data.error ?? 'Firecrawl not configured',
+      error: data.error ?? 'Firecrawl chưa được cấu hình',
       configured: false,
-      hint: 'Set FIRECRAWL_API_KEY in .env.local and restart Vite.',
+      hint: 'Đặt FIRECRAWL_API_KEY trong .env.local rồi khởi động lại Vite.',
     };
   }
   if (data.ok === false || (data.error && data.ok !== true && !data.results && !data.pages && !data.links && !data.markdown)) {
     if (data.ok === false || data.error) {
       return {
         ok: false,
-        error: data.error ?? 'Firecrawl request failed',
+        error: data.error ?? 'Yêu cầu Firecrawl thất bại',
         status: data.status,
         crawlId: data.crawlId,
       };
@@ -75,12 +75,12 @@ export async function execWebTool(
   if (name === 'web_map') return execMap(args);
   if (name === 'web_crawl') return execCrawl(args);
   if (name === 'web_batch_scrape') return execBatchScrape(args);
-  return { error: `unknown tool ${name}` };
+  return { error: `Tool không xác định: ${name}` };
 }
 
 async function execScrape(args: Args, ctx: AgentContext): Promise<unknown> {
   const url = String(args.url ?? '').trim();
-  if (!url || !isHttpUrl(url)) return { error: 'url must be a valid http(s) URI' };
+  if (!url || !isHttpUrl(url)) return { error: 'url phải là URI http(s) hợp lệ' };
 
   const body: Record<string, unknown> = {
     url,
@@ -102,7 +102,7 @@ async function execScrape(args: Args, ctx: AgentContext): Promise<unknown> {
   const err = configError(data);
   if (err) return err;
   if (data.ok === false) {
-    return { ok: false, error: data.error ?? 'scrape failed', status: data.status, url };
+    return { ok: false, error: data.error ?? 'Scrape thất bại', status: data.status, url };
   }
 
   const out: Record<string, unknown> = {
@@ -131,14 +131,14 @@ async function execScrape(args: Args, ctx: AgentContext): Promise<unknown> {
     ctx.commands.addAsset(asset);
     out.screenshotAssetId = asset.id;
     out.screenshotSrc = shotPath;
-    out.note = 'Screenshot saved to media pool (screenshotAssetId).';
+    out.note = 'Ảnh chụp màn hình đã được lưu vào kho tư liệu (screenshotAssetId).';
   }
   return out;
 }
 
 async function execSearch(args: Args): Promise<unknown> {
   const query = String(args.query ?? '').trim();
-  if (!query) return { error: 'query is required' };
+  if (!query) return { error: 'Cần có query' };
   const body: Record<string, unknown> = {
     query,
     scrapeMarkdown: args.scrapeMarkdown !== false,
@@ -163,7 +163,7 @@ async function execSearch(args: Args): Promise<unknown> {
 
 async function execMap(args: Args): Promise<unknown> {
   const url = String(args.url ?? '').trim();
-  if (!url || !isHttpUrl(url)) return { error: 'url must be a valid http(s) URI' };
+  if (!url || !isHttpUrl(url)) return { error: 'url phải là URI http(s) hợp lệ' };
   const body: Record<string, unknown> = {
     url,
     includeSubdomains: args.includeSubdomains !== false,
@@ -187,7 +187,7 @@ async function execMap(args: Args): Promise<unknown> {
 
 async function execCrawl(args: Args): Promise<unknown> {
   const url = String(args.url ?? '').trim();
-  if (!url || !isHttpUrl(url)) return { error: 'url must be a valid http(s) URI' };
+  if (!url || !isHttpUrl(url)) return { error: 'url phải là URI http(s) hợp lệ' };
   const body: Record<string, unknown> = {
     url,
     allowSubdomains: args.allowSubdomains === true,
@@ -229,7 +229,7 @@ async function execBatchScrape(args: Args): Promise<unknown> {
     .map((u) => u.trim())
     .filter((u) => isHttpUrl(u))
     .slice(0, 15);
-  if (!urls.length) return { error: 'urls must be a non-empty array of http(s) URIs (max 15)' };
+  if (!urls.length) return { error: 'urls phải là mảng URI http(s) không rỗng (tối đa 15 URL)' };
 
   const body: Record<string, unknown> = {
     urls,

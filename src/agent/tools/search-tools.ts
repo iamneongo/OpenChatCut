@@ -21,9 +21,9 @@ function describeHit(hit: SearchHit): string {
 }
 
 export async function execSearchTool(name: string, args: Args): Promise<unknown> {
-  if (name !== 'search_content') return { error: `unknown tool ${name}` };
+  if (name !== 'search_content') return { error: `Tool không xác định: ${name}` };
   const query = String(args.query ?? '').trim();
-  if (!query) return { error: 'query is required' };
+  if (!query) return { error: 'Cần có query' };
   const projectId = typeof args.projectId === 'string' && args.projectId.trim()
     ? args.projectId.trim()
     : undefined;
@@ -38,7 +38,7 @@ export async function execSearchTool(name: string, args: Args): Promise<unknown>
     });
     if (!response.ok) {
       const body = await response.json().catch(() => null) as { error?: string } | null;
-      return { error: body?.error ?? `search failed: ${response.status}` };
+      return { error: body?.error ?? `Tìm kiếm thất bại: ${response.status}` };
     }
     const body = await response.json() as { hits: SearchHit[] };
     const hits = body.hits.map((hit) => ({
@@ -50,8 +50,8 @@ export async function execSearchTool(name: string, args: Args): Promise<unknown>
       query,
       count: hits.length,
       note: hits.length
-        ? '命中按相关度降序；传 projectId 可缩小范围。'
-        : '无命中。尝试换关键词或 ≥3 字词（中文 2 字词已支持）。',
+        ? 'Kết quả được sắp xếp theo độ liên quan giảm dần; truyền projectId để thu hẹp phạm vi.'
+        : 'Không có kết quả. Hãy thử từ khóa khác hoặc cụm từ dài ít nhất 3 ký tự.',
       hits,
     };
   } catch (error) {
