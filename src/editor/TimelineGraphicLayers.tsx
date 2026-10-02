@@ -2,6 +2,7 @@ import { AbsoluteFill } from 'remotion';
 import { getCompiledTemplate } from '../template-host';
 import type { AspectFit, TimelineItem, Watermark } from './types';
 import { VisualClipSurface } from './TimelineMediaLayer';
+import { useT } from '../i18n/locale';
 
 export function SolidLayer({ item, canvasW, canvasH, borderRadius }: {
   item: TimelineItem;
@@ -42,6 +43,7 @@ export function TextLayer({ item, canvasW, canvasH, fit }: {
   canvasH: number;
   fit: AspectFit;
 }) {
+  const t = useT();
   const dw = item.width ?? 1920;
   const dh = item.height ?? 1080;
   const scale = fit === 'cover' ? Math.max(canvasW / dw, canvasH / dh) : Math.min(canvasW / dw, canvasH / dh);
@@ -51,7 +53,7 @@ export function TextLayer({ item, canvasW, canvasH, fit }: {
   return (
     <AbsoluteFill style={{ justifyContent: 'center', alignItems: 'center', overflow: 'hidden' }}>
       <div style={{ width: dw, height: dh, flexShrink: 0, transform: `scale(${scale})`, display: 'flex', alignItems: 'center', justifyContent: justify, padding: '0 96px', boxSizing: 'border-box' }}>
-        <div style={{ color: String(props.color ?? '#ffffff'), fontSize: Number(props.fontSize ?? 96), fontWeight: Number(props.fontWeight ?? 700), textAlign: align, width: '100%', fontFamily: 'Geist, system-ui, -apple-system, sans-serif', textShadow: '0 3px 16px rgba(0,0,0,0.55)', whiteSpace: 'pre-wrap', lineHeight: 1.2 }}>{String(props.text ?? '文字')}</div>
+        <div style={{ color: String(props.color ?? '#ffffff'), fontSize: Number(props.fontSize ?? 96), fontWeight: Number(props.fontWeight ?? 700), textAlign: align, width: '100%', fontFamily: 'Geist, system-ui, -apple-system, sans-serif', textShadow: '0 3px 16px rgba(0,0,0,0.55)', whiteSpace: 'pre-wrap', lineHeight: 1.2 }}>{String(props.text ?? t('文字'))}</div>
       </div>
     </AbsoluteFill>
   );
