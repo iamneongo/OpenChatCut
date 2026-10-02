@@ -188,8 +188,8 @@ export async function applyCaptionAvoidance(
       }
       adjusted += 1;
       const label = representative.target.placementSources
-        .map((source) => source.kind === 'layout' ? '整体字幕' : source.kind === 'slot' ? `字幕槽「${source.slotId}」` : `字幕条「${source.sourceId}」`)
-        .join('、');
+        .map((source) => source.kind === 'layout' ? 'phụ đề tổng thể' : source.kind === 'slot' ? `ô phụ đề "${source.slotId}"` : `dải phụ đề "${source.sourceId}"`)
+        .join(', ');
       details.push(`${label} đã tránh khuôn mặt`);
     }
     if (adjusted) ctx.commands.setCaptions(next, trackId ?? undefined);
@@ -209,10 +209,10 @@ export async function applyCaptionAvoidance(
     adjusted: total,
     sources: summary,
     note: total
-      ? `已自动避让 ${total} 处字幕布局（按可见画面与字幕时段分析人像/人脸）。`
+      ? `Đã tự động tránh ${total} bố cục phụ đề (phân tích người/khuôn mặt theo khung hình hiển thị và thời lượng phụ đề).`
       : blocked
-        ? `检测到 ${blocked} 处字幕遮挡，但有效位置由不可修改的布局策略控制，未作修改。`
-        : '未检测到字幕遮挡人脸，布局无需调整。',
+        ? `Phát hiện ${blocked} vị trí phụ đề che khuất, nhưng vị trí khả dụng do policy layout không thể chỉnh sửa kiểm soát nên chưa thay đổi.`
+        : 'Không phát hiện phụ đề che khuất khuôn mặt; không cần điều chỉnh bố cục.',
   };
 }
 

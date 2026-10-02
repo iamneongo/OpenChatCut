@@ -128,7 +128,7 @@ try {
   assert.deepEqual(seen, ['a', 'b'], 'the third URL must not start after the window has passed');
   assert.equal(rows.length, 3, 'every URL gets a row');
   assert.equal(rows[2]?.success, false);
-  assert.match((rows[2] as { error: string }).error, /75s/);
+  assert.match((rows[2] as { error: string }).error, /75 giây/);
   assert.equal((rows[2] as { url?: string }).url, 'c');
 
   const single = await serialBatch(['x'], async (url) => ({ success: false, error: 'upstream', url }), () => 10 ** 9);

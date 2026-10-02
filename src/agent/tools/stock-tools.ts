@@ -98,7 +98,7 @@ async function materializeUrl(url: string): Promise<Materialized> {
       return { src: url, local: false, note: err, failed: true };
     }
     if (body.code === 'upstream_http') {
-      return { src: url, local: false, note: `该地址不可下载（${err}），请换一个可直接访问的素材地址`, failed: true };
+      return { src: url, local: false, note: `Không thể tải địa chỉ này (${err}); hãy dùng địa chỉ media có thể truy cập trực tiếp`, failed: true };
     }
     return { src: url, local: false, note: `remote src (import-url: ${err})` };
   } catch (e) {
@@ -133,7 +133,7 @@ function batchEnvelope(results: BatchRow[]) {
  * reported as rows, not silently dropped.
  */
 export const BATCH_START_WINDOW_MS = 75_000;
-const BATCH_WINDOW_ERROR = '本批次已超过 75s 时间窗口，该地址未开始下载；请再次调用，每次最多传 3 个地址';
+const BATCH_WINDOW_ERROR = 'Batch này đã vượt quá cửa sổ 75 giây; địa chỉ này chưa bắt đầu tải. Hãy gọi lại, mỗi lần tối đa 3 địa chỉ';
 
 export async function serialBatch(
   urls: readonly string[],
@@ -174,7 +174,7 @@ async function registerMediaUrl(
       success: false,
       error: opts.type === 'effect' || opts.type === 'transition'
         ? `type=${opts.type} is not an OpenChatCut media-pool asset`
-        : '无法从 URL 识别媒体类型，请传 type: video|image|audio|gif|svg|motion-graphic',
+        : 'Không thể nhận diện loại media từ URL; hãy truyền type: video|image|audio|gif|svg|motion-graphic',
       url,
     };
   }
@@ -188,7 +188,7 @@ async function registerMediaUrl(
 
   if (kind !== 'motion-graphic' && !opts.forceRemote) {
     const mat = await materializeUrl(url);
-    if (mat.failed) return { success: false, error: mat.note ?? `无法连接到 ${url}`, url };
+    if (mat.failed) return { success: false, error: mat.note ?? `Không thể kết nối tới ${url}`, url };
     src = mat.src;
     local = mat.local;
     note = mat.note;
@@ -345,13 +345,13 @@ async function execSearchStockMedia(args: Args): Promise<unknown> {
 
   try {
     const res = await fetch(`/api/stock-search?${params.toString()}`);
-    if (!res.ok) return { error: `素材库搜索失败 (${res.status})`, results: [] };
+    if (!res.ok) return { error: `Tìm kiếm kho media thất bại (${res.status})`, results: [] };
     const body = await res.json() as StockSearchResponse;
     if (!body.configured) {
       return {
         error: kind === 'audio' || kind === 'music'
-          ? '未配置音频素材库 API key（FREESOUND_API_KEY），可改用内置音效库或 download_media / push_asset 直接导入 URL'
-          : '未配置素材搜索凭据（PEXELS_API_KEY / PIXABAY_API_KEY / UNSPLASH_ACCESS_KEY / FIRECRAWL_API_KEY），可改用 download_media / push_asset 直接导入 URL',
+          ? 'Chưa cấu hình API key cho kho audio (FREESOUND_API_KEY); có thể dùng kho hiệu ứng âm thanh tích hợp hoặc nhập URL trực tiếp bằng download_media / push_asset'
+          : 'Chưa cấu hình thông tin xác thực tìm kiếm media (PEXELS_API_KEY / PIXABAY_API_KEY / UNSPLASH_ACCESS_KEY / FIRECRAWL_API_KEY); có thể nhập URL trực tiếp bằng download_media / push_asset',
         results: [],
         warnings: body.warnings ?? [],
       };

@@ -76,7 +76,7 @@ export async function execBeatTool(name: string, args: Args, ctx: AgentContext):
         bpm: 0,
         confidence: analysis.confidence,
         beats: [],
-        note: '未检出稳定节拍(低可信度守门):素材可能是语音/环境声,或节奏不稳。',
+        note: 'Không phát hiện nhịp ổn định (qua bộ lọc độ tin cậy thấp): tài nguyên có thể là giọng nói/âm thanh môi trường hoặc tiết tấu không ổn định.',
       };
     }
 
@@ -87,7 +87,7 @@ export async function execBeatTool(name: string, args: Args, ctx: AgentContext):
       downbeatCount: analysis.downbeats.length,
       beats: listed(analysis.beats),
       downbeats: listed(analysis.downbeats),
-      ...(analysis.beats.length > MAX_LISTED ? { note: `beats 只列前 ${MAX_LISTED} 个,总数见 beatCount` } : {}),
+      ...(analysis.beats.length > MAX_LISTED ? { note: `beats chỉ liệt kê ${MAX_LISTED} nhịp đầu; xem tổng số trong beatCount` } : {}),
     };
     if (!item) return base;
 
@@ -99,7 +99,7 @@ export async function execBeatTool(name: string, args: Args, ctx: AgentContext):
       const cap = typeof args.markerLimit === 'number' ? Math.max(1, Math.min(500, Math.round(args.markerLimit))) : DEFAULT_MARKER_CAP;
       const frames = args.markers === 'downbeats' ? downbeatFrames : beatFrames;
       const actions = markerActions(item, frames, args.markers === 'downbeats' ? 'downbeat' : 'beat', cap);
-      if (actions.length) ctx.commands.batch(actions, '节拍标记');
+      if (actions.length) ctx.commands.batch(actions, 'Đánh dấu nhịp');
       markersCreated = actions.length;
     }
     return {
