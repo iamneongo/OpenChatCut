@@ -1,5 +1,8 @@
 // EN dictionary (field fragmentation, key = Chinese original text). Data files are exempt from the upper limit of row count.
 export default {
+  '渲染': 'Rendering',
+  '上传': 'Upload',
+  '清理': 'Cleanup',
   '预检': 'Preflight',
   '排队': 'Queue',
   '目标写入': 'Destination',

@@ -3,6 +3,9 @@
 // Untranslated copy intentionally falls back to English while the Vietnamese
 // dictionary is completed domain by domain.
 export const VI: Record<string, string> = {
+  '渲染': 'Kết xuất',
+  '上传': 'Tải lên',
+  '清理': 'Dọn dẹp',
   '切换界面语言': 'Chuyển ngôn ngữ giao diện',
   '返回工程列表': 'Quay lại danh sách dự án',
   '双击重命名': 'Nhấp đúp để đổi tên',
