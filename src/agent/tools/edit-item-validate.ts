@@ -63,7 +63,7 @@ export function validateAdd(ctx: AgentContext, entry: Entry): OpResult {
   if (AUTHORED_ADD_KINDS.has(type)) return validateAuthoredAdd(ctx.getState(), entry);
   if (GENERIC_ADD_KINDS.has(type)) return validateGenericAdd(ctx.getState(), ctx.getDoc().assets ?? [], entry);
   return {
-    error: `add type not supported: ${type}`,
+    error: `Không hỗ trợ type khi add: ${type}`,
     supported: ['video', 'image', 'gif', 'svg', 'audio', 'text', 'solid', 'effect', 'transition', 'motion-graphic'],
   };
 }
@@ -95,9 +95,9 @@ export function validateUpdate(ctx: AgentContext, entry: Entry): OpResult {
     );
   }
   return {
-    error: `update type not supported: ${type}`,
+    error: `Không hỗ trợ type khi update: ${type}`,
     supported: [...GENERIC_ITEM_KINDS, 'effect', 'transition'],
-    hint: 'type must be the item\'s actual kind (video/audio/image/gif/svg/text/solid/motion-graphic), never the literal "generic" or "clip"',
+    hint: 'type phải là kind thực tế của item (video/audio/image/gif/svg/text/solid/motion-graphic), không bao giờ là literal "generic" hoặc "clip"',
   };
 }
 
@@ -109,16 +109,16 @@ export function validateDelete(ctx: AgentContext, entry: Entry): OpResult {
   }
   if (type === 'transition') return validateTransitionDelete(ctx, entry);
   if (GENERIC_ITEM_KINDS.has(type)) return validateGenericDelete(ctx.getState(), entry);
-  if (type !== 'effect' && type) return { error: `delete unsupported type ${type}` };
+  if (type !== 'effect' && type) return { error: `delete không hỗ trợ type ${type}` };
   const assetId = String(entry.assetId ?? '');
   if (assetId === 'builtin:zoom' || parseZoomLibraryId(assetId)) {
     const item = findItem(ctx.getState().items, entry.targetItemId);
-    if (!item) return { error: 'zoom delete needs targetItemId' };
+    if (!item) return { error: 'zoom delete cần targetItemId' };
     return { ok: true, kind: 'zoom', plan: 'clearZoom', targetItemId: item.id };
   }
   const effectId = String(entry.id ?? entry.effectId ?? '');
   const item = findEffectOwner(ctx, entry.targetItemId, effectId);
-  if (!item) return { error: 'effect delete needs targetItemId or effect id' };
+  if (!item) return { error: 'effect delete cần targetItemId hoặc effect id' };
   const effects = filterDeletedEffects(item, effectId, assetId);
   return {
     ok: true,
@@ -138,7 +138,7 @@ function validateEffectAdd(ctx: AgentContext, entry: Entry): OpResult {
   if (zoomShape || assetId === 'builtin:zoom' || customZoom) {
     const target = findItem(ctx.getState().items, entry.targetItemId);
     if (!target || target.kind === 'audio') {
-      return { error: 'zoom needs a visual targetItemId', got: entry.targetItemId };
+      return { error: 'zoom cần targetItemId của hình ảnh trực quan', got: entry.targetItemId };
     }
     if (customZoom) {
       const magnification = typeof overrides.magnification === 'number' ? overrides.magnification : undefined;
@@ -149,10 +149,10 @@ function validateEffectAdd(ctx: AgentContext, entry: Entry): OpResult {
   }
   const target = findItem(ctx.getState().items, entry.targetItemId);
   if (!target || (target.kind !== 'video' && target.kind !== 'image')) {
-    return { error: 'effect needs video/image targetItemId', got: entry.targetItemId };
+    return { error: 'effect cần targetItemId của video/ảnh', got: entry.targetItemId };
   }
   if (!(assetId in ALL_FX)) {
-    return { error: `unknown effect assetId ${assetId}`, hint: 'browse_library category=fx|luts|zoom' };
+    return { error: `effect assetId không xác định: ${assetId}`, hint: 'browse_library category=fx|luts|zoom' };
   }
   const effect = { id: `fx_${crypto.randomUUID()}`, assetId, overrides } satisfies ClipEffect;
   return { ok: true, kind: 'effect', plan: 'addEffect', targetItemId: target.id, effect };
@@ -176,8 +176,8 @@ function resolveTransition(assetId: string): ResolvedTransition | TransitionErro
     const type = parseTransitionAssetId(assetId);
     if (type) return { type };
     return {
-      error: `unknown transition assetId ${assetId}`,
-      hint: 'Use builtin:tr-<type> from browse_library category=transitions, or custom:tr-* from submit_shader type=transition',
+      error: `transition assetId không xác định: ${assetId}`,
+      hint: 'Dùng builtin:tr-<type> từ browse_library category=transitions, hoặc custom:tr-* từ submit_shader type=transition',
       examples: ['builtin:tr-cross-dissolve', 'builtin:tr-page-curl'],
     };
   }
@@ -193,8 +193,8 @@ function resolveTransition(assetId: string): ResolvedTransition | TransitionErro
     };
   }
   return assetId.startsWith('plugin:')
-    ? { error: `unknown plugin transition ${assetId}`, hint: '该插件未安装或该 id 不是转场条目;用 browse_library category=transitions 查可用清单' }
-    : { error: `unknown custom transition ${assetId}`, hint: 'submit_shader type=transition returns a fresh custom:tr-* id; generate it first, then add it this session' };
+    ? { error: `Plugin transition không xác định: ${assetId}`, hint: 'Plugin chưa được cài hoặc id này không phải transition; dùng browse_library category=transitions để xem danh sách' }
+    : { error: `Custom transition không xác định: ${assetId}`, hint: 'submit_shader type=transition trả về id custom:tr-* mới; hãy tạo trước rồi add trong phiên này' };
 }
 
 function resolveIncoming(ctx: AgentContext, entry: Entry): TimelineItem | null {
@@ -215,23 +215,23 @@ function validateTransitionAdd(ctx: AgentContext, entry: Entry): OpResult {
   const state = ctx.getState();
   const incoming = resolveIncoming(ctx, entry);
   if (!incoming || incoming.kind === 'audio') {
-    return { error: 'transition needs incomingItemId (the later clip at the cut)' };
+    return { error: 'transition cần incomingItemId (clip phía sau tại điểm cắt)' };
   }
   if (entry.outgoingItemId && !findItem(state.items, entry.outgoingItemId)) {
-    return { error: `outgoingItemId not found: ${entry.outgoingItemId}` };
+    return { error: `Không tìm thấy outgoingItemId: ${entry.outgoingItemId}` };
   }
   const outgoing = findAdjacentOutgoing(state.items, incoming);
   if (!outgoing) {
     return {
-      error: `no adjacent prior clip before ${incoming.id} on track ${incoming.track}`,
-      hint: 'Transition straddles a cut between two same-track visual clips',
+      error: `Không có clip liền trước ${incoming.id} trên track ${incoming.track}`,
+      hint: 'Transition nằm tại điểm cắt giữa hai clip hình ảnh trên cùng track',
     };
   }
   const requestedOutgoing = entry.outgoingItemId
     ? findItem(state.items, entry.outgoingItemId)
     : null;
   if (requestedOutgoing && requestedOutgoing.id !== outgoing.id) {
-    return { error: `outgoingItemId ${entry.outgoingItemId} is not the adjacent prior clip (found ${outgoing.id})` };
+    return { error: `outgoingItemId ${entry.outgoingItemId} không phải clip liền trước (đã tìm thấy ${outgoing.id})` };
   }
   return transitionPlan(entry, assetId, incoming, outgoing, resolved);
 }
@@ -264,9 +264,9 @@ function transitionPlan(
 function validateAudioAdd(ctx: AgentContext, entry: Entry): OpResult {
   const assetId = String(entry.assetId ?? '');
   const match = /^library:sound:(.+)$/.exec(assetId);
-  if (!match) return { error: 'audio add expects library:sound:<id>', got: assetId };
+  if (!match) return { error: 'audio add cần library:sound:<id>', got: assetId };
   const sound = SOUND_EFFECTS.find((entry) => entry.id === match[1]);
-  if (!sound) return { error: `unknown sound ${match[1]}` };
+  if (!sound) return { error: `Âm thanh không xác định: ${match[1]}` };
   const state = ctx.getState();
   const requestedTrack = entry.track ?? entry.trackId ?? 'A1';
   const resolvedTrack = resolveTrackId(state, requestedTrack, 'audio');
@@ -290,14 +290,14 @@ function validateAudioAdd(ctx: AgentContext, entry: Entry): OpResult {
 function validateMgAdd(ctx: AgentContext, entry: Entry): OpResult {
   const assetId = String(entry.assetId ?? '');
   const match = /^library:motion-graphic:(.+)$/.exec(assetId);
-  if (!match) return { error: 'motion-graphic add expects library:motion-graphic:<id>', got: assetId };
+  if (!match) return { error: 'motion-graphic add cần library:motion-graphic:<id>', got: assetId };
   const id = match[1];
   const template = ctx.templates.find((item) => item.id === id || item.id.startsWith(id) || item.name === id)
     ?? ctx.templates.find((item) => item.name.toLowerCase() === id.toLowerCase());
-  if (!template) return { error: `unknown motion-graphic ${id}`, hint: 'browse_library category=motion-graphics' };
+  if (!template) return { error: `Motion graphic không xác định: ${id}`, hint: 'browse_library category=motion-graphics' };
   const state = ctx.getState();
   const track = resolveTrackId(state, entry.track ?? entry.trackId ?? 'V1', 'video') ?? defaultTrackId(state, 'video');
-  if (!track) return { error: 'no video track; create one with edit_track first' };
+  if (!track) return { error: 'Không có track video; hãy tạo bằng edit_track trước' };
   const startFrame = typeof entry.fromFrame === 'number'
     ? entry.fromFrame
     : typeof entry.startFrame === 'number' ? entry.startFrame : undefined;
@@ -314,7 +314,7 @@ function planZoomUpdate(target: TimelineItem | null, entry: Entry): OpResult | n
     || Boolean(parseZoomLibraryId(String(entry.assetId ?? '')))
     || Boolean(target?.zoom && !String(entry.id ?? entry.effectId ?? '') && (Object.keys(overrides).length || envelope));
   if (!isZoom) return null;
-  if (!target) return { error: 'zoom update needs targetItemId' };
+  if (!target) return { error: 'zoom update cần targetItemId' };
   const shapeOverride = shapeFrom(entry.propertyOverrides);
   const shape = shapeOverride ?? target.zoom?.shape ?? 'hold';
   const zoom = zoomFromOverrides(shape, { ...(target.zoom as object), ...overrides } as Record<string, ClipEffectValue>);
@@ -361,7 +361,7 @@ function validateEffectUpdate(ctx: AgentContext, entry: Entry): OpResult {
 
 function effectNotFound(item: TimelineItem | null): OpResult {
   return {
-    error: 'effect update: effect not found',
+    error: 'effect update: không tìm thấy effect',
     hint: item && !(item.effects ?? []).length
       ? `item ${item.id} has no effects yet — add one via adds:[{type:"effect",targetItemId:"${item.id}",assetId}]`
       : 'pass effectId (or targetItemId owning the effect); existingEffects lists what is there now',
@@ -372,12 +372,12 @@ function effectNotFound(item: TimelineItem | null): OpResult {
 function validateTransitionUpdate(ctx: AgentContext, entry: Entry): OpResult {
   const id = String(entry.id ?? '');
   const transition = ctx.getState().transitions?.find((item) => item.id === id || item.id.startsWith(id));
-  if (!transition) return { error: `transition not found: ${id}` };
+  if (!transition) return { error: `Không tìm thấy transition: ${id}` };
   const patch: Record<string, unknown> = {};
   if (typeof entry.durationInFrames === 'number') patch.durationInFrames = entry.durationInFrames;
   if (typeof entry.assetId === 'string') {
     const type = parseTransitionAssetId(entry.assetId);
-    if (!type) return { error: `unknown transition assetId ${entry.assetId}` };
+    if (!type) return { error: `transition assetId không xác định: ${entry.assetId}` };
     patch.type = type;
   }
   if (typeof entry.transitionType === 'string') {
@@ -390,7 +390,7 @@ function validateTransitionUpdate(ctx: AgentContext, entry: Entry): OpResult {
 function validateTransitionDelete(ctx: AgentContext, entry: Entry): OpResult {
   const id = String(entry.id ?? '');
   const transition = ctx.getState().transitions?.find((item) => item.id === id || item.id.startsWith(id));
-  if (!transition) return { error: `transition not found: ${id}` };
+  if (!transition) return { error: `Không tìm thấy transition: ${id}` };
   return { ok: true, kind: 'transition', plan: 'removeTransition', id: transition.id };
 }
 
