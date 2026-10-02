@@ -154,7 +154,7 @@ export function MediaPoolPanel({
   const createFolder = (restoreFocus: () => void) => {
     modalFocus.remember(restoreFocus);
     openPrompt({
-      title: '新文件夹名称', initialValue: '', rejectSlash: true,
+      title: t('新文件夹名称'), initialValue: '', rejectSlash: true,
       onSubmit: (name) => setCurrentFolderId(onCreateFolder(name, currentFolderId)),
     });
   };
@@ -176,7 +176,7 @@ export function MediaPoolPanel({
   ), [assets, folders]);
   const renameFolderTarget = (folder: MediaFolder) => {
     openPrompt({
-      title: '重命名文件夹', initialValue: folder.name, rejectSlash: true,
+      title: t('重命名文件夹'), initialValue: folder.name, rejectSlash: true,
       onSubmit: (name) => onRenameFolder(folder.id, name),
     });
   };
@@ -223,7 +223,7 @@ export function MediaPoolPanel({
   const renameAssets = (targets: MediaAsset[]) => {
     if (!targets.length) return;
     openPrompt({
-      title: targets.length > 1 ? '批量重命名素材' : '素材显示名称',
+      title: targets.length > 1 ? t('批量重命名素材') : t('素材显示名称'),
       initialValue: targets.length > 1 ? '' : targets[0]!.name,
       onSubmit: (name) => {
         const entries = batchAssetRename(targets, name);
