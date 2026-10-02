@@ -10,6 +10,7 @@ export default {
     'The Agent is still running and the chat cannot be cleared. Wait for the run to finish or stop it first, then try again.',
   'Agent 工作台': 'Agent workspace',
   '聊天滚动快捷操作': 'Chat scroll shortcuts',
+  '聊天': 'Chat',
   '快速到顶部': 'Jump to top',
   '快速到底部': 'Jump to bottom',
   '从这里开工': 'Start here',

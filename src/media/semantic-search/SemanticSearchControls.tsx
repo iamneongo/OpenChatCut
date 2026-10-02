@@ -271,13 +271,19 @@ function describeTextHit(ref: string, t: ViewProps['t']): string {
   return ref;
 }
 
+const TEXT_HIT_KIND_LABELS = {
+  chat: '聊天',
+  caption: '字幕',
+  transcript: '转写',
+} as const;
+
 function TextResults({ state, t }: ViewProps & { names: Map<string, string> }) {
   if (state.textHits.length === 0) return null;
   return <div className="cc-semantic-results">
     <strong>{t('相关文本 {n} 处', { n: state.textHits.length })}</strong>
     {state.textHits.slice(0, 5).map((hit) => <span key={`${hit.kind}:${hit.ref}`}>
       <b>{describeTextHit(hit.ref, t)}</b>
-      <em>{hit.kind}</em>
+      <em>{t(TEXT_HIT_KIND_LABELS[hit.kind])}</em>
     </span>)}
   </div>;
 }

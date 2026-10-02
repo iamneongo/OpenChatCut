@@ -16,6 +16,7 @@ export const VI: Record<string, string> = {
   '查看后台导出任务': 'Xem tác vụ xuất nền',
   '导出中…': 'Đang xuất…',
   '导出': 'Xuất',
+  '聊天': 'Trò chuyện',
   '账户': 'Tài khoản',
   '窗口控制': 'Điều khiển cửa sổ',
   '关闭窗口': 'Đóng cửa sổ',
