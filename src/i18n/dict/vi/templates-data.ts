@@ -12,7 +12,7 @@ export default {
   '竖屏·封面大字': 'Dọc · chữ lớn bìa',
   '竖屏·清单勾选': 'Dọc · checklist đánh dấu',
   '竖屏·前后对比条': 'Dọc · thanh so sánh trước/sau',
-  '竖屏·便签贴纸': 'Dọc · sticker ghi chú',
+  '竖屏·便签贴纸': 'Dọc · nhãn dán ghi chú',
   '竖屏·互动提示': 'Dọc · gợi ý tương tác',
   '竖屏·期数角标': 'Dọc · huy hiệu số tập',
   '口播·米色格纹（横）': 'Talking head · caro màu be (ngang)',

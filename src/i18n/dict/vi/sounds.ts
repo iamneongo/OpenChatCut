@@ -24,7 +24,7 @@ export default {
   'Video Call Ringtone': 'Nhạc chuông cuộc gọi video',
   'Record Scratch Stop': 'Tiếng đĩa than xước dừng lại',
   'Record Scratch Rewind': 'Tiếng đĩa than xước tua lại',
-  'Camera Shutter': 'Màn trập camera',
+  'Camera Shutter': 'Màn trập máy ảnh',
   'Vintage Camera Shutter': 'Màn trập máy ảnh cổ điển',
   'Short Shutter Click': 'Tiếng màn trập ngắn',
   'Mechanical Clicking Loop': 'Vòng lặp tiếng nhấp cơ khí',

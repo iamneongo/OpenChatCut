@@ -21,7 +21,7 @@ export default {
   'Black Title - Box Title': 'Tiêu đề đen · tiêu đề hộp',
   'Black Title - Character Cascade': 'Tiêu đề đen · ký tự xếp tầng',
   'Black Title - Subtitle Line': 'Tiêu đề đen · dòng phụ đề',
-  'Bold Glitch Title': 'Tiêu đề glitch đậm',
+  'Bold Glitch Title': 'Tiêu đề nhiễu đậm',
   'Bold Typography — Style Showcase HQ': 'Kiểu chữ đậm — trình diễn phong cách HQ',
   'Bold Typography Aesthetic — Style Showcase': 'Thẩm mỹ kiểu chữ đậm — trình diễn phong cách',
   'Bold Typography Impact — Style Showcase HQ': 'Kiểu chữ đậm mạnh — trình diễn phong cách HQ',
