@@ -8,6 +8,7 @@ export default {
   '清理成功': 'Cleanup succeeded',
   '清理失败': 'Cleanup failed',
   '可重试': 'Retryable',
+  'CapCut / 剪映': 'CapCut',
   '导出设置': 'Export Settings',
   '发布工作台': 'Delivery Studio',
   '关闭': 'Close',
