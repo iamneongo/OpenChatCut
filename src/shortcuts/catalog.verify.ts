@@ -1,10 +1,16 @@
 // Stable regression for the shortcut catalog (count, chord parsing, matcher routing).
 // Wired into verify:shortcuts (npm pretest).
 import assert from 'node:assert';
-import { SHORTCUT_CATALOG, SHORTCUT_BY_ID } from './catalog';
+import { SHORTCUT_CATALOG, SHORTCUT_BY_ID, SHORTCUT_GROUP_LABELS_VI, SHORTCUT_LABELS_VI, SHORTCUT_GROUPS } from './catalog';
 import { matchShortcut, parseBindingAlts, parseChord } from './match';
 
 assert.strictEqual(SHORTCUT_CATALOG.length, 56);
+for (const shortcut of SHORTCUT_CATALOG) {
+  assert.ok(SHORTCUT_LABELS_VI[shortcut.id], `missing Vietnamese label: ${shortcut.id}`);
+}
+for (const group of SHORTCUT_GROUPS) {
+  assert.ok(SHORTCUT_GROUP_LABELS_VI[group.id], `missing Vietnamese group label: ${group.id}`);
+}
 assert.ok(SHORTCUT_BY_ID['play-pause']);
 assert.ok(SHORTCUT_BY_ID['shuttle-back']);
 
