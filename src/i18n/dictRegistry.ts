@@ -52,10 +52,10 @@ async function fetchDicts(locale: Locale): Promise<LocaleDicts> {
     return { ui: ru.RU, uiFallback: EMPTY, data: enData.default, dataFallback: EMPTY };
   }
   if (locale === 'vi') {
-    const [vi, viData, viSounds, en] = await Promise.all([
-      import('./dict/vi'), import('./dict/vi/templates-data'), import('./dict/vi/sounds'), import('./dict/en'),
+    const [vi, viData, viSounds, viMusic, en] = await Promise.all([
+      import('./dict/vi'), import('./dict/vi/templates-data'), import('./dict/vi/sounds'), import('./dict/vi/music'), import('./dict/en'),
     ]);
-    return { ui: vi.VI, uiFallback: en.EN, data: { ...viData.default, ...viSounds.default }, dataFallback: EMPTY };
+    return { ui: vi.VI, uiFallback: en.EN, data: { ...viData.default, ...viSounds.default, ...viMusic.default }, dataFallback: EMPTY };
   }
   const [it, itData, en, enData] = await Promise.all([
     import('./dict/it'), import('./dict/it/templates-data'),
