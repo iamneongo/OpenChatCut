@@ -124,35 +124,35 @@ const SLIP_UPDATE_KEYS: Record<string, true> = {
 // validation for LLM output (prop whitelist, finite frame ≥0, value in range, easing shape).
 function parseKeyframesArg(raw: unknown): { keyframes?: ItemKeyframes; error?: string } {
   if (!raw || typeof raw !== 'object' || Array.isArray(raw)) {
-    return { error: 'keyframes must be an object mapping prop → [{frame,value,easing?}]' };
+    return { error: 'keyframes phải là đối tượng ánh xạ prop → [{frame,value,easing?}]' };
   }
   const out: ItemKeyframes = {};
   for (const [prop, list] of Object.entries(raw as Record<string, unknown>)) {
     if (!KEYFRAME_PROPS.includes(prop as KeyframeProp)) {
-      return { error: `keyframes prop must be one of ${KEYFRAME_PROPS.join('/')}, got "${prop}"` };
+      return { error: `prop của keyframes phải là một trong ${KEYFRAME_PROPS.join('/')}, nhận được "${prop}"` };
     }
-    if (!Array.isArray(list)) return { error: `keyframes.${prop} must be an array` };
+    if (!Array.isArray(list)) return { error: `keyframes.${prop} phải là một mảng` };
     const [lo, hi] = getKeyframePropertyDefinition(prop as KeyframeProp).valueRange;
     const kfs: Keyframe[] = [];
     for (const entry of list) {
       const k = (entry ?? {}) as Record<string, unknown>;
       const frame = finiteNum(k.frame);
       const value = finiteNum(k.value);
-      if (frame === undefined || frame < 0) return { error: `keyframes.${prop}: frame must be a finite number ≥ 0` };
+      if (frame === undefined || frame < 0) return { error: `keyframes.${prop}: frame phải là số hữu hạn ≥ 0` };
       if (value === undefined || value < lo || value > hi) {
         // Real-life lessons: The model was rejected when sending x/y according to px - the unit is the canvas percentage, and the error is pointed out
         const unitNote = prop === 'x' || prop === 'y' ? ' (x/y are % of canvas, NOT px; 100 = one full canvas width/height)' : '';
-        return { error: `keyframes.${prop}: value must be a finite number in ${lo}..${hi}${unitNote}` };
+        return { error: `keyframes.${prop}: value phải là số hữu hạn trong khoảng ${lo}..${hi}${unitNote}` };
       }
       const easing = normalizeEasing(k.easing);
       if (easing !== undefined && !isValidEasing(easing)) {
-        return { error: `keyframes.${prop}: easing must be linear/easeIn/easeOut/easeInOut or [x1,y1,x2,y2]` };
+        return { error: `keyframes.${prop}: easing phải là linear/easeIn/easeOut/easeInOut hoặc [x1,y1,x2,y2]` };
       }
       kfs.push({ frame: Math.round(frame), value, ...(easing !== undefined ? { easing } : {}) });
     }
     if (kfs.length) out[prop as KeyframeProp] = kfs;
   }
-  if (!Object.keys(out).length) return { error: 'keyframes has no keyframe entries' };
+  if (!Object.keys(out).length) return { error: 'keyframes không có entry nào' };
   return { keyframes: out };
 }
 
@@ -184,8 +184,8 @@ export function validateGenericUpdate(
   if (!it) {
     return {
       error: itemRef
-        ? `item not found: ${itemRef}`
-        : 'no clip selected — pass itemId from read_project.timeline.selectedId',
+        ? `Không tìm thấy item: ${itemRef}`
+        : 'Chưa chọn clip — hãy truyền itemId từ read_project.timeline.selectedId',
     };
   }
   const plan: OpResult = { ok: true, kind: it.kind, plan: 'genericUpdate', itemId: it.id };
@@ -194,7 +194,7 @@ export function validateGenericUpdate(
   if (trackRaw !== undefined) {
     const kind = it.kind === 'audio' ? 'audio' : 'video';
     const track = resolveTrackId(state, trackRaw, kind);
-    if (!track) return { error: `no compatible ${kind} track "${String(trackRaw)}"` };
+    if (!track) return { error: `Không có track ${kind} tương thích với "${String(trackRaw)}"` };
     plan.track = track;
   }
   // fromFrame is canonical; startFrame remains an alias for local and legacy tools.
@@ -218,7 +218,7 @@ export function validateGenericUpdate(
     if (parsed.error) return { error: parsed.error };
     for (const prop of Object.keys(parsed.keyframes!) as KeyframeProp[]) {
       if (!supportsKeyframeProperty(it, prop)) {
-        return { error: `keyframes.${prop} is not supported on a ${it.kind} clip` };
+        return { error: `keyframes.${prop} không được hỗ trợ trên clip ${it.kind}` };
       }
     }
     plan.keyframes = parsed.keyframes;
@@ -226,13 +226,13 @@ export function validateGenericUpdate(
   if (entry.filters !== undefined) {
     const visual = it.kind === 'video' || it.kind === 'image' || it.kind === 'gif' || it.kind === 'svg'
       || it.kind === 'text' || it.kind === 'solid' || it.kind === 'motion-graphic';
-    if (!visual) return { error: `filters not supported on ${it.kind} clips` };
+    if (!visual) return { error: `Không hỗ trợ filters trên clip ${it.kind}` };
     const parsed = parseFiltersArg(entry.filters);
     if (parsed.error) return { error: parsed.error };
     plan.filters = parsed.filters;
   }
   if (entry.transform !== undefined) {
-    if (it.kind === 'audio') return { error: 'transform is not supported on audio clips' };
+    if (it.kind === 'audio') return { error: 'Không hỗ trợ transform trên clip âm thanh' };
     const parsed = parseTransformArg(entry.transform, { width: state.width, height: state.height });
     if (parsed.error) return { error: parsed.error };
     const patch = { ...parsed.transform };
@@ -258,10 +258,10 @@ export function validateGenericUpdate(
   const speedRaw = entry.speed ?? entry.playbackRate;
   if (speedRaw !== undefined) {
     if (it.kind !== 'video' && it.kind !== 'audio' && it.kind !== 'gif') {
-      return { error: `speed/playbackRate only applies to video/audio/gif (got ${it.kind})` };
+      return { error: `speed/playbackRate chỉ áp dụng cho video/audio/gif (nhận ${it.kind})` };
     }
     const n = finiteNum(speedRaw);
-    if (n === undefined) return { error: 'speed must be a finite number (0.1..8)' };
+    if (n === undefined) return { error: 'speed phải là số hữu hạn (0.1..8)' };
     plan.speed = clampNum(n, 0.1, 8);
   }
   if (entry.clearKeyframes !== undefined) {
@@ -270,7 +270,7 @@ export function validateGenericUpdate(
     } else if (typeof entry.clearKeyframes === 'string' && KEYFRAME_PROPS.includes(entry.clearKeyframes as KeyframeProp)) {
       plan.clearKeyframes = entry.clearKeyframes as KeyframeProp;
     } else {
-      return { error: `clearKeyframes must be true (all props) or one of ${KEYFRAME_PROPS.join('/')}` };
+      return { error: `clearKeyframes phải là true (tất cả prop) hoặc một trong ${KEYFRAME_PROPS.join('/')}` };
     }
   }
 
@@ -281,7 +281,7 @@ export function validateGenericUpdate(
   ];
   if (!FIELDS.some((k) => k in plan)) {
     return {
-      error: 'update needs at least one of: track/trackId, startFrame/fromFrame, durationInFrames/sourceDurationInFrames, srcInFrame/sourceStartFrame, assetId, props, volume, fadeInSeconds, fadeOutSeconds, keyframes, clearKeyframes, filters, transform, backgroundFill, backgroundFillStrength, speed',
+      error: 'update cần ít nhất một trong: track/trackId, startFrame/fromFrame, durationInFrames/sourceDurationInFrames, srcInFrame/sourceStartFrame, assetId, props, volume, fadeInSeconds, fadeOutSeconds, keyframes, clearKeyframes, filters, transform, backgroundFill, backgroundFillStrength, speed',
     };
   }
   return plan;
@@ -294,7 +294,7 @@ export function validateSlipUpdate(state: TimelineState, entry: Record<string, u
     }
     return {
       ok: false,
-      error: `update operation not supported: ${String(entry.operation)}`,
+      error: `Không hỗ trợ operation update: ${String(entry.operation)}`,
       code: 'unknown-operation',
       supported: ['slip', 'replace_media', 'relink_media'],
     };
@@ -304,11 +304,11 @@ export function validateSlipUpdate(state: TimelineState, entry: Record<string, u
   const itemRef = entry.itemId ?? entry.id;
   const item = findItem(state.items, itemRef);
   if (!item) {
-    return { ok: false, error: `item not found: ${String(itemRef ?? '')}`, code: 'unknown-item' };
+    return { ok: false, error: `Không tìm thấy item: ${String(itemRef ?? '')}`, code: 'unknown-item' };
   }
   const deltaInFrames = finiteNum(entry.deltaInFrames);
   if (deltaInFrames === undefined) {
-    return { ok: false, error: 'slip needs a finite deltaInFrames', code: 'invalid-delta' };
+    return { ok: false, error: 'slip cần deltaInFrames là số hữu hạn', code: 'invalid-delta' };
   }
   const result = planSlip(state, item.id, deltaInFrames);
   if (!result.ok) return slipFailureToOpResult(result);
@@ -328,7 +328,7 @@ export function validateGenericDelete(state: TimelineState, entry: Record<string
   if (unknown) return { error: unknown };
   const itemRef = entry.itemId ?? entry.id;
   const it = findItem(state.items, itemRef);
-  if (!it) return { error: `item not found: ${String(itemRef ?? '')}` };
+  if (!it) return { error: `Không tìm thấy item: ${String(itemRef ?? '')}` };
   return { ok: true, kind: it.kind, plan: 'genericDelete', itemId: it.id, ripple: entry.ripple === true };
 }
 
@@ -346,16 +346,16 @@ export function validateAuthoredAdd(
 ): OpResult {
   const type = String(entry.type ?? '');
   if (!AUTHORED_ADD_KINDS.has(type)) {
-    return { error: `authored add type not supported: ${type}`, supported: [...AUTHORED_ADD_KINDS] };
+    return { error: `Không hỗ trợ authored add type: ${type}`, supported: [...AUTHORED_ADD_KINDS] };
   }
   const unknown = rejectUnknownFields(entry, AUTHORED_ADD_KEYS);
   if (unknown) return { error: unknown };
   if (entry.assetId !== undefined) {
-    return { error: `${type} is authored — do not pass assetId; set text/color/name props directly` };
+    return { error: `${type} là nội dung authored — không truyền assetId; đặt trực tiếp các prop text/color/name` };
   }
   const track = resolveTrackId(state, entry.track ?? entry.trackId ?? 'V1', 'video')
     ?? defaultTrackId(state, 'video');
-  if (!track) return { error: 'no video track for placement — create one with edit_track first' };
+  if (!track) return { error: 'Không có track video để đặt — hãy tạo bằng edit_track trước' };
   const startFrame = finiteNum(entry.startFrame) ?? finiteNum(entry.fromFrame);
   const durationInFrames = finiteNum(entry.durationInFrames);
   const name = typeof entry.name === 'string' && entry.name.trim() ? entry.name.trim() : undefined;
@@ -374,7 +374,7 @@ export function validateAuthoredAdd(
         : {}),
     };
   }
-  const text = typeof entry.text === 'string' && entry.text.trim() ? entry.text.trim() : '文字';
+  const text = typeof entry.text === 'string' && entry.text.trim() ? entry.text.trim() : 'Văn bản';
   const color = isHexColor(entry.color) ? entry.color.trim() : '#ffffff';
   const fontSize = finiteNum(entry.fontSize);
   const fontWeight = finiteNum(entry.fontWeight);
@@ -411,30 +411,30 @@ export function validateGenericAdd(
   if (AUTHORED_ADD_KINDS.has(type)) return validateAuthoredAdd(state, entry);
   if (!GENERIC_ADD_KINDS.has(type)) {
     return {
-      error: `add type not supported: ${type}`,
+      error: `Không hỗ trợ add type: ${type}`,
       supported: [...GENERIC_ADD_KINDS, ...AUTHORED_ADD_KINDS],
     };
   }
   const unknown = rejectUnknownFields(entry, GENERIC_ADD_KEYS);
   if (unknown) return { error: unknown };
   const q = String(entry.assetId ?? '').trim();
-  if (!q) return { error: `${type} add needs assetId (a pool asset id/prefix; see manage_media_pool action=list)` };
+  if (!q) return { error: `${type} add cần assetId (id/tiền tố asset trong kho; xem manage_media_pool action=list)` };
   const exact = assets.find((asset) => asset.id === q);
   const hits = exact ? [exact] : assets.filter((asset) => asset.id.startsWith(q));
   if (hits.length === 0) {
-    return { error: `no pool asset matching "${q}"`, hint: 'manage_media_pool action=list shows asset ids/names' };
+    return { error: `Không có asset trong kho khớp với "${q}"`, hint: 'manage_media_pool action=list hiển thị id/tên asset' };
   }
   if (hits.length > 1) {
-    return { error: `ambiguous asset prefix "${q}"`, candidates: hits.slice(0, 6).map((asset) => ({ id: asset.id, name: asset.name, kind: asset.kind })) };
+    return { error: `Tiền tố asset "${q}" không đủ rõ ràng`, candidates: hits.slice(0, 6).map((asset) => ({ id: asset.id, name: asset.name, kind: asset.kind })) };
   }
   const asset = hits[0]!;
   if (asset.kind !== type) {
-    return { error: `asset ${asset.id} is kind=${asset.kind}, not ${type} — pass type:"${asset.kind}"` };
+    return { error: `Asset ${asset.id} có kind=${asset.kind}, không phải ${type} — hãy truyền type:"${asset.kind}"` };
   }
   const family = type === 'audio' ? 'audio' : 'video';
   const track = resolveTrackId(state, entry.track ?? entry.trackId ?? (family === 'audio' ? 'A1' : 'V1'), family)
     ?? defaultTrackId(state, family);
-  if (!track) return { error: `no ${family} track for placement — create one with edit_track first` };
+  if (!track) return { error: `Không có track ${family} để đặt — hãy tạo bằng edit_track trước` };
   const startFrame = finiteNum(entry.startFrame) ?? finiteNum(entry.fromFrame);
   const durationInFrames = finiteNum(entry.durationInFrames);
   const sourceWindow = validateSourceWindow(type, asset, state.fps || 30, entry, durationInFrames);
