@@ -6,6 +6,18 @@ import { ExportTabContent } from './ExportDialogTabs';
 import { EXPORT_TABS, type ExportDialogModel } from './useExportDialogModel';
 import type { ExportTab, RenderEngine } from './useExportWorkflow';
 import type { ExportEngineInfo } from './exportWorkflowTypes';
+import type { ExportCleanupStatus, ExportFailureStage } from './exportFailure';
+
+const FAILURE_STAGE_LABELS: Record<ExportFailureStage, string> = {
+  preflight: '预检', queue: '排队', render: '渲染', encode: '编码',
+  destination: '目标写入', upload: '上传', cancel: '取消', timeout: '超时', cleanup: '清理',
+};
+
+const CLEANUP_STATUS_LABELS: Record<ExportCleanupStatus, string> = {
+  'not-required': '无需清理',
+  succeeded: '清理成功',
+  failed: '清理失败',
+};
 
 function RenderBadge({ tab, renderEngine, engine, reason }: {
   tab: ExportTab;
@@ -64,15 +76,16 @@ function BackgroundExportJobs({ model }: { model: ExportDialogModel }) {
 }
 
 function StructuredExportFailure({ model }: { model: ExportDialogModel }) {
+  const t = useT();
   const failure = model.workflow.failure;
   if (!failure) return model.workflow.error
     ? <p className="cc-export-error">{model.workflow.error}</p>
     : null;
   return (
     <div className="cc-export-error" role="alert">
-      <strong>{failure.message}</strong>
-      <div>{failure.stage} · {failure.code} · {failure.retryable ? 'retryable' : 'not retryable'}</div>
-      <div>cleanup: {failure.cleanupStatus}</div>
+      <strong>{t(failure.message)}</strong>
+      <div>{t(FAILURE_STAGE_LABELS[failure.stage])} · {failure.code} · {t(failure.retryable ? '可重试' : '不可重试')}</div>
+      <div>{t('清理')}：{t(CLEANUP_STATUS_LABELS[failure.cleanupStatus])}</div>
       {failure.targetPath && <div>{failure.targetPath}</div>}
       {failure.mediaIssues?.length ? (
         <ul>
