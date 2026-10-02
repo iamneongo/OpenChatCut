@@ -82,6 +82,33 @@ const PRESET_GUIDE_ZH: Record<string, string> = {
   'Jewel Deco': '宝石装饰艺术：装饰边框先绘制，内容随后分组淡入，图表使用温暖渐变并带轻微旋转。近黑暖色背景搭配珊瑚、金色、青色、酒红和粉色宝石色调。',
 };
 
+const PRESET_GUIDE_VI: Record<string, string> = {
+  'Terracotta Editorial': 'Phong cách biên tập ấm áp với chuyển động lò xo có chủ đích, bảng màu đất nung, đồng và hổ phách; dùng chữ trắng và serif trang nhã.',
+  'Retro Duotone Print': 'Phong cách in hai màu hoài cổ: chữ xuất hiện như máy đánh chữ, biểu đồ phát triển tuyến tính, nền kem ấm với xanh hải quân và đỏ cam.',
+  'Highlighter Notebook': 'Phong cách sổ tay: nét bút nhớ quét sau chữ, dấu tích được vẽ dần, giấy trắng, xanh ngọc dịu và vàng sáng.',
+  'Soft Organic Gradient': 'Nền kem với mảng chuyển màu đào và xanh xô thơm, chuyển động mượt và tiết chế, kết hợp tiêu đề serif cùng nội dung sans-serif.',
+  'Doodle Explainer': 'Phong cách giải thích thân thiện với nét vẽ tay, dấu sao và khung xuất hiện bằng chuyển động nảy nhẹ trên nền trắng ấm.',
+  'Emerald Deco': 'Phong cách trang trí ngọc lục bảo: nền xanh đậm, chữ kem, đường viền vàng và chuyển động lò xo mềm mại, thanh lịch.',
+  'Black Yellow Type': 'Phong cách chữ đen vàng mạnh mẽ: bố cục trực tiếp, chỉ dùng đen và vàng sáng, không dùng chuyển màu hay xám.',
+  'Electric Impact Type': 'Phong cách điện quang giàu năng lượng: chữ xuất hiện theo từng từ trên nền xanh điện, nhấn đỏ và trắng.',
+  'Acid Script Poster': 'Phong cách áp-phích chữ viết tay nổi bật: chữ hẹp kết hợp nét viết tay, đường cong được vẽ dần trên nền vàng xanh huỳnh quang.',
+  'Neon Grid Commerce': 'Phong cách thương mại lưới neon: nội dung bật vào theo ô lưới, viền neon và chú thích chữ đơn cách trên nền đen.',
+  'Pale Tech Dashboard': 'Bảng điều khiển công nghệ sáng với nền gần trắng, mảng tím xanh dịu, số lớn và biểu đồ chuyển động mượt.',
+  'Liquid Aura': 'Phong cách hào quang chất lỏng: nền tím xanh sâu, các mảng sáng tím-hồng-xanh chuyển động chậm và chữ trắng nổi bật.',
+  'Grainy Heatwave': 'Phong cách sóng nhiệt nhiễu hạt: phần tử dần hiện ra từ kết cấu nhiễu, dùng cam và đỏ tươi trên nền chuyển màu mạnh.',
+  'Blush Watercolor': 'Phong cách màu nước hồng phấn: các mảng hồng, xanh và đào lan nhẹ như màu nước, kết hợp tiêu đề serif thanh thoát.',
+  'Archive Typewriter': 'Phong cách máy đánh chữ lưu trữ: chữ xuất hiện từng ký tự, biểu đồ vẽ tuyến tính trên nền giấy da ấm và chữ đen.',
+  'Cubist Collage': 'Phong cách tranh ghép lập thể: mảng màu bật từ tâm, chữ trượt từ nhiều hướng, dùng các hình học và màu bão hòa.',
+  'Redline Tech': 'Phong cách công nghệ công nghiệp đường đỏ: bề mặt than đen, lưới chấm, bảng đỏ sắc và kiểu chữ cô đọng mạnh.',
+  'Black & White Neon': 'Phong cách studio đen trắng tiết chế: nền gần đen, chữ trắng phát sáng, đường tròn và biểu đồ tuyến tính, điểm tím dùng rất ít.',
+  'Violet Aura': 'Phong cách hào quang tím mộng mơ: nền tím đen, quầng chuyển tím-hồng, số lớn mờ và thẻ bo góc với chữ trắng tương phản.',
+  'Warm Paper': 'Phong cách biên tập trên giấy ấm: nền kem có vân, điểm nhấn cam san hô, hình sóng hữu cơ và typography serif thanh lịch.',
+  'Modern Editorial': 'Phong cách biên tập hiện đại: giấy xám ấm, lưới sổ tay, tiêu đề serif và chữ Roboto rõ ràng; cam hoặc vàng chỉ nhấn điểm quan trọng.',
+  'Orange Minimal': 'Phong cách tối giản cam: nền trung tính như giấy, khối hình phẳng, typography đậm, huy hiệu đánh số và biểu đồ sạch.',
+  'Crimson Night Glass': 'Phong cách kính đêm đỏ thẫm: phần tử dịu dàng hiện ra từ bóng tối, thẻ kính bo góc và ánh đỏ tiết chế trên nền gần đen.',
+  'Jewel Deco': 'Phong cách trang trí đá quý: khung viền được vẽ trước, nội dung hiện theo nhóm, dùng san hô, vàng, xanh ngọc, đỏ rượu và hồng.',
+};
+
 const ROLE_ZH: Record<string, string> = {
   primary: '主色',
   secondary: '辅色',
@@ -202,6 +229,11 @@ const GUIDE_ZH_BY_SOURCE = new Map(
     .filter((preset) => preset.style.styleGuide && PRESET_GUIDE_ZH[preset.name])
     .map((preset) => [preset.style.styleGuide as string, PRESET_GUIDE_ZH[preset.name]]),
 );
+const GUIDE_VI_BY_SOURCE = new Map(
+  DESIGN_STYLE_PRESETS
+    .filter((preset) => preset.style.styleGuide && PRESET_GUIDE_VI[preset.name])
+    .map((preset) => [preset.style.styleGuide as string, PRESET_GUIDE_VI[preset.name]]),
+);
 
 export function localizeDesignPresetName(name: string, locale: Locale): string {
   if (locale === 'zh') return PRESET_NAME_ZH[name] ?? name;
@@ -221,5 +253,7 @@ export function localizeDesignFontRole(role: string, locale: Locale): string {
 }
 
 export function localizeDesignStyleGuide(guide: string, locale: Locale): string {
-  return locale === 'zh' ? (GUIDE_ZH_BY_SOURCE.get(guide) ?? guide) : guide;
+  if (locale === 'zh') return GUIDE_ZH_BY_SOURCE.get(guide) ?? guide;
+  if (locale === 'vi') return GUIDE_VI_BY_SOURCE.get(guide) ?? guide;
+  return guide;
 }

@@ -26,6 +26,7 @@ assert.equal(
   localizeDesignStyleGuide(modern.style.styleGuide ?? '', 'zh'),
   '现代杂志编辑风：暖灰纸张、笔记本或报刊网格、衬线标题与清晰的 Roboto 正文。整体像数据记者的批注笔记，以黑灰为主，仅用橙色或黄色强调关键数值和语句。',
 );
+assert.match(localizeDesignStyleGuide(modern.style.styleGuide ?? '', 'vi'), /^Phong cách biên tập hiện đại:/);
 assert.equal(localizeDesignStyleGuide(modern.style.styleGuide ?? '', 'en'), modern.style.styleGuide);
 
 for (const preset of DESIGN_STYLE_PRESETS) {
@@ -35,6 +36,11 @@ for (const preset of DESIGN_STYLE_PRESETS) {
     localizeDesignStyleGuide(preset.style.styleGuide ?? '', 'zh'),
     preset.style.styleGuide,
     `${preset.name} 应提供中文品牌指引`,
+  );
+  assert.notEqual(
+    localizeDesignStyleGuide(preset.style.styleGuide ?? '', 'vi'),
+    preset.style.styleGuide,
+    `${preset.name} should provide a Vietnamese style guide`,
   );
 }
 
