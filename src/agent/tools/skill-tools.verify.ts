@@ -26,7 +26,7 @@ const builtinId = CREATIVE_SKILLS[0]?.id ?? null;
 {
   const r = await execSkillTool('manage_skill', { action: 'current' }, ctx) as { active: unknown; note?: string };
   assert.strictEqual(r.active, null, '未选模式应回 active:null');
-  assert.ok(r.note?.includes('未选'), '应带未选说明');
+  assert.ok(r.note?.includes('chưa chọn'), 'phải có ghi chú chưa chọn');
 }
 
 // ---- activate 内置技能 → 落地 + 回简介;current 读回同一个 ----
@@ -39,7 +39,7 @@ if (builtinId) {
   assert.strictEqual(r.ok, true);
   assert.strictEqual(r.active?.id, builtinId);
   assert.strictEqual(r.active?.builtin, true, '内置技能应标 builtin');
-  assert.ok(r.note?.includes('下一条消息'), '应说明注入时机(system 每次 runAgent 构建一次)');
+  assert.ok(r.note?.includes('Tin nhắn tiếp theo'), 'phải mô tả thời điểm tải skill');
   assert.strictEqual(mode, builtinId, 'ctx.setCreativeMode 应被调用');
 
   const cur = await execSkillTool('manage_skill', { action: 'current' }, ctx) as { active: { id: string } };

@@ -39,6 +39,6 @@ export async function execInstallSkillTool(name: string, args: Record<string, un
     slug: result.slug,
     installedAt: result.installedAt,
     files: result.files,
-    note: '技能已安装到用户技能目录（~/.openchatcut/skills/<slug>/），资源库「技能」面板会自动展示。可以在对话中 /skill:<slug> 或从面板激活。',
+    note: 'Skill đã được cài vào thư mục skill của người dùng (~/.openchatcut/skills/<slug>/); panel “Skill” trong thư viện sẽ tự hiển thị. Có thể kích hoạt bằng /skill:<slug> trong hội thoại hoặc từ panel.',
   };
 }

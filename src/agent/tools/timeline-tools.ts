@@ -151,7 +151,7 @@ export async function execTimelineTool(name: string, args: Args, ctx: AgentConte
         ctx.commands.deleteTimeline(t.id);
         deleted.push(t.name);
       }
-      return { ok: deleted.length > 0, deleted, ...(kept.length ? { kept, note: '至少保留一条序列、被嵌套实例引用或未找到的已跳过' } : {}), ...(blocked.length ? { blocked } : {}) };
+      return { ok: deleted.length > 0, deleted, ...(kept.length ? { kept, note: 'Đã bỏ qua các sequence cần giữ lại ít nhất một bản, đang được instance lồng nhau tham chiếu hoặc không tìm thấy' } : {}), ...(blocked.length ? { blocked } : {}) };
     }
 
     default:

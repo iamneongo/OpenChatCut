@@ -204,7 +204,7 @@ function commitTextPlan(ctx: AgentContext, plan: OpResult, ripple: boolean): OpR
     kind: 'text',
     placed: {
       itemId,
-      name: plan.name ?? '文字',
+      name: plan.name ?? 'Văn bản',
       text: plan.text,
       track: plan.track,
       startFrame: plan.startFrame ?? 'appended',
@@ -230,7 +230,7 @@ function commitSolidPlan(ctx: AgentContext, plan: OpResult, ripple: boolean): Op
     kind: 'solid',
     placed: {
       itemId,
-      name: plan.name ?? '纯色',
+      name: plan.name ?? 'Màu đơn',
       color: plan.color ?? '#1a1a1a',
       track: plan.track,
       startFrame: plan.startFrame ?? 'appended',
