@@ -81,7 +81,7 @@ function repetitionFindings(scenes: readonly SceneLike[]): SceneFinding[] {
         severity: 'medium',
         dimension: 'repetition',
         scenes: runScenes,
-        message: `场景 ${sceneRangeMessage(runScenes)} 连续使用同一类型「${types[runStart]}」；建议改变镜头类型或构图。`,
+        message: `Các scene ${sceneRangeMessage(runScenes)} liên tiếp dùng cùng một loại "${types[runStart]}"; nên thay đổi loại shot hoặc bố cục.`,
       });
     }
     runStart = index;
@@ -99,7 +99,7 @@ function repetitionFindings(scenes: readonly SceneLike[]): SceneFinding[] {
       severity: 'medium',
       dimension: 'repetition',
       scenes: affected,
-      message: `场景 ${sceneRangeMessage(affected)} 重复同一画面描述「${description.slice(0, 80)}」；请为每个镜头指定不同内容或动作。`,
+      message: `Các scene ${sceneRangeMessage(affected)} lặp lại cùng mô tả hình ảnh "${description.slice(0, 80)}"; hãy chỉ định nội dung hoặc hành động khác nhau cho từng shot.`,
     });
   }
   return findings;
@@ -119,7 +119,7 @@ export function reviewScenePlan(scenes: readonly SceneLike[]): SceneQualityRepor
         severity: 'high',
         dimension: 'decorative_visuals',
         scenes: [],
-        message: '场景列表为空，没有可供审阅的分镜。',
+        message: 'Danh sách scene đang trống, không có storyboard để đánh giá.',
       }],
     };
   }
@@ -134,7 +134,7 @@ export function reviewScenePlan(scenes: readonly SceneLike[]): SceneQualityRepor
       severity: purposeless.length / scenes.length >= 0.3 ? 'medium' : 'low',
       dimension: 'decorative_visuals',
       scenes: purposeless,
-      message: `场景 ${sceneRangeMessage(purposeless)} 缺少非空 shotIntent/informationRole；请说明镜头的叙事或信息职责。`,
+      message: `Các scene ${sceneRangeMessage(purposeless)} thiếu shotIntent/informationRole không rỗng; hãy nêu rõ vai trò kể chuyện hoặc thông tin của shot.`,
     });
   }
 
@@ -147,7 +147,7 @@ export function reviewScenePlan(scenes: readonly SceneLike[]): SceneQualityRepor
       severity: 'medium',
       dimension: 'typography_overreliance',
       scenes: staticScenes,
-      message: `${staticScenes.length}/${scenes.length} 个场景是静态卡片或图表；建议加入实拍、生成视频或有动作的场景。`,
+      message: `${staticScenes.length}/${scenes.length} scene là card hoặc biểu đồ tĩnh; nên thêm cảnh quay thật, video tạo bằng AI hoặc scene có chuyển động.`,
     });
   }
 
@@ -164,7 +164,7 @@ export function reviewScenePlan(scenes: readonly SceneLike[]): SceneQualityRepor
       severity: 'low',
       dimension: 'generic_language',
       scenes: affected,
-      message: `场景 ${sceneRangeMessage(affected)} 使用泛化措辞「${phrase}」；改写为具体主体、构图、光线、动作或信息。`,
+      message: `Các scene ${sceneRangeMessage(affected)} dùng cách diễn đạt chung chung "${phrase}"; hãy viết lại bằng chủ thể, bố cục, ánh sáng, hành động hoặc thông tin cụ thể.`,
     });
   }
 

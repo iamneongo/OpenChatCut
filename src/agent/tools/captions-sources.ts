@@ -48,11 +48,11 @@ function selectorToEntry(sel: Record<string, unknown>, s: TimelineState): Captio
   const vKind = str(variantObj?.variantKind ?? sel.variantKind);
   const vLang = str(variantObj?.languageCode ?? sel.languageCode);
   if (vKind || vLang) {
-    if (vKind && vKind !== 'translation') return { error: `variantKind "${vKind}" 不支持(仅 translation)` };
-    if (!vLang) return { error: 'variant 需要 languageCode(翻译目标语言)' };
+    if (vKind && vKind !== 'translation') return { error: `Không hỗ trợ variantKind "${vKind}" (chỉ hỗ trợ translation)` };
+    if (!vLang) return { error: 'variant cần languageCode (ngôn ngữ đích để dịch)' };
     const item = s.items.find((it) => it.id === itemId);
     if (!item?.variants || !findVariantByLang(item.variants, vLang, 'translation')) {
-      return { error: `item ${itemId.slice(0, 8)} 上没有 "${vLang}" 翻译变体 — 先 manage_transcript translation_ensure` };
+      return { error: `Item ${itemId.slice(0, 8)} chưa có biến thể bản dịch "${vLang}" — hãy chạy manage_transcript translation_ensure trước` };
     }
     entry.variant = { variantKind: 'translation', languageCode: vLang };
   }
@@ -92,7 +92,7 @@ export function sourceList(c: CaptionsData, s: TimelineState): Result {
       itemId: it.id, track: trackAlias(s, it.track), name: it.name,
       translations: (it.variants ?? []).filter((v) => v.kind === 'translation').map((v) => v.lang),
     })),
-    note: 'auto-stack 里 sources 自上而下按列表序渲染(第一个在最上);per-source 摆位/样式用 positions / source_update。',
+    note: 'Trong auto-stack, sources được render từ trên xuống theo thứ tự danh sách (mục đầu tiên ở trên cùng); dùng positions / source_update để đặt vị trí hoặc style từng source.',
   };
 }
 
@@ -100,14 +100,14 @@ export function sourceList(c: CaptionsData, s: TimelineState): Result {
 export function sourceSet(json: Record<string, unknown>, c: CaptionsData, ctx: AgentContext, s: TimelineState): Result {
   if (json.sourceScope === null || json.mode === 'clear') {
     ctx.commands.updateCaptions({ sources: undefined, sourceEntries: undefined, layoutPolicy: undefined, perSource: undefined, sourceMode: 'item' });
-    return { ok: true, sourceMode: 'item', sources: null, note: 'cleared — 回到单源 sourceItemId' };
+    return { ok: true, sourceMode: 'item', sources: null, note: 'Đã xóa — quay về sourceItemId đơn' };
   }
   if (str(json.mode) === 'timeline') {
     ctx.commands.updateCaptions({ sourceMode: 'timeline', sources: undefined, sourceEntries: undefined });
     return { ok: true, sourceMode: 'timeline', wordCount: resolveCaptionWords({ ...c, sourceMode: 'timeline', sources: undefined, sourceEntries: undefined }, s.items, s.fps).length };
   }
   const rawSources = json.sources;
-  if (!Array.isArray(rawSources) || rawSources.length === 0) return { error: 'source_set needs {mode:"timeline"}, a non-empty {sources:[...]}, or {sourceScope:null}' };
+  if (!Array.isArray(rawSources) || rawSources.length === 0) return { error: 'source_set cần {mode:"timeline"}, {sources:[...]} không rỗng hoặc {sourceScope:null}' };
   const entries: CaptionSourceEntry[] = [];
   for (const sel of rawSources) {
     const e = sel && typeof sel === 'object' ? selectorToEntry(sel as Record<string, unknown>, s) : { error: `bad source: ${JSON.stringify(sel)}` };
@@ -120,7 +120,7 @@ export function sourceSet(json: Record<string, unknown>, c: CaptionsData, ctx: A
   return {
     ok: true, sources: normalized.map((e, i) => entryRow(e, i, s)),
     wordCount: resolveCaptionWords({ ...c, ...patch }, s.items, s.fps).length,
-    note: 'auto-stack:列表第一个渲染在最上。',
+    note: 'auto-stack: source đầu tiên trong danh sách được render ở trên cùng.',
   };
 }
 
@@ -143,7 +143,7 @@ export function sourceAdd(json: Record<string, unknown>, c: CaptionsData, ctx: A
 /** source_remove — drop one source by top-level selector (index/trackId/itemId/…). */
 export function sourceRemove(json: Record<string, unknown>, c: CaptionsData, ctx: AgentContext, s: TimelineState): Result {
   const cur = ensureEntries(c, s);
-  if (!cur.length) return { error: 'no multi-source scope to remove from' };
+  if (!cur.length) return { error: 'Không có phạm vi nhiều source để xóa' };
   const m = matchEntries(cur, json, s);
   if ('error' in (m as object)) return m as Result;
   const drop = new Set(m as number[]);
@@ -162,21 +162,21 @@ export async function languageMode(json: Record<string, unknown>, c: CaptionsDat
     return { ok: true, mode: 'original' };
   }
   if (mode === 'translation') {
-    if (!lang) return { error: 'translation mode needs languageCode (the target language)' };
+    if (!lang) return { error: 'Chế độ translation cần languageCode (ngôn ngữ đích)' };
     const it = c.sourceItemId ? s.items.find((x) => x.id === c.sourceItemId) : firstTranscribedOnTrack(s, 'A1');
     const v = it?.variants ? findVariantByLang(it.variants, lang, 'translation') : undefined;
-    if (!v) return { error: `no "${lang}" transcript variant on the caption source; run manage_transcript translation_ensure first` };
+    if (!v) return { error: `Nguồn phụ đề chưa có variant transcript "${lang}"; hãy chạy manage_transcript translation_ensure trước` };
     ctx.commands.updateCaptions({ captionVariantId: v.id, bilingual: false, translation: undefined });
-    return { ok: true, mode: 'translation', languageCode: v.lang, note: 'main caption line now shows the translation variant (source timing preserved).' };
+    return { ok: true, mode: 'translation', languageCode: v.lang, note: 'Dòng phụ đề chính giờ hiển thị biến thể bản dịch (giữ nguyên timing nguồn).' };
   }
   if (mode === 'bilingual') return bilingual(json, c, ctx, s, lang);
-  return { error: `unknown language_mode "${mode}" (expected original|translation|bilingual)` };
+  return { error: `language_mode không xác định: "${mode}" (cần original|translation|bilingual)` };
 }
 
 /** bilingual — original + a translated 2nd line (action=bilingual / language_mode bilingual). */
 export async function bilingual(json: Record<string, unknown>, c: CaptionsData, ctx: AgentContext, s: TimelineState, langArg?: string): Promise<Result> {
   const lang = langArg ?? (str(json.languageCode) || str(json.lang));
-  if (!lang) return { error: 'bilingual needs languageCode (the language to translate INTO)' };
+  if (!lang) return { error: 'bilingual cần languageCode (ngôn ngữ đích để dịch sang)' };
   try {
     const { cues, fingerprint } = await buildTranslation(c, s.items, s.fps, lang);
     ctx.commands.updateCaptions({
@@ -186,9 +186,9 @@ export async function bilingual(json: Record<string, unknown>, c: CaptionsData, 
     const primary = str(json.primary) || 'original';
     return {
       ok: true, mode: 'bilingual', languageCode: lang, lines: cues.length,
-      ...(primary === 'translation' ? { note: 'this build always stacks the original on top; primary:"translation" ordering not modeled.' } : {}),
+      ...(primary === 'translation' ? { note: 'Bản này luôn xếp bản gốc ở trên; chưa mô hình hóa thứ tự primary:"translation".' } : {}),
     };
   } catch (e) {
-    return { error: `translation failed: ${e instanceof Error ? e.message : String(e)}` };
+    return { error: `Dịch thất bại: ${e instanceof Error ? e.message : String(e)}` };
   }
 }
