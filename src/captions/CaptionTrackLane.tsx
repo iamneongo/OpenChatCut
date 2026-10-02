@@ -332,9 +332,9 @@ export function CaptionTrackLane({
         style={{ left: menu.x, top: menu.y }} onPointerDown={(event) => event.stopPropagation()}>
         {translationOpen ? <>
           <button type="button" role="menuitem" onClick={() => setTranslationOpen(false)}>{t('翻译')}</button>
-          {CAPTION_CUE_TRANSLATION_LANGS.map((language) => <button key={language.label} type="button" role="menuitem"
-            disabled={menuBusy} onClick={() => void translateCue(menu.target, language.label)}>
-            {language.flag} {language.label}
+          {CAPTION_CUE_TRANSLATION_LANGS.map((language) => <button key={language.id} type="button" role="menuitem"
+            disabled={menuBusy} onClick={() => void translateCue(menu.target, language.id)}>
+            {language.flag} {t(language.label)}
           </button>)}
         </> : <>
           <button type="button" role="menuitem" onClick={() => void copyCue(menu.selection)}>{t('复制')}</button>

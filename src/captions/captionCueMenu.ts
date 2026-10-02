@@ -3,13 +3,13 @@ import type { CaptionsData } from './types';
 import { updateManualCue } from './manualCaptions';
 
 export const CAPTION_CUE_TRANSLATION_LANGS = [
-  { label: 'English', flag: '🇺🇸' },
-  { label: '日本語', flag: '🇯🇵' },
-  { label: '한국어', flag: '🇰🇷' },
-  { label: 'Español', flag: '🇪🇸' },
-  { label: 'Français', flag: '🇫🇷' },
-  { label: 'Deutsch', flag: '🇩🇪' },
-  { label: 'Português', flag: '🇵🇹' },
+  { id: 'English', label: '英文', flag: '🇺🇸' },
+  { id: '日本語', label: '日文', flag: '🇯🇵' },
+  { id: '한국어', label: '韩文', flag: '🇰🇷' },
+  { id: 'Español', label: '西班牙文', flag: '🇪🇸' },
+  { id: 'Français', label: '法文', flag: '🇫🇷' },
+  { id: 'Deutsch', label: '德文', flag: '🇩🇪' },
+  { id: 'Português', label: '葡萄牙文', flag: '🇵🇹' },
 ] as const;
 
 export interface CaptionCueTextTarget {

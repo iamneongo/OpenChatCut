@@ -24,10 +24,11 @@ const FIELD_STYLE: CSSProperties = {
 };
 
 export function PropSchemaField(props: PropSchemaFieldProps) {
+  const t = useT();
   const label = props.spec.label ?? props.spec.key;
   return (
     <label className="cc-insp-mg-field">
-      <span title={props.spec.key}>{label}{props.mixed ? ' —' : ''}</span>
+      <span title={props.spec.key}>{t(label)}{props.mixed ? ' —' : ''}</span>
       <PropControl {...props} />
     </label>
   );
@@ -86,11 +87,12 @@ function FontField({ spec, value, onChange }: PropSchemaFieldProps) {
 }
 
 function SelectField({ spec, value, onChange }: PropSchemaFieldProps) {
+  const t = useT();
   const options = (spec.options ?? []).map((option) => typeof option === 'string' ? { label: option, value: option } : option);
   return (
     <select value={String(value ?? '')} onChange={(event) => onChange(event.target.value)} style={FIELD_STYLE}>
       {options.length === 0 && <option value={String(value ?? '')}>{String(value ?? '—')}</option>}
-      {options.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
+      {options.map((option) => <option key={option.value} value={option.value}>{t(option.label)}</option>)}
     </select>
   );
 }
