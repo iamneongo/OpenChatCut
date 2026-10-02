@@ -8,6 +8,7 @@
 import type { AnyAction } from '../editor/store';
 import type { ProjectDoc, TimelineState } from '../editor/types';
 import { migrateProjectDoc } from '../persist/projectStore';
+import { getLocale } from '../i18n/locale';
 
 export interface Operation {
   tool: string;
@@ -52,30 +53,45 @@ export interface BuiltProposal extends Proposal {
 
 // map an agent tool call + the store actions it produced into a display Operation.
 const VERB: Record<string, string> = {
-  add_motion_graphic: '添加动画',
-  create_motion_graphic: '生成动画',
-  add_audio: '添加音频',
-  update_item_props: '改属性',
-  move_item: '移动片段',
-  set_item_timing: '改时长/位置',
-  duplicate_item: '复制片段',
-  remove_item: '删除片段',
-  split_item: '切分片段',
-  clear_timeline: '清空时间线',
-  set_aspect_ratio: '改画面比例',
-  set_item_transcript: '挂转写',
-  delete_text: '删文字=删视频',
-  clean_script: '清理口播',
-  edit_captions: '编辑字幕',
-  manage_timelines: '管理序列',
-  edit_track: '管理轨道',
-  manage_media_pool: '整理素材池',
-  isolate_voice: '人声隔离',
-  apply_script: '改稿应用',
-  manage_effects: '特效',
-  edit_item: '编辑片段',
-  browse_library: '浏览资源库',
+  add_motion_graphic: 'Thêm hoạt ảnh',
+  create_motion_graphic: 'Tạo hoạt ảnh',
+  add_audio: 'Thêm âm thanh',
+  update_item_props: 'Sửa thuộc tính',
+  move_item: 'Di chuyển đoạn',
+  set_item_timing: 'Sửa thời lượng/vị trí',
+  duplicate_item: 'Nhân bản đoạn',
+  remove_item: 'Xóa đoạn',
+  split_item: 'Tách đoạn',
+  clear_timeline: 'Xóa dòng thời gian',
+  set_aspect_ratio: 'Sửa tỷ lệ khung hình',
+  set_item_transcript: 'Gắn bản chép lời',
+  delete_text: 'Xóa chữ = xóa video',
+  clean_script: 'Làm gọn lời thoại',
+  edit_captions: 'Sửa phụ đề',
+  manage_timelines: 'Quản lý chuỗi',
+  edit_track: 'Quản lý rãnh',
+  manage_media_pool: 'Sắp xếp kho tư liệu',
+  isolate_voice: 'Tách giọng',
+  apply_script: 'Áp dụng bản sửa',
+  manage_effects: 'Hiệu ứng',
+  edit_item: 'Sửa đoạn',
+  browse_library: 'Duyệt thư viện',
 };
+
+const VERB_ZH: Record<string, string> = {
+  add_motion_graphic: '添加动画', create_motion_graphic: '生成动画', add_audio: '添加音频',
+  update_item_props: '改属性', move_item: '移动片段', set_item_timing: '改时长/位置',
+  duplicate_item: '复制片段', remove_item: '删除片段', split_item: '切分片段',
+  clear_timeline: '清空时间线', set_aspect_ratio: '改画面比例', set_item_transcript: '挂转写',
+  delete_text: '删文字=删视频', clean_script: '清理口播', edit_captions: '编辑字幕',
+  manage_timelines: '管理序列', edit_track: '管理轨道', manage_media_pool: '整理素材池',
+  isolate_voice: '人声隔离', apply_script: '改稿应用', manage_effects: '特效',
+  edit_item: '编辑片段', browse_library: '浏览资源库',
+};
+
+function localized(vi: string, zh: string): string {
+  return getLocale() === 'vi' ? vi : zh;
+}
 
 function targetOf(args: Record<string, unknown>, actions: AnyAction[]): string {
   const name = args.name ?? args.query ?? args.template ?? args.ratio;
@@ -88,7 +104,7 @@ function targetOf(args: Record<string, unknown>, actions: AnyAction[]): string {
     if (a.type === 'tl.create') return a.timeline.name;
     if (a.type === 'tl.duplicate' || a.type === 'tl.rename') return a.name;
   }
-  return '时间线';
+  return localized('Dòng thời gian', '时间线');
 }
 
 function impactOf(actions: AnyAction[]): string {
@@ -102,12 +118,12 @@ function impactOf(actions: AnyAction[]): string {
     else mod++;
   }
   const parts: string[] = [];
-  if (addSeq) parts.push(`+${addSeq} 序列`);
-  if (delSeq) parts.push(`−${delSeq} 序列`);
-  if (add) parts.push(`+${add} 片段`);
-  if (del) parts.push(`−${del} 片段`);
-  if (mod) parts.push(`${mod} 处改动`);
-  return parts.join(' · ') || '无变化';
+  if (addSeq) parts.push(localized(`+${addSeq} chuỗi`, `+${addSeq} 序列`));
+  if (delSeq) parts.push(localized(`−${delSeq} chuỗi`, `−${delSeq} 序列`));
+  if (add) parts.push(localized(`+${add} đoạn`, `+${add} 片段`));
+  if (del) parts.push(localized(`−${del} đoạn`, `−${del} 片段`));
+  if (mod) parts.push(localized(`${mod} thay đổi`, `${mod} 处改动`));
+  return parts.join(' · ') || localized('Không có thay đổi', '无变化');
 }
 
 export function buildOperation(tool: string, args: Record<string, unknown>, actions: AnyAction[]): Operation {
@@ -115,7 +131,7 @@ export function buildOperation(tool: string, args: Record<string, unknown>, acti
     tool,
     args,
     actions,
-    action: VERB[tool] ?? tool,
+    action: getLocale() === 'vi' ? (VERB[tool] ?? tool) : (VERB_ZH[tool] ?? tool),
     target: targetOf(args, actions),
     impact: impactOf(actions),
     rationale: typeof args.rationale === 'string' ? args.rationale : undefined,
@@ -165,13 +181,13 @@ export function buildProposal(
 ): BuiltProposal {
   const compacted = compactOperations(operations);
   const totalImpact = impactOf(compacted.flatMap((o) => o.actions));
-  const summary = assistantText.trim() || `${compacted.length} 项编辑`;
+  const summary = assistantText.trim() || localized(`${compacted.length} mục chỉnh sửa`, `${compacted.length} 项编辑`);
   return {
     id: crypto.randomUUID(),
-    title: 'Agent 编辑提案',
+    title: localized('Đề xuất chỉnh sửa của Agent', 'Agent 编辑提案'),
     summary,
     totalImpact,
-    options: [{ id: 'opt-1', label: '应用全部', recommended: true, summary, totalImpact, operations: compacted }],
+    options: [{ id: 'opt-1', label: localized('Áp dụng tất cả', '应用全部'), recommended: true, summary, totalImpact, operations: compacted }],
     baseDoc,
     resultState,
     ...(agentRunId ? { agentRunId } : {}),
