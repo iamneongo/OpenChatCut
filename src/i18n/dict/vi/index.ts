@@ -2546,4 +2546,8 @@ export const VI: Record<string, string> = {
   '桌面端点击“选择目录”；也可手动输入绝对路径（可用 ~/ 开头）。清除后回到默认目录。': 'Trên desktop nhấp “Chọn thư mục”; cũng có thể nhập thủ công đường dẫn tuyệt đối (có thể bắt đầu bằng ~/). Xóa để quay về thư mục mặc định.',
   '已保存 · 重启应用后新的工程存储目录才会生效': 'Đã lưu · thư mục lưu dự án mới chỉ có hiệu lực sau khi khởi động lại ứng dụng',
   '该模型不在内置目录，以上数值为估算（上下文 {context} / 输出 {output}）。若与实际不符，点「展开」手动修改。': 'Model này không có trong danh mục tích hợp, các giá trị trên chỉ là ước tính (context {context} / output {output}). Nếu không đúng thực tế, nhấp “Mở rộng” để sửa thủ công.',
+  'Selected {n}': 'Đã chọn {n}',
+  '切换 WebCodecs…': 'Đang chuyển sang WebCodecs…',
+  '已选 {n} 项': 'Đã chọn {n} mục',
+  '无法将此属性应用到全部选中片段。': 'Không thể áp dụng thuộc tính này cho toàn bộ clip đã chọn.',
 };
