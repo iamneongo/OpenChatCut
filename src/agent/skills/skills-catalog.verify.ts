@@ -24,7 +24,7 @@ for (const slug of slugs) {
   assert.ok(body.trim().length > 500, `${slug}: 创作技能正文有实质内容`);
 }
 for (const s of CREATIVE_SKILL_METADATA) {
-  assert.ok(s.id && s.name && s.nameZh, `skill ${s.name} is well-formed`);
+  assert.ok(s.id && s.name && s.nameZh && s.nameVi, `skill ${s.name} is well-formed`);
   assert.ok(Array.isArray(s.scenarios), 'scenarios is an array');
 }
 
