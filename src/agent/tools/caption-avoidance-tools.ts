@@ -177,20 +177,20 @@ export async function applyCaptionAvoidance(
       if (!replacement) {
         if (hasConflict) {
           blocked += 1;
-          details.push('检测到字幕遮挡，但没有可用的安全位置，未调整');
+          details.push('Phát hiện phụ đề che khuất, nhưng không có vị trí an toàn khả dụng nên chưa điều chỉnh');
         }
         continue;
       }
       if (!writeLayout(next, representative.target.placementSources, replacement)) {
         blocked += 1;
-        details.push('有效字幕位置由不可修改的布局策略控制，未调整');
+        details.push('Vị trí phụ đề hiện tại do layout policy không thể sửa đổi kiểm soát nên chưa điều chỉnh');
         continue;
       }
       adjusted += 1;
       const label = representative.target.placementSources
         .map((source) => source.kind === 'layout' ? '整体字幕' : source.kind === 'slot' ? `字幕槽「${source.slotId}」` : `字幕条「${source.sourceId}」`)
         .join('、');
-      details.push(`${label}已避开人脸`);
+      details.push(`${label} đã tránh khuôn mặt`);
     }
     if (adjusted) ctx.commands.setCaptions(next, trackId ?? undefined);
     total += adjusted;
@@ -199,10 +199,10 @@ export async function applyCaptionAvoidance(
   }
 
   if (!sourceCount) {
-    return { ok: false, error: '字幕显示期间没有找到可见的视频画面，未修改字幕布局' };
+    return { ok: false, error: 'Không tìm thấy hình ảnh video hiển thị trong thời gian phụ đề xuất hiện; chưa sửa layout phụ đề' };
   }
   if (!geometryCount) {
-    return { ok: false, error: '可见视频画面的几何分析不可用，未修改字幕布局' };
+    return { ok: false, error: 'Không có dữ liệu phân tích hình học của hình ảnh video hiển thị; chưa sửa layout phụ đề' };
   }
   return {
     ok: true,
@@ -217,6 +217,6 @@ export async function applyCaptionAvoidance(
 }
 
 export async function execCaptionAvoidanceTool(name: string, _args: Args, ctx: AgentContext): Promise<unknown> {
-  if (name !== 'apply_caption_avoidance') return { error: `unknown tool ${name}` };
+  if (name !== 'apply_caption_avoidance') return { error: `Tool không xác định: ${name}` };
   return applyCaptionAvoidance(ctx);
 }

@@ -18,13 +18,13 @@ function findAsset(
   id: unknown,
 ): { asset?: MediaAsset; error?: string; candidates?: Array<{ id: string; name: string; kind: string }> } {
   const query = String(id ?? '').trim();
-  if (!query) return { error: '缺少素材 id' };
+  if (!query) return { error: 'Thiếu id tư liệu' };
   const exact = assets.find((asset) => asset.id === query);
   const matches = exact ? [exact] : assets.filter((asset) => asset.id.startsWith(query));
-  if (!matches.length) return { error: `找不到素材 ${query}` };
+  if (!matches.length) return { error: `Không tìm thấy tư liệu ${query}` };
   if (matches.length > 1) {
     return {
-      error: `素材前缀 ${query} 不唯一`,
+      error: `Tiền tố tư liệu ${query} không đủ rõ ràng`,
       candidates: matches.slice(0, 6).map((asset) => ({ id: asset.id, name: asset.name, kind: asset.kind })),
     };
   }
@@ -36,26 +36,26 @@ export async function execIsolateVoiceTool(
   args: Args,
   ctx: AgentContext,
 ): Promise<unknown> {
-  if (name !== 'isolate_voice') return { error: `unknown tool ${name}` };
+  if (name !== 'isolate_voice') return { error: `Tool không xác định: ${name}` };
 
   const state = ctx.getState();
   const item = findItem(state.items, args.itemId);
   if (!item) {
     return {
-      error: `找不到 clip ${args.itemId ?? '(缺 itemId)'}`,
+      error: `Không tìm thấy clip ${args.itemId ?? '(thiếu itemId)'}`,
       available: state.items
         .filter((it) => it.kind === 'video' || it.kind === 'audio')
         .map((it) => ({ itemId: it.id, name: it.name, kind: it.kind })),
     };
   }
   if (item.kind !== 'video' && item.kind !== 'audio') {
-    return { error: `isolate_voice 只适用于 video/audio，当前 kind=${item.kind}` };
+    return { error: `isolate_voice chỉ áp dụng cho video/audio, kind hiện tại=${item.kind}` };
   }
 
   const action = String(args.action ?? 'apply').toLowerCase();
   if (action === 'clear') {
     if (!item.denoisedSrc) {
-      return { ok: true, itemId: item.id, action: 'clear', note: '本来就没有人声隔离' };
+      return { ok: true, itemId: item.id, action: 'clear', note: 'Clip vốn chưa có tách giọng' };
     }
     ctx.commands.setItemDenoise(item.id, null);
     return { ok: true, itemId: item.id, action: 'clear', denoisedSrc: null };
@@ -71,11 +71,11 @@ export async function execIsolateVoiceTool(
     if (!sourceMatch.asset) return { error: `sourceAssetId: ${sourceMatch.error}`, candidates: sourceMatch.candidates };
     const sourceAsset = sourceMatch.asset;
     if (sourceAsset.kind !== 'audio' && sourceAsset.kind !== 'video') {
-      return { error: `sourceAssetId 必须是 video/audio，当前 kind=${sourceAsset.kind}` };
+      return { error: `sourceAssetId phải là video/audio, kind hiện tại=${sourceAsset.kind}` };
     }
     if (!item.src || item.src !== sourceAsset.src) {
       return {
-        error: 'sourceAssetId 与目标片段来源不匹配',
+        error: 'sourceAssetId không khớp với nguồn của clip đích',
         itemSrc: item.src ?? null,
         sourceAssetId: sourceAsset.id,
         sourceSrc: sourceAsset.src,
@@ -86,10 +86,10 @@ export async function execIsolateVoiceTool(
     if (!denoisedMatch.asset) return { error: `denoisedAssetId: ${denoisedMatch.error}`, candidates: denoisedMatch.candidates };
     const denoisedAsset = denoisedMatch.asset;
     if (denoisedAsset.kind !== 'audio') {
-      return { error: `denoisedAssetId 必须是 audio，当前 kind=${denoisedAsset.kind}` };
+      return { error: `denoisedAssetId phải là audio, kind hiện tại=${denoisedAsset.kind}` };
     }
     if (denoisedAsset.id === sourceAsset.id || denoisedAsset.src === sourceAsset.src) {
-      return { error: 'denoisedAssetId 不能与源素材相同' };
+      return { error: 'denoisedAssetId không được trùng với tư liệu nguồn' };
     }
 
     const unchanged = item.denoisedSrc === denoisedAsset.src
@@ -104,24 +104,24 @@ export async function execIsolateVoiceTool(
       denoisedSrc: denoisedAsset.src,
       strength,
       unchanged,
-      note: '已挂载媒体池中的分离音频；源素材与共享素材均未修改。',
+      note: 'Đã gắn âm thanh đã tách trong kho tư liệu; không thay đổi tư liệu nguồn hoặc tư liệu dùng chung.',
     };
   }
 
   if (action !== 'apply') {
-    return { error: `unknown action ${action}（用 apply、attach 或 clear）` };
+    return { error: `Action không xác định: ${action} (dùng apply, attach hoặc clear)` };
   }
 
   if (args.sourceAssetId) {
     const sourceMatch = findAsset(ctx.getDoc().assets ?? [], args.sourceAssetId);
     if (!sourceMatch.asset) return { error: `sourceAssetId: ${sourceMatch.error}`, candidates: sourceMatch.candidates };
-    if (sourceMatch.asset.src !== item.src) return { error: 'sourceAssetId 与目标片段来源不匹配' };
+    if (sourceMatch.asset.src !== item.src) return { error: 'sourceAssetId không khớp với nguồn của clip đích' };
   }
 
   const src = item.src ?? '';
   if (!src.startsWith('/media/uploads/')) {
     return {
-      error: 'isolate_voice 需要 /media/uploads 源文件（请先 finalize/上传到媒体池）。blob: 占位预览尚不可隔离。',
+      error: 'isolate_voice cần tệp nguồn trong /media/uploads (hãy finalize/tải lên kho tư liệu trước). Chưa thể tách từ bản xem trước placeholder blob:.',
       src: src || null,
     };
   }
@@ -150,7 +150,7 @@ export async function execIsolateVoiceTool(
         sourceRevision: validation.sourceRevision,
         currentSourceRevision: validation.currentSourceRevision,
         resultSourceRevision: validation.resultSourceRevision,
-        note: '源素材在隔离期间已变化；派生结果已丢弃，未修改时间线。',
+        note: 'Tư liệu nguồn đã thay đổi trong lúc tách; đã bỏ kết quả dẫn xuất và không sửa timeline.',
       };
     }
     ctx.commands.setItemDenoise(item.id, r.path, r.strength);
@@ -163,15 +163,15 @@ export async function execIsolateVoiceTool(
       engine: r.engine ?? 'ffmpeg-open-box',
       sourceRevision: r.sourceRevision,
       bytes: r.bytes,
-      note: 'Open-box ffmpeg denoise attached; original src unchanged. action=clear to remove.',
+      note: 'Đã gắn bản khử nhiễu bằng ffmpeg open-box; src gốc không đổi. Dùng action=clear để gỡ.',
     };
   } catch (err) {
-    const msg = err instanceof Error ? err.message : 'isolate_voice 请求失败';
+    const msg = err instanceof Error ? err.message : 'Yêu cầu isolate_voice thất bại';
     return {
       error: msg,
       hint: /503|ffmpeg|spawn/i.test(msg)
-        ? '本机 ffmpeg 不可用；可外部降噪后重新导入，或安装 ffmpeg。'
-        : '确认 dev server 已挂载 /api/isolate-voice，且源文件在 /media/uploads。',
+        ? 'ffmpeg trên máy không khả dụng; có thể khử nhiễu bên ngoài rồi nhập lại, hoặc cài ffmpeg.'
+        : 'Hãy xác nhận dev server đã gắn /api/isolate-voice và tệp nguồn nằm trong /media/uploads.',
     };
   }
 }
