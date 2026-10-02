@@ -23,14 +23,14 @@ function findAudioItems(ctx: AgentContext, itemId: unknown) {
 }
 
 export async function execLoudnessTool(name: string, args: Args, ctx: AgentContext): Promise<unknown> {
-  if (name !== 'normalize_loudness') return { error: `unknown tool ${name}` };
+  if (name !== 'normalize_loudness') return { error: `Tool không xác định: ${name}` };
 
   const target = typeof args.target === 'number' && Number.isFinite(args.target) ? args.target : DEFAULT_TARGET_LUFS;
   const items = findAudioItems(ctx, args.itemId);
   if (items.length === 0) {
     return args.itemId
-      ? { error: `no audio clip ${args.itemId}` }
-      : { ok: true, normalized: [], target, note: 'timeline 上没有音频 clip' };
+      ? { error: `Không tìm thấy clip âm thanh ${args.itemId}` }
+      : { ok: true, normalized: [], target, note: 'Timeline không có clip âm thanh' };
   }
 
   const normalized: { itemId: string; measuredLufs: number; gain: number }[] = [];
@@ -40,7 +40,7 @@ export async function execLoudnessTool(name: string, args: Args, ctx: AgentConte
   const analyses = await analyzeLoudnessBatch(snapshots.map((snapshot) => snapshot.src).filter(Boolean));
   for (const snapshot of snapshots) {
     if (!snapshot.src) {
-      skipped.push({ itemId: snapshot.itemId, note: 'no src' });
+      skipped.push({ itemId: snapshot.itemId, note: 'không có src' });
       continue;
     }
     try {
@@ -48,7 +48,7 @@ export async function execLoudnessTool(name: string, args: Args, ctx: AgentConte
       if (analysis.status === 'rejected') throw analysis.reason;
       const current = ctx.getState().items.find((item) => item.id === snapshot.itemId);
       if (ctx.getDoc().activeTimelineId !== doc.activeTimelineId || validateTimelineItemSourceResult(snapshot, current, ctx.getDoc().assets, snapshot.sourceRevision).status === 'stale') {
-        skipped.push({ itemId: snapshot.itemId, note: '源素材已变化，请重试' });
+        skipped.push({ itemId: snapshot.itemId, note: 'Tư liệu nguồn đã thay đổi, hãy thử lại' });
         continue;
       }
       const measuredLufs = analysis.value;
@@ -56,7 +56,7 @@ export async function execLoudnessTool(name: string, args: Args, ctx: AgentConte
       ctx.commands.setItemVolume(snapshot.itemId, gain);
       normalized.push({ itemId: snapshot.itemId, measuredLufs, gain });
     } catch (e) {
-      skipped.push({ itemId: snapshot.itemId, note: `解码失败: ${e instanceof Error ? e.message : String(e)}` });
+      skipped.push({ itemId: snapshot.itemId, note: `Giải mã thất bại: ${e instanceof Error ? e.message : String(e)}` });
     }
   }
 

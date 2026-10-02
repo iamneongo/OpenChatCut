@@ -109,7 +109,7 @@ const bareState: TimelineState = { fps: 30, width: 1920, height: 1080, selectedI
 const bare = makeDraft(docFromTimeline(bareState));
 const bareCtx: AgentContext = { commands: bare.commands, getState: bare.getState, getDoc: bare.getDoc, getCreativeMode: () => null, templates: [], audio: [] };
 const err = await execHighlightTool('find_highlights', { count: 3 }, bareCtx) as { error?: string };
-assert.ok(err.error && /转写/.test(err.error), '无转写返回清晰错误');
+assert.ok(err.error && /chép lời/.test(err.error), '无转写返回清晰错误');
 assert.strictEqual(bare.getDoc().timelines.length, 1, '错误路径不新建任何序列');
 
 setHighlightSelector(null); // 还原真 LLM 路径

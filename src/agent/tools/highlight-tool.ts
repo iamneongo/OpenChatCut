@@ -81,7 +81,7 @@ function parseJsonArray(text: string): unknown {
   const cleaned = text.replace(/^\s*```[a-zA-Z]*\s*\n?/, '').replace(/\n?```\s*$/, '').trim();
   const start = cleaned.indexOf('[');
   const end = cleaned.lastIndexOf(']');
-  if (start < 0 || end <= start) throw new Error('模型输出里没有 JSON 数组');
+  if (start < 0 || end <= start) throw new Error('Output của model không chứa mảng JSON');
   return JSON.parse(cleaned.slice(start, end + 1));
 }
 
@@ -127,7 +127,7 @@ export function validateHighlights(
         let e2 = ei;
         while (e2 > si && (opts.words[e2].end - startMs) > opts.maxMs) e2 -= 1;
         if ((opts.words[e2].end - startMs) < (opts.minMs ?? 0)) continue;
-        const title = typeof o.title === 'string' && o.title.trim() ? o.title.trim() : `精彩片段 ${cleaned.length + 1}`;
+        const title = typeof o.title === 'string' && o.title.trim() ? o.title.trim() : `Đoạn nổi bật ${cleaned.length + 1}`;
         cleaned.push({
           startWordIndex: si,
           endWordIndex: e2,
@@ -137,7 +137,7 @@ export function validateHighlights(
         continue;
       }
     }
-    const title = typeof o.title === 'string' && o.title.trim() ? o.title.trim() : `精彩片段 ${cleaned.length + 1}`;
+    const title = typeof o.title === 'string' && o.title.trim() ? o.title.trim() : `Đoạn nổi bật ${cleaned.length + 1}`;
     cleaned.push({ startWordIndex: si, endWordIndex: ei, title, reason: typeof o.reason === 'string' ? o.reason : undefined });
   }
   cleaned.sort((a, b) => a.startWordIndex - b.startWordIndex || a.endWordIndex - b.endWordIndex);
@@ -179,7 +179,7 @@ export function heuristicHighlights(
       const score = (text.length / (dur / 1000))
         + ( /[?!？！]/.test(text) ? 8 : 0)
         + ( /\d/.test(text) ? 4 : 0);
-      const title = text.replace(/\s+/g, ' ').trim().slice(0, 24) || `片段 ${candidates.length + 1}`;
+      const title = text.replace(/\s+/g, ' ').trim().slice(0, 24) || `Đoạn ${candidates.length + 1}`;
       candidates.push({
         startWordIndex: i,
         endWordIndex: j,
@@ -316,7 +316,7 @@ function trimCopyToHighlight(
 }
 
 export async function execHighlightTool(name: string, args: Args, ctx: AgentContext): Promise<unknown> {
-  if (name !== 'find_highlights') return { error: `unknown tool ${name}` };
+  if (name !== 'find_highlights') return { error: `Tool không xác định: ${name}` };
 
   const doc = ctx.getDoc();
   const originalActiveId = doc.activeTimelineId;
@@ -327,12 +327,12 @@ export async function execHighlightTool(name: string, args: Args, ctx: AgentCont
     typeof args.itemId === 'string' ? args.itemId : undefined,
   );
   if (!hasOperationalTranscript(item)) {
-    return { error: '当前时间线没有已转写的视频/音频片段;请先用 transcribe_track 转写,再智能切片。' };
+    return { error: 'Timeline hiện không có clip video/âm thanh đã chép lời; hãy chạy transcribe_track trước rồi mới cắt thông minh.' };
   }
 
   const ratio = typeof args.ratio === 'string' ? args.ratio : '9:16';
   const preset = ASPECT_PRESETS.find((p) => p.label === ratio);
-  if (!preset) return { error: `unknown ratio ${ratio}(可选 ${ASPECT_PRESETS.map((p) => p.label).join('/')})` };
+  if (!preset) return { error: `Tỷ lệ không xác định: ${ratio} (có thể dùng ${ASPECT_PRESETS.map((p) => p.label).join('/')})` };
   const count = Number.isInteger(args.count) && (args.count as number) > 0 ? (args.count as number) : 3;
   // Duration bounds only when caller opts in (default leaves short LLM picks intact).
   const hasMin = Number.isFinite(Number(args.minSeconds));
@@ -376,7 +376,7 @@ export async function execHighlightTool(name: string, args: Args, ctx: AgentCont
   if (!highlights.length) {
     ctx.commands.switchTimeline(originalActiveId);
     return {
-      error: '转写内容不足以选出高光片段：模型与启发式都没有候选。请确认该片段的转写完整（可用 read_transcript 查看），或换一段口播内容更丰富的片段后再试。',
+      error: 'Transcript chưa đủ để chọn đoạn nổi bật: cả model và heuristic đều không tìm thấy ứng viên. Hãy kiểm tra transcript của clip (dùng read_transcript), hoặc thử clip có nội dung lời thoại phong phú hơn.',
     };
   }
 
