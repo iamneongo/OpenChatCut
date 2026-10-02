@@ -193,7 +193,7 @@ function AssetMenuActions(props: AssetMenuPortalProps & { asset: MediaAsset }) {
       <label className="cc-asset-menu-move">
         <span>{t('移动到')}</span>
         <select aria-label={t('移动 {name}', { name: asset.name })} value={asset.folderId ?? ''} onChange={(event) => props.onMove(event.target.value || undefined)}>
-          <option value="">Master</option>
+          <option value="">{t('根目录')}</option>
           {props.folders.map((folder) => <option key={folder.id} value={folder.id}>{folderPath(folder, props.folders)}</option>)}
         </select>
       </label>

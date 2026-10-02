@@ -1,5 +1,6 @@
 // EN dictionary (field fragmentation, key = Chinese original text). Data files are exempt from the upper limit of row count.
 export default {
+  '根目录': 'Root folder',
   '聊天第 {n} 条': 'Chat message {n}',
   // MediaPoolPanel toolbar
   '搜索素材': 'Search media',

@@ -421,6 +421,7 @@ export const VI: Record<string, string> = {
   '知识成片': 'Video kiến thức',
   '模式': 'Chế độ',
   'Q&A': 'Hỏi đáp',
+  '根目录': 'Thư mục gốc',
   // Transcript and text-based editing
   '素材文件不可用，请在“我的素材”中重新链接后再转写': 'Không tìm thấy tư liệu. Hãy liên kết lại trong Tư liệu của tôi rồi chép lời.',
   '无法连接转写服务，请检查网络和 AssemblyAI 配置后重试': 'Không thể kết nối dịch vụ chép lời. Kiểm tra mạng và cấu hình AssemblyAI rồi thử lại.',
