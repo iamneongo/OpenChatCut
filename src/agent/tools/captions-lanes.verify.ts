@@ -89,7 +89,7 @@ const cap = (over: Partial<CaptionsData>): CaptionsData =>
   const legacyIdx = matchEntries(entries2, { index: 1 }, S);
   assert.ok(
     'error' in (legacyIdx as object)
-    && /legacy-only/.test((legacyIdx as { error: string }).error),
+    && /chỉ dành cho dữ liệu cũ/.test((legacyIdx as { error: string }).error),
     'stable-id entries reject the index selector',
   );
   assert.deepEqual(matchEntries(entries2, { sourceId: 's2' }, S), [1]);

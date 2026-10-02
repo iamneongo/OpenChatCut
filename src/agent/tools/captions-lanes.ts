@@ -56,51 +56,51 @@ export function matchEntries(entries: CaptionSourceEntry[], sel: Json, s: Timeli
     const hits = entries.flatMap((entry, index) => (entry.id === id ? [index] : []));
     return hits.length === 1
       ? hits
-      : { error: hits.length ? `ambiguous sourceId "${id}"` : `no source with id "${id}" (source_list 查 sourceId)` };
+      : { error: hits.length ? `sourceId "${id}" không duy nhất` : `Không có source với id "${id}" (dùng source_list để tra sourceId)` };
   }
   const idx = num(sel.index);
   if (idx !== undefined) {
-    if (idx < 0 || idx >= entries.length) return { error: `index ${idx} out of range (0..${entries.length - 1})` };
+    if (idx < 0 || idx >= entries.length) return { error: `index ${idx} nằm ngoài phạm vi (0..${entries.length - 1})` };
     return isStableIdentity(entries[idx]?.id)
-      ? { error: `index ${idx} is legacy-only; use sourceId "${entries[idx]!.id}"` }
+      ? { error: `index ${idx} chỉ dành cho dữ liệu cũ; hãy dùng sourceId "${entries[idx]!.id}"` }
       : [idx];
   }
-  if (str(sel.speakerId)) return { error: 'speakerId selector 不支持:无 per-speaker 车道,请按轨/按 item 选择' };
+  if (str(sel.speakerId)) return { error: 'Không hỗ trợ selector speakerId: không có lane riêng cho từng người nói; hãy chọn theo track hoặc item' };
   const slotId = str(sel.slotId);
   if (slotId) {
     const hits = entries.flatMap((e, i) => (e.slotId === slotId ? [i] : []));
-    return hits.length ? hits : { error: `no source pinned to slot "${slotId}"` };
+    return hits.length ? hits : { error: `Không có source nào được ghim vào slot "${slotId}"` };
   }
   const label = str(sel.label);
   if (label) {
     const hits = entries.flatMap((e, i) => (e.label === label ? [i] : []));
-    return hits.length ? hits : { error: `no source labeled "${label}"` };
+    return hits.length ? hits : { error: `Không có source nào mang nhãn "${label}"` };
   }
   const variant = sel.variant && typeof sel.variant === 'object' ? (sel.variant as Json) : undefined;
   if (variant) {
     const lang = str(variant.languageCode);
     const hits = entries.flatMap((e, i) => (e.variant && (!lang || e.variant.languageCode === lang) ? [i] : []));
-    return hits.length ? hits : { error: `no translation-variant source${lang ? ` for "${lang}"` : ''}` };
+    return hits.length ? hits : { error: `Không có source biến thể bản dịch${lang ? ` cho "${lang}"` : ''}` };
   }
   const itemId = str(sel.itemId);
   if (itemId) {
     const hits = entries.flatMap((e, i) => (e.itemId === itemId || e.itemId.startsWith(itemId) ? [i] : []));
-    return hits.length ? hits : { error: `no source on item "${itemId}"` };
+    return hits.length ? hits : { error: `Không có source trên item "${itemId}"` };
   }
   const assetId = str(sel.assetId);
   if (assetId) {
     const item = s.items.find((it) => it.src === assetId || it.templateId === assetId);
     const hits = item ? entries.flatMap((e, i) => (e.itemId === item.id ? [i] : [])) : [];
-    return hits.length ? hits : { error: `no source for asset "${assetId}"` };
+    return hits.length ? hits : { error: `Không có source cho asset "${assetId}"` };
   }
   const track = str(sel.trackId) || str(sel.track);
   if (track) {
     const tid = resolveTrackId(s, track) ?? track;
     const onTrack = new Set(s.items.filter((it) => it.track === tid).map((it) => it.id));
     const hits = entries.flatMap((e, i) => (onTrack.has(e.itemId) ? [i] : []));
-    return hits.length ? hits : { error: `no source on track "${track}"` };
+    return hits.length ? hits : { error: `Không có source trên track "${track}"` };
   }
-  return { error: '缺选择器:每条要带 index / sourceId / trackId / itemId / label / variant 之一定位车道,例 {"index":0} 或 {"trackId":"A2"} 或 {"variant":{"languageCode":"en"}};sourceId 用 source_list 查' };
+  return { error: 'Thiếu selector: mỗi mục cần một trong index / sourceId / trackId / itemId / label / variant để định vị lane; ví dụ {"index":0}, {"trackId":"A2"} hoặc {"variant":{"languageCode":"en"}}; dùng source_list để tra sourceId' };
 }
 
 const entrySummary = (e: CaptionSourceEntry, i: number) => ({
@@ -114,7 +114,7 @@ const entrySummary = (e: CaptionSourceEntry, i: number) => ({
 export function execLayoutPolicy(json: Json, c: CaptionsData, ctx: AgentContext): Result {
   if (json.layoutPolicy === null) {
     ctx.commands.updateCaptions({ layoutPolicy: null });
-    return { ok: true, layoutPolicy: null, note: 'cleared — 回到默认 auto-stack' };
+    return { ok: true, layoutPolicy: null, note: 'Đã xóa — quay về auto-stack mặc định' };
   }
   const patch: Partial<CaptionsData> = {};
   const mode = str(json.mode);
@@ -124,18 +124,18 @@ export function execLayoutPolicy(json: Json, c: CaptionsData, ctx: AgentContext)
       patch.layoutPolicy = { mode, ...(cap !== undefined ? { maxVisibleSources: Math.max(1, Math.floor(cap)) } : {}) } as CaptionLayoutPolicy;
     } else if (mode === 'manual-slots') {
       const raw = Array.isArray(json.slots) ? json.slots : null;
-      if (!raw?.length) return { error: 'manual-slots 要给槽位表,例 {"mode":"manual-slots","slots":[{"id":"top","anchor":"top-center","offsetYRatio":0.08},{"id":"bottom","anchor":"bottom-center","offsetYRatio":-0.08}]};再用 source_update 把车道 slotId 钉到槽位' };
+      if (!raw?.length) return { error: 'manual-slots cần bảng slot, ví dụ {"mode":"manual-slots","slots":[{"id":"top","anchor":"top-center","offsetYRatio":0.08},{"id":"bottom","anchor":"bottom-center","offsetYRatio":-0.08}]}; sau đó dùng source_update để gán slotId cho lane' };
       const slots: CaptionSlot[] = [];
       for (const sl of raw) {
         const o = (sl ?? {}) as Json;
         const sid = str(o.id);
         const anchor = str(o.anchor);
-        if (!sid || !ANCHORS.has(anchor)) return { error: `slot 非法:${JSON.stringify(sl)}(需 id + 3×3 anchor)` };
+        if (!sid || !ANCHORS.has(anchor)) return { error: `Slot không hợp lệ: ${JSON.stringify(sl)} (cần id + anchor 3×3)` };
         slots.push({ id: sid, anchor: anchor as CaptionAnchor, offsetXRatio: num(o.offsetXRatio), offsetYRatio: num(o.offsetYRatio), widthRatio: num(o.widthRatio), heightRatio: num(o.heightRatio) });
       }
       patch.layoutPolicy = { mode, slots };
     } else {
-      return { error: `unknown layout_policy mode "${mode}" (single-lane|auto-stack|manual-slots)` };
+      return { error: `Mode layout_policy không xác định: "${mode}" (single-lane|auto-stack|manual-slots)` };
     }
   }
   if (json.perSource && typeof json.perSource === 'object') {
@@ -146,22 +146,22 @@ export function execLayoutPolicy(json: Json, c: CaptionsData, ctx: AgentContext)
     }
     patch.perSource = per;
   }
-  if (!('layoutPolicy' in patch) && !('perSource' in patch)) return { error: 'layout_policy 参数例:{"mode":"auto-stack","maxVisibleSources":2}(上下堆叠)/ {"mode":"single-lane"}(同位只显一条)/ {"mode":"manual-slots","slots":[…]} / {"perSource":{"<sourceId>":{"maxLines":2}}} / {"layoutPolicy":null} 清除' };
+  if (!('layoutPolicy' in patch) && !('perSource' in patch)) return { error: 'Ví dụ layout_policy: {"mode":"auto-stack","maxVisibleSources":2} (xếp dọc) / {"mode":"single-lane"} (chỉ hiện một lane tại vị trí) / {"mode":"manual-slots","slots":[…]} / {"perSource":{"<sourceId>":{"maxLines":2}}} / {"layoutPolicy":null} để xóa' };
   ctx.commands.updateCaptions(patch);
-  return { ok: true, layoutPolicy: patch.layoutPolicy ?? c.layoutPolicy ?? { mode: 'auto-stack' }, ...(patch.perSource ? { perSource: patch.perSource } : {}), note: 'perSource.maxLines 按 maxLines×模板每页词数近似(分页按词数)' };
+  return { ok: true, layoutPolicy: patch.layoutPolicy ?? c.layoutPolicy ?? { mode: 'auto-stack' }, ...(patch.perSource ? { perSource: patch.perSource } : {}), note: 'perSource.maxLines được ước tính theo maxLines × số từ mỗi trang của template (phân trang theo số từ)' };
 }
 
 /** action=positions — call multiple sources in one call (same anchor point = same block stack).*/
 export function execPositions(json: Json, c: CaptionsData, ctx: AgentContext, s: TimelineState): Result {
   const raw = Array.isArray(json.positions) ? json.positions : null;
-  if (!raw?.length) return { error: 'positions 参数例(可直接照抄改数):{"positions":[{"index":0,"anchor":"top-center","offsetYRatio":0.08},{"index":1,"anchor":"bottom-center","offsetYRatio":-0.08}]}——每条 = 选择器(index/sourceId/trackId/variant…)+ anchor(3×3);同 anchor 会堆叠成一块' };
+  if (!raw?.length) return { error: 'Ví dụ positions (có thể sao chép rồi sửa số): {"positions":[{"index":0,"anchor":"top-center","offsetYRatio":0.08},{"index":1,"anchor":"bottom-center","offsetYRatio":-0.08}]} — mỗi mục = selector (index/sourceId/trackId/variant…)+ anchor (3×3); các source cùng anchor sẽ xếp chồng thành một khối' };
   const entries = ensureEntries(c, s);
-  if (!entries.length) return { error: '当前没有字幕 source:先 edit_captions action=enable 开字幕(或 source_set 指定 sources),再来摆位' };
+  if (!entries.length) return { error: 'Hiện chưa có source phụ đề: hãy gọi edit_captions action=enable (hoặc source_set để chỉ định sources) trước khi định vị' };
   const placed: Result[] = [];
   for (const p of raw) {
     const o = (p ?? {}) as Json;
     const anchor = str(o.anchor);
-    if (!ANCHORS.has(anchor)) return { error: `anchor 非法:"${anchor}"。用 3×3 锚点:top/middle/bottom × left/center/right,如 top-center / bottom-center / middle-left` };
+    if (!ANCHORS.has(anchor)) return { error: `Anchor không hợp lệ: "${anchor}". Dùng anchor 3×3: top/middle/bottom × left/center/right, ví dụ top-center / bottom-center / middle-left` };
     const m = matchEntries(entries, o, s);
     if ('error' in (m as object)) return m as Result;
     for (const i of m as number[]) {
@@ -170,15 +170,15 @@ export function execPositions(json: Json, c: CaptionsData, ctx: AgentContext, s:
     }
   }
   ctx.commands.updateCaptions({ sourceEntries: entries, sources: undefined, sourceMode: 'item' });
-  return { ok: true, placed, note: '同 anchor 的多个 source 在该锚点堆叠为一个普通字幕块;像素级 left/top 用 action=layout(整块)' };
+  return { ok: true, placed, note: 'Nhiều source cùng anchor sẽ xếp chồng thành một khối phụ đề tại anchor đó; muốn đặt left/top theo pixel cho cả khối, dùng action=layout' };
 }
 
 /** action=source_update — Change the presentation of single/multiple sources according to the selector (without moving the caption track/item).*/
 export function execSourceUpdate(json: Json, c: CaptionsData, ctx: AgentContext, s: TimelineState): Result {
   const raw = Array.isArray(json.updates) ? json.updates : (json.update ? [json.update] : null);
-  if (!raw?.length) return { error: 'source_update 参数例(可直接照抄改数):{"updates":[{"index":0,"anchor":"bottom-center","offsetYRatio":-0.08},{"trackId":"A2","visible":false},{"index":1,"style":{"sizePx":54,"color":"#fff"}}]}——每条 = 选择器 + 要改的字段(visible/anchor/offsetXRatio/offsetYRatio/slotId/style/preset/variant);sourceId 用 source_list 查' };
+  if (!raw?.length) return { error: 'Ví dụ source_update (có thể sao chép rồi sửa số): {"updates":[{"index":0,"anchor":"bottom-center","offsetYRatio":-0.08},{"trackId":"A2","visible":false},{"index":1,"style":{"sizePx":54,"color":"#fff"}}]} — mỗi mục = selector + trường cần sửa (visible/anchor/offsetXRatio/offsetYRatio/slotId/style/preset/variant); dùng source_list để tra sourceId' };
   let entries = ensureEntries(c, s);
-  if (!entries.length) return { error: '当前没有字幕 source:先 edit_captions action=enable 开字幕(或 source_set 指定 sources)' };
+  if (!entries.length) return { error: 'Hiện chưa có source phụ đề: hãy gọi edit_captions action=enable (hoặc source_set để chỉ định sources)' };
   const updated: Result[] = [];
   const notes: string[] = [];
   for (const u of raw) {
@@ -198,7 +198,7 @@ export function execSourceUpdate(json: Json, c: CaptionsData, ctx: AgentContext,
       if (str(o.slotId)) e.slotId = str(o.slotId);
       const anchor = str(o.anchor);
       if (anchor) {
-        if (!ANCHORS.has(anchor)) return { error: `anchor 非法:"${anchor}"。用 3×3 锚点,如 top-center / bottom-center / middle-left` };
+        if (!ANCHORS.has(anchor)) return { error: `Anchor không hợp lệ: "${anchor}". Dùng anchor 3×3, ví dụ top-center / bottom-center / middle-left` };
         e.anchor = anchor as CaptionAnchor;
       }
       for (const k of ['offsetXRatio', 'offsetYRatio', 'widthRatio', 'heightRatio'] as const) {
@@ -210,11 +210,11 @@ export function execSourceUpdate(json: Json, c: CaptionsData, ctx: AgentContext,
       const vKind = str(variantObj?.variantKind ?? o.variantKind);
       const vLang = str(variantObj?.languageCode ?? o.languageCode);
       if (vKind || vLang) {
-        if (vKind && vKind !== 'translation') return { error: `variantKind "${vKind}" 不支持(仅 translation)` };
-        if (!vLang) return { error: 'variant 切换要给翻译目标语言,例 {"variant":{"variantKind":"translation","languageCode":"en"}} 或简写 {"languageCode":"en"}' };
+        if (vKind && vKind !== 'translation') return { error: `Không hỗ trợ variantKind "${vKind}" (chỉ hỗ trợ translation)` };
+        if (!vLang) return { error: 'Chuyển variant cần ngôn ngữ đích, ví dụ {"variant":{"variantKind":"translation","languageCode":"en"}} hoặc dạng rút gọn {"languageCode":"en"}' };
         const item = s.items.find((it) => it.id === e.itemId);
         const v = item ? findVariantByLang(item.variants ?? [], vLang, 'translation') : undefined;
-        if (!v) return { error: `item ${e.itemId.slice(0, 8)} 上没有 "${vLang}" 翻译变体 — 先 manage_transcript translation_ensure` };
+        if (!v) return { error: `Item ${e.itemId.slice(0, 8)} chưa có biến thể bản dịch "${vLang}" — hãy chạy manage_transcript translation_ensure trước` };
         e.variant = { variantKind: 'translation', languageCode: vLang };
       }
       if (o.variant === null) e = { ...e, variant: undefined };
@@ -222,7 +222,7 @@ export function execSourceUpdate(json: Json, c: CaptionsData, ctx: AgentContext,
       const presetId = str(o.preset) || str(o.templatePreset);
       if (presetId) {
         const tpl = captionStyleFor(presetId);
-        if (!tpl) return { error: `unknown preset "${presetId}"` };
+        if (!tpl) return { error: `Preset không xác định: "${presetId}"` };
         const { id: _i, label: _l, labelZh: _z, hint: _h, ...styleOnly } = tpl;
         e.style = { ...styleOnly };
       }
