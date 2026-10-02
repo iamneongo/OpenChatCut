@@ -271,7 +271,7 @@ export async function hydrateAgentSession(
     // and surface the reason instead of silently showing an empty chat.
     state.setMessages([{
       role: 'error',
-      text: '聊天记录暂时无法读取，已停止加载以避免覆盖已保存的对话。请刷新页面重试。',
+      text: 'Tạm thời không thể đọc lịch sử trò chuyện; đã dừng tải để tránh ghi đè hội thoại đã lưu. Hãy tải lại trang rồi thử lại.',
     }]);
     return;
   }
@@ -477,7 +477,7 @@ function persistAgentSession(state: AgentHookState, projectId: string): void {
       console.error('[agent] chat persistence failed:', error);
       if (chatSaveFailureShown) return;
       chatSaveFailureShown = true;
-      showAppToast('聊天记录保存失败，本次对话可能不会被保留。请检查存储后重试。', { error: true });
+      showAppToast('Lưu lịch sử trò chuyện thất bại; hội thoại này có thể không được giữ lại. Hãy kiểm tra bộ nhớ rồi thử lại.', { error: true });
     },
   );
 }

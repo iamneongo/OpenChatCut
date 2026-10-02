@@ -106,7 +106,7 @@ function commitAppliedUi(
   state.setChangeLog((current) => appendAgentChange(current, session));
   state.llmRef.current.push({
     role: 'user',
-    content: `（已应用提案：${chosen.length}/${proposal.options[0].operations.length} 项操作。）`,
+    content: `(Đã áp dụng đề xuất: ${chosen.length}/${proposal.options[0].operations.length} thao tác.)`,
   });
   state.refreshEstimatedContextUsage();
   state.setProposalStale(false);
@@ -130,13 +130,13 @@ async function cleanupAppliedProposal(
       clearStoredServerRun(projectId, proposal.agentRunId);
     }
   } catch {
-    return '提案已应用，但运行记录尚未完成；重新打开工程时会继续恢复。';
+    return 'Đề xuất đã áp dụng nhưng bản ghi chạy chưa hoàn tất; khi mở lại dự án sẽ tiếp tục khôi phục.';
   }
   try {
     await persistence.clear(projectId, proposal.id);
     return null;
   } catch {
-    return '提案已应用，但恢复记录暂未清理；它已标记为不可重放。';
+    return 'Đề xuất đã áp dụng nhưng bản ghi khôi phục chưa được dọn; bản ghi đã được đánh dấu không thể phát lại.';
   }
 }
 class CommittedProposalRecoveryError extends Error {}
@@ -150,7 +150,7 @@ async function persistSelectedProposal(
   operationCount: number,
   persistence: ProposalPersistence,
 ): Promise<boolean> {
-  await persistence.saveVersion(projectId, 'Agent 修改前', currentDoc);
+  await persistence.saveVersion(projectId, 'Trước khi Agent chỉnh sửa', currentDoc);
   if (state.proposalRef.current !== proposal || state.ctxRef.current.getDoc() !== currentDoc) {
     await settleAndRecord(projectId, proposal, 'stale', persistence);
     state.setProposalStale(true);
@@ -192,7 +192,7 @@ export async function applySelectedProposal(
     result = replayActions(currentDoc, chosen.flatMap((operation) => operation.actions));
   } catch {
     state.applyingProposalRef.current = false;
-    showProposalError(state, '所选操作无法应用（可能取消勾选了前置步骤），提案未改动工程。');
+    showProposalError(state, 'Không thể áp dụng thao tác đã chọn (có thể bạn đã bỏ chọn bước tiên quyết), đề xuất chưa thay đổi dự án.');
     return;
   }
   try {
@@ -209,9 +209,9 @@ export async function applySelectedProposal(
   } catch (error) {
     if (error instanceof CommittedProposalRecoveryError) {
       commitAppliedUi(state, proposal, chosen, currentDoc, result);
-      showProposalError(state, '提案已保存到工程，但恢复记录尚未完成；请重新打开工程确认。');
+      showProposalError(state, 'Đề xuất đã được lưu vào dự án nhưng bản ghi khôi phục chưa hoàn tất; hãy mở lại dự án để xác nhận.');
     } else {
-      showProposalError(state, '无法取得提案运行权限、保存工程或创建修改前版本，提案未应用。请重试。');
+      showProposalError(state, 'Không thể lấy quyền chạy đề xuất, lưu dự án hoặc tạo version trước chỉnh sửa; đề xuất chưa được áp dụng. Hãy thử lại.');
     }
   } finally {
     state.applyingProposalRef.current = false;
@@ -228,7 +228,7 @@ function applyUnlessStale(
   if (isProposalStale(proposal, state.ctxRef.current.getDoc())) {
     state.setProposalStale(true);
     void settleAndRecord(projectId, proposal, 'stale', DEFAULT_PROPOSAL_PERSISTENCE)
-      .catch(() => showProposalError(state, '无法持久化过期提案状态；提案不会被应用。'));
+      .catch(() => showProposalError(state, 'Không thể lưu trạng thái đề xuất hết hạn; đề xuất sẽ không được áp dụng.'));
     return;
   }
   void applySelectedProposal(state, projectId, selected);
@@ -245,13 +245,13 @@ async function replaceStaleProposal(
     await settleAndRecord(projectId, previous, 'reproposed', DEFAULT_PROPOSAL_PERSISTENCE);
     await DEFAULT_PROPOSAL_PERSISTENCE.clear(projectId, previous.id);
   } catch {
-    showProposalError(state, '无法持久化提案替换状态，请重试。');
+    showProposalError(state, 'Không thể lưu trạng thái thay thế đề xuất, hãy thử lại.');
     return;
   }
   state.setProposalStale(false);
   state.setProposal(null);
   state.proposalRef.current = null;
-  await send('（工程在上一提案生成后发生了变化。请基于当前 <editor_state> 重新提出与上一提案等价的修改方案。）');
+  await send('(Dự án đã thay đổi sau khi đề xuất trước được tạo. Hãy dựa trên <editor_state> hiện tại để đưa ra phương án chỉnh sửa tương đương đề xuất trước.)');
 }
 
 export async function rejectPendingProposal(
@@ -264,7 +264,7 @@ export async function rejectPendingProposal(
   try {
     await persistence.settle(projectId, previous, 'rejected');
   } catch {
-    showProposalError(state, '无法持久化提案拒绝状态，提案未拒绝。请重试。');
+    showProposalError(state, 'Không thể lưu trạng thái từ chối đề xuất, đề xuất chưa bị từ chối. Hãy thử lại.');
     return;
   }
   let warning: string | null = null;
@@ -273,7 +273,7 @@ export async function rejectPendingProposal(
     await recordProposalOutcome(projectId, previous, status.runtime, status.final, status.summary);
     await persistence.clear(projectId, previous.id);
   } catch {
-    warning = '提案已拒绝，但运行记录尚未完成；重新打开工程时会继续清理。';
+    warning = 'Đề xuất đã bị từ chối nhưng bản ghi chạy chưa hoàn tất; khi mở lại dự án sẽ tiếp tục dọn dẹp.';
   }
   state.setProposalStale(false);
   state.llmRef.current = appendRejectedProposal(state.llmRef.current);

@@ -87,7 +87,7 @@ export async function commitPersistentOperations(
   await turn.persistentSnapshot;
   if (turn.abortController.signal.aborted) return false;
   if (turn.persistentSaveError) {
-    showRunError(turn, '无法创建修改前版本，Agent 改动未应用。请检查本地存储后重试。');
+    showRunError(turn, 'Không thể tạo version trước chỉnh sửa, thay đổi của Agent chưa được áp dụng. Hãy kiểm tra bộ nhớ cục bộ rồi thử lại.');
     return false;
   }
   turn.state.llmProviderRef.current = PROVIDER;
@@ -139,14 +139,14 @@ async function landOperations(
     if (afterDoc === currentDoc) return currentDoc;
     const saved = await persist(turn.projectId, afterDoc).catch(() => null);
     if (!saved?.saved) {
-      showRunError(turn, '无法保存工程，Agent 改动未应用。请检查本地存储后重试。');
+      showRunError(turn, 'Không thể lưu dự án, thay đổi của Agent chưa được áp dụng. Hãy kiểm tra bộ nhớ cục bộ rồi thử lại.');
       return null;
     }
     const liveDoc = turn.state.ctxRef.current.getDoc();
     if (turn.abortController.signal.aborted || liveDoc !== currentDoc) {
       const restored = await persist(turn.projectId, liveDoc).catch(() => null);
       if (turn.abortController.signal.aborted) {
-        if (!restored?.saved) showRunError(turn, 'Agent 已停止，但无法恢复工程存储。请重新打开工程并检查内容。');
+        if (!restored?.saved) showRunError(turn, 'Agent đã dừng nhưng không thể khôi phục dữ liệu dự án. Hãy mở lại dự án và kiểm tra nội dung.');
         return null;
       }
       continue;
@@ -155,7 +155,7 @@ async function landOperations(
     recordRunSession(turn, operations, currentDoc, afterDoc);
     return afterDoc;
   }
-  showRunError(turn, '保存期间工程持续发生其他修改，Agent 改动暂未应用；请稍后重试。');
+  showRunError(turn, 'Dự án tiếp tục có thay đổi khác trong lúc lưu, thay đổi của Agent chưa được áp dụng; hãy thử lại sau.');
   return null;
 }
 
@@ -179,7 +179,7 @@ function recordRunSession(
   turn.state.setChangeLog((current) => appendAgentChange(current, session));
 }
 
-const RUN_SESSION_PLACEHOLDER = 'Agent 修改（进行中）';
+const RUN_SESSION_PLACEHOLDER = 'Agent chỉnh sửa (đang thực hiện)';
 
 /** The run is over: the row it grew during the run gets the model's own summary. */
 export function finalizeRunSession(turn: AgentTurn): void {
@@ -211,7 +211,7 @@ export async function createPendingProposal(
     return null;
   }
   if (turn.draftInvalidated) {
-    showRunError(turn, '生成期间工程发生了其他修改；素材已保存到媒体池，请重新发送落轨请求。');
+    showRunError(turn, 'Dự án đã có thay đổi khác trong lúc tạo; tư liệu đã được lưu vào kho media, hãy gửi lại yêu cầu đặt lên timeline.');
     return null;
   }
   if (!turn.runId) return null;
