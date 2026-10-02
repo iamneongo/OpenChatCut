@@ -14,10 +14,10 @@ function describeHit(hit: SearchHit): string {
   if (hit.kind === 'chat') {
     const index = hit.ref.lastIndexOf(':');
     const messageIndex = index >= 0 ? Number(hit.ref.slice(index + 1)) : NaN;
-    return `工程 ${hit.projectId} 第 ${Number.isFinite(messageIndex) ? messageIndex + 1 : '?'} 条消息`;
+    return `Tin nhắn số ${Number.isFinite(messageIndex) ? messageIndex + 1 : '?'} trong project ${hit.projectId}`;
   }
-  if (hit.kind === 'caption') return `工程 ${hit.projectId} 的字幕`;
-  return `工程 ${hit.projectId} 的转写文本`;
+  if (hit.kind === 'caption') return `Phụ đề trong project ${hit.projectId}`;
+  return `Transcript trong project ${hit.projectId}`;
 }
 
 export async function execSearchTool(name: string, args: Args): Promise<unknown> {

@@ -29,7 +29,7 @@ assert.equal(formatFrameTime(2721, 30), '01:30.7');
 // ── timepoint / timerange builders ───────────────────────────────────────────
 const tp = timepointRef(156, state);
 assert.equal(tp.kind, 'timepoint');
-assert.equal(tp.name, '00:05.2 时间点');
+assert.equal(tp.name, '00:05.2 — mốc thời gian');
 assert.deepEqual(
   { fps: tp.metadata.fps, timelineFrameStart: (tp.metadata as { timelineFrameStart: number }).timelineFrameStart },
   { fps: 30, timelineFrameStart: 156 },
@@ -102,7 +102,7 @@ assert.deepEqual(offRegion, [], 'region misses the transformed rect');
 
 const cr = canvasRegionRef({ x: 0, y: 0, width: 400, height: 400 }, 60, regionState);
 assert.ok(cr.kind === 'canvas-region');
-assert.equal(cr.name, '画面区域（1 个片段）');
+assert.equal(cr.name, 'Vùng hình ảnh (1 clip)');
 assert.deepEqual(cr.metadata.containedItems, ['item_1']);
 assert.equal(cr.metadata.compositionWidth, 1920);
 assert.equal(cr.metadata.timelineFrameStart, 60);
@@ -118,7 +118,7 @@ const spoken: TimelineItem = {
 };
 const ts1 = transcriptSelectionRef(spoken, [1, 0], 30); // unsorted input normalizes
 assert.ok(ts1 && ts1.kind === 'transcript-selection');
-assert.equal(ts1.name, '“今天我们”（2 词）');
+assert.equal(ts1.name, '“今天我们” (2 từ)');
 assert.equal(ts1.metadata.selectedText, '今天我们', 'CJK words join without spaces');
 assert.deepEqual(ts1.metadata.selectedWordIds, [0, 1]);
 assert.equal(ts1.metadata.sourceMediaStartMs, 0);

@@ -87,7 +87,7 @@ const stateOf = (items: TimelineItem[], tracks: Record<string, { kind: 'video' |
   const after = stateOf(items.map((it) => ({ ...it, durationInFrames: 20 })));
   const d = describeTimelineDelta(before, after)!;
   assert.equal(d.clips?.length, 30, '最多列 30 条');
-  assert.match(d.notes?.join(' ') ?? '', /共 40 个片段变更/, '提示总数与重读');
+  assert.match(d.notes?.join(' ') ?? '', /Có 40 clip thay đổi/, 'hiển thị tổng số và yêu cầu đọc lại');
 }
 
 // ── New track reporting + track composition change reminder ──
@@ -96,7 +96,7 @@ const stateOf = (items: TimelineItem[], tracks: Record<string, { kind: 'video' |
   const after = stateOf([clip('a', 'trk-lower', 0), clip('b', 'trk-upper', 0)]); // Add a new video track above
   const d = describeTimelineDelta(before, after)!;
   assert.deepEqual(d.createdTracks, ['V2'], '新轨上报(按别名:新轨在上 = V2)');
-  assert.match(d.notes?.join(' ') ?? '', /轨道构成已变化/, '提醒重新确认轨道定位');
+  assert.match(d.notes?.join(' ') ?? '', /Cấu trúc track đã thay đổi/, 'nhắc xác nhận lại vị trí track');
 }
 
 // ── Ripple removal by real reducer: difference is consistent with actual result ──
