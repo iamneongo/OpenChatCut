@@ -125,7 +125,7 @@ function resolveAssetFrameTarget(args: Args, ctx: AgentContext): AssetFrameTarge
   const assetQuery = typeof args.assetId === 'string' ? args.assetId.trim() : '';
   const itemQuery = typeof args.itemId === 'string' ? args.itemId.trim() : '';
   if (!assetQuery && !itemQuery) {
-    return { error: 'view_asset_frames requires assetId or itemId' };
+    return { error: 'view_asset_frames cần assetId hoặc itemId' };
   }
   const doc = ctx.getDoc();
   let base: Timeline;
@@ -140,7 +140,7 @@ function resolveAssetFrameTarget(args: Args, ctx: AgentContext): AssetFrameTarge
     const exact = base.items.find((candidate) => candidate.id === itemQuery);
     const matches = exact ? [exact] : base.items.filter((candidate) => candidate.id.startsWith(itemQuery));
     if (matches.length !== 1) {
-      return { error: matches.length ? `ambiguous item prefix "${itemQuery}"` : `no item ${itemQuery}` };
+      return { error: matches.length ? `Tiền tố item "${itemQuery}" không đủ rõ ràng` : `Không tìm thấy item ${itemQuery}` };
     }
     item = matches[0]!;
   }
@@ -160,15 +160,15 @@ function resolveAssetFrameTarget(args: Args, ctx: AgentContext): AssetFrameTarge
   if (assetMatches.length !== 1) {
     return {
       error: assetMatches.length
-        ? `ambiguous asset prefix "${assetQuery}"`
+        ? `Tiền tố asset "${assetQuery}" không đủ rõ ràng`
         : item
-          ? `item ${item.id} has no matching media-pool source asset`
-          : `no asset ${assetQuery}`,
+          ? `Item ${item.id} không có asset nguồn tương ứng trong kho tư liệu`
+          : `Không tìm thấy asset ${assetQuery}`,
     };
   }
   const asset = assetMatches[0]!;
   if (item && itemAsset?.id !== asset.id) {
-    return { error: `asset ${asset.id} is not the source of item ${item.id}` };
+    return { error: `Asset ${asset.id} không phải nguồn của item ${item.id}` };
   }
   const rawWindow = item
     ? sourceWindowForTimelineRange(item, 0, item.durationInFrames)
@@ -178,7 +178,7 @@ function resolveAssetFrameTarget(args: Args, ctx: AgentContext): AssetFrameTarge
     endFrame: Math.min(Math.max(0, asset.durationInFrames), rawWindow.endFrame),
   };
   if (sourceWindow.endFrame <= sourceWindow.startFrame) {
-    return { error: `item ${item?.id ?? asset.id} has no visible source frames` };
+    return { error: `Item ${item?.id ?? asset.id} không có frame nguồn hiển thị` };
   }
   return { asset, item, base, sourceWindow };
 }
@@ -257,7 +257,7 @@ async function renderStills(
     };
     return packImages(data.frames, data.gridBase64, note, { renderedBy: data.renderedBy ?? 'remotion' });
   } catch (e) {
-    return { error: `render-still 请求失败: ${e instanceof Error ? e.message : String(e)}` };
+    return { error: `Yêu cầu render-still thất bại: ${e instanceof Error ? e.message : String(e)}` };
   } finally {
     await prepared?.cleanup();
   }
@@ -313,10 +313,10 @@ async function extractAssetContactSheet(
       frames: sourceTimesMs.length ? sourceTimesMs.map((ms) => Math.round((ms / 1000) * fps)) : [0],
       layout: (data.sampleCount ?? 1) > 1 ? 'contact_sheet' : 'individual',
       note: [
-        `源资产「${asset.name}」contact sheet`,
+        `Contact sheet của asset nguồn "${asset.name}"`,
         data.sampleCount ? `${data.sampleCount} samples` : '',
         labelLine,
-        '（未进时间线合成；每格≈对应源时间区间中点）',
+        '(chưa ghép vào timeline; mỗi ô xấp xỉ trung điểm của khoảng thời gian nguồn tương ứng)',
       ].filter(Boolean).join(' · '),
       renderedBy: data.renderedBy ?? 'ffmpeg',
       sampleCount: data.sampleCount,
@@ -375,10 +375,10 @@ async function viewTimelineFrames(args: Args, ctx: AgentContext): Promise<unknow
     return { error: error instanceof Error ? error.message : String(error) };
   }
   if (total <= 0 || !state.items.length) {
-    return { error: 'timeline is empty — nothing to render' };
+    return { error: 'Timeline đang trống — không có gì để render' };
   }
   const frames = pickFrames(args, total, state.fps, DEFAULT_TIMELINE_SCAN);
-  const note = `时间线「${state.name}」${frames.length} 帧（绝对时间线坐标 f${frames.join(', f')}，共 ${total} @${state.fps}fps）——目标时间线草稿合成画面（含未提交编辑）`;
+  const note = `Timeline "${state.name}" gồm ${frames.length} frame (tọa độ timeline tuyệt đối f${frames.join(', f')}, tổng ${total} @${state.fps}fps) — hình ảnh ghép từ bản nháp timeline đích (gồm chỉnh sửa chưa gửi)`;
   const rendered = await renderStills(state, frames, note, project, state.id);
   return 'error' in rendered
     ? rendered
@@ -390,7 +390,7 @@ async function viewAssetFrames(args: Args, ctx: AgentContext): Promise<unknown> 
   if ('error' in target) return target;
   const { asset, item, base, sourceWindow } = target;
   if (asset.kind === 'audio') {
-    return { error: `asset "${asset.name}" is audio — it has no frames to render` };
+    return { error: `Asset "${asset.name}" là âm thanh — không có frame để render` };
   }
 
   const fps = base.fps || 30;
@@ -402,8 +402,8 @@ async function viewAssetFrames(args: Args, ctx: AgentContext): Promise<unknown> 
     sourceWindow,
   };
   const windowNote = item
-    ? `item ${item.id} 可见源窗口 [${sourceWindow.startFrame}, ${sourceWindow.endFrame})`
-    : `完整源窗口 [${sourceWindow.startFrame}, ${sourceWindow.endFrame})`;
+    ? `item ${item.id} có cửa sổ nguồn hiển thị [${sourceWindow.startFrame}, ${sourceWindow.endFrame})`
+    : `cửa sổ nguồn đầy đủ [${sourceWindow.startFrame}, ${sourceWindow.endFrame})`;
 
   // Upload-in-progress placeholder: sample from blob: in the browser (no server path yet).
   if (isBlobishSrc(asset.src)) {
@@ -414,7 +414,7 @@ async function viewAssetFrames(args: Args, ctx: AgentContext): Promise<unknown> 
           __images: [{ frame: 0, base64 }],
           frames: [0],
           layout: 'individual',
-          note: `源资产「${asset.name}」blob 预览 · ${windowNote}`,
+          note: `Xem trước blob của asset nguồn "${asset.name}" · ${windowNote}`,
           renderedBy: 'browser-blob',
           ...metadata,
         };
@@ -442,7 +442,7 @@ async function viewAssetFrames(args: Args, ctx: AgentContext): Promise<unknown> 
           __images: [{ frame: 0, base64: sheet.base64 }],
           frames: sheet.sourceTimesMs.map((ms) => Math.round((ms / 1000) * fps)),
           layout: sheet.sampleCount > 1 ? 'contact_sheet' : 'individual',
-          note: `源资产「${asset.name}」blob contact sheet · ${sheet.sampleCount} samples · cells L→R T→B: ${labelLine} · ${windowNote}`,
+          note: `Contact sheet blob của asset nguồn "${asset.name}" · ${sheet.sampleCount} mẫu · các ô trái→phải trên→dưới: ${labelLine} · ${windowNote}`,
           renderedBy: 'browser-blob',
           sampleCount: sheet.sampleCount,
           sourceTimesMs: sheet.sourceTimesMs,
@@ -467,7 +467,7 @@ async function viewAssetFrames(args: Args, ctx: AgentContext): Promise<unknown> 
   }
 
   const track = defaultTrackId(base, 'video');
-  if (!track) return { error: 'no video track to render the asset preview on' };
+  if (!track) return { error: 'Không có track video để render bản xem trước asset' };
   const total = Math.max(1, asset.durationInFrames);
   const frames = pickFrames(
     constrainedArgs,
@@ -476,7 +476,7 @@ async function viewAssetFrames(args: Args, ctx: AgentContext): Promise<unknown> 
     asset.kind === 'video' || asset.kind === 'gif' ? DEFAULT_ASSET_SCAN : 1,
   );
   const state = assetPreviewState(base, asset, track);
-  const note = `源资产「${asset.name}」${frames.length} 帧（源坐标 f${frames.join(', f')}，共 ${total}）——单独预览，未合成到时间线 · ${windowNote}`;
+  const note = `Asset nguồn "${asset.name}" gồm ${frames.length} frame (tọa độ nguồn f${frames.join(', f')}, tổng ${total}) — xem trước riêng, chưa ghép vào timeline · ${windowNote}`;
   const rendered = await renderStills(state, frames, note);
   return 'error' in rendered ? rendered : { ...rendered, ...metadata };
 }
@@ -486,7 +486,7 @@ export async function execFramesTool(name: string, args: Args, ctx: AgentContext
     ? await viewTimelineFrames(args, ctx)
     : name === 'view_asset_frames'
       ? await viewAssetFrames(args, ctx)
-      : { error: `unknown tool ${name}` };
+      : { error: `Tool không xác định: ${name}` };
   return await maybeDescribeFramesResult(
     result,
     name === 'view_asset_frames' ? 'asset-frames' : 'timeline-frames',
