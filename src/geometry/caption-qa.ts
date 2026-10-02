@@ -245,7 +245,7 @@ export async function captionFaceQaIssues(
       issues.push({
         code: 'caption_covers_face',
         severity: 'warning',
-        message: '字幕位置可能遮挡说话人脸部（几何检测）；建议上移或换侧。',
+        message: 'Vị trí phụ đề có thể che khuôn mặt người nói (phát hiện hình học); nên đưa lên cao hơn hoặc đổi sang bên khác.',
       });
     }
   }

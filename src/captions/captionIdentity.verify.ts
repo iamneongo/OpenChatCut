@@ -67,7 +67,7 @@ assert.deepEqual(
 const legacyMatch = matchEntries(captions.sourceEntries!, { index: 0 }, timeline);
 assert.match(
   'error' in legacyMatch ? legacyMatch.error : '',
-  /legacy-only/,
+  /dữ liệu cũ/,
   'legacy index fallback is rejected once a source has stable identity',
 );
 const automaticEntry = captions.sourceEntries!.find((entry) => entry.itemId === item.id)!;
