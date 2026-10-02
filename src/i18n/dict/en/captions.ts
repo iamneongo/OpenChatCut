@@ -118,6 +118,8 @@ export default {
   '西班牙文': 'Spanish',
   '法文': 'French',
   '韩文': 'Korean',
+  '德文': 'German',
+  '葡萄牙文': 'Portuguese',
   '翻译中…': 'Translating…',
   '重新翻译': 'Re-translate',
   '生成翻译': 'Generate translation',

@@ -15,7 +15,15 @@ import { newManualCaptions } from './manualCaptions';
 import { captionTemplatePatch } from './captionTemplatePatch';
 import { MenuDrillHeader } from '../components/timeline/MenuDrillHeader';
 
-const CAPTION_LANGS = ['English', '日本語', '한국어', 'Español', 'Français', 'Deutsch', 'Português'];
+const CAPTION_LANGS = [
+  { id: 'English', label: '英文' },
+  { id: '日本語', label: '日文' },
+  { id: '한국어', label: '韩文' },
+  { id: 'Español', label: '西班牙文' },
+  { id: 'Français', label: '法文' },
+  { id: 'Deutsch', label: '德文' },
+  { id: 'Português', label: '葡萄牙文' },
+];
 
 interface CaptionStyleMenuProps {
   state: TimelineState;
@@ -115,7 +123,7 @@ export function CaptionStyleMenu({ state, commands, trackId, pos, error, onError
     <div className="cc-caption-style-menu" style={{ position: 'fixed', left: pos.left, top: pos.top }} onPointerDown={(e) => e.stopPropagation()}>
       <MenuDrillHeader title={t('翻译')} onBack={() => initialTranslateOpen ? backToParent() : setTranslateOpen(false)} />
       <div className="cc-caption-language-menu is-drill">
-        {CAPTION_LANGS.map((lang) => <button type="button" key={lang} disabled={busy} onClick={() => void translate(lang)}>{lang}</button>)}
+        {CAPTION_LANGS.map((lang) => <button type="button" key={lang.id} disabled={busy} onClick={() => void translate(lang.id)}>{t(lang.label)}</button>)}
       </div>
       {busy && <div className="cc-caption-style-status">{t('翻译中...')}</div>}
       {error && <div className="cc-caption-style-error">{error}</div>}

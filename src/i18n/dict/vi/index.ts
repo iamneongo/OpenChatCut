@@ -1354,6 +1354,8 @@ export const VI: Record<string, string> = {
   '西班牙文': 'Tiếng Tây Ban Nha',
   '法文': 'Tiếng Pháp',
   '韩文': 'Tiếng Hàn',
+  '德文': 'Tiếng Đức',
+  '葡萄牙文': 'Tiếng Bồ Đào Nha',
   '显示翻译第二行（{lang}）': 'Hiển thị dòng dịch thứ hai ({lang})',
   '原文时间已改变，翻译行仍停留在旧位置，建议重新翻译。': 'Thời gian bản gốc đã thay đổi, dòng dịch vẫn ở vị trí cũ; nên dịch lại.',
   '样式': 'Kiểu',
