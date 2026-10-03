@@ -92,7 +92,7 @@ export function sourceList(c: CaptionsData, s: TimelineState): Result {
       itemId: it.id, track: trackAlias(s, it.track), name: it.name,
       translations: (it.variants ?? []).filter((v) => v.kind === 'translation').map((v) => v.lang),
     })),
-    note: 'Trong auto-stack, sources được render từ trên xuống theo thứ tự danh sách (mục đầu tiên ở trên cùng); dùng positions / source_update để đặt vị trí hoặc style từng source.',
+    note: 'Trong auto-stack, các nguồn được kết xuất từ trên xuống theo thứ tự danh sách (mục đầu tiên ở trên cùng); dùng positions / source_update để đặt vị trí hoặc kiểu hiển thị cho từng nguồn.',
   };
 }
 
@@ -120,7 +120,7 @@ export function sourceSet(json: Record<string, unknown>, c: CaptionsData, ctx: A
   return {
     ok: true, sources: normalized.map((e, i) => entryRow(e, i, s)),
     wordCount: resolveCaptionWords({ ...c, ...patch }, s.items, s.fps).length,
-    note: 'auto-stack: source đầu tiên trong danh sách được render ở trên cùng.',
+    note: 'auto-stack: nguồn đầu tiên trong danh sách được kết xuất ở trên cùng.',
   };
 }
 

@@ -12,32 +12,32 @@ export const AGENT_PATH_IMPORT_SCHEMAS: AgentToolSchema[] = [
   {
     name: 'browse_local_media',
     description: [
-      'Browse local directories or search local media filenames before importing into the media pool.',
-      'Desktop only. Defaults to the home directory; absolute paths may include external drives.',
-      'Local access is enabled by default; an explicit AGENT_IMPORT_ROOTS setting restricts access.',
-      'Returns directories and supported media paths, sizes, and modification times without importing.',
-      'Use recursive with query/kind to find candidates, then import_assets for selected files.',
-      'Follow nextOffset for more results. If truncated, browse narrower subdirectories; symlinks are not followed.',
+      'Duyệt thư mục cục bộ hoặc tìm tên tệp media cục bộ trước khi nhập vào kho media.',
+      'Chỉ dùng trên desktop. Mặc định bắt đầu từ thư mục home; đường dẫn tuyệt đối có thể trỏ đến ổ đĩa ngoài.',
+      'Quyền truy cập cục bộ được bật mặc định; thiết lập AGENT_IMPORT_ROOTS sẽ giới hạn phạm vi truy cập.',
+      'Trả về thư mục, đường dẫn media được hỗ trợ, kích thước và thời điểm sửa đổi mà không nhập tệp.',
+      'Dùng recursive cùng query/kind để tìm ứng viên, sau đó dùng import_assets cho các tệp đã chọn.',
+      'Dùng nextOffset để lấy thêm kết quả. Nếu kết quả bị cắt, hãy duyệt các thư mục con hẹp hơn; không theo liên kết tượng trưng.',
     ].join(' '),
     input_schema: {
       type: 'object',
       properties: {
-        path: { type: 'string', description: 'Absolute directory path; omitted means the user home directory.' },
-        query: { type: 'string', maxLength: 256, description: 'Case-insensitive substring of the relative file or directory path.' },
+        path: { type: 'string', description: 'Đường dẫn tuyệt đối đến thư mục; bỏ qua nghĩa là dùng thư mục home của người dùng.' },
+        query: { type: 'string', maxLength: 256, description: 'Chuỗi con không phân biệt hoa thường trong đường dẫn tệp hoặc thư mục tương đối.' },
         kind: { type: 'string', enum: ['video', 'audio', 'image', 'gif', 'svg'] },
-        recursive: { type: 'boolean', description: 'Search subdirectories, up to 12 levels and 10000 entries. Default false.' },
+        recursive: { type: 'boolean', description: 'Tìm trong thư mục con, tối đa 12 cấp và 10000 mục. Mặc định là false.' },
         offset: { type: 'integer', minimum: 0, maximum: 10000 },
-        limit: { type: 'integer', minimum: 1, maximum: 200, description: 'Page size; default 100.' },
+        limit: { type: 'integer', minimum: 1, maximum: 200, description: 'Số mục mỗi trang; mặc định là 100.' },
       },
     },
   },
   {
     name: 'import_assets',
-    description: 'Import selected local media paths into the media pool in one batch. Desktop only. Local access is enabled by default; explicit AGENT_IMPORT_ROOTS restricts access. Reuses normal media probing and skips duplicate content. Use browse_local_media to find paths first.',
+    description: 'Nhập một batch các đường dẫn media cục bộ đã chọn vào kho media. Chỉ dùng trên desktop. Quyền truy cập cục bộ được bật mặc định; AGENT_IMPORT_ROOTS sẽ giới hạn phạm vi. Dùng lại quy trình phân tích media thông thường và bỏ qua nội dung trùng lặp. Hãy dùng browse_local_media để tìm đường dẫn trước.',
     input_schema: {
       type: 'object',
       properties: {
-        paths: { type: 'array', minItems: 1, maxItems: 100, items: { type: 'string', minLength: 1 }, description: 'Absolute paths of selected media files.' },
+        paths: { type: 'array', minItems: 1, maxItems: 100, items: { type: 'string', minLength: 1 }, description: 'Đường dẫn tuyệt đối của các tệp media đã chọn.' },
       },
       required: ['paths'],
     },
@@ -45,14 +45,14 @@ export const AGENT_PATH_IMPORT_SCHEMAS: AgentToolSchema[] = [
   {
     name: 'import_asset',
     description: [
-      'Import ONE local media file (video/audio/image) by its absolute disk path into the media pool.',
-      'Desktop app only; local access is enabled by default. Explicit AGENT_IMPORT_ROOTS restricts access.',
-      'Returns the imported pool asset(s); duplicates already in the pool are skipped.',
+      'Nhập MỘT tệp media cục bộ (video/audio/image) vào kho media bằng đường dẫn tuyệt đối trên ổ đĩa.',
+      'Chỉ dùng trong ứng dụng desktop; quyền truy cập cục bộ được bật mặc định. AGENT_IMPORT_ROOTS sẽ giới hạn phạm vi.',
+      'Trả về tư liệu đã nhập vào kho; các bản trùng đã có trong kho sẽ được bỏ qua.',
     ].join(' '),
     input_schema: {
       type: 'object',
       properties: {
-        path: { type: 'string', description: 'Absolute path to the media file.' },
+        path: { type: 'string', description: 'Đường dẫn tuyệt đối đến tệp media.' },
       },
       required: ['path'],
     },
@@ -60,15 +60,15 @@ export const AGENT_PATH_IMPORT_SCHEMAS: AgentToolSchema[] = [
   {
     name: 'import_folder',
     description: [
-      'Import every supported media file inside a local directory (recursive, bounded) into the media pool.',
-      'Desktop app only; local access is enabled by default. Explicit AGENT_IMPORT_ROOTS restricts access.',
-      'Returns imported assets, duplicate counts, unsupported file names, and per-file errors.',
-      'Documents (txt/md/docx/pdf) are reported as unsupported here and should be attached to chat instead.',
+      'Nhập mọi tệp media được hỗ trợ trong một thư mục cục bộ (đệ quy, có giới hạn) vào kho media.',
+      'Chỉ dùng trong ứng dụng desktop; quyền truy cập cục bộ được bật mặc định. AGENT_IMPORT_ROOTS sẽ giới hạn phạm vi.',
+      'Trả về tư liệu đã nhập, số lượng bản trùng, tên tệp không được hỗ trợ và lỗi theo từng tệp.',
+      'Tài liệu (txt/md/docx/pdf) sẽ được báo là không hỗ trợ ở đây; hãy đính kèm chúng vào cuộc trò chuyện.',
     ].join(' '),
     input_schema: {
       type: 'object',
       properties: {
-        path: { type: 'string', description: 'Absolute path to the media directory.' },
+        path: { type: 'string', description: 'Đường dẫn tuyệt đối đến thư mục media.' },
       },
       required: ['path'],
     },

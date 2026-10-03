@@ -41,7 +41,7 @@ function markerActions(
       itemId: item.id,
       fromFrame,
       durationFrames: 0,
-      note: kind === 'downbeat' ? `Bar ${index + 1}` : `Beat ${index + 1}`,
+      note: kind === 'downbeat' ? `Ô nhịp ${index + 1}` : `Nhịp ${index + 1}`,
       color: kind === 'downbeat' ? 'purple' : 'cyan',
     },
   }));
