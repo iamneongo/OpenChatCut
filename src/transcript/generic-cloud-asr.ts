@@ -23,7 +23,7 @@ const asRecord = (value: unknown): Record<string, unknown> | null => (
 
 function parseTimestamp(value: unknown, label: string): number {
   if (typeof value !== 'number' || !Number.isFinite(value) || value < 0) {
-    throw new Error(`transcription response has invalid ${label}`);
+    throw new Error(`phản hồi transcription có ${label} không hợp lệ`);
   }
   return value;
 }
@@ -31,16 +31,16 @@ function parseTimestamp(value: unknown, label: string): number {
 function parseWord(value: unknown): TranscriptWord {
   const word = asRecord(value);
   if (!word || typeof word.text !== 'string') {
-    throw new Error('transcription response has an invalid word');
+    throw new Error('phản hồi transcription có word không hợp lệ');
   }
   const start = parseTimestamp(word.start, 'word start');
   const end = parseTimestamp(word.end, 'word end');
-  if (end < start) throw new Error('transcription response has a reversed word timestamp');
+  if (end < start) throw new Error('phản hồi transcription có timestamp của word bị đảo ngược');
   if (word.id !== undefined && typeof word.id !== 'string') {
-    throw new Error('transcription response has an invalid word id');
+    throw new Error('phản hồi transcription có id của word không hợp lệ');
   }
   if (word.speaker !== undefined && word.speaker !== null && typeof word.speaker !== 'string') {
-    throw new Error('transcription response has an invalid word speaker');
+    throw new Error('phản hồi transcription có speaker của word không hợp lệ');
   }
   return {
     ...(word.id === undefined ? {} : { id: word.id }),
@@ -54,12 +54,12 @@ function parseWord(value: unknown): TranscriptWord {
 function parseUtterance(value: unknown): TranscriptUtterance {
   const utterance = asRecord(value);
   if (!utterance || typeof utterance.speaker !== 'string' || typeof utterance.text !== 'string') {
-    throw new Error('transcription response has an invalid utterance');
+    throw new Error('phản hồi transcription có utterance không hợp lệ');
   }
   const start = parseTimestamp(utterance.start, 'utterance start');
   const end = parseTimestamp(utterance.end, 'utterance end');
   if (end < start || !Array.isArray(utterance.words)) {
-    throw new Error('transcription response has an invalid utterance range');
+    throw new Error('phản hồi transcription có khoảng utterance không hợp lệ');
   }
   return {
     speaker: utterance.speaker,
@@ -74,7 +74,7 @@ export function parseTranscriptResult(value: unknown): TranscriptResult {
   const result = asRecord(value);
   if (!result || typeof result.text !== 'string' || !Array.isArray(result.words)
     || !Array.isArray(result.utterances)) {
-    throw new Error('transcription service returned an invalid response');
+    throw new Error('dịch vụ transcription trả về phản hồi không hợp lệ');
   }
   return {
     text: result.text,
@@ -118,12 +118,12 @@ async function postTranscription(
   }
   const body = await response.text();
   if (!response.ok) {
-    throw new Error(`transcription failed: HTTP ${response.status}${body ? `: ${body.slice(0, 300)}` : ''}`);
+    throw new Error(`transcription thất bại: HTTP ${response.status}${body ? `: ${body.slice(0, 300)}` : ''}`);
   }
   try {
     return parseTranscriptResult(JSON.parse(body) as unknown);
   } catch (error) {
-    if (error instanceof SyntaxError) throw new Error('transcription service returned invalid JSON');
+    if (error instanceof SyntaxError) throw new Error('dịch vụ transcription trả về JSON không hợp lệ');
     throw error;
   }
 }

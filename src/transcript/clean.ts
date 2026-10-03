@@ -9,7 +9,7 @@ export type SilenceRule =
 
 function positiveMs(value: string, label: string): number {
   const parsed = Number(value);
-  if (!Number.isFinite(parsed) || parsed < 0) throw new Error(`${label} must be a non-negative number of milliseconds`);
+  if (!Number.isFinite(parsed) || parsed < 0) throw new Error(`${label} phải là số mili giây không âm`);
   return Math.round(parsed);
 }
 
@@ -28,19 +28,19 @@ export function parseSilenceRule(value: unknown): SilenceRule | undefined {
   if (match) {
     const minMs = positiveMs(match[1], 'range minimum');
     const maxMs = positiveMs(match[2], 'range maximum');
-    if (minMs > maxMs) throw new Error('silence range minimum cannot exceed maximum');
+    if (minMs > maxMs) throw new Error('giá trị tối thiểu của khoảng im lặng không được lớn hơn giá trị tối đa');
     return { mode: 'range', minMs, maxMs };
   }
   if (/^\d+(?:\.\d+)?$/.test(rule)) return { mode: 'normalize', targetMs: positiveMs(rule, 'normalize') };
-  throw new Error(`invalid silence rule "${value}"`);
+  throw new Error(`quy tắc im lặng không hợp lệ "${value}"`);
 }
 
 export function parseCleanOnly(value: unknown): { fillers: boolean; silence: boolean } {
   if (value == null || value === '') return { fillers: true, silence: true };
-  if (typeof value !== 'string') throw new Error('only must be "fillers", "silence", or "fillers,silence"');
+  if (typeof value !== 'string') throw new Error('only phải là "fillers", "silence" hoặc "fillers,silence"');
   const parts = new Set(value.toLowerCase().split(',').map((part) => part.trim()).filter(Boolean));
   if (!parts.size || [...parts].some((part) => part !== 'fillers' && part !== 'silence')) {
-    throw new Error('only must be "fillers", "silence", or "fillers,silence"');
+    throw new Error('only phải là "fillers", "silence" hoặc "fillers,silence"');
   }
   return { fillers: parts.has('fillers'), silence: parts.has('silence') };
 }

@@ -93,11 +93,11 @@ try {
 
   assert.throws(
     () => parseTranscriptResult({ text: 'bad', words: [{ text: 'x', start: 10, end: 2 }], utterances: [] }),
-    /reversed word timestamp/,
+    /timestamp của word bị đảo ngược/,
   );
   assert.throws(
     () => parseTranscriptResult({ text: 'bad', words: [], utterances: 'not-an-array' }),
-    /invalid response/,
+    /phản hồi không hợp lệ/,
   );
 } finally {
   globalThis.fetch = originalFetch;
