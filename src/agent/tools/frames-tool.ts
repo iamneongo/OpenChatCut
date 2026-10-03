@@ -160,15 +160,15 @@ function resolveAssetFrameTarget(args: Args, ctx: AgentContext): AssetFrameTarge
   if (assetMatches.length !== 1) {
     return {
       error: assetMatches.length
-        ? `Tiền tố asset "${assetQuery}" không đủ rõ ràng`
+        ? `Tiền tố tư liệu "${assetQuery}" không đủ rõ ràng`
         : item
-          ? `Item ${item.id} không có asset nguồn tương ứng trong kho tư liệu`
-          : `Không tìm thấy asset ${assetQuery}`,
+          ? `Đoạn ${item.id} không có tư liệu nguồn tương ứng trong kho tư liệu`
+          : `Không tìm thấy tư liệu ${assetQuery}`,
     };
   }
   const asset = assetMatches[0]!;
   if (item && itemAsset?.id !== asset.id) {
-    return { error: `Asset ${asset.id} không phải nguồn của item ${item.id}` };
+    return { error: `Tư liệu ${asset.id} không phải nguồn của đoạn ${item.id}` };
   }
   const rawWindow = item
     ? sourceWindowForTimelineRange(item, 0, item.durationInFrames)
@@ -178,7 +178,7 @@ function resolveAssetFrameTarget(args: Args, ctx: AgentContext): AssetFrameTarge
     endFrame: Math.min(Math.max(0, asset.durationInFrames), rawWindow.endFrame),
   };
   if (sourceWindow.endFrame <= sourceWindow.startFrame) {
-    return { error: `Item ${item?.id ?? asset.id} không có frame nguồn hiển thị` };
+    return { error: `Đoạn ${item?.id ?? asset.id} không có khung hình nguồn để hiển thị` };
   }
   return { asset, item, base, sourceWindow };
 }
@@ -313,7 +313,7 @@ async function extractAssetContactSheet(
       frames: sourceTimesMs.length ? sourceTimesMs.map((ms) => Math.round((ms / 1000) * fps)) : [0],
       layout: (data.sampleCount ?? 1) > 1 ? 'contact_sheet' : 'individual',
       note: [
-        `Contact sheet của asset nguồn "${asset.name}"`,
+        `Bảng liên hệ của tư liệu nguồn "${asset.name}"`,
         data.sampleCount ? `${data.sampleCount} samples` : '',
         labelLine,
         '(chưa ghép vào timeline; mỗi ô xấp xỉ trung điểm của khoảng thời gian nguồn tương ứng)',
@@ -390,7 +390,7 @@ async function viewAssetFrames(args: Args, ctx: AgentContext): Promise<unknown> 
   if ('error' in target) return target;
   const { asset, item, base, sourceWindow } = target;
   if (asset.kind === 'audio') {
-    return { error: `Asset "${asset.name}" là âm thanh — không có frame để render` };
+    return { error: `Tư liệu "${asset.name}" là âm thanh — không có khung hình để kết xuất` };
   }
 
   const fps = base.fps || 30;
@@ -414,7 +414,7 @@ async function viewAssetFrames(args: Args, ctx: AgentContext): Promise<unknown> 
           __images: [{ frame: 0, base64 }],
           frames: [0],
           layout: 'individual',
-          note: `Xem trước blob của asset nguồn "${asset.name}" · ${windowNote}`,
+          note: `Xem trước blob của tư liệu nguồn "${asset.name}" · ${windowNote}`,
           renderedBy: 'browser-blob',
           ...metadata,
         };
@@ -442,7 +442,7 @@ async function viewAssetFrames(args: Args, ctx: AgentContext): Promise<unknown> 
           __images: [{ frame: 0, base64: sheet.base64 }],
           frames: sheet.sourceTimesMs.map((ms) => Math.round((ms / 1000) * fps)),
           layout: sheet.sampleCount > 1 ? 'contact_sheet' : 'individual',
-          note: `Contact sheet blob của asset nguồn "${asset.name}" · ${sheet.sampleCount} mẫu · các ô trái→phải trên→dưới: ${labelLine} · ${windowNote}`,
+          note: `Bảng liên hệ blob của tư liệu nguồn "${asset.name}" · ${sheet.sampleCount} mẫu · các ô trái→phải trên→dưới: ${labelLine} · ${windowNote}`,
           renderedBy: 'browser-blob',
           sampleCount: sheet.sampleCount,
           sourceTimesMs: sheet.sourceTimesMs,
@@ -467,7 +467,7 @@ async function viewAssetFrames(args: Args, ctx: AgentContext): Promise<unknown> 
   }
 
   const track = defaultTrackId(base, 'video');
-  if (!track) return { error: 'Không có track video để render bản xem trước asset' };
+  if (!track) return { error: 'Không có rãnh video để kết xuất bản xem trước tư liệu' };
   const total = Math.max(1, asset.durationInFrames);
   const frames = pickFrames(
     constrainedArgs,
@@ -476,7 +476,7 @@ async function viewAssetFrames(args: Args, ctx: AgentContext): Promise<unknown> 
     asset.kind === 'video' || asset.kind === 'gif' ? DEFAULT_ASSET_SCAN : 1,
   );
   const state = assetPreviewState(base, asset, track);
-  const note = `Asset nguồn "${asset.name}" gồm ${frames.length} frame (tọa độ nguồn f${frames.join(', f')}, tổng ${total}) — xem trước riêng, chưa ghép vào timeline · ${windowNote}`;
+  const note = `Tư liệu nguồn "${asset.name}" gồm ${frames.length} khung hình (tọa độ nguồn f${frames.join(', f')}, tổng ${total}) — xem trước riêng, chưa ghép vào dòng thời gian · ${windowNote}`;
   const rendered = await renderStills(state, frames, note);
   return 'error' in rendered ? rendered : { ...rendered, ...metadata };
 }

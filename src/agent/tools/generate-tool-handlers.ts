@@ -98,7 +98,7 @@ const submitSoundHandler: Handler = async (args, ctx) => {
     throw error;
   }
   await trackSubmission(ctx, submission, label, 'submit_sound', submitArgs, 'sonilo');
-  return { ok: true, ...submission, next: `Call track_progress with target=generation and jobIds=${submission.jobId}.` };
+  return { ok: true, ...submission, next: `Gọi track_progress với target=generation và jobIds=${submission.jobId}.` };
 };
 
 async function registerSubmissionIntent(
@@ -222,7 +222,7 @@ const submitMusicHandler: Handler = async (args, ctx) => {
     throw error;
   }
   await trackSubmission(ctx, submission, label, 'submit_music', submitArgs, input.provider);
-  return { ok: true, ...submission, next: `Call track_progress with target=generation and jobIds=${submission.jobId}.` };
+  return { ok: true, ...submission, next: `Gọi track_progress với target=generation và jobIds=${submission.jobId}.` };
 };
 
 const submitVideoHandler: Handler = async (args, ctx) => {
@@ -249,7 +249,7 @@ const submitVideoHandler: Handler = async (args, ctx) => {
     throw error;
   }
   await trackSubmission(ctx, submission, label, 'submit_video', submitArgs, input.model);
-  return { ok: true, model: input.model, ...submission, next: `Call track_progress with target=generation and jobIds=${submission.jobId}.` };
+  return { ok: true, model: input.model, ...submission, next: `Gọi track_progress với target=generation và jobIds=${submission.jobId}.` };
 };
 
 async function trackProgressHandler(args: GenerateArgs, ctx: AgentContext): Promise<unknown> {

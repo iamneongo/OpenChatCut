@@ -114,9 +114,9 @@ function resolveMgSource(ctx: AgentContext, q: string): { id: string; name: stri
 // outputUrl only as a fallback when no renderId is available.
 async function register(args: Args, ctx: AgentContext): Promise<unknown> {
   const mgQuery = typeof args.mgAssetId === 'string' ? args.mgAssetId.trim() : '';
-  if (!mgQuery) return { error: 'Cần có mgAssetId (id asset motion-graphic nguồn)' };
+  if (!mgQuery) return { error: 'Cần có mgAssetId (mã tư liệu motion graphic nguồn)' };
   const mg = resolveMgSource(ctx, mgQuery);
-  if (!mg) return { error: `Không có asset/template/clip motion-graphic khớp với "${mgQuery}"` };
+  if (!mg) return { error: `Không có tư liệu/mẫu/clip motion graphic khớp với "${mgQuery}"` };
 
   // renderId (preferred) → resolve the finished render's output from the local job records.
   let outputUrl = '';
@@ -151,7 +151,7 @@ async function register(args: Args, ctx: AgentContext): Promise<unknown> {
     durationInFrames: dur,
   };
   ctx.commands.addAsset(asset);
-  return { ok: true, assetId: asset.id, videoAssetId: asset.id, mgAssetId: mg.id, name: asset.name, durationInFrames: dur, next: `Place it with edit_item adds:[{type:"video",assetId:"${asset.id}"}], or delete the MG item and add the video in the same edit_item call to replace it.` };
+  return { ok: true, assetId: asset.id, videoAssetId: asset.id, mgAssetId: mg.id, name: asset.name, durationInFrames: dur, next: `Đặt bằng edit_item adds:[{type:"video",assetId:"${asset.id}"}], hoặc xóa mục MG rồi thêm video trong cùng một lần gọi edit_item để thay thế.` };
 }
 
 const strs = (v: unknown): string[] =>
@@ -348,7 +348,7 @@ async function exportProres(args: Args, ctx: AgentContext): Promise<unknown> {
     return { error: error instanceof Error ? error.message : String(error) };
   }
   const targets = resolveMotionGraphicExportTargets(state, args, ctx.getDoc().assets ?? [], ctx.templates);
-  if (!targets.length) return { error: 'no MG clip or asset found; pass itemId(s) (preferred) or assetId(s)' };
+  if (!targets.length) return { error: 'không tìm thấy clip hoặc tư liệu MG; hãy truyền itemId (được ưu tiên) hoặc assetId' };
   const plan = buildMotionGraphicExportPlan(targets, args);
   const { exported, failed } = await runMotionGraphicExportPlan(state, plan);
   return {
