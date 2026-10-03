@@ -64,7 +64,7 @@ async function readJson(req: IncomingMessage): Promise<VideoRequest> {
   for await (const chunk of req) {
     const bytes = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk);
     total += bytes.length;
-    if (total > 1_000_000) throw new Error('request body too large');
+    if (total > 1_000_000) throw new Error('thân request quá lớn');
     chunks.push(bytes);
   }
   return JSON.parse(Buffer.concat(chunks).toString('utf8')) as VideoRequest;
@@ -80,9 +80,9 @@ async function providerError(response: Response): Promise<string> {
   const text = await response.text();
   try {
     const data = JSON.parse(text) as { message?: string; error?: { message?: string }; code?: number };
-    return data.error?.message ?? data.message ?? `video provider failed (${data.code ?? response.status})`;
+    return data.error?.message ?? data.message ?? `provider video thất bại (${data.code ?? response.status})`;
   } catch {
-    return text.slice(0, 300) || `video provider failed (${response.status})`;
+    return text.slice(0, 300) || `provider video thất bại (${response.status})`;
   }
 }
 
@@ -90,7 +90,7 @@ async function requestJson(url: string, init: RequestInit): Promise<Record<strin
   const response = await fetchWithProxy(url, init);
   if (!response.ok) throw new Error(await providerError(response));
   const data = await response.json() as Record<string, unknown>;
-  if (typeof data.code === 'number' && data.code !== 0) throw new Error(String(data.message ?? `video provider failed (${data.code})`));
+  if (typeof data.code === 'number' && data.code !== 0) throw new Error(String(data.message ?? `provider video thất bại (${data.code})`));
   return data;
 }
 
@@ -156,23 +156,23 @@ async function generateSeedance(
       body: JSON.stringify(seedanceRequestBody(input, config.model, content)),
     });
     taskId = String(current.id ?? '');
-    if (!taskId) throw new Error(`${config.providerId} did not return a task id`);
+    if (!taskId) throw new Error(`${config.providerId} không trả về task id`);
     await registerProviderTask(config.providerId, taskId);
   }
-  if (!taskId) throw new Error(`${config.providerId} provider task id is unavailable`);
+  if (!taskId) throw new Error(`provider task id của ${config.providerId} không khả dụng`);
   const deadline = Date.now() + 10 * 60_000;
   while (Date.now() < deadline) {
     const status = String(current.status ?? '');
     if (status === 'succeeded') {
       const result = current.content as { video_url?: string; last_frame_url?: string } | undefined;
-      if (!result?.video_url) throw new Error(`${config.providerId} succeeded without a video URL`);
+      if (!result?.video_url) throw new Error(`${config.providerId} thành công nhưng không có URL video`);
       return { videoUrl: result.video_url, lastFrameUrl: result.last_frame_url };
     }
-    if (VIDEO_FAILURES.has(status)) throw new Error(String((current.error as { message?: string } | undefined)?.message ?? `${config.providerId} generation ${status}`));
+    if (VIDEO_FAILURES.has(status)) throw new Error(String((current.error as { message?: string } | undefined)?.message ?? `tạo ${config.providerId} ở trạng thái ${status}`));
     await wait(2_000);
     current = await requestJson(`${baseUrl}/contents/generations/tasks/${encodeURIComponent(taskId)}`, { headers });
   }
-  throw new Error(`${config.providerId} generation timed out`);
+  throw new Error(`tạo ${config.providerId} đã hết thời gian chờ`);
 }
 
 /** xAI Grok Imagine Video (text-to-video): async request_id + polling. The
@@ -181,11 +181,11 @@ function seedanceConfig(model: 'seedance2' | 'byteplus', options: VideoOptions):
   return model === 'seedance2'
     ? {
         providerId: 'seedance2', baseUrl: options.seedanceBaseUrl, apiKey: options.seedanceApiKey, model: options.seedanceModel,
-        missingKeyHint: 'Seedance generation is not configured. Set SEEDANCE_API_KEY in .env.local.',
+        missingKeyHint: 'Seedance chưa được cấu hình. Hãy đặt SEEDANCE_API_KEY trong .env.local.',
       }
     : {
         providerId: 'byteplus', baseUrl: options.byteplusBaseUrl, apiKey: options.byteplusApiKey, model: options.byteplusModel,
-        missingKeyHint: 'BytePlus generation is not configured. Set BYTEPLUS_API_KEY in .env.local.',
+        missingKeyHint: 'BytePlus chưa được cấu hình. Hãy đặt BYTEPLUS_API_KEY trong .env.local.',
       };
 }
 
@@ -202,7 +202,7 @@ async function generateKling(
   registerProviderTask: RegisterGenerationProviderTask,
   existingTaskId?: string,
 ): Promise<string> {
-  if (!options.klingApiKey) throw new Error('Kling generation is not configured. Set KLING_API_KEY in .env.local.');
+  if (!options.klingApiKey) throw new Error('Kling chưa được cấu hình. Hãy đặt KLING_API_KEY trong .env.local.');
   const baseUrl = options.klingBaseUrl.replace(/\/$/, '');
   const headers = { Authorization: `Bearer ${options.klingApiKey}`, 'Content-Type': 'application/json' };
   let taskId = existingTaskId;
@@ -246,10 +246,10 @@ async function generateKling(
     current = await requestJson(`${baseUrl}/v1/videos/omni-video`, { method: 'POST', headers, body: JSON.stringify(body) });
     const data = current.data as Record<string, unknown> | undefined;
     taskId = String(data?.task_id ?? '');
-    if (!taskId) throw new Error('kling did not return a task id');
+    if (!taskId) throw new Error('kling không trả về task id');
     await registerProviderTask('kling', taskId);
   }
-  if (!taskId) throw new Error('kling provider task id is unavailable');
+  if (!taskId) throw new Error('provider task id của kling không khả dụng');
   const deadline = Date.now() + 10 * 60_000;
   while (Date.now() < deadline) {
     const currentData = current.data as Record<string, unknown> | undefined;
@@ -257,14 +257,14 @@ async function generateKling(
     if (status === 'succeed' || status === 'succeeded') {
       const taskResult = currentData?.task_result as { videos?: Array<{ url?: string }> } | undefined;
       const url = taskResult?.videos?.[0]?.url;
-      if (!url) throw new Error('kling succeeded without a video URL');
+      if (!url) throw new Error('kling thành công nhưng không có URL video');
       return url;
     }
     if (VIDEO_FAILURES.has(status)) throw new Error(String(currentData?.task_status_msg ?? `kling generation ${status}`));
     await wait(2_000);
     current = await requestJson(`${baseUrl}/v1/videos/omni-video/${encodeURIComponent(taskId)}`, { headers });
   }
-  throw new Error('kling generation timed out');
+  throw new Error('tạo kling đã hết thời gian chờ');
 }
 
 interface MinimaxBaseResp { status_code?: number; status_msg?: string }
@@ -279,10 +279,10 @@ async function minimaxJson(url: string, init: RequestInit): Promise<{ raw: strin
   try {
     data = JSON.parse(raw) as Record<string, unknown>;
   } catch {
-    throw new Error(`hailuo returned invalid JSON: ${raw.slice(0, 200)}`);
+    throw new Error(`hailuo trả về JSON không hợp lệ: ${raw.slice(0, 200)}`);
   }
   const base = data.base_resp as MinimaxBaseResp | undefined;
-  if (base && base.status_code !== 0) throw new Error(base.status_msg || `hailuo provider failed (${base.status_code})`);
+  if (base && base.status_code !== 0) throw new Error(base.status_msg || `provider hailuo thất bại (${base.status_code})`);
   return { raw, data };
 }
 
@@ -290,7 +290,7 @@ async function minimaxJson(url: string, init: RequestInit): Promise<{ raw: strin
  * would round it through a JS double and corrupt the id. */
 function hailuoFileId(raw: string): string {
   const match = /"file_id"\s*:\s*"?(\d+)"?/.exec(raw);
-  if (!match) throw new Error('hailuo succeeded without a file_id');
+  if (!match) throw new Error('hailuo thành công nhưng không có file_id');
   return match[1];
 }
 
@@ -310,7 +310,7 @@ async function generateHailuo(
     const body = hailuoRequestBody(input, options.minimaxModel, firstFrame, lastFrame);
     const submit = await minimaxJson(`${baseUrl}/v1/video_generation`, { method: 'POST', headers, body: JSON.stringify(body) });
     taskId = String(submit.data.task_id ?? '');
-    if (!taskId) throw new Error('hailuo did not return a task id');
+    if (!taskId) throw new Error('hailuo không trả về task id');
     await registerProviderTask('hailuo', taskId);
   }
   const deadline = Date.now() + 10 * 60_000;
@@ -321,12 +321,12 @@ async function generateHailuo(
     if (status === 'Success') {
       const retrieve = await minimaxJson(`${baseUrl}/v1/files/retrieve?file_id=${encodeURIComponent(hailuoFileId(poll.raw))}`, { headers });
       const file = retrieve.data.file as { download_url?: string } | undefined;
-      if (!file?.download_url) throw new Error('hailuo succeeded without a download URL');
+      if (!file?.download_url) throw new Error('hailuo thành công nhưng không có URL tải xuống');
       return file.download_url;
     }
-    if (status === 'Fail') throw new Error('hailuo generation failed');
+    if (status === 'Fail') throw new Error('tạo hailuo thất bại');
   }
-  throw new Error('hailuo generation timed out');
+  throw new Error('tạo hailuo đã hết thời gian chờ');
 }
 
 async function runVideoOperation(
