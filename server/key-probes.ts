@@ -118,7 +118,9 @@ export function minimaxPostCheck(bodyText: string): string | null {
     const code = body.base_resp?.status_code ?? 0;
     if (code === 0) return null;
     const msg = body.base_resp?.status_msg ?? '';
-    const hint = code === 1004 ? '（鉴权失败，检查 Key）' : '';
+    const hint = code === 1004
+      ? localized({ zh: '（鉴权失败，检查 Key）', en: ' (authentication failed; check the key)', vi: ' (xác thực thất bại; hãy kiểm tra key)' })
+      : '';
     return `MiniMax base_resp ${code}${msg ? ` · ${sanitize(msg)}` : ''}${hint}`;
   } catch {
     return null; // Non-JSON 2xx are counted as successful
