@@ -102,10 +102,10 @@ assert.deepEqual(spansToLocalCuts(clip({}), [{ startMs: 0, endMs: 10_000 }], FPS
 }
 
 // ── Gatekeeper: variable speed/zoom/word-level editing/non-audio/video/passive ──
-assert.match(silenceRemovalBlocker(clip({ playbackRate: 2 })) ?? '', /变速/);
+assert.match(silenceRemovalBlocker(clip({ playbackRate: 2 })) ?? '', /đổi tốc độ/);
 assert.match(silenceRemovalBlocker(clip({ zoom: { kind: 'shape' } as never })) ?? '', /zoom/);
-assert.match(silenceRemovalBlocker(clip({ kind: 'image' })) ?? '', /无音频/);
-assert.match(silenceRemovalBlocker(clip({ src: undefined })) ?? '', /无媒体源/);
+assert.match(silenceRemovalBlocker(clip({ kind: 'image' })) ?? '', /không có âm thanh/);
+assert.match(silenceRemovalBlocker(clip({ src: undefined })) ?? '', /Không có nguồn media/);
 assert.match(
   silenceRemovalBlocker(clip({ transcript: [{ text: 'hi', start: 0, end: 300 }], deletedWordIdx: [0] })) ?? '',
   /clean_script/, '词级编辑过的转写 clip 让位 clean_script',

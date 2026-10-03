@@ -127,12 +127,12 @@ export function planSilenceRemoval(
 
 /** remove_silence clip that should not be touched: give a readable reason, and the tool layer reports it as it is. */
 export function silenceRemovalBlocker(item: TimelineItem): string | null {
-  if (item.kind !== 'video' && item.kind !== 'audio') return `kind=${item.kind} 无音频`;
-  if (!item.src) return '无媒体源';
-  if ((item.playbackRate ?? 1) !== 1) return '已变速(playbackRate≠1) — 先删静音再变速,或用 clean_script';
-  if (item.zoom) return '带动画缩放(zoom) — 分段会打断缩放曲线,先移除 zoom';
+  if (item.kind !== 'video' && item.kind !== 'audio') return `kind=${item.kind} không có âm thanh`;
+  if (!item.src) return 'Không có nguồn media';
+  if ((item.playbackRate ?? 1) !== 1) return 'Đã đổi tốc độ (playbackRate≠1) — hãy xóa đoạn im lặng trước khi đổi tốc độ, hoặc dùng clean_script';
+  if (item.zoom) return 'Có thu phóng động (zoom) — việc chia đoạn sẽ làm gián đoạn đường cong thu phóng; hãy xóa zoom trước';
   if (hasOperationalTranscript(item) && (item.deletedWordIdx?.length || item.silenceFrames !== undefined || item.gapCapsMs)) {
-    return '已有词级编辑/静音压缩 — 转写 clip 请用 clean_script 的静音上限(它按词间隙精确处理)';
+    return 'Đã chỉnh sửa từng từ/nén đoạn im lặng — với clip đã chép lời, hãy dùng giới hạn im lặng của clean_script (xử lý chính xác theo khoảng cách giữa các từ)';
   }
   return null;
 }
