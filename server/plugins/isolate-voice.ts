@@ -172,7 +172,7 @@ export function isolateVoicePlugin(): Plugin {
     configureServer(server) {
       server.middlewares.use('/api/isolate-voice', async (req, res) => {
         if (req.method !== 'POST') {
-          sendJson(res, 405, { error: 'method not allowed — use POST' });
+          sendJson(res, 405, { error: 'method không được phép — hãy dùng POST' });
           return;
         }
         try {
@@ -230,7 +230,7 @@ export function isolateVoicePlugin(): Plugin {
 
           const bytes = await isolateToFile(inputPath, finalPath, 100);
           if (bytes <= 0) {
-            sendJson(res, 422, { error: 'isolated audio is empty (source may have no audio track)' });
+                sendJson(res, 422, { error: 'âm thanh đã tách rỗng (nguồn có thể không có track âm thanh)' });
             return;
           }
           server.config.logger.info(

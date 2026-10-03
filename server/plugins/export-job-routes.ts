@@ -64,7 +64,7 @@ export function registerExportJobRoute(server: ViteDevServer): void {
       const snapshot = getGenerationJobSnapshot(id);
       if (!snapshot) { sendError(res, 404, `không tìm thấy job render ${id}`); return; }
       if (snapshot.status !== 'succeeded' || !snapshot.result) {
-        sendError(res, 409, `render job ${id} is not complete`); return;
+        sendError(res, 409, `job render ${id} chưa hoàn tất`); return;
       }
       try {
         sendJson(res, 200, await promoteExportResult(snapshot.result, uploadDir()));
@@ -75,12 +75,12 @@ export function registerExportJobRoute(server: ViteDevServer): void {
     }
 
     if (req.method === 'DELETE') {
-      if (!id || segments.length !== 1) { sendError(res, 400, 'render id is required'); return; }
+      if (!id || segments.length !== 1) { sendError(res, 400, 'bắt buộc phải có render id'); return; }
       const snapshot = getGenerationJobSnapshot(id);
       if (!snapshot) { sendError(res, 404, `không tìm thấy job render ${id}`); return; }
       if (snapshot.status === 'queued' || snapshot.status === 'running') {
         if (!await cancelActiveExportJob(id)) {
-          sendError(res, 409, 'render job cancellation timed out'); return;
+          sendError(res, 409, 'hủy job render quá thời gian chờ'); return;
         }
       } else {
         await deleteGenerationJob(id);
@@ -90,7 +90,7 @@ export function registerExportJobRoute(server: ViteDevServer): void {
       return;
     }
     if (req.method === 'GET') {
-      if (!id || segments.length !== 1) { sendError(res, 400, 'render id is required'); return; }
+      if (!id || segments.length !== 1) { sendError(res, 400, 'bắt buộc phải có render id'); return; }
       const snapshot = getGenerationJobSnapshot(id);
       if (!snapshot) { sendError(res, 404, `không tìm thấy job render ${id}`); return; }
       const failure = isExportFailure(snapshot.params.exportFailure)
@@ -99,8 +99,8 @@ export function registerExportJobRoute(server: ViteDevServer): void {
       sendJson(res, 200, failure ? { ...snapshot, failure } : snapshot);
       return;
     }
-    if (req.method !== 'POST') { sendError(res, 405, 'method not allowed — POST to enqueue, GET to inspect, DELETE to clean up'); return; }
-    if (id) { sendError(res, 404, 'unknown export job route'); return; }
+    if (req.method !== 'POST') { sendError(res, 405, 'method không được phép — dùng POST để xếp hàng, GET để xem, DELETE để dọn dẹp'); return; }
+    if (id) { sendError(res, 404, 'route job export không xác định'); return; }
     const requestAbort = bindRequestAbort(req, res);
     const controller = requestAbort.controller;
 
@@ -235,7 +235,7 @@ export function registerExportRoute(server: ViteDevServer): void {
       return;
     }
     if (req.method !== 'POST') {
-      sendError(res, 405, 'method not allowed — use POST');
+      sendError(res, 405, 'method không được phép — hãy dùng POST');
       return;
     }
     const requestAbort = bindRequestAbort(req, res);

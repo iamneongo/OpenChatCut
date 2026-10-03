@@ -115,7 +115,7 @@ export function e2bPlugin(options: E2bOptions): Plugin {
     name: 'openchatcut-e2b',
     configureServer(server) {
       server.middlewares.use('/e2b/run', async (req, res) => {
-        if (req.method !== 'POST') { sendJson(res, 405, { error: 'method not allowed — use POST' }); return; }
+        if (req.method !== 'POST') { sendJson(res, 405, { error: 'method không được phép — hãy dùng POST' }); return; }
         let sandbox: Sandbox | undefined;
         try {
           if (!options.apiKey) throw new Error('sandbox e2b chưa được cấu hình. Hãy đặt E2B_API_KEY trong .env.local.');
@@ -157,7 +157,7 @@ export function e2bPlugin(options: E2bOptions): Plugin {
       // webm is read back as BYTES (binary-safe) and written to media/uploads; returns its
       // path. This is the "bake to video = bake to an alpha webm" step that local ffmpeg can't do.
       server.middlewares.use('/e2b/transcode-alpha', async (req, res) => {
-        if (req.method !== 'POST') { sendJson(res, 405, { error: 'method not allowed — use POST' }); return; }
+        if (req.method !== 'POST') { sendJson(res, 405, { error: 'method không được phép — hãy dùng POST' }); return; }
         let sandbox: Sandbox | undefined;
         try {
           if (!options.apiKey) throw new Error('sandbox e2b chưa được cấu hình. Hãy đặt E2B_API_KEY trong .env.local.');

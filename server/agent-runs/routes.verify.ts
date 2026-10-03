@@ -414,7 +414,7 @@ try {
   const source = await readFile(new URL('./routes.ts', import.meta.url), 'utf8');
   assert.match(source, /sendJson\(res, 403, \{ error: 'quyền truy cập lượt chạy không hợp lệ' \}\)/, 'draft without a valid capability is rejected 403');
   assert.match(source, /sendJson\(res, 404, \{ error: 'không tìm thấy lượt chạy' \}\)/, 'draft for an unknown run is rejected 404');
-  assert.match(source, /sendJson\(res, 409, \{ error: 'draft artifact was rejected \(invalid, duplicate, or over the limit\)' \}\)/, 'malformed draft artifacts are rejected 409');
+  assert.match(source, /sendJson\(res, 409, \{ error: 'draft artifact bị từ chối \(không hợp lệ, trùng lặp hoặc vượt giới hạn\)' \}\)/, 'malformed draft artifacts are rejected 409');
 
   // The draft route must not inherit readJson's 1 MiB default: the producer,
   // the snapshot validation and the durable store all contract at 8 MiB, so a

@@ -105,7 +105,7 @@ function onlyIn(has: Record<string, string>, lacks: Record<string, string>): str
   assert.equal(t('导出'), 'Xuất', 'the Vietnamese UI fixture is actually translated');
   assert.equal(tData('竖屏·重点词弹出'), 'Dọc · từ khóa bật lên',
     'vi reads Vietnamese template names');
-  assert.equal(tData('Simple Whoosh'), 'Whoosh đơn giản',
+  assert.equal(tData('Simple Whoosh'), 'Tiếng vút đơn giản',
     'vi reads Vietnamese sound names');
   assert.equal(tData('electronic'), 'Điện tử',
     'vi reads Vietnamese music metadata');

@@ -192,7 +192,7 @@ export function autoGradePlugin(): Plugin {
       server.middlewares.use('/api/auto-grade', async (req, res) => {
         try {
           if (req.method !== 'POST') {
-            sendJson(res, 405, { error: 'method not allowed' });
+            sendJson(res, 405, { error: 'method không được phép' });
             return;
           }
           const body = (await readJson(req)) as AnalyzeColorOptions & { src?: string };
@@ -200,12 +200,12 @@ export function autoGradePlugin(): Plugin {
           const name = uploadNameFromSrc(src);
           const file = name ? resolveUploadFile(name) : null;
           if (!name || !file) {
-            sendJson(res, 404, { error: 'auto grade requires a local /media/uploads source' });
+            sendJson(res, 404, { error: 'chấm điểm tự động cần nguồn /media/uploads cục bộ' });
             return;
           }
           const fileInfo = await stat(file);
           if (!fileInfo.isFile()) {
-            sendJson(res, 404, { error: 'media file not found' });
+            sendJson(res, 404, { error: 'không tìm thấy tệp media' });
             return;
           }
           const analysis = await analyzeColorInFile(file, body);

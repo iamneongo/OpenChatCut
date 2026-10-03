@@ -124,7 +124,7 @@ async function boundRun(
     return null;
   }
   if (current && current.projectId !== projectId) {
-    sendJson(res, 409, { error: 'projectId does not match the run' });
+    sendJson(res, 409, { error: 'projectId không khớp với lượt chạy' });
     return null;
   }
   const run = await recoverServerRun(projectId, runId);
@@ -171,7 +171,7 @@ async function handleCreate(req: IncomingMessage, res: ServerResponse): Promise<
   const input = validateCreateInput(body);
   const askOnly = body.askOnly === true;
   const origin = requestOrigin(req);
-  if (!origin) return sendJson(res, 400, { error: 'valid request host is required' });
+  if (!origin) return sendJson(res, 400, { error: 'bắt buộc phải có host yêu cầu hợp lệ' });
   const execution = resolveRunExecution(body, input, origin, askOnly);
   const existing = getRun(input.runId)
     ?? await recoverServerRun(input.projectId, input.runId);
@@ -183,7 +183,7 @@ async function handleCreate(req: IncomingMessage, res: ServerResponse): Promise<
       && verifyServerRunCapability(existing.capabilityVerifier, input.capability)
       && existing.requestShapeHash === digests.requestShapeHash;
     if (!matches) {
-      sendJson(res, 409, { error: 'Agent run identity already exists with different input.' });
+      sendJson(res, 409, { error: 'danh tính lượt chạy Agent đã tồn tại với input khác' });
       return;
     }
     ensureDeferredRunExecution(existing, execution);
@@ -215,7 +215,7 @@ async function handleStart(req: IncomingMessage, res: ServerResponse, runId: str
   if (!run) return;
   const outcome = startDeferredRun(run);
   if (outcome === 'unavailable') {
-    return sendJson(res, 409, { error: 'agent run admission is no longer available' });
+    return sendJson(res, 409, { error: 'không còn chấp nhận lượt chạy Agent mới' });
   }
   sendJson(res, outcome === 'started' ? 202 : 200, { ok: true, outcome });
 }
@@ -350,7 +350,7 @@ async function handleDraftStore(req: IncomingMessage, res: ServerResponse, runId
   if (!run) return;
   const artifact = body.artifact as Record<string, unknown> | undefined;
   if (!artifact || typeof artifact !== 'object') {
-    sendJson(res, 400, { error: 'draft artifact is required' });
+    sendJson(res, 400, { error: 'bắt buộc phải có draft artifact' });
     return;
   }
   const rawBody = typeof artifact.body === 'string' ? artifact.body : '';
@@ -372,7 +372,7 @@ async function handleDraftStore(req: IncomingMessage, res: ServerResponse, runId
     ...(typeof artifact.toolName === 'string' ? { toolName: artifact.toolName } : {}),
   });
   if (!accepted) {
-    sendJson(res, 409, { error: 'draft artifact was rejected (invalid, duplicate, or over the limit)' });
+    sendJson(res, 409, { error: 'draft artifact bị từ chối (không hợp lệ, trùng lặp hoặc vượt giới hạn)' });
     return;
   }
   sendJson(res, 200, { ok: true });

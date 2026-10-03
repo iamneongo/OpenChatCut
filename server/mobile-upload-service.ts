@@ -319,7 +319,7 @@ export class MobileUploadService {
         try { await upload; } finally { session.activeUploads.delete(upload); }
         return;
       }
-      sendJson(res, 405, { error: 'method not allowed' });
+      sendJson(res, 405, { error: 'method không được phép' });
     } catch (error) {
       const status = error instanceof UploadError ? error.status : 500;
       sendJson(res, status, { error: error instanceof Error ? error.message : String(error) });

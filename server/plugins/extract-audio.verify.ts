@@ -51,7 +51,7 @@ try {
   assert.deepEqual(JSON.parse(silentBody), {
     ok: false,
     noAudio: true,
-    error: 'source has no audio track: silent.png',
+    error: 'nguồn không có track âm thanh: silent.png',
   });
 
   process.env.OPENCHATCUT_FFPROBE = join(directory, 'missing-ffprobe');

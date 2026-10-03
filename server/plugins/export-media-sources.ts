@@ -43,24 +43,24 @@ export async function handleExportMediaSourcesRequest(
   res.setHeader('Cache-Control', 'no-store');
   if (req.method !== 'POST') {
     req.resume();
-    sendJson(res, 405, { error: 'method not allowed — use POST' });
+    sendJson(res, 405, { error: 'method không được phép — hãy dùng POST' });
     return;
   }
   if (!dependencies.authorized(req)) {
     req.resume();
-    sendJson(res, 403, { error: 'local editor request required' });
+    sendJson(res, 403, { error: 'bắt buộc phải có yêu cầu từ editor cục bộ' });
     return;
   }
   let body: unknown;
   try {
     body = await readJsonBody(req);
   } catch (error) {
-    sendJson(res, 400, { error: error instanceof Error ? error.message : 'invalid JSON body' });
+    sendJson(res, 400, { error: error instanceof Error ? error.message : 'body JSON không hợp lệ' });
     return;
   }
   const sources = requestedSources(body);
   if (!sources) {
-    sendJson(res, 400, { error: `sources must be an array of at most ${MAX_EXPORT_MEDIA_SOURCES} strings` });
+    sendJson(res, 400, { error: `sources phải là mảng gồm tối đa ${MAX_EXPORT_MEDIA_SOURCES} chuỗi` });
     return;
   }
   sendJson(res, 200, { ok: true, sources: await dependencies.resolve(sources) });
@@ -73,7 +73,7 @@ export function exportMediaSourcesPlugin(): Plugin {
       server.middlewares.use(EXPORT_MEDIA_SOURCES_ROUTE, (req, res) => {
         handleExportMediaSourcesRequest(req, res).catch((error: unknown) => {
           server.config.logger.error(`[export-media-sources] ${error instanceof Error ? error.message : String(error)}`);
-          if (!res.headersSent) sendJson(res, 500, { error: 'media source resolution failed' });
+          if (!res.headersSent) sendJson(res, 500, { error: 'không thể phân giải nguồn media' });
         });
       });
     },

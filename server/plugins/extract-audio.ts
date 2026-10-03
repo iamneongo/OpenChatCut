@@ -176,7 +176,7 @@ export function extractAudioPlugin(): Plugin {
     configureServer(server) {
       server.middlewares.use('/api/extract-audio', async (req, res) => {
         if (req.method !== 'POST') {
-          sendJson(res, 405, { error: 'method not allowed — use POST' });
+          sendJson(res, 405, { error: 'method không được phép — hãy dùng POST' });
           return;
         }
         try {
@@ -196,7 +196,7 @@ export function extractAudioPlugin(): Plugin {
           // emit an opaque "output file does not contain any stream" error.
           const hasAudio = await probeHasAudio(inputPath);
           if (!hasAudio) {
-            sendJson(res, 422, { ok: false, noAudio: true, error: `source has no audio track: ${name}` });
+            sendJson(res, 422, { ok: false, noAudio: true, error: `nguồn không có track âm thanh: ${name}` });
             return;
           }
 
@@ -225,7 +225,7 @@ export function extractAudioPlugin(): Plugin {
 
           const { file, bytes } = await extractAsrAudio(inputPath, dir, stem);
           if (bytes <= 0) {
-            sendJson(res, 422, { error: 'extracted audio is empty (source may have no audio track)' });
+            sendJson(res, 422, { error: 'âm thanh trích xuất rỗng (nguồn có thể không có track âm thanh)' });
             return;
           }
           const outName = basename(file);

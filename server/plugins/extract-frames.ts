@@ -206,7 +206,7 @@ export function extractFramesPlugin(): Plugin {
     configureServer(server) {
       server.middlewares.use('/api/extract-frames', async (req, res) => {
         if (req.method !== 'POST') {
-          sendJson(res, 405, { error: 'method not allowed — use POST' });
+          sendJson(res, 405, { error: 'method không được phép — hãy dùng POST' });
           return;
         }
         const work = await mkdtemp(join(tmpdir(), 'cc-frames-'));
@@ -251,7 +251,7 @@ export function extractFramesPlugin(): Plugin {
               : sampleTimesMs(fromMs, toMs, count);
           }
           if (!times.length) {
-            sendJson(res, 400, { error: 'no sample times' });
+            sendJson(res, 400, { error: 'không có mốc thời gian mẫu' });
             return;
           }
 
@@ -272,7 +272,7 @@ export function extractFramesPlugin(): Plugin {
             }
           }
           if (!cells.length) {
-            sendJson(res, 422, { error: 'could not extract any frames (codec/corrupt?)' });
+            sendJson(res, 422, { error: 'không thể trích xuất frame nào (codec bị hỏng hoặc tệp bị lỗi?)' });
             return;
           }
 

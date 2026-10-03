@@ -245,7 +245,7 @@ export async function handlePreviewProxyFile(
     if (!hit) return;
     const proxyPath = deps.cachePath(hit.name, hit.source, 'proxy', 'mp4');
     if (!existsSync(proxyPath)) {
-      deps.sendJson(res, 404, { error: 'preview proxy is not ready' });
+      deps.sendJson(res, 404, { error: 'proxy xem trước chưa sẵn sàng' });
       return;
     }
     res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
