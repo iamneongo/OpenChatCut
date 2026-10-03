@@ -1,6 +1,9 @@
 import { EditorBridgeRequestError } from './external-bridge-registration';
+import { t } from '../i18n/locale';
 
-const errorMessage = (error: unknown) => error instanceof Error ? error.message : String(error);
+const errorMessage = (error: unknown) => t('失败:{error}', {
+  error: error instanceof Error ? error.message : String(error),
+});
 
 /** Report bridge conflicts without navigating away from the editor. A page reload can trigger
  * the browser's beforeunload guard while autosave is pending, and reloading cannot clear a

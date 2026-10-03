@@ -82,7 +82,9 @@ export function StorageMigrationDialog({ onClose }: { onClose: () => void }) {
     try {
       const body = await runStorageMigrationRequest();
       if (body.status?.phase !== 'complete' || !body.status.receipt || body.status.enabled !== true) {
-        setError(body.status?.error ?? t('迁移尚未完成，仍在使用 JSON 文件目录'));
+        setError(body.status?.error
+          ? t('失败:{error}', { error: body.status.error })
+          : t('迁移尚未完成，仍在使用 JSON 文件目录'));
         setStatus(body.status ?? await loadMigrationStatus());
         return;
       }
