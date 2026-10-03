@@ -187,7 +187,7 @@ function registerDesktopHandlers(trustedOrigin: string): void {
     suggestedFilename: unknown,
   ) => {
     if (!validDesktopExportFilename(suggestedFilename)) {
-      throw new Error('invalid export filename');
+      throw new Error(localized({ zh: '导出文件名无效', en: 'The export filename is invalid', vi: 'Tên tệp xuất không hợp lệ' }));
     }
     const parent = BrowserWindow.fromWebContents(event.sender);
     const options: SaveDialogOptions = {
