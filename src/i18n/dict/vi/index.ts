@@ -2125,7 +2125,7 @@ export const VI: Record<string, string> = {
   '整帧像素块风格化。': 'Tạo phong cách khối điểm ảnh cho toàn khung hình.',
   '减少色阶，插画/海报感。': 'Giảm cấp màu, tạo cảm giác minh họa/áp phích.',
   '按亮度映射阴影色与高光色。': 'Ánh xạ màu vùng tối và vùng sáng theo độ sáng.',
-  '左右/上下镜像拼贴。mode: 0左→右 1右→左 2上→下 3下→上。': 'Ghép đối xứng trái/phải hoặc trên/dưới. mode: 0 trái→phải, 1 phải→trái, 2 trên→dưới, 3 dưới→trên.',
+  '左右/上下镜像拼贴。mode: 0左→右 1右→左 2上→下 3下→上。': 'Ghép đối xứng trái/phải hoặc trên/dưới. Chế độ: 0 trái→phải, 1 phải→trái, 2 trên→dưới, 3 dưới→trên.',
   '桶形畸变广角效果。': 'Hiệu ứng góc rộng biến dạng barrel.',
   '径向分片镜像，万花筒图案。': 'Đối xứng theo lát xuyên tâm, tạo họa tiết kaleidoscope.',
   'Sobel 边缘检测叠加彩色描边。': 'Phát hiện cạnh Sobel phủ viền màu.',
