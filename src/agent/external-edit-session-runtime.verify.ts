@@ -86,7 +86,7 @@ await assert.rejects(
   }, runtimeBinding),
   (error: unknown) => error instanceof ExternalEditSessionOutcomeError
     && error.outcome === 'rejected'
-    && error.message.includes('not active'),
+    && error.message.includes('không hoạt động'),
   'connected calls cannot invoke schemas outside the registered catalog',
 );
 

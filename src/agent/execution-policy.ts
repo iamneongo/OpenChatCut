@@ -172,7 +172,7 @@ export function validateAgentToolInvocation(
 ): ToolInvocationValidation {
   const active = activeCatalog.find((candidate) => candidate.name === schema.name);
   if (!active) {
-    return { ok: false, error: `Tool is not active for this request: ${schema.name}`, issues: ['tool is not in the active catalog'] };
+    return { ok: false, error: `Tool không hoạt động trong request này: ${schema.name}`, issues: ['tool không có trong catalog đang hoạt động'] };
   }
   if (!args || typeof args !== 'object' || Array.isArray(args)) {
     return { ok: false, error: `Tham số cho tool ${schema.name} không hợp lệ`, issues: ['arguments phải là object'] };
@@ -183,7 +183,7 @@ export function validateAgentToolInvocation(
   const issues = (validate.errors ?? []).slice(0, 20).map(issueText);
   return {
     ok: false,
-    error: `Invalid arguments for tool ${schema.name}: ${issues.join('; ')}`,
+    error: `Tham số cho tool ${schema.name} không hợp lệ: ${issues.join('; ')}`,
     issues,
   };
 }

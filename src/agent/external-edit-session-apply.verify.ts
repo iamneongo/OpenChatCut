@@ -107,7 +107,7 @@ assert.equal(sessionStatus(warningInfo), 'applied');
 assert(warningInfo && typeof warningInfo === 'object' && 'warning' in warningInfo);
 assert.equal(
   warningInfo.warning,
-  'The edit was applied, but the project list timestamp could not be updated.',
+  'Đã áp dụng chỉnh sửa nhưng không thể cập nhật thời điểm của danh sách dự án.',
 );
 const repeatedWarningInfo = await warningRuntime.execute(
   'get_edit_session',

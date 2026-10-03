@@ -132,7 +132,7 @@ export async function runMulticamSync(args: {
       return {
         status: 'failed', changed: false, referenceItemId: refId,
         syncedItemIds: [], skippedItemIds: eligible.map((x) => x.id),
-        offsets: [], message: 'referenceItemId must be one of the selected clips.',
+        offsets: [], message: 'referenceItemId phải là một trong các clip đã chọn.',
       };
     }
     refId = hit.id;

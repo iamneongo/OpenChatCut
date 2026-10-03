@@ -95,7 +95,7 @@ export class MaxToolTurnsError extends Error {
   readonly state: StreamState;
 
   constructor(state: StreamState) {
-    super('Maximum tool turns reached.');
+    super('Đã đạt số lượt gọi tool tối đa.');
     this.state = state;
   }
 }
@@ -104,7 +104,7 @@ export class CodexToolRefresh extends Error {
   readonly state: StreamState;
 
   constructor(state: StreamState) {
-    super('Codex tools changed; restarting the turn with the expanded schema set.');
+    super('Các tool Codex đã thay đổi; đang khởi động lại lượt với bộ schema mở rộng.');
     this.state = state;
   }
 }
@@ -181,7 +181,7 @@ function withoutToolImages(execution: CodexToolExecution): CodexToolExecution {
       ...rest,
       note: typeof rest.note === 'string'
         ? rest.note
-        : 'Image output omitted because the selected model does not support image input.',
+        : 'Đã bỏ đầu ra hình ảnh vì model được chọn không hỗ trợ đầu vào hình ảnh.',
     }),
   };
 }
@@ -231,7 +231,7 @@ async function stopAtToolLimit(
   requestId: string,
   onEvent: (event: AgentEvent) => void,
 ): Promise<never> {
-  const execution = failedTool('Maximum tool turns reached.');
+  const execution = failedTool('Đã đạt số lượt gọi tool tối đa.');
   state.toolFailures.record(event.name, execution);
   const failedState = {
     ...state,
@@ -255,9 +255,9 @@ async function executeStreamTool(
   const validArgs = isToolArgs(event.args);
   let prefaceFlushed = false;
   const execution = !known
-    ? failedTool(`Unknown Codex tool: ${event.name}`)
+    ? failedTool(`Không nhận diện được tool Codex: ${event.name}`)
     : !validArgs
-      ? failedTool(`Invalid arguments for Codex tool: ${event.name}`)
+      ? failedTool(`Tham số cho tool Codex không hợp lệ: ${event.name}`)
       : await opts.executeTool(
         event.name, event.args, event.callId, opts.signal, requestHarnessContext(opts),
         () => {

@@ -182,7 +182,7 @@ async function settleToolError(
   error: unknown,
 ): Promise<CodexToolExecution> {
   const message = error instanceof Error ? error.message : String(error);
-  const safeMessage = message.trim().slice(0, 1_000) || 'Tool execution failed.';
+  const safeMessage = message.trim().slice(0, 1_000) || 'Thực thi tool thất bại.';
   const outcome = error instanceof ToolBoundaryError
     ? error.outcome
     : state.started && state.policy.recovery === 'outcome_unknown'

@@ -282,8 +282,8 @@ export class ExternalBridgeRuntime {
     try {
       await this.recordRunTerminal(session, 'applied');
     } catch {
-      warning = warning ? `${warning} The applied run ledger could not be finalized.`
-        : 'The edit was applied, but the run ledger could not be finalized.';
+      warning = warning ? `${warning} Không thể hoàn tất sổ lượt chạy đã áp dụng.`
+        : 'Đã áp dụng chỉnh sửa nhưng không thể hoàn tất sổ lượt chạy.';
     }
     if (!indexUpdated) warning = warning ? `${warning} ${EXTERNAL_PROJECT_INDEX_WARNING}` : EXTERNAL_PROJECT_INDEX_WARNING;
     if (warning) this.sessionWarnings.set(session.id, warning);
