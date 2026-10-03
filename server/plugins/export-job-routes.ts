@@ -62,7 +62,7 @@ export function registerExportJobRoute(server: ViteDevServer): void {
 
     if (req.method === 'POST' && action === 'promote' && segments.length === 2) {
       const snapshot = getGenerationJobSnapshot(id);
-      if (!snapshot) { sendError(res, 404, `render job ${id} not found`); return; }
+      if (!snapshot) { sendError(res, 404, `không tìm thấy job render ${id}`); return; }
       if (snapshot.status !== 'succeeded' || !snapshot.result) {
         sendError(res, 409, `render job ${id} is not complete`); return;
       }
@@ -77,7 +77,7 @@ export function registerExportJobRoute(server: ViteDevServer): void {
     if (req.method === 'DELETE') {
       if (!id || segments.length !== 1) { sendError(res, 400, 'render id is required'); return; }
       const snapshot = getGenerationJobSnapshot(id);
-      if (!snapshot) { sendError(res, 404, `render job ${id} not found`); return; }
+      if (!snapshot) { sendError(res, 404, `không tìm thấy job render ${id}`); return; }
       if (snapshot.status === 'queued' || snapshot.status === 'running') {
         if (!await cancelActiveExportJob(id)) {
           sendError(res, 409, 'render job cancellation timed out'); return;
@@ -92,7 +92,7 @@ export function registerExportJobRoute(server: ViteDevServer): void {
     if (req.method === 'GET') {
       if (!id || segments.length !== 1) { sendError(res, 400, 'render id is required'); return; }
       const snapshot = getGenerationJobSnapshot(id);
-      if (!snapshot) { sendError(res, 404, `render job ${id} not found`); return; }
+      if (!snapshot) { sendError(res, 404, `không tìm thấy job render ${id}`); return; }
       const failure = isExportFailure(snapshot.params.exportFailure)
         ? snapshot.params.exportFailure
         : undefined;

@@ -104,7 +104,7 @@ function localVideoUpload(uploadPath: string): { file: string; name: string } {
   const name = clean.slice('/media/uploads/'.length);
   if (!isSafeUploadName(name)) throw new Error('invalid Sonilo source path');
   const file = resolveUploadFile(name);
-  if (!file) throw new Error(`Sonilo source not found: ${uploadPath}`);
+  if (!file) throw new Error(`không tìm thấy nguồn Sonilo: ${uploadPath}`);
   return { file, name };
 }
 
@@ -171,7 +171,7 @@ async function fetchSoniloTask(baseUrl: string, apiKey: string, taskId: string):
   // 404 on the poll is the documented fail-fast signal (task not found/expired),
   // not a transient error worth retrying.
   if (response.status === 404) {
-    throw soniloTaskError(`Sonilo task not found or expired: ${taskId}`, 'sonilo_task_not_found', false);
+    throw soniloTaskError(`task Sonilo không tồn tại hoặc đã hết hạn: ${taskId}`, 'sonilo_task_not_found', false);
   }
   if (!response.ok) throw new Error(await soniloProviderError(response));
   return response.json() as Promise<SoniloTask>;

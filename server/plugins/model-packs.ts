@@ -441,7 +441,7 @@ export async function handleModelPackRequest(
     await handleDeleteRequest(req, res);
     return;
   }
-  sendJson(res, 404, { error: 'Not found' });
+  sendJson(res, 404, { error: 'không tìm thấy' });
 }
 
 export function modelPacksPlugin(): Plugin {

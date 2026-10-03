@@ -146,7 +146,7 @@ export function generationProgressPlugin(): Plugin {
 
           const reports = jobIds.map((id) => {
             const job = jobs.get(id);
-            return job ? report(job, input.action) : { jobId: id, operationId: id, status: 'not_found', error: 'generation job not found' };
+            return job ? report(job, input.action) : { jobId: id, operationId: id, status: 'not_found', error: 'không tìm thấy job generation' };
           });
           sendJson(res, 200, { target: 'generation', action: input.action, reports });
         } catch (error) {

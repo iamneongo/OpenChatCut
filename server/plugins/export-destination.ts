@@ -85,7 +85,7 @@ function parseRoute(url: string): { grantId: string; filename: string } {
   }
   const grantId = decodeSegment(parts[1] ?? '');
   const filename = decodeSegment(parts[2] ?? '');
-  if (!GRANT_ID.test(grantId)) throw new ExportDestinationError(404, 'export destination not found');
+  if (!GRANT_ID.test(grantId)) throw new ExportDestinationError(404, 'không tìm thấy điểm đến export');
   if (!validFilename(filename)) throw new ExportDestinationError(400, 'invalid export filename');
   return { grantId, filename };
 }
@@ -143,7 +143,7 @@ export async function handleExportDestinationPut(
   if (req.method !== 'PUT') throw new ExportDestinationError(405, 'method not allowed — use PUT');
   const { grantId, filename } = parseRoute(req.url ?? '/');
   const grant = resolveExportDirectoryGrant(grantId);
-  if (!grant) throw new ExportDestinationError(404, 'export destination not found');
+  if (!grant) throw new ExportDestinationError(404, 'không tìm thấy điểm đến export');
   const directory = resolve(grant.directory);
   const target = resolve(directory, filename);
   if (dirname(target) !== directory) throw new ExportDestinationError(400, 'invalid export filename');

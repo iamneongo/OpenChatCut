@@ -413,7 +413,7 @@ try {
 {
   const source = await readFile(new URL('./routes.ts', import.meta.url), 'utf8');
   assert.match(source, /sendJson\(res, 403, \{ error: 'invalid run capability' \}\)/, 'draft without a valid capability is rejected 403');
-  assert.match(source, /sendJson\(res, 404, \{ error: 'run not found' \}\)/, 'draft for an unknown run is rejected 404');
+  assert.match(source, /sendJson\(res, 404, \{ error: 'không tìm thấy lượt chạy' \}\)/, 'draft for an unknown run is rejected 404');
   assert.match(source, /sendJson\(res, 409, \{ error: 'draft artifact was rejected \(invalid, duplicate, or over the limit\)' \}\)/, 'malformed draft artifacts are rejected 409');
 
   // The draft route must not inherit readJson's 1 MiB default: the producer,

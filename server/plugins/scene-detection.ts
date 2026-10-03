@@ -418,7 +418,7 @@ export function sceneDetectionPlugin(): Plugin {
           if (jobMatch && (req.method === 'GET' || req.method === 'DELETE')) {
             const id = decodeURIComponent(jobMatch[1]!);
             const job = jobs.get(id);
-            if (!job) { sendJson(res, 404, { error: `scene detection job not found: ${id}` }); return; }
+            if (!job) { sendJson(res, 404, { error: `không tìm thấy job nhận diện cảnh: ${id}` }); return; }
             if (req.method === 'DELETE' && !terminalStatuses.has(job.status)) {
               job.status = 'cancelled';
               job.updatedAt = Date.now();

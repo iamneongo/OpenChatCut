@@ -73,10 +73,10 @@ export function subtitleExportPlugin(): Plugin {
         if (req.method === 'GET') {
           const requestUrl = new URL(req.url ?? '/', 'http://localhost');
           const match = requestUrl.pathname.match(/^\/file\/([a-f0-9-]+\.(srt|txt))$/i);
-          if (!match) { sendJson(res, 404, { error: 'subtitle file not found' }); return; }
+          if (!match) { sendJson(res, 404, { error: 'không tìm thấy tệp phụ đề' }); return; }
           try {
             const file = resolveUploadFile(match[1]);
-            if (!file) { sendJson(res, 404, { error: 'subtitle file not found' }); return; }
+            if (!file) { sendJson(res, 404, { error: 'không tìm thấy tệp phụ đề' }); return; }
             const bytes = await readFile(file);
             const requestedName = requestUrl.searchParams.get('name') ?? match[1];
             const downloadName = requestedName.replace(/[\r\n"\\/]+/g, '_');
@@ -85,7 +85,7 @@ export function subtitleExportPlugin(): Plugin {
             res.setHeader('Content-Disposition', `attachment; filename="subtitles.${match[2]}"; filename*=UTF-8''${encodeURIComponent(downloadName)}`);
             res.end(bytes);
           } catch {
-            sendJson(res, 404, { error: 'subtitle file not found' });
+            sendJson(res, 404, { error: 'không tìm thấy tệp phụ đề' });
           }
           return;
         }

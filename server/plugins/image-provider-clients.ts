@@ -21,7 +21,7 @@ export function localImageAssetPath(path: string): string {
   const name = path.slice('/media/uploads/'.length);
   if (!isSafeUploadName(name)) throw new Error('đường dẫn asset tham chiếu không hợp lệ');
   const file = resolveUploadFile(name);
-  if (!file) throw new Error(`reference asset not found: ${name}`);
+  if (!file) throw new Error(`không tìm thấy asset tham chiếu: ${name}`);
   return file;
 }
 

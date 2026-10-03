@@ -129,7 +129,7 @@ async function boundRun(
   }
   const run = await recoverServerRun(projectId, runId);
   if (!run) {
-    sendJson(res, 404, { error: 'run not found' });
+    sendJson(res, 404, { error: 'không tìm thấy lượt chạy' });
     return null;
   }
   if (!current && !verifyServerRunCapability(
@@ -428,7 +428,7 @@ async function routeAgentRunRequest(
   const pathname = url.pathname;
   if (req.method === 'POST' && pathname === '/') return handleCreate(req, res);
   const match = /^\/([0-9a-f-]{36})(?:\/(start|events|tool-claim|tool-result|cancel|settle|draft|draft\/clear))?$/.exec(pathname);
-  if (!match) return sendJson(res, 404, { error: 'not found' });
+  if (!match) return sendJson(res, 404, { error: 'không tìm thấy' });
   const runId = match[1]!;
   const action = match[2];
   if (req.method === 'GET' && action === 'events') return handleEvents(req, res, url, runId);
@@ -440,7 +440,7 @@ async function routeAgentRunRequest(
   if (req.method === 'POST' && action === 'draft') return handleDraftStore(req, res, runId);
   if (req.method === 'POST' && action === 'draft/clear') return handleDraftClear(req, res, runId);
   if (req.method === 'GET' && !action) return handleMetadata(req, res, url, runId);
-  sendJson(res, 404, { error: 'not found' });
+  sendJson(res, 404, { error: 'không tìm thấy' });
 }
 
 function sendRouteError(res: ServerResponse, error: unknown): void {

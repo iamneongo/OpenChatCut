@@ -142,7 +142,7 @@ export function planExport(body: ExportRequest | null): ExportPlan {
     const selectedTimelineId = body.timelineId ?? migratedProject.activeTimelineId;
     timelineId = selectedTimelineId;
     const root = migratedProject.timelines.find((timeline: Timeline) => timeline.id === selectedTimelineId);
-    if (!root) throw new ExportRequestError(`timeline ${selectedTimelineId} not found in project`);
+    if (!root) throw new ExportRequestError(`không tìm thấy timeline ${selectedTimelineId} trong project`);
     const nestedPlan = resolveTimelineRenderPlan(migratedProject, selectedTimelineId);
     state = root;
     nestedDuration = nestedPlan.durationInFrames;

@@ -190,12 +190,12 @@ async function handleRequest(rootDir: string, req: IncomingMessage, res: ServerR
       return;
     }
     const found = await serializeWrite(() => setEnabled(rootDir, id, body.enabled as boolean));
-    sendJson(res, found ? 200 : 404, found ? { ok: true } : { error: 'extension not found' });
+    sendJson(res, found ? 200 : 404, found ? { ok: true } : { error: 'không tìm thấy extension' });
     return;
   }
   if (req.method === 'DELETE' && id) {
     const found = await serializeWrite(() => removePack(rootDir, id));
-    sendJson(res, found ? 200 : 404, found ? { ok: true } : { error: 'extension not found' });
+    sendJson(res, found ? 200 : 404, found ? { ok: true } : { error: 'không tìm thấy extension' });
     return;
   }
   sendJson(res, 405, { error: 'method not allowed' });

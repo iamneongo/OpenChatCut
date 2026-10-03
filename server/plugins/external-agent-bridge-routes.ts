@@ -350,6 +350,6 @@ export async function routeExternalAgentBridge(
   } else if (req.method === 'GET' && url.pathname === '/tools') {
     sendBridgeJson(res, 200, { tools: operations.mcpTools() });
   } else {
-    sendBridgeJson(res, 404, { error: 'not found' });
+    sendBridgeJson(res, 404, { error: 'không tìm thấy' });
   }
 }

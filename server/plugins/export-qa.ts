@@ -240,7 +240,7 @@ export function exportQaPlugin(): Plugin {
           }
           const file = resolveUploadFile(name);
           if (!file || !existsSync(file)) {
-            sendJson(res, 404, { error: `export not found: ${name}` });
+            sendJson(res, 404, { error: `không tìm thấy bản export: ${name}` });
             return;
           }
           const expected: AnalyzeExportFileOptions = {

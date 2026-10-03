@@ -365,7 +365,7 @@ export async function handleAsrModelsRequest(
     }
     return;
   }
-  sendJson(res, 404, { error: 'not found' });
+  sendJson(res, 404, { error: 'không tìm thấy' });
 }
 
 export function asrModelsPlugin(): Plugin {
