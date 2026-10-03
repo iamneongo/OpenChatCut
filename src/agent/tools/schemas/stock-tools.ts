@@ -83,7 +83,7 @@ export const STOCK_TOOL_SCHEMAS: AgentToolSchema[] = [
         },
         projectId: {
           type: 'string',
-          description: 'Ignored because OpenChatCut uses the active project.',
+          description: 'Bỏ qua vì OpenChatCut dùng dự án đang hoạt động.',
         },
       },
       required: ['filePath'],
