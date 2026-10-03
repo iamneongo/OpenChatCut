@@ -15,6 +15,7 @@ export default {
   '转写失败：{detail}': 'Transcription failed: {detail}',
   '模型包操作失败：{err}': 'Model pack operation failed: {err}',
   '存储迁移失败：{error}': 'Storage migration failed: {error}',
+  '任务失败：{error}': 'Task failed: {error}',
   '下载更新': 'Download update',
   '查看发布页': 'View release',
   '下载中 {percent}%': 'Downloading {percent}%',

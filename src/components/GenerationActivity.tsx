@@ -149,7 +149,7 @@ export function GenerationActivity({ projectId, onResume }: GenerationActivityPr
                   {job.providerTaskId && <span>{t('Provider 任务')} {job.providerTaskId}</span>}
                   {retryLabel && <span>{retryLabel}</span>}
                 </div>
-                {job.error && <div style={{ color: theme.danger, fontSize: 11, lineHeight: 1.45, marginTop: 6 }}>{job.error}</div>}
+                {job.error && <div style={{ color: theme.danger, fontSize: 11, lineHeight: 1.45, marginTop: 6 }}>{t('任务失败：{error}', { error: job.error })}</div>}
                 {job.resultPath && (
                   <a href={job.resultPath} target="_blank" rel="noreferrer" style={{ color: theme.accent, display: 'inline-block', fontSize: 11.5, marginTop: 6 }}>
                     {t('打开结果')}
