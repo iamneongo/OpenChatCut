@@ -178,7 +178,7 @@ assert.deepEqual(
     toolCallId: 'call-dangling',
     toolName: 'read_timeline',
     argsDigest: 'digest-dangling',
-    error: 'The agent run was interrupted before this tool returned a result.',
+    error: 'Lượt chạy Agent bị gián đoạn trước khi tool trả về kết quả.',
   },
 );
 resetServerRunStoreForTest();
