@@ -30,7 +30,7 @@ export function createContentHashAccumulator(
     createTransform: () => new Transform({
       transform(chunk: Buffer, _encoding, done) {
         if (chunk.length > maxBytes - bytes) {
-          done(options.limitError?.(maxBytes) ?? new Error(`stream exceeds ${maxBytes} bytes`));
+          done(options.limitError?.(maxBytes) ?? new Error(`luồng dữ liệu vượt quá ${maxBytes} byte`));
           return;
         }
         bytes += chunk.length;
@@ -39,7 +39,7 @@ export function createContentHashAccumulator(
       },
     }),
     digest: () => {
-      if (digested) throw new Error('content hash already finalized');
+      if (digested) throw new Error('hash nội dung đã được hoàn tất');
       digested = true;
       return { bytes, contentHash: hash.digest('hex') };
     },
