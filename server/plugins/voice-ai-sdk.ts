@@ -27,7 +27,7 @@ function requireProviderKey(options: VoiceOptions, provider: AiVoiceProvider): s
     : options.ai.cartesiaApiKey;
   if (key) return key;
   const label = provider === 'openai' ? 'OpenAI' : provider[0]!.toUpperCase() + provider.slice(1);
-  throw new Error(`${label} API key is not configured`);
+  throw new Error(`Chưa cấu hình API key của ${label}`);
 }
 
 function cartesiaProviderOptions(input: ValidVoiceRequest) {

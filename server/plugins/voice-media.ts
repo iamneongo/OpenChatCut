@@ -55,7 +55,7 @@ function probeDuration(file: string): Promise<number> {
     child.on('close', (code) => {
       const duration = Number(output.trim());
       if (code === 0 && Number.isFinite(duration) && duration > 0) resolvePromise(duration);
-      else reject(new Error('unable to probe generated audio'));
+      else reject(new Error('không thể kiểm tra audio đã tạo'));
     });
   });
 }

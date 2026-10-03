@@ -111,7 +111,7 @@ async function publishBlobSource(
     signal: options.signal,
   });
   if (!blobResponse.ok) {
-    throw new Error(`blob fetch failed (HTTP ${blobResponse.status})`);
+    throw new Error(`tải blob thất bại (HTTP ${blobResponse.status})`);
   }
   const blob = await blobResponse.blob();
   const name = safeUploadName(candidate, blob.type);
@@ -123,7 +123,7 @@ async function publishBlobSource(
   });
   const info = (await upload.json().catch(() => null)) as { path?: string; error?: string } | null;
   if (!upload.ok || !info?.path) {
-    throw new Error(info?.error ?? `upload failed (HTTP ${upload.status})`);
+    throw new Error(info?.error ?? `tải lên thất bại (HTTP ${upload.status})`);
   }
   options.onPublished?.(info.path);
   return info.path;
@@ -223,7 +223,7 @@ export async function materializeTimelineExport(
   options: Omit<MaterializeBlobMediaOptions, 'mediaPlanSnapshot'> = {},
 ): Promise<MaterializedTimelineExport> {
   const selected = project.timelines.find((timeline) => timeline.id === timelineId);
-  if (!selected) throw new Error(`timeline not found: ${timelineId}`);
+  if (!selected) throw new Error(`không tìm thấy timeline: ${timelineId}`);
   const snapshot = immutableExportSnapshot({
     ...project,
     activeTimelineId: timelineId,
@@ -233,6 +233,6 @@ export async function materializeTimelineExport(
     mediaPlanSnapshot: snapshot,
   });
   const state = materialized.timelines.find((timeline) => timeline.id === timelineId);
-  if (!state) throw new Error(`timeline not found: ${timelineId}`);
+  if (!state) throw new Error(`không tìm thấy timeline: ${timelineId}`);
   return { state, project: materialized, timelineId };
 }

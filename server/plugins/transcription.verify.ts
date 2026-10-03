@@ -62,7 +62,7 @@ try {
 
   assert.throws(
     () => assertTranscriptionProviderConfigured({ ...options, mistralApiKey: '' }, 'mistral'),
-    /Mistral API key is not configured/,
+    /Chưa cấu hình API key của Mistral/,
   );
   assert.throws(
     () => assertTranscriptionProviderConfigured({ ...options, cartesiaModel: 'ink-2' }, 'cartesia'),

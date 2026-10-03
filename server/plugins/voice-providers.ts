@@ -26,9 +26,9 @@ async function providerError(response: Response): Promise<string> {
   const text = await response.text();
   try {
     const data = JSON.parse(text) as { detail?: { message?: string }; error?: { message?: string }; message?: string };
-    return data.detail?.message ?? data.error?.message ?? data.message ?? `voice provider failed (${response.status})`;
+    return data.detail?.message ?? data.error?.message ?? data.message ?? `provider voice thất bại (${response.status})`;
   } catch {
-    return text.slice(0, 300) || `voice provider failed (${response.status})`;
+    return text.slice(0, 300) || `provider voice thất bại (${response.status})`;
   }
 }
 
@@ -166,7 +166,7 @@ export function minimaxVoiceBody(model: string, input: ValidVoiceRequest): Recor
 }
 
 export async function inworldVoice(options: VoiceOptions, input: ValidVoiceRequest): Promise<Buffer> {
-  if (!options.inworldApiKey) throw new Error('Inworld is not configured. Set INWORLD_TTS_API_KEY in .env.local.');
+  if (!options.inworldApiKey) throw new Error('Chưa cấu hình Inworld. Hãy đặt INWORLD_TTS_API_KEY trong .env.local.');
   const response = await fetchWithProxy(`${options.inworldBaseUrl.replace(/\/$/, '')}/tts/v1/voice`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', Authorization: `Basic ${options.inworldApiKey}` },
@@ -182,7 +182,7 @@ export async function inworldVoice(options: VoiceOptions, input: ValidVoiceReque
 }
 
 export async function fishAudioVoice(options: VoiceOptions, input: ValidVoiceRequest): Promise<Buffer> {
-  if (!options.fishAudioApiKey) throw new Error('Fish Audio is not configured. Set FISHAUDIO_TTS_API_KEY in .env.local.');
+  if (!options.fishAudioApiKey) throw new Error('Chưa cấu hình Fish Audio. Hãy đặt FISHAUDIO_TTS_API_KEY trong .env.local.');
   const response = await fetchWithProxy(`${options.fishAudioBaseUrl.replace(/\/$/, '')}/v1/tts`, {
     method: 'POST',
     headers: {
@@ -197,7 +197,7 @@ export async function fishAudioVoice(options: VoiceOptions, input: ValidVoiceReq
 }
 
 export async function speechifyVoice(options: VoiceOptions, input: ValidVoiceRequest): Promise<Buffer> {
-  if (!options.speechifyApiKey) throw new Error('Speechify is not configured. Set SPEECHIFY_TTS_API_KEY in .env.local.');
+  if (!options.speechifyApiKey) throw new Error('Chưa cấu hình Speechify. Hãy đặt SPEECHIFY_TTS_API_KEY trong .env.local.');
   const response = await fetchWithProxy(`${options.speechifyBaseUrl.replace(/\/$/, '')}/v1/audio/speech`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${options.speechifyApiKey}` },

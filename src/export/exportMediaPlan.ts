@@ -188,7 +188,7 @@ export function collectExportMediaPlan(snapshot: unknown): ExportMediaPlan {
           itemId,
           assetId: itemAssetId,
           field: 'src',
-          message: `Media item ${itemId ?? '(unknown)'} has no source`,
+          message: `Media ${itemId ?? '(chưa biết)'} không có nguồn`,
         });
       }
 
@@ -221,8 +221,8 @@ export function collectExportMediaPlan(snapshot: unknown): ExportMediaPlan {
             itemId,
             field: 'timelineId',
             message: nestedId
-              ? `Sequence ${itemId ?? '(unknown)'} references missing timeline ${nestedId}`
-              : `Sequence ${itemId ?? '(unknown)'} has no timeline reference`,
+              ? `Sequence ${itemId ?? '(chưa biết)'} tham chiếu timeline không tồn tại ${nestedId}`
+              : `Sequence ${itemId ?? '(chưa biết)'} không có tham chiếu timeline`,
           });
         } else {
           visitTimeline(nested, nestedId);
@@ -279,7 +279,7 @@ export function collectExportMediaPlan(snapshot: unknown): ExportMediaPlan {
           timelineId,
           itemId: sourceId,
           field: 'sourceItemId',
-          message: `Captions reference missing item ${sourceId}`,
+          message: `Phụ đề tham chiếu media không tồn tại ${sourceId}`,
         });
       }
     }
@@ -351,7 +351,7 @@ export async function assertExportMediaReadable(
       stage: 'preflight',
       code: 'export_media_preflight_failed',
       retryable: false,
-      message: `Export media preflight failed for ${issues.length} reference${issues.length === 1 ? '' : 's'}: ${detail}`,
+      message: `Kiểm tra trước media export thất bại với ${issues.length} tham chiếu: ${detail}`,
       mediaIssues: issues,
     }));
   }

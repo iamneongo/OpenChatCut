@@ -32,7 +32,7 @@ function requireProviderKey(options: TranscriptionOptions, provider: CloudTransc
             : options.cartesiaApiKey;
   if (key) return key;
   const label = provider === 'elevenlabs' ? 'ElevenLabs' : provider[0]!.toUpperCase() + provider.slice(1);
-  throw new TranscriptionConfigurationError(`${label} API key is not configured`);
+  throw new TranscriptionConfigurationError(`Chưa cấu hình API key của ${label}`);
 }
 
 export function assertTranscriptionProviderConfigured(

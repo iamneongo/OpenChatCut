@@ -73,15 +73,15 @@ export class SequenceGraphError extends Error {
 function sequenceErrorMessage(details: Omit<SequenceGraphErrorDetails, 'message'>): string {
   switch (details.code) {
     case 'SEQUENCE_TIMELINE_MISSING':
-      return `Sequence item ${details.itemId ?? '(unknown)'} references missing timeline ${details.referencedTimelineId ?? '(unknown)'}`;
+      return `Mục Sequence ${details.itemId ?? '(chưa biết)'} tham chiếu timeline không tồn tại ${details.referencedTimelineId ?? '(chưa biết)'}`;
     case 'SEQUENCE_FPS_MISMATCH':
-      return `Sequence FPS mismatch: parent timeline ${details.timelineId ?? '(unknown)'} is ${details.parentFps ?? '(unknown)'}fps, child timeline ${details.referencedTimelineId ?? '(unknown)'} is ${details.childFps ?? '(unknown)'}fps`;
+      return `FPS của Sequence không khớp: timeline cha ${details.timelineId ?? '(chưa biết)'} là ${details.parentFps ?? '(chưa biết)'}fps, timeline con ${details.referencedTimelineId ?? '(chưa biết)'} là ${details.childFps ?? '(chưa biết)'}fps`;
     case 'SEQUENCE_CYCLE':
-      return `Sequence cycle detected: ${details.path.join(' -> ')}`;
+      return `Phát hiện vòng lặp Sequence: ${details.path.join(' -> ')}`;
     case 'SEQUENCE_DEPTH_LIMIT':
-      return `Sequence nesting exceeds maximum depth ${details.limit}`;
+      return `Sequence lồng quá độ sâu tối đa ${details.limit}`;
     case 'SEQUENCE_NODE_LIMIT':
-      return `Sequence render graph exceeds maximum node count ${details.limit}`;
+      return `Đồ thị render Sequence vượt quá số node tối đa ${details.limit}`;
     case 'SEQUENCE_DUPLICATE_TIMELINE_ID':
       return `Duplicate timeline id ${details.timelineId ?? '(unknown)'}`;
   }

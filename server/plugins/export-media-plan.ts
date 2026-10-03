@@ -371,7 +371,7 @@ function preflightFailure(issues: readonly ExportMediaIssue[]): ExportFailureErr
     stage: 'preflight',
     code: 'export_media_preflight_failed',
     retryable: false,
-    message: `Export media preflight failed for ${issues.length} reference${issues.length === 1 ? '' : 's'}: ${detail}`,
+    message: `Kiểm tra trước media export thất bại với ${issues.length} tham chiếu: ${detail}`,
     mediaIssues: [...issues],
   }));
 }

@@ -101,7 +101,7 @@ export async function handleAssemblyAiUpload(
     }
     const apiKey = (dependencies.getApiKey ?? (() => getKey('ASSEMBLYAI_API_KEY')))();
     if (!apiKey) {
-      sendJson(res, 503, { error: 'AssemblyAI API key is not configured' });
+      sendJson(res, 503, { error: 'Chưa cấu hình API key của AssemblyAI' });
       return;
     }
     const info = await stat(file);
