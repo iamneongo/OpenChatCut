@@ -86,7 +86,7 @@ assert.equal(strippedVisualContent.some((part) => part.mediaType === 'image/png'
   'models without image input never receive visual attachments');
 assert.equal(strippedVisualContent.some((part) => part.mediaType === 'application/pdf'), true,
   'non-image files are not conflated with image capability');
-assert.equal(strippedVisualContent.some((part) => String(part.text).includes('omitted')), true,
+assert.equal(strippedVisualContent.some((part) => String(part.text).includes('bỏ qua')), true,
   'the model receives an explicit omission notice');
 assert.equal(normalizeOpenAiApiMode('chat'), 'chat');
 assert.equal(normalizeOpenAiApiMode('unexpected'), 'responses');
@@ -373,7 +373,7 @@ assert.deepEqual(chatVisionHistory, [
   {
     role: 'user',
     content: [
-      { type: 'text', text: 'Rendered media returned by the preceding tool calls:' },
+      { type: 'text', text: 'Media đã kết xuất từ các lần gọi tool trước:' },
       {
         type: 'file',
         data: { type: 'data', data: 'jpeg-base64' },
@@ -474,7 +474,7 @@ assert.deepEqual(compatibleChatHistory.slice(2), [
       ...compatibleFileResultA,
       output: {
         type: 'text',
-        value: 'Rendered media is attached in the following user message.',
+        value: 'Media đã kết xuất được đính kèm trong tin nhắn người dùng tiếp theo.',
       },
     }],
   },
@@ -492,7 +492,7 @@ assert.deepEqual(compatibleChatHistory.slice(2), [
   {
     role: 'user',
     content: [
-      { type: 'text', text: 'Rendered media returned by the preceding tool calls:' },
+      { type: 'text', text: 'Media đã kết xuất từ các lần gọi tool trước:' },
       {
         type: 'file',
         data: { type: 'data', data: 'compatible-jpeg-a' },
@@ -520,7 +520,7 @@ assert.deepEqual(compatibleTextOnlyHistory.slice(2), [
       ...compatibleFileResultA,
       output: {
         type: 'text',
-        value: 'Rendered media was omitted because the selected model does not accept visual attachments.',
+        value: 'Media đã kết xuất bị bỏ qua vì model được chọn không nhận tệp đính kèm hình ảnh.',
       },
     }],
   },

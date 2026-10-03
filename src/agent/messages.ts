@@ -187,12 +187,12 @@ function withoutForeignProviderOptions<T extends object>(value: T): T {
   return providerOptions ? { ...portable, providerOptions } : portable;
 }
 
-const CHAT_MEDIA_INTRO = 'Rendered media returned by the preceding tool calls:';
-const CHAT_MEDIA_ATTACHED_FALLBACK = 'Rendered media is attached in the following user message.';
+const CHAT_MEDIA_INTRO = 'Media đã kết xuất từ các lần gọi tool trước:';
+const CHAT_MEDIA_ATTACHED_FALLBACK = 'Media đã kết xuất được đính kèm trong tin nhắn người dùng tiếp theo.';
 const CHAT_MEDIA_OMITTED_FALLBACK =
-  'Rendered media was omitted because the selected model does not accept visual attachments.';
+  'Media đã kết xuất bị bỏ qua vì model được chọn không nhận tệp đính kèm hình ảnh.';
 const USER_MEDIA_OMITTED_FALLBACK =
-  'Visual attachment omitted because the selected model does not support image input.';
+  'Tệp hình ảnh đính kèm bị bỏ qua vì model được chọn không hỗ trợ đầu vào hình ảnh.';
 
 export interface ChatCompletionsMediaPreparation {
   messages: ModelMessage[];
