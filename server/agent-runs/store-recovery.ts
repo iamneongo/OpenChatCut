@@ -14,7 +14,7 @@ import {
 import type { ServerRun, ServerRunEvent, ServerRunStatus } from './store-types';
 import { eventBytes, isServerRunCapabilityVerifier, runtimeEvent } from './store-values';
 
-const RECOVERY_ERROR = 'Agent run interrupted because the server restarted before provider state could be resumed.';
+const RECOVERY_ERROR = 'Lượt chạy Agent bị gián đoạn vì server khởi động lại trước khi có thể tiếp tục trạng thái provider.';
 
 export interface StoreRecoveryDependencies {
   runs: Map<string, ServerRun>;

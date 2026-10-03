@@ -142,7 +142,7 @@ assert.equal(
   'failed',
   'restart recovery fails genuinely unfinished server transport without replay',
 );
-assert.equal(recoveredInterrupted?.error, 'Agent run interrupted because the server restarted before provider state could be resumed.');
+assert.equal(recoveredInterrupted?.error, 'Lượt chạy Agent bị gián đoạn vì server khởi động lại trước khi có thể tiếp tục trạng thái provider.');
 assert.equal(recoveredInterrupted?.events.at(-1)?.type, 'done');
 const interruptedSidecar = await loadAgentRuntimeSidecar(interrupted.projectId);
 const interruptedRecord = interruptedSidecar.runs.find(

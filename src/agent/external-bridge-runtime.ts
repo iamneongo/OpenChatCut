@@ -131,7 +131,7 @@ export class ExternalBridgeRuntime {
     if (name === 'discard_edit_session') {
       if (!session) {
         await this.validateBinding(binding);
-        throw new ExternalEditSessionOutcomeError('rejected', `Unknown edit session ${sessionId}`);
+        throw new ExternalEditSessionOutcomeError('rejected', `Không nhận diện được phiên chỉnh sửa ${sessionId}`);
       }
       throwIfExternalCallCancelled(signal);
       return this.discard(session);
@@ -139,7 +139,7 @@ export class ExternalBridgeRuntime {
     if (name === 'get_edit_session') {
       if (!session) {
         await this.validateBinding(binding);
-        throw new ExternalEditSessionOutcomeError('rejected', `Unknown edit session ${sessionId}`);
+        throw new ExternalEditSessionOutcomeError('rejected', `Không nhận diện được phiên chỉnh sửa ${sessionId}`);
       }
       await this.validateTerminalReadBinding(binding, session);
       throwIfExternalCallCancelled(signal);
@@ -419,7 +419,7 @@ export class ExternalBridgeRuntime {
   private requireSession(sessionId: string): ExternalEditSession {
     const session = this.sessions.get(sessionId);
     if (!session) {
-      throw new ExternalEditSessionOutcomeError('rejected', `Unknown edit session ${sessionId}`);
+      throw new ExternalEditSessionOutcomeError('rejected', `Không nhận diện được phiên chỉnh sửa ${sessionId}`);
     }
     return session;
   }

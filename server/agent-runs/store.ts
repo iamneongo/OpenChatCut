@@ -410,7 +410,7 @@ export async function flushServerRunPersistence(run?: ServerRun): Promise<void> 
 export function resetServerRunStoreForTest(): void {
   for (const run of runs.values()) {
     run.abort?.abort();
-    void rejectPendingTools(run, 'Server run store reset.');
+    void rejectPendingTools(run, 'kho lượt chạy server đã được đặt lại.');
     run.status = 'failed';
     wakeSubscribers(run);
   }

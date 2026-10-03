@@ -85,10 +85,10 @@ function parseMarkerPayload(payload: string): ContextCheckpointMarker {
   try {
     parsed = JSON.parse(payload);
   } catch {
-    throw new ContextIntegrityError('checkpoint marker JSON is malformed.');
+    throw new ContextIntegrityError('JSON của marker checkpoint bị sai định dạng.');
   }
   if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
-    throw new ContextIntegrityError('checkpoint marker must be an object.');
+    throw new ContextIntegrityError('marker checkpoint phải là một object.');
   }
   const keys = Object.keys(parsed).sort().join(',');
   if (keys !== 'id,source,summary,v'
@@ -96,7 +96,7 @@ function parseMarkerPayload(payload: string): ContextCheckpointMarker {
     || !('id' in parsed) || typeof parsed.id !== 'string' || !CHECKPOINT_ID.test(parsed.id)
     || !('source' in parsed) || typeof parsed.source !== 'string' || !SHA256_HEX.test(parsed.source)
     || !('summary' in parsed) || typeof parsed.summary !== 'string' || !SHA256_HEX.test(parsed.summary)) {
-    throw new ContextIntegrityError('checkpoint marker fields are invalid.');
+    throw new ContextIntegrityError('các trường marker checkpoint không hợp lệ.');
   }
   return {
     version: 1,
@@ -113,14 +113,14 @@ export function parseContextCheckpointMarker(message: ModelMessage): ContextChec
   const start = text.lastIndexOf(CHECKPOINT_MARKER_OPEN);
   if (start < 0) {
     if (text.includes(CHECKPOINT_MARKER_CLOSE)) {
-      throw new ContextIntegrityError('checkpoint marker is incomplete.');
+      throw new ContextIntegrityError('marker checkpoint chưa đầy đủ.');
     }
     return null;
   }
   const payloadStart = start + CHECKPOINT_MARKER_OPEN.length;
   const end = text.indexOf(CHECKPOINT_MARKER_CLOSE, payloadStart);
   if (end < 0 || end + CHECKPOINT_MARKER_CLOSE.length !== text.length) {
-    throw new ContextIntegrityError('checkpoint marker is incomplete or not terminal.');
+    throw new ContextIntegrityError('marker checkpoint chưa đầy đủ hoặc chưa ở cuối.');
   }
   return parseMarkerPayload(text.slice(payloadStart, end));
 }
@@ -131,11 +131,11 @@ export function verifyContextCheckpointMarker(
 ): ContextCheckpointMarker | null {
   const marker = parseContextCheckpointMarker(message);
   if (!marker) return null;
-  if (!persisted) throw new ContextIntegrityError('marked checkpoint sidecar is missing.');
+  if (!persisted) throw new ContextIntegrityError('thiếu sidecar của checkpoint được đánh dấu.');
   if (marker.checkpointId !== persisted.checkpointId
     || marker.sourceDigest !== persisted.sourceDigest
     || marker.summaryDigest !== persisted.summaryDigest) {
-    throw new ContextIntegrityError('marked checkpoint sidecar does not match saved chat.');
+    throw new ContextIntegrityError('sidecar checkpoint được đánh dấu không khớp chat đã lưu.');
   }
   return marker;
 }
@@ -145,7 +145,7 @@ function checkpointSummary(message: ModelMessage): string {
   const marker = text?.lastIndexOf(`\n\n${CHECKPOINT_MARKER_OPEN}`) ?? -1;
   if (text === null || !text.startsWith(CHECKPOINT_SUMMARY_PREFIX)
       || marker < CHECKPOINT_SUMMARY_PREFIX.length) {
-    throw new ContextIntegrityError('canonical checkpoint summary shape is invalid.');
+    throw new ContextIntegrityError('cấu trúc tóm tắt checkpoint chính tắc không hợp lệ.');
   }
   return text.slice(CHECKPOINT_SUMMARY_PREFIX.length, marker);
 }

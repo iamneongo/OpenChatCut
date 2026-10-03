@@ -9,7 +9,7 @@ export class EditorBridgeRequestError extends Error {
   readonly status: number;
 
   constructor(operation: string, status: number) {
-    super(`${operation} failed: HTTP ${status}`);
+    super(`${operation} thất bại: HTTP ${status}`);
     this.name = 'EditorBridgeRequestError';
     this.operation = operation;
     this.status = status;

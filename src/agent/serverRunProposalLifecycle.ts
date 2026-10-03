@@ -187,7 +187,7 @@ async function loadStartDraft(projectId: string, input: ServerRunStart) {
   const recovered = await loadServerRunDraft(projectId, input.runId);
   if (input.resumed && !recovered) {
     throw permanentServerRunRecoveryError(
-      'Server run draft is unavailable; interrupted tools cannot be recovered safely.',
+      'Bản nháp lượt chạy server không khả dụng; không thể khôi phục an toàn các tool bị gián đoạn.',
     );
   }
   const baseDoc = recovered?.base.baseDoc ?? input.baseDoc;
@@ -338,7 +338,7 @@ async function finalizeCompletedTurn(
   if (!committed) {
     await settleServerRun(turn.projectId, input.runId, {
       status: 'failed',
-      summary: 'server run persistent operations failed',
+      summary: 'các thao tác lưu bền vững của lượt chạy server thất bại',
     });
     return 'finalized';
   }

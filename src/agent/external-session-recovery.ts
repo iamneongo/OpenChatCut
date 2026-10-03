@@ -35,7 +35,7 @@ export async function executeExternalSessionRecovery(
   if (!EXTERNAL_ACTIVE_STATUSES.has(session.status)) return dependencies.info(session);
   if (args.action === 'discard') return dependencies.discard(session);
   if (args.action !== 'resume') {
-    throw new ExternalEditSessionOutcomeError('rejected', 'action must be "resume" or "discard".');
+    throw new ExternalEditSessionOutcomeError('rejected', 'action phải là "resume" hoặc "discard".');
   }
   if (session.baseRevision !== dependencies.currentRevision()) {
     await dependencies.markStale(session);

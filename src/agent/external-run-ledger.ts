@@ -90,7 +90,7 @@ export function externalToolResultFailure(
 function boundedExternalToolError(error: unknown): ExternalEditSessionOutcomeError {
   const message = redactTextForAgentRuntime(
     error instanceof Error ? error.message : String(error),
-  ).slice(0, 1_200) || 'External tool execution failed.';
+  ).slice(0, 1_200) || 'Thực thi tool bên ngoài thất bại.';
   return error instanceof ExternalEditSessionOutcomeError
     ? new ExternalEditSessionOutcomeError(error.outcome, message)
     : new ExternalEditSessionOutcomeError('failed', message);
@@ -214,7 +214,7 @@ export class ExternalSessionRunLedger {
       await this.recordProjectionFailure(invocation);
       throw new ExternalEditSessionOutcomeError(
         'failed',
-        'The load_skill result could not be projected exactly.',
+        'Không thể chuyển đổi chính xác kết quả load_skill.',
       );
     }
   }
@@ -242,7 +242,7 @@ export class ExternalSessionRunLedger {
       await this.recordProjectionFailure(invocation);
       throw new ExternalEditSessionOutcomeError(
         'failed',
-        'The tool result could not be serialized safely, so no external result was returned.',
+        'Không thể tuần tự hóa an toàn kết quả tool nên không trả về kết quả bên ngoài.',
       );
     }
     let artifact = null;
@@ -265,7 +265,7 @@ export class ExternalSessionRunLedger {
       await this.recordProjectionFailure(invocation);
       throw new ExternalEditSessionOutcomeError(
         'failed',
-        'The tool result could not be archived safely, so no external result was returned.',
+        'Không thể lưu trữ an toàn kết quả tool nên không trả về kết quả bên ngoài.',
       );
     }
     if (result === undefined) return undefined;
@@ -290,7 +290,7 @@ export class ExternalSessionRunLedger {
         kind: 'terminal_failure',
         operationId: invocation.operationId,
         code: 'external_result_projection_failed',
-        summary: 'The tool result could not be safely archived or projected.',
+        summary: 'Không thể lưu trữ hoặc chuyển đổi an toàn kết quả tool.',
       },
     }).catch(() => undefined);
   }
