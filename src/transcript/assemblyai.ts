@@ -8,6 +8,7 @@
 // original path; browser-local ASR requires the compact extract.
 import type { TranscriptResult } from './types';
 import { getMediaBlob } from '../persist/mediaBlobStore';
+import { t } from '../i18n/locale';
 
 const ASSEMBLYAI_POLL_DEADLINE_MS = 30 * 60 * 1000;
 const BASE = '/assemblyai/v2';
@@ -175,9 +176,12 @@ async function poll(
       }
       return { text: d.text ?? words.map((w: { text: string }) => w.text).join(''), words, utterances };
     }
-    if (d.status === 'error') throw new Error(d.error ?? 'transcription gặp lỗi');
+    if (d.status === 'error') throw new Error(t('转写服务报错：{error}', { error: d.error ?? 'unknown error' }));
     const waited = Math.max(0, Math.round((ASSEMBLYAI_POLL_DEADLINE_MS - (deadline - Date.now())) / 1000));
-    onWait?.(`Đang chép lời trên đám mây (${String(d.status)}, đã chờ ${waited}s)`);
+    onWait?.(t('正在云端转写（{status}，已等待 {seconds}s）', {
+      status: String(d.status),
+      seconds: waited,
+    }));
     await new Promise((res) => setTimeout(res, 2500));
   }
 }
