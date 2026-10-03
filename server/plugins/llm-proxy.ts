@@ -73,7 +73,7 @@ export function llmProxyPlugin(): Plugin {
           llmProviderForRequest(req);
         } catch {
           res.writeHead(400, { 'Content-Type': 'application/json' });
-          res.end(JSON.stringify({ error: { message: 'Unsupported LLM provider' } }));
+          res.end(JSON.stringify({ error: { message: 'provider LLM không được hỗ trợ' } }));
           return;
         }
         next();
