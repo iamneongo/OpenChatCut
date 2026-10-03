@@ -752,7 +752,7 @@
     },
     {
       "name": "manage_timelines",
-      "description": "Manage project timelines (sequences): list/create/duplicate/switch/update/delete, or insert one timeline as a nested sequence instance in the active timeline. Nested instances reference the child timeline without copying it and reject missing/cyclic references.",
+      "description": "Quản lý timeline dự án (sequence): list/create/duplicate/switch/update/delete, hoặc chèn một timeline thành instance sequence lồng trong timeline đang hoạt động. Instance lồng tham chiếu timeline con mà không sao chép và từ chối tham chiếu thiếu/vòng lặp.",
       "input_schema": {
         "type": "object",
         "properties": {
@@ -767,22 +767,22 @@
               "delete",
               "insert"
             ],
-            "description": "What to do."
+            "description": "Thao tác cần thực hiện."
           },
           "timelineId": {
             "type": "string",
-            "description": "Target timeline id (prefix/name ok). insert: the child timeline to reference; update defaults to active."
+            "description": "Id timeline đích (chấp nhận tiền tố/tên). insert: timeline con cần tham chiếu; update mặc định timeline đang hoạt động."
           },
           "timelineIds": {
             "type": "array",
             "items": {
               "type": "string"
             },
-            "description": "delete: several timeline ids (prefixes ok)."
+            "description": "delete: nhiều id timeline (chấp nhận tiền tố)."
           },
           "name": {
             "type": "string",
-            "description": "create/duplicate: the new timeline's name; update: rename."
+            "description": "create/duplicate: tên timeline mới; update: đổi tên."
           },
           "ratio": {
             "type": "string",
@@ -793,15 +793,15 @@
               "4:3",
               "3:4"
             ],
-            "description": "Canvas aspect preset (create/update). Use ratio OR explicit width+height, not both."
+            "description": "Preset tỷ lệ canvas (create/update). Dùng ratio HOẶC width+height rõ ràng, không dùng cả hai."
           },
           "width": {
             "type": "integer",
-            "description": "Explicit canvas width px (create/update, omit when ratio is given)."
+            "description": "Chiều rộng canvas px rõ ràng (create/update, bỏ qua khi truyền ratio)."
           },
           "height": {
             "type": "integer",
-            "description": "Explicit canvas height px (create/update, omit when ratio is given)."
+            "description": "Chiều cao canvas px rõ ràng (create/update, bỏ qua khi truyền ratio)."
           },
           "fit": {
             "type": "string",
@@ -809,15 +809,15 @@
               "contain",
               "cover"
             ],
-            "description": "update: how existing clips adapt to the new canvas — contain letterboxes, cover fills+crops."
+            "description": "update: cách clip hiện có thích ứng canvas mới — contain letterbox, cover lấp đầy+cắt."
           },
           "hidden": {
             "type": "boolean",
-            "description": "update: hide (true) or restore (false) the timeline tab; data is kept. The last visible timeline cannot be hidden."
+            "description": "update: ẩn (true) hoặc khôi phục (false) tab timeline; dữ liệu được giữ. Không thể ẩn timeline cuối cùng đang hiển thị."
           },
           "activate": {
             "type": "boolean",
-            "description": "create/duplicate: false keeps the current timeline active (default true; batch create activates the last entry)."
+            "description": "create/duplicate: false giữ timeline hiện tại hoạt động (mặc định true; create batch kích hoạt entry cuối)."
           },
           "timelines": {
             "type": "array",
@@ -838,27 +838,27 @@
                 }
               }
             },
-            "description": "create: several timelines at once, each {name, ratio | width+height}."
+            "description": "create: nhiều timeline cùng lúc, mỗi timeline {name, ratio | width+height}."
           },
           "track": {
             "type": "string",
-            "description": "insert: destination video track id/alias."
+            "description": "insert: id/alias track video đích."
           },
           "startFrame": {
             "type": "integer",
-            "description": "insert: instance start on the active timeline."
+            "description": "insert: frame bắt đầu instance trên timeline đang hoạt động."
           },
           "sourceStartFrame": {
             "type": "integer",
-            "description": "insert: child timeline source-window in-point (default 0)."
+            "description": "insert: điểm vào source window của timeline con (mặc định 0)."
           },
           "sourceDurationInFrames": {
             "type": "integer",
-            "description": "insert: source-window length in child timeline frames (default remaining child duration)."
+            "description": "insert: độ dài source window tính bằng frame của timeline con (mặc định phần thời lượng còn lại)."
           },
           "playbackRate": {
             "type": "number",
-            "description": "insert: instance speed from 0.1 to 8 (default 1)."
+            "description": "insert: tốc độ instance từ 0.1 đến 8 (mặc định 1)."
           }
         },
         "required": [
@@ -3908,7 +3908,7 @@
     },
     {
       "name": "search_content",
-      "description": "Search project content across the local library: agent chat messages, caption texts and transcript words (FTS5, Chinese-aware segmentation). Use when the user asks \"where did I say X\" / \"which project has the caption about Y\" / referencing earlier edits or words. Returns per-hit kind (chat|caption|transcript), projectId, ref and score, best first. Query is segmented with the same dictionary as the index, so 2-char Chinese words work.",
+      "description": "Tìm nội dung dự án trong thư viện cục bộ: tin nhắn chat agent, text caption và từ transcript (FTS5, phân đoạn có hỗ trợ tiếng Trung). Dùng khi người dùng hỏi \"tôi đã nói X ở đâu\" / \"dự án nào có caption về Y\" / hoặc nhắc tới chỉnh sửa hay từ trước đó. Trả về kind cho từng kết quả (chat|caption|transcript), projectId, ref và score, sắp xếp tốt nhất trước. Query được phân đoạn bằng cùng dictionary với index nên từ tiếng Trung 2 ký tự vẫn hoạt động.",
       "input_schema": {
         "type": "object",
         "properties": {
@@ -3918,11 +3918,11 @@
           },
           "projectId": {
             "type": "string",
-            "description": "Optional project id to scope the search; omit to search every project."
+            "description": "Id dự án tùy chọn để giới hạn tìm kiếm; bỏ qua để tìm mọi dự án."
           },
           "limit": {
             "type": "number",
-            "description": "Optional max hits (default 20, max 50)."
+            "description": "Số kết quả tối đa tùy chọn (mặc định 20, tối đa 50)."
           }
         },
         "required": [
@@ -4340,7 +4340,7 @@
     },
     {
       "name": "read_project",
-      "description": "Read the project currently targeted by this agent session, including draft state visible to the current tool context. Default = full overview. Narrow with view:\"timeline\"|\"assets\", timelineId, track, fromFrame/toFrame, itemId, or assetId; projectId cannot retarget this call. Unknown timeline/track references return an error. itemId/assetId are filters, so unmatched prefixes return empty item/asset arrays rather than an error. Pass code:true with assetId to include MG source code. Read at session start or after out-of-band changes; between your own edits, apply mutation deltas unless a note requests a reread. Timeline items include canonical media linkage (sourceAssetId, resolvedSourceAssetId, linkStatus), exact source window (srcInFrame, sourceStartFrame, sourceDurationInFrames, sourceEndFrameExclusive), and editable state (keyframes, transform, filters, volume, fadeInFrames, fadeOutFrames). timeline.selectedId / selectedIds / selected is the inspector selection. If the user says \"the selected clip\" or \"this clip\", use that id — do not pick an adjacent track. Video aliases are bottom-up: V1 is the bottom video track, not the top lane.",
+      "description": "Đọc dự án hiện đang được session agent nhắm tới, gồm cả trạng thái draft hiển thị trong context tool hiện tại. Mặc định = tổng quan đầy đủ. Thu hẹp bằng view:\"timeline\"|\"assets\", timelineId, track, fromFrame/toFrame, itemId hoặc assetId; projectId không thể chuyển target của lần gọi này. Tham chiếu timeline/track không tồn tại sẽ trả lỗi. itemId/assetId là bộ lọc nên tiền tố không khớp trả mảng item/asset rỗng thay vì lỗi. Truyền code:true cùng assetId để bao gồm source code MG. Đọc lúc bắt đầu session hoặc sau thay đổi bên ngoài; giữa các chỉnh sửa của chính mình, dùng delta mutation trừ khi note yêu cầu đọc lại. Item timeline gồm liên kết media chuẩn (sourceAssetId, resolvedSourceAssetId, linkStatus), source window chính xác (srcInFrame, sourceStartFrame, sourceDurationInFrames, sourceEndFrameExclusive) và trạng thái chỉnh sửa được (keyframes, transform, filters, volume, fadeInFrames, fadeOutFrames). timeline.selectedId / selectedIds / selected là lựa chọn trong inspector. Nếu người dùng nói \"clip đã chọn\" hoặc \"clip này\", dùng id đó — không chọn track kế bên. Alias video đi từ dưới lên: V1 là track video dưới cùng, không phải lane trên cùng.",
       "input_schema": {
         "type": "object",
         "properties": {
@@ -4350,39 +4350,39 @@
               "timeline",
               "assets"
             ],
-            "description": "'timeline' tracks+items+markers; 'assets' library only. Omit for full overview."
+            "description": "'timeline' gồm track+item+marker; 'assets' chỉ thư viện. Bỏ qua để xem tổng quan đầy đủ."
           },
           "timelineId": {
             "type": "string",
-            "description": "Inspect a non-active timeline by id/prefix without switching."
+            "description": "Kiểm tra timeline không hoạt động theo id/tiền tố mà không chuyển timeline."
           },
           "track": {
             "type": "string",
-            "description": "Filter by track alias (e.g. C1, V1, A1)."
+            "description": "Lọc theo alias track (ví dụ C1, V1, A1)."
           },
           "fromFrame": {
             "type": "number",
-            "description": "Items overlapping this frame or later (half-open with toFrame)."
+            "description": "Item chồng lên frame này hoặc phía sau (nửa mở với toFrame)."
           },
           "toFrame": {
             "type": "number",
-            "description": "Exclusive upper frame bound."
+            "description": "Giới hạn frame trên, không bao gồm."
           },
           "itemId": {
             "type": "string",
-            "description": "Item id(s) or prefixes, comma-separated."
+            "description": "Id item hoặc tiền tố, phân tách bằng dấu phẩy."
           },
           "assetId": {
             "type": "string",
-            "description": "Asset id(s) or prefixes, comma-separated."
+            "description": "Id asset hoặc tiền tố, phân tách bằng dấu phẩy."
           },
           "code": {
             "type": "boolean",
-            "description": "Include MG code when assetId is set."
+            "description": "Bao gồm code MG khi đã đặt assetId."
           },
           "projectId": {
             "type": "string",
-            "description": "Ignored. Use target_project first; this reads the project targeted by the current session."
+            "description": "Bỏ qua. Gọi target_project trước; tool này đọc dự án mà session hiện tại đang nhắm tới."
           }
         },
         "additionalProperties": false
@@ -5897,7 +5897,7 @@
     },
     {
       "name": "read_project",
-      "description": "Read the project currently targeted by this agent session, including draft state visible to the current tool context. Default = full overview. Narrow with view:\"timeline\"|\"assets\", timelineId, track, fromFrame/toFrame, itemId, or assetId; projectId cannot retarget this call. Unknown timeline/track references return an error. itemId/assetId are filters, so unmatched prefixes return empty item/asset arrays rather than an error. Pass code:true with assetId to include MG source code. Read at session start or after out-of-band changes; between your own edits, apply mutation deltas unless a note requests a reread. Timeline items include canonical media linkage (sourceAssetId, resolvedSourceAssetId, linkStatus), exact source window (srcInFrame, sourceStartFrame, sourceDurationInFrames, sourceEndFrameExclusive), and editable state (keyframes, transform, filters, volume, fadeInFrames, fadeOutFrames). timeline.selectedId / selectedIds / selected is the inspector selection. If the user says \"the selected clip\" or \"this clip\", use that id — do not pick an adjacent track. Video aliases are bottom-up: V1 is the bottom video track, not the top lane.",
+      "description": "Đọc dự án hiện đang được session agent nhắm tới, gồm cả trạng thái draft hiển thị trong context tool hiện tại. Mặc định = tổng quan đầy đủ. Thu hẹp bằng view:\"timeline\"|\"assets\", timelineId, track, fromFrame/toFrame, itemId hoặc assetId; projectId không thể chuyển target của lần gọi này. Tham chiếu timeline/track không tồn tại sẽ trả lỗi. itemId/assetId là bộ lọc nên tiền tố không khớp trả mảng item/asset rỗng thay vì lỗi. Truyền code:true cùng assetId để bao gồm source code MG. Đọc lúc bắt đầu session hoặc sau thay đổi bên ngoài; giữa các chỉnh sửa của chính mình, dùng delta mutation trừ khi note yêu cầu đọc lại. Item timeline gồm liên kết media chuẩn (sourceAssetId, resolvedSourceAssetId, linkStatus), source window chính xác (srcInFrame, sourceStartFrame, sourceDurationInFrames, sourceEndFrameExclusive) và trạng thái chỉnh sửa được (keyframes, transform, filters, volume, fadeInFrames, fadeOutFrames). timeline.selectedId / selectedIds / selected là lựa chọn trong inspector. Nếu người dùng nói \"clip đã chọn\" hoặc \"clip này\", dùng id đó — không chọn track kế bên. Alias video đi từ dưới lên: V1 là track video dưới cùng, không phải lane trên cùng.",
       "input_schema": {
         "type": "object",
         "properties": {
@@ -5907,39 +5907,39 @@
               "timeline",
               "assets"
             ],
-            "description": "'timeline' tracks+items+markers; 'assets' library only. Omit for full overview."
+            "description": "'timeline' gồm track+item+marker; 'assets' chỉ thư viện. Bỏ qua để xem tổng quan đầy đủ."
           },
           "timelineId": {
             "type": "string",
-            "description": "Inspect a non-active timeline by id/prefix without switching."
+            "description": "Kiểm tra timeline không hoạt động theo id/tiền tố mà không chuyển timeline."
           },
           "track": {
             "type": "string",
-            "description": "Filter by track alias (e.g. C1, V1, A1)."
+            "description": "Lọc theo alias track (ví dụ C1, V1, A1)."
           },
           "fromFrame": {
             "type": "number",
-            "description": "Items overlapping this frame or later (half-open with toFrame)."
+            "description": "Item chồng lên frame này hoặc phía sau (nửa mở với toFrame)."
           },
           "toFrame": {
             "type": "number",
-            "description": "Exclusive upper frame bound."
+            "description": "Giới hạn frame trên, không bao gồm."
           },
           "itemId": {
             "type": "string",
-            "description": "Item id(s) or prefixes, comma-separated."
+            "description": "Id item hoặc tiền tố, phân tách bằng dấu phẩy."
           },
           "assetId": {
             "type": "string",
-            "description": "Asset id(s) or prefixes, comma-separated."
+            "description": "Id asset hoặc tiền tố, phân tách bằng dấu phẩy."
           },
           "code": {
             "type": "boolean",
-            "description": "Include MG code when assetId is set."
+            "description": "Bao gồm code MG khi đã đặt assetId."
           },
           "projectId": {
             "type": "string",
-            "description": "Ignored. Use target_project first; this reads the project targeted by the current session."
+            "description": "Bỏ qua. Gọi target_project trước; tool này đọc dự án mà session hiện tại đang nhắm tới."
           }
         },
         "additionalProperties": false

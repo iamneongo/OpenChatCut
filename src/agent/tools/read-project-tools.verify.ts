@@ -68,9 +68,9 @@ if (!missingTimeline || typeof missingTimeline !== 'object' || !('error' in miss
 assert.match(String(missingTimeline.error ?? ''), /timeline/i, 'unknown timeline references return an error');
 
 const schemaDescription = READ_PROJECT_TOOL_SCHEMAS[0]!.description ?? '';
-assert.match(schemaDescription, /currently targeted by this agent session/);
-assert.match(schemaDescription, /return an error/);
-assert.match(schemaDescription, /empty item\/asset arrays/);
+assert.match(schemaDescription, /session agent nhắm tới/);
+assert.match(schemaDescription, /sẽ trả lỗi/);
+assert.match(schemaDescription, /mảng item\/asset rỗng/);
 assert.match(schemaDescription, /selectedId/);
 
 console.log('read-project-tools.verify: session targeting and documented failure/filter semantics ok');
