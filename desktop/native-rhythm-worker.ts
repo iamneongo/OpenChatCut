@@ -76,7 +76,7 @@ function requireRuntime(): NativeRhythmConfig {
 }
 
 function throwIfCanceled(requestId: string): void {
-  if (canceled.has(requestId)) throw new DOMException('Native rhythm request canceled', 'AbortError');
+  if (canceled.has(requestId)) throw new DOMException('request rhythm native đã bị hủy', 'AbortError');
 }
 
 function report(requestId: string, progress: number): void {

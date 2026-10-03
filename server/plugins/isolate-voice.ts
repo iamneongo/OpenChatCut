@@ -31,7 +31,7 @@ function readJson(req: IncomingMessage, max = MAX_JSON): Promise<unknown> {
     req.on('data', (c: Buffer) => {
       size += c.length;
       if (size > max) {
-        reject(new Error('body too large'));
+        reject(new Error('thân request quá lớn'));
         req.destroy();
         return;
       }
@@ -87,7 +87,7 @@ function runFfmpeg(args: string[], timeoutMs: number): Promise<void> {
     let stderr = '';
     const timer = setTimeout(() => {
       child.kill('SIGKILL');
-      reject(new Error(`ffmpeg timed out after ${Math.round(timeoutMs / 1000)}s`));
+      reject(new Error(`ffmpeg đã hết thời gian chờ sau ${Math.round(timeoutMs / 1000)} giây`));
     }, timeoutMs);
     child.stderr?.on('data', (c: Buffer) => {
       stderr += String(c);
@@ -100,7 +100,7 @@ function runFfmpeg(args: string[], timeoutMs: number): Promise<void> {
     child.on('close', (code) => {
       clearTimeout(timer);
       if (code === 0) resolve();
-      else reject(new Error(`ffmpeg exit ${code}: ${stderr.slice(-500)}`));
+      else reject(new Error(`ffmpeg thoát với mã ${code}: ${stderr.slice(-500)}`));
     });
   });
 }
@@ -163,7 +163,7 @@ async function isolateToFile(
       await unlink(partPath).catch(() => {});
     }
   }
-  throw lastErr ?? new Error('isolate-voice failed');
+  throw lastErr ?? new Error('isolate-voice thất bại');
 }
 
 export function isolateVoicePlugin(): Plugin {

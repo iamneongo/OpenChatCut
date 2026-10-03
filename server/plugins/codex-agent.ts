@@ -205,7 +205,7 @@ function mapReasoningEfforts(value: unknown): CodexAgentModel['supportedReasonin
 
 export function mapCodexModels(value: unknown): CodexAgentModel[] {
   const data = object(value)?.data;
-  if (!Array.isArray(data)) throw new Error('invalid model response');
+  if (!Array.isArray(data)) throw new Error('phản hồi model không hợp lệ');
   const models: CodexAgentModel[] = [];
   const seen = new Set<string>();
   for (const candidate of data) {
@@ -380,7 +380,7 @@ async function streamTurn(req: IncomingMessage, res: ServerResponse, body: Recor
   const emit = ndjsonWriter(res);
   const controller = new AbortController();
   let finished = false;
-  const disconnect = () => { if (!finished) controller.abort(new Error('HTTP client disconnected.')); };
+  const disconnect = () => { if (!finished) controller.abort(new Error('client HTTP đã ngắt kết nối.')); };
   req.once('aborted', disconnect);
   res.once('close', disconnect);
   if (req.aborted || res.destroyed) disconnect();
@@ -467,7 +467,7 @@ export async function runServerCodexTurn(
   emit: (event: CodexTurnStreamEvent) => void,
   signal: AbortSignal,
 ): Promise<void> {
-  if (codexTurnManager.hasRequest(request.requestId)) throw new Error('requestId is already active');
+  if (codexTurnManager.hasRequest(request.requestId)) throw new Error('requestId đang hoạt động');
   const { client } = await requireClient();
   await codexTurnManager.run(client, request, emit, signal);
 }

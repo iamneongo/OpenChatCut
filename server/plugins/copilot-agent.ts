@@ -269,7 +269,7 @@ async function streamTurn(req: IncomingMessage, res: ServerResponse, body: Recor
   const emit = ndjsonWriter(res);
   const controller = new AbortController();
   let finished = false;
-  const disconnect = () => { if (!finished) controller.abort(new Error('HTTP client disconnected.')); };
+  const disconnect = () => { if (!finished) controller.abort(new Error('client HTTP đã ngắt kết nối.')); };
   req.once('aborted', disconnect);
   res.once('close', disconnect);
   if (req.aborted || res.destroyed) disconnect();
@@ -340,7 +340,7 @@ export async function runServerCopilotTurn(
   emit: (event: CopilotTurnStreamEvent) => void,
   signal: AbortSignal,
 ): Promise<void> {
-  if (hasCopilotRequest(request.requestId)) throw new Error('requestId is already active');
+  if (hasCopilotRequest(request.requestId)) throw new Error('requestId đang hoạt động');
   await requireInstallation();
   await runCopilotTurn(request, emit, signal);
 }

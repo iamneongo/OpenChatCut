@@ -65,7 +65,7 @@ export async function generateGrokVideo(
       if (typeof url !== 'string' || !url) throw new Error('grok-imagine-video thành công nhưng không có URL video');
       return url;
     }
-    if (FAILURES.has(status)) throw new Error(`grok-imagine-video generation ${status}`);
+    if (FAILURES.has(status)) throw new Error(`tạo grok-imagine-video ở trạng thái ${status}`);
     await wait(3_000);
   }
   throw new Error('tạo video grok-imagine-video đã hết thời gian chờ');

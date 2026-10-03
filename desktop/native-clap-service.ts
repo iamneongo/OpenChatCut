@@ -141,7 +141,7 @@ export class NativeClapService {
       this.verifiedPack = await inspectPack(this.cacheDir, this.verifiedPack);
       if (this.disposed) throw new Error('service CLAP native đã được giải phóng');
       if (this.cancelRequested.has(parsed.requestId)) {
-        throw new DOMException('Native CLAP request canceled', 'AbortError');
+        throw new DOMException('request CLAP native đã bị hủy', 'AbortError');
       }
       const worker = this.ensureWorker();
       return await new Promise<DesktopClapResponse>((resolve, reject) => {

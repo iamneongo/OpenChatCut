@@ -19,7 +19,7 @@ export interface DownloadModelFileOptions {
 export interface CurlContext extends DownloadModelFileOptions { progress: Map<string, number> }
 
 function downloadAborted(signal?: AbortSignal): Error {
-  const error = signal?.reason instanceof Error ? signal.reason : new Error('Model download cancelled');
+  const error = signal?.reason instanceof Error ? signal.reason : new Error('tải model đã bị hủy');
   error.name = 'AbortError';
   return error;
 }
@@ -95,7 +95,7 @@ function runCurl(
     child.once('close', (code) => {
       if (context.signal?.aborted) finish(downloadAborted(context.signal));
       else if (code === 0) finish();
-      else finish(new Error(`model download failed (curl exit ${code}): ${stderr.slice(-300)}`));
+      else finish(new Error(`tải model thất bại (curl thoát với mã ${code}): ${stderr.slice(-300)}`));
     });
   });
 }
@@ -131,15 +131,15 @@ function probeRemoteSize(url: string, expectedBytes: number | undefined, signal?
     child.once('close', (code) => {
       cleanup();
       if (signal?.aborted) { reject(downloadAborted(signal)); return; }
-      if (code !== 0) { reject(new Error(`range probe failed (curl exit ${code})`)); return; }
+      if (code !== 0) { reject(new Error(`thăm dò range thất bại (curl thoát với mã ${code})`)); return; }
       const match = /content-range:\s*bytes\s+\d+-\d+\/(\d+)/i.exec(stdout);
       const size = match ? Number(match[1]) : NaN;
       if (!Number.isFinite(size) || size <= 0 || size > MAX_CACHE_FILE_BYTES) {
-        reject(new Error(`invalid content-range: ${stdout.slice(0, 160)}`));
+        reject(new Error(`content-range không hợp lệ: ${stdout.slice(0, 160)}`));
         return;
       }
       if (expectedBytes !== undefined && size !== expectedBytes) {
-        reject(new Error(`remote model size mismatch: got ${size}, expected ${expectedBytes}`));
+        reject(new Error(`kích thước model từ xa không khớp: nhận ${size}, dự kiến ${expectedBytes}`));
         return;
       }
       resolve(size);
@@ -153,7 +153,7 @@ async function writeEntireChunk(file: FileHandle, chunk: Buffer): Promise<void> 
   let offset = 0;
   while (offset < chunk.length) {
     const { bytesWritten } = await file.write(chunk, offset, chunk.length - offset);
-    if (bytesWritten <= 0) throw new Error('parallel download merge made no write progress');
+    if (bytesWritten <= 0) throw new Error('gộp bản tải song song không ghi được tiến triển');
     offset += bytesWritten;
   }
 }
@@ -181,7 +181,7 @@ export async function mergeDownloadedParts(
     await destination.close();
   }
   if (total !== expectedSize) {
-    throw new Error(`parallel download size mismatch: got ${total}, expected ${expectedSize}`);
+    throw new Error(`kích thước bản tải song song không khớp: nhận ${total}, dự kiến ${expectedSize}`);
   }
 }
 

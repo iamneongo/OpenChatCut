@@ -200,7 +200,7 @@ function postCanceled(requestId: string): void {
     type: 'error',
     requestId,
     name: 'AbortError',
-    message: 'Native CLAP request canceled',
+    message: 'request CLAP native đã bị hủy',
   });
 }
 

@@ -112,7 +112,7 @@ function createNativeAsrWorker(): UtilityProcess {
 }
 
 function nativeAsrAbortError(): DOMException {
-  return new DOMException('Native ASR request canceled', 'AbortError');
+  return new DOMException('request ASR native đã bị hủy', 'AbortError');
 }
 
 function abortReason(signal: AbortSignal): Error {

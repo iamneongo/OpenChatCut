@@ -232,7 +232,7 @@ async function readJson(req: IncomingMessage): Promise<ImageRequest> {
   for await (const chunk of req) {
     const buf = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk);
     total += buf.length;
-    if (total > 1_000_000) throw new Error('request body too large');
+    if (total > 1_000_000) throw new Error('thân request quá lớn');
     chunks.push(buf);
   }
   return JSON.parse(Buffer.concat(chunks).toString('utf8')) as ImageRequest;
@@ -348,7 +348,7 @@ async function callProvider(baseUrl: string, apiKey: string, body: GptImageInput
   const response = await fetchWithProxy(`${baseUrl.replace(/\/$/, '')}${endpoint}`, { method: 'POST', headers, body: requestBody });
   if (!response.ok) throw new Error(await imageProviderError(response));
   const result = await response.json() as { data?: ProviderImage[] };
-  if (!result.data?.length) throw new Error('image provider returned no images');
+  if (!result.data?.length) throw new Error('image provider không trả về ảnh nào');
   return result.data;
 }
 
@@ -367,9 +367,9 @@ async function saveImage(image: ProviderImage, fallbackExt: string): Promise<str
     bytes = Buffer.from(await response.arrayBuffer());
     const urlExt = extname(new URL(image.url).pathname).slice(1).toLowerCase();
     if (SAVED_IMAGE_EXTS.has(urlExt)) ext = urlExt;
-  } else throw new Error('image provider returned neither bytes nor URL');
+  } else throw new Error('image provider không trả về bytes hoặc URL');
 
-  if (!bytes.length) throw new Error('image provider returned an empty image');
+  if (!bytes.length) throw new Error('image provider trả về ảnh rỗng');
   const dir = uploadDir();
   await mkdir(dir, { recursive: true });
   const filename = `${randomUUID()}.${ext}`;

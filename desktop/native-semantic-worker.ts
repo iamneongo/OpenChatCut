@@ -68,7 +68,7 @@ const canceled = new Set<string>();
 
 function throwIfCanceled(requestId: string): void {
   if (canceled.has(requestId)) {
-    throw new DOMException('Native semantic request canceled', 'AbortError');
+    throw new DOMException('request semantic native đã bị hủy', 'AbortError');
   }
 }
 

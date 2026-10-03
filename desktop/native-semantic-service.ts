@@ -141,7 +141,7 @@ export class NativeSemanticService {
       }
       if (this.disposed) throw new Error('service semantic native đã được giải phóng');
       if (this.cancelRequested.has(request.requestId)) {
-        throw new DOMException('Native semantic request canceled', 'AbortError');
+        throw new DOMException('request semantic native đã bị hủy', 'AbortError');
       }
       const worker = this.ensureWorker();
       return await new Promise<DesktopSemanticResponse>((resolve, reject) => {

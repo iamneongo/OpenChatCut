@@ -144,7 +144,7 @@ export class NativeRhythmService {
       this.verifiedPack = await inspectPack(this.cacheDir, this.verifiedPack);
       if (this.disposed) throw new Error('service rhythm native đã được giải phóng');
       if (this.cancelRequested.has(request.requestId)) {
-        throw new DOMException('Native rhythm request canceled', 'AbortError');
+        throw new DOMException('request rhythm native đã bị hủy', 'AbortError');
       }
       const worker = this.ensureWorker(this.verifiedPack);
       return await new Promise<DesktopRhythmResponse>((resolve, reject) => {

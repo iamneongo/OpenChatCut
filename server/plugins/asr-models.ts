@@ -84,7 +84,7 @@ function readJson(req: IncomingMessage, max = MAX_JSON): Promise<Record<string, 
   req.on('data', (c: Buffer) => {
     size += c.length;
     if (size > max) {
-      reject(new Error('body too large'));
+      reject(new Error('thân request quá lớn'));
       req.destroy();
       return;
     }
@@ -297,7 +297,7 @@ function newDownloadTask(entry: AsrModelEntry): AsrDownloadTask {
 
 async function startDownload(id: string): Promise<AsrDownloadTask> {
   const entry = asrModelEntry(id);
-  if (!entry) throw new Error(`unknown model ${id}`);
+  if (!entry) throw new Error(`không biết model ${id}`);
   const existing = tasks.get(id);
   if (existing && existing.status === 'downloading') return existing;
   const task = newDownloadTask(entry);
@@ -314,9 +314,9 @@ async function startDownload(id: string): Promise<AsrDownloadTask> {
 
 async function deleteModel(id: string): Promise<boolean> {
   const entry = asrModelEntry(id);
-  if (!entry) throw new Error(`unknown model ${id}`);
+  if (!entry) throw new Error(`không biết model ${id}`);
   const task = tasks.get(id);
-  if (task?.status === 'downloading') throw new Error(`model ${id} is downloading`);
+  if (task?.status === 'downloading') throw new Error(`model ${id} đang được tải`);
   await rm(join(modelCacheDir(), entry.modelId), { recursive: true, force: true });
   if (entry.ggmlFile) {
     await rm(resolveGgmlPath(modelCacheDir(), entry.ggmlFile.fileName), { force: true });

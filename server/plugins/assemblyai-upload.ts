@@ -78,7 +78,7 @@ export async function handleAssemblyAiUpload(
   const onClientClose = () => {
     if (res.writableEnded) return;
     clientClosed = true;
-    controller.abort(new Error('client disconnected'));
+    controller.abort(new Error('client đã ngắt kết nối'));
   };
   req.once('aborted', onClientClose);
   res.once('close', onClientClose);
@@ -117,7 +117,7 @@ export async function handleAssemblyAiUpload(
     controller.signal.addEventListener('abort', destroyOnAbort, { once: true });
     timer = setTimeout(() => {
       timedOut = true;
-      controller.abort(new Error('AssemblyAI upload timed out'));
+      controller.abort(new Error('upload AssemblyAI đã hết thời gian chờ'));
     }, dependencies.timeoutMs ?? UPLOAD_TIMEOUT_MS);
 
     const response = await (dependencies.fetchUpstream ?? fetch)('https://api.assemblyai.com/v2/upload', {

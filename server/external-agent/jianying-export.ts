@@ -156,7 +156,7 @@ function runCapcut(args: string[], timeoutMs = 120_000): Promise<unknown> {
     let stderr = '';
     const timer = setTimeout(() => {
       child.kill('SIGKILL');
-      reject(new Error(`capcut-cli timed out after ${timeoutMs / 1000}s: ${args[0] ?? ''}`));
+      reject(new Error(`capcut-cli đã hết thời gian chờ sau ${timeoutMs / 1000} giây: ${args[0] ?? ''}`));
     }, timeoutMs);
     child.stdout.on('data', (chunk) => { stdout += chunk; });
     child.stderr.on('data', (chunk) => { stderr += chunk; });
@@ -165,7 +165,7 @@ function runCapcut(args: string[], timeoutMs = 120_000): Promise<unknown> {
       const hint = error.code === 'ENOENT' && launch.executable === 'npx'
         ? ' (capcut-cli runs through npx: install Node.js, or set CAPCUT_CLI)'
         : '';
-      reject(new Error(`capcut-cli launch failed: ${error.message}${hint}`));
+      reject(new Error(`khởi chạy capcut-cli thất bại: ${error.message}${hint}`));
     });
     child.on('close', (code) => {
       clearTimeout(timer);
@@ -183,7 +183,7 @@ function runCapcut(args: string[], timeoutMs = 120_000): Promise<unknown> {
         resolve({ raw: combined.slice(0, 400) });
         return;
       }
-      reject(new Error(`capcut-cli ${args[0] ?? ''} failed (exit ${code}): ${combined.slice(0, 500)}`));
+      reject(new Error(`capcut-cli ${args[0] ?? ''} thất bại (thoát với mã ${code}): ${combined.slice(0, 500)}`));
     });
   });
 }

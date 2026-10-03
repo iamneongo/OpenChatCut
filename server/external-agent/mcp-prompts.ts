@@ -64,7 +64,7 @@ export function registerMcpPrompts(server: Server): void {
     const template = name === 'generate-script'
       ? localized({ zh: `请围绕「${topic}」写一段解说词/口播稿：先明确结构（开头钩子、主体要点、结尾行动引导），再规划与素材匹配的分镜。`, en: `Write narration about “${topic}”: define the structure (opening hook, key points, call to action), then plan a storyboard matched to the media.`, vi: `Hãy viết lời thuyết minh về “${topic}”: xác định cấu trúc (hook mở đầu, ý chính, lời kêu gọi hành động), rồi lập storyboard phù hợp với tư liệu.` })
       : promptText(name);
-    if (!template) throw new Error(`Unknown prompt ${name}`);
+    if (!template) throw new Error(`Không biết prompt ${name}`);
     const text = template
       .replace(/\{topic\}/g, topic || localized({ zh: '当前素材', en: 'current media', vi: 'tư liệu hiện tại' }))
       .replace(/\{track\}/g, track || 'A1');

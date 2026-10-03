@@ -12,7 +12,7 @@ import { buildFalCatalogImageRequest, buildFalCatalogVideoRequest, type FalCatal
 
 function client() {
   const credentials = getKey('FAL_KEY').trim();
-  if (!credentials) throw new Error('Fal is not configured. Set FAL_KEY in .env.local and restart.');
+  if (!credentials) throw new Error('Fal chưa được cấu hình. Hãy đặt FAL_KEY trong .env.local rồi khởi động lại.');
   return createFalClient({ credentials, fetch: (url, init) => fetch(url, {
     ...init, dispatcher: proxyDispatcher(), signal: init?.signal ?? AbortSignal.timeout(5 * 60_000),
   } as RequestInit) });
@@ -22,7 +22,7 @@ async function uploadReference(fal: ReturnType<typeof client>, path: string): Pr
   const file = localImageAssetPath(path);
   const mime = mimeFor(file);
   const limit = mime.startsWith('audio/') ? 15 : mime.startsWith('video/') ? 50 : 30;
-  if ((await stat(file)).size > limit * 1024 * 1024) throw new Error(`Fal reference exceeds ${limit} MB`);
+  if ((await stat(file)).size > limit * 1024 * 1024) throw new Error(`asset tham chiếu Fal vượt quá ${limit} MB`);
   return fal.storage.upload(new File([await readFile(file)], basename(file), { type: mime }));
 }
 
@@ -33,7 +33,7 @@ export async function generateFalCatalogImage(body: FalCatalogInput): Promise<Pr
   const imageUrls = await Promise.all((body.imageUrls ?? []).map((path) => uploadReference(fal, path)));
   const result = await runFalQueue(fal, buildFalCatalogImageRequest({ ...body, imageUrls }), async () => {}) as { images?: ProviderImage[]; image?: ProviderImage };
   const images = result.images ?? (result.image ? [result.image] : []);
-  if (!images.length || images.some((image) => !image.url)) throw new Error('Fal returned no image URLs');
+  if (!images.length || images.some((image) => !image.url)) throw new Error('Fal không trả về URL ảnh nào');
   return images;
 }
 
@@ -48,7 +48,7 @@ export async function generateFalVideo(
   if (existingTaskId) {
     request = { endpoint: falTask(existingTaskId).endpoint, input: {} };
   } else {
-    if (body.model !== 'fal') throw new Error('New Fal video requests require model=fal and a concrete falModel');
+    if (body.model !== 'fal') throw new Error('request video Fal mới yêu cầu model=fal và falModel cụ thể');
     const build = (input: ValidVideoRequest) => buildFalCatalogVideoRequest(falVideoCatalogInput(input));
     build(body);
     const upload = (path: string) => uploadReference(fal, path);
@@ -62,6 +62,6 @@ export async function generateFalVideo(
     });
   }
   const result = await runFalQueue(fal, request, register, existingTaskId) as { video?: { url?: string } };
-  if (!result.video?.url) throw new Error('Fal returned no video URL');
+  if (!result.video?.url) throw new Error('Fal không trả về URL video');
   return result.video.url;
 }

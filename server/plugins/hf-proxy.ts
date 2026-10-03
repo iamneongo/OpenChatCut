@@ -174,7 +174,7 @@ function downloadExpectation(
   const sha256 = fixed?.sha256 ?? options.expectedSha256;
   if (bytes !== undefined
     && (!Number.isSafeInteger(bytes) || bytes <= 0 || bytes > MAX_CACHE_FILE_BYTES)) {
-    throw new Error(`invalid expected model size: ${bytes}`);
+    throw new Error(`kích thước model dự kiến không hợp lệ: ${bytes}`);
   }
   if (sha256 !== undefined && (!bytes || !/^[a-f0-9]{64}$/.test(sha256))) {
     throw new Error('expected model SHA-256 requires a valid size and lowercase digest');

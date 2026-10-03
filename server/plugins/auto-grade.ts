@@ -67,7 +67,7 @@ function runCapture(command: string, args: string[], timeoutMs = PROCESS_TIMEOUT
     };
     const timer = setTimeout(() => {
       child.kill('SIGKILL');
-      finish(new Error(`${command} timed out`));
+      finish(new Error(`${command} đã hết thời gian chờ`));
     }, timeoutMs);
     child.stdout?.on('data', (chunk: Buffer) => {
       stdout += String(chunk);
@@ -80,7 +80,7 @@ function runCapture(command: string, args: string[], timeoutMs = PROCESS_TIMEOUT
     child.on('error', (error) => finish(error));
     child.on('close', (code) => {
       if (code === 0) finish();
-      else finish(new Error(`${command} exit ${code}: ${stderr.slice(-800)}`));
+      else finish(new Error(`${command} thoát với mã ${code}: ${stderr.slice(-800)}`));
     });
   });
 }
