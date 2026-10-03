@@ -136,7 +136,7 @@ export function WidgetCard({ fields, title, submitLabel, messagePrefix, persiste
                         value={typeof values[f.id] === 'string' ? (values[f.id] as string) : ''}
                         onChange={(e) => setOtherText(f.id, e.target.value)}
                         onClick={(e) => e.stopPropagation()}
-                        placeholder={f.otherPlaceholder || t('请输入')}
+                        placeholder={f.otherPlaceholder ? t(f.otherPlaceholder) : t('请输入')}
                       />
                     )}
                   </label>
@@ -171,7 +171,7 @@ export function WidgetCard({ fields, title, submitLabel, messagePrefix, persiste
                 disabled={submitted}
                 value={typeof values[f.id] === 'string' ? values[f.id] as string : ''}
                 onChange={(event) => setOtherText(f.id, event.target.value)}
-                placeholder={f.placeholder || t('请输入')}
+                placeholder={f.placeholder ? t(f.placeholder) : t('请输入')}
                 rows={3}
               />
             )}
@@ -222,7 +222,7 @@ export function WidgetCard({ fields, title, submitLabel, messagePrefix, persiste
                         autoFocus
                         value={typeof values[f.id] === 'string' ? values[f.id] as string : ''}
                         onChange={(event) => setOtherText(f.id, event.target.value)}
-                        placeholder={f.otherPlaceholder || t('请输入')}
+                        placeholder={f.otherPlaceholder ? t(f.otherPlaceholder) : t('请输入')}
                       />
                     )}
                   </div>
