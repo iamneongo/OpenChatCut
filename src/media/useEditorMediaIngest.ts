@@ -190,7 +190,7 @@ function awaitTimelinePlaceholder(file: File, batch: DropBatch, context: DropCon
   ).catch((error) => {
     if (!placeholder.id) reject(error);
     else removePlacedAsset(batch, placeholder.id, context);
-    showAppToast(error instanceof Error ? error.message : context.t('导入失败'), { error: true });
+    showAppToast(error instanceof Error ? context.t('失败:{error}', { error: error.message }) : context.t('导入失败'), { error: true });
   });
   return promise;
 }
@@ -222,7 +222,7 @@ async function importDroppedCaptions(file: File, trackId: TrackId, startFrame: n
         : entry),
     }, captionTrackId);
   } catch (error) {
-    showAppToast(error instanceof Error ? error.message : context.t('读取字幕文件失败'), { error: true });
+    showAppToast(error instanceof Error ? context.t('失败:{error}', { error: error.message }) : context.t('读取字幕文件失败'), { error: true });
   }
 }
 
@@ -249,7 +249,7 @@ async function placeDroppedMedia(file: File, mediaKind: MediaAsset['kind'], trac
     });
     return itemId;
   } catch (error) {
-    showAppToast(error instanceof Error ? error.message : context.t('导入失败'), { error: true });
+    showAppToast(error instanceof Error ? context.t('失败:{error}', { error: error.message }) : context.t('导入失败'), { error: true });
     return null;
   }
 }

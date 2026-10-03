@@ -66,6 +66,7 @@ export function ItemLayer({ item, canvasW, canvasH, fit, borderRadius }: {
   fit: AspectFit;
   borderRadius: number;
 }) {
+  const t = useT();
   const dw = item.width ?? 1920;
   const dh = item.height ?? 1080;
   const scale = fit === 'cover' ? Math.max(canvasW / dw, canvasH / dh) : Math.min(canvasW / dw, canvasH / dh);
@@ -83,7 +84,7 @@ export function ItemLayer({ item, canvasW, canvasH, fit, borderRadius }: {
   } catch (error) {
     return (
       <AbsoluteFill style={{ color: '#f88', fontFamily: 'monospace', fontSize: 20, padding: 40, whiteSpace: 'pre-wrap' }}>
-        {(item.name + ' — compile error:\n') + (error instanceof Error ? error.message : String(error))}
+        {item.name + ' — ' + t('失败:{error}', { error: error instanceof Error ? error.message : String(error) })}
       </AbsoluteFill>
     );
   }

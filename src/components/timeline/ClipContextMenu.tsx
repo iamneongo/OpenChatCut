@@ -128,7 +128,7 @@ export function ClipContextMenu({ item, transitions, x, y, playhead, commands, t
         window.setTimeout(() => onClose(), 900);
       }
     } catch (e) {
-      setSyncMsg(e instanceof Error ? e.message : t('多机位同步失败'));
+      setSyncMsg(e instanceof Error ? t('失败:{error}', { error: e.message }) : t('多机位同步失败'));
     } finally {
       setSyncBusy(false);
     }
