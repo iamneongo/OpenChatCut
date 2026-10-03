@@ -93,7 +93,7 @@ export class SemanticClient {
       }
     };
     worker.onerror = (event) => {
-      if (this.worker === worker) this.failAll(new Error(event.message || 'Semantic worker failed'));
+      if (this.worker === worker) this.failAll(new Error(event.message || 'worker ngữ nghĩa gặp lỗi'));
     };
     this.worker = worker;
     return worker;
@@ -168,16 +168,16 @@ function semanticAbortError(): DOMException {
 }
 
 function requireLoaded(result: WorkerResult): void {
-  if (result.type !== 'loaded') throw new Error('Semantic worker returned an unexpected result');
+  if (result.type !== 'loaded') throw new Error('worker ngữ nghĩa trả về kết quả không mong đợi');
 }
 
 function requireVector(result: WorkerResult): number[] {
-  if (result.type !== 'embedding') throw new Error('Semantic model returned no embedding');
+  if (result.type !== 'embedding') throw new Error('model ngữ nghĩa không trả về embedding');
   return result.vector;
 }
 
 function requireDuplicates(result: WorkerResult): DuplicateMatch[] {
-  if (result.type !== 'duplicates') throw new Error('Semantic worker returned no duplicate matches');
+  if (result.type !== 'duplicates') throw new Error('worker ngữ nghĩa không trả về kết quả trùng lặp');
   return result.matches;
 }
 

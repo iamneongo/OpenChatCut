@@ -123,7 +123,7 @@ async function runWithRetries(
   options: EnqueueMusicAnalysisOptions,
 ): Promise<MusicAnalysis | null> {
   const { retries } = normalizedOptions(options);
-  let lastError: unknown = new Error('Music analysis failed');
+  let lastError: unknown = new Error('phân tích âm nhạc thất bại');
   for (let attempt = 0; attempt <= retries; attempt += 1) {
     if (activeKeys.get(asset.id) !== key) return null;
     if (options.signal?.aborted) {

@@ -28,7 +28,7 @@ env.allowRemoteModels = true;
 
 function proxyHost(): string {
   const origin = workerScope.location.origin;
-  if (origin === 'null') throw new Error('Semantic search requires an HTTP(S) application origin');
+  if (origin === 'null') throw new Error('tìm kiếm ngữ nghĩa yêu cầu ứng dụng có origin HTTP(S)');
   return `${origin}/api/hf-proxy`;
 }
 
@@ -83,14 +83,14 @@ async function loadModel(request: Extract<WorkerRequest, { type: 'load' }>): Pro
 }
 
 async function embedText(text: string): Promise<number[]> {
-  if (!model || !tokenizer || !dummyImageInputs) throw new Error('Semantic model is not loaded');
+  if (!model || !tokenizer || !dummyImageInputs) throw new Error('model ngữ nghĩa chưa được tải');
   const textInputs = tokenizer([text], { padding: true, truncation: true });
   const output: unknown = await model({ ...textInputs, ...dummyImageInputs });
   return normalizeVector(readEmbedding(output, 'text_embeds'));
 }
 
 async function embedImage(request: Extract<WorkerRequest, { type: 'embed-image' }>): Promise<number[]> {
-  if (!model || !processor || !dummyTextInputs) throw new Error('Semantic model is not loaded');
+  if (!model || !processor || !dummyTextInputs) throw new Error('model ngữ nghĩa chưa được tải');
   const { data, width, height } = request.frame;
   const image = new RawImage(data, width, height, RGBA_CHANNELS);
   const output: unknown = await model({ ...dummyTextInputs, ...await processor(image) });
@@ -100,7 +100,7 @@ async function embedImage(request: Extract<WorkerRequest, { type: 'embed-image' 
 function readEmbedding(output: unknown, key: 'text_embeds' | 'image_embeds'): ArrayLike<number> {
   if (!output || typeof output !== 'object') throw new Error('model ngữ nghĩa trả về phản hồi không hợp lệ');
   const embedding = (output as Record<string, unknown>)[key];
-  if (!embedding || typeof embedding !== 'object') throw new Error('Semantic model returned no embedding');
+  if (!embedding || typeof embedding !== 'object') throw new Error('model ngữ nghĩa không trả về embedding');
   const data = (embedding as Record<string, unknown>).data;
   const numericView = ArrayBuffer.isView(data) && !(data instanceof DataView) && 'length' in data;
   if (!Array.isArray(data) && !numericView) throw new Error('model ngữ nghĩa trả về dữ liệu embedding không hợp lệ');
@@ -110,10 +110,10 @@ function readEmbedding(output: unknown, key: 'text_embeds' | 'image_embeds'): Ar
 }
 
 function validateRequest(value: unknown): WorkerRequest {
-  if (!value || typeof value !== 'object') throw new Error('Invalid semantic worker request');
+  if (!value || typeof value !== 'object') throw new Error('yêu cầu worker ngữ nghĩa không hợp lệ');
   const request = value as Record<string, unknown>;
   if (!Number.isSafeInteger(request.id) || (request.id as number) < 0) {
-    throw new Error('Invalid semantic worker request id');
+    throw new Error('request id của worker ngữ nghĩa không hợp lệ');
   }
   if (request.type === 'load' && (request.device === 'webgpu' || request.device === 'wasm')) return request as WorkerRequest;
   if (request.type === 'embed-text' && typeof request.text === 'string'
@@ -121,7 +121,7 @@ function validateRequest(value: unknown): WorkerRequest {
   if (request.type === 'embed-image' && isValidFrame(request.frame)) return request as WorkerRequest;
   if (request.type === 'find-duplicates' && typeof request.threshold === 'number'
     && Number.isFinite(request.threshold) && isValidPackedVectors(request.vectors)) return request as WorkerRequest;
-  throw new Error('Invalid semantic worker request payload');
+  throw new Error('payload yêu cầu worker ngữ nghĩa không hợp lệ');
 }
 
 function isValidFrame(value: unknown): boolean {

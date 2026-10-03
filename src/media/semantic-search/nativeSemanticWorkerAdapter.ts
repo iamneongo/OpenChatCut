@@ -140,7 +140,7 @@ class NativeSemanticWorkerAdapter {
     }
     const request = value as WorkerRequest;
     if (!request || !Number.isSafeInteger(request.id) || typeof request.type !== 'string') {
-      throw new Error('Invalid native semantic adapter request');
+      throw new Error('yêu cầu bộ chuyển tiếp ngữ nghĩa native không hợp lệ');
     }
     if (request.type === 'load') this.lastDevice = request.device;
     const pending = { request, transfer: [...transfer] };
@@ -198,7 +198,7 @@ class NativeSemanticWorkerAdapter {
     if (!isDesktopSemanticResponse(response)
       || response.requestId !== requestId
       || !this.responseMatches(pending.request, response)) {
-      this.failNative(new Error('Desktop semantic API returned an invalid response'));
+      this.failNative(new Error('API ngữ nghĩa desktop trả về phản hồi không hợp lệ'));
       return;
     }
     this.nativePending.delete(requestId);
@@ -313,7 +313,7 @@ class NativeSemanticWorkerAdapter {
   private handleBrowserError(worker: Worker, event: ErrorEvent): void {
     if (this.browserWorker !== worker || this.mode === 'terminated') return;
     if (this.mode === 'starting-browser') {
-      this.retryBootstrapOrFail(new Error(event.message || 'Semantic browser bootstrap failed'));
+      this.retryBootstrapOrFail(new Error(event.message || 'khởi tạo worker ngữ nghĩa trên trình duyệt thất bại'));
       return;
     }
     this.onerror?.call(this as unknown as Worker, event);

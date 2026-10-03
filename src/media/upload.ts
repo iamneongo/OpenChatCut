@@ -206,7 +206,7 @@ export async function normalizeUploadedVideo(
         fps: typeof data.fps === 'number' ? data.fps : undefined,
       };
     }
-    throw new Error('server returned no media path');
+    throw new Error('máy chủ không trả về đường dẫn lưu media');
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
     throw new Error(t('视频兼容性处理失败：{error}', { error: message }));

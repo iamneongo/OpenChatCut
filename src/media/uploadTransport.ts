@@ -178,7 +178,7 @@ async function putPart(uploadId: string, part: number, blob: Blob): Promise<void
       );
       if (response.ok) return;
       const info = await response.json().catch(() => null);
-      lastError = new Error(responseError(info) ?? `part ${part} failed (${response.status})`);
+      lastError = new Error(responseError(info) ?? `phần tải lên ${part} thất bại (${response.status})`);
       if (response.status < 500 && response.status !== 408 && response.status !== 429) throw lastError;
     } catch (error) {
       lastError = error instanceof Error ? error : new Error(String(error));
@@ -186,7 +186,7 @@ async function putPart(uploadId: string, part: number, blob: Blob): Promise<void
     }
     if (attempt < PART_RETRIES) await sleep(Math.min(16_000, 500 * 2 ** (attempt - 1)));
   }
-  throw lastError ?? new Error(`part ${part} failed`);
+  throw lastError ?? new Error(`phần tải lên ${part} thất bại`);
 }
 
 interface MultipartSession {

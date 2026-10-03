@@ -113,7 +113,7 @@ export async function runExportQa(
       signal?.throwIfAborted();
       if (response.ok && result?.report) return { response: { ...result, report: result.report }, attempts: attempt };
       throw new ExportQaHttpError(
-        result?.error ?? `export QA failed (${response.status})`,
+        result?.error ?? `kiểm tra chất lượng bản xuất thất bại (${response.status})`,
         retryableStatus(response.status) || (response.ok && !result?.report),
       );
     } catch (reason) {
@@ -125,5 +125,5 @@ export async function runExportQa(
       if (retryDelayMs > 0) await wait(retryDelayMs * attempt, signal);
     }
   }
-  throw lastError ?? new Error('export QA failed');
+  throw lastError ?? new Error('kiểm tra chất lượng bản xuất thất bại');
 }

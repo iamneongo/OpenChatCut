@@ -32,7 +32,7 @@ export interface BeatThisPeaks {
 }
 function abortError(signal: AbortSignal): Error {
   if (signal.reason instanceof Error) return signal.reason;
-  const error = new Error(signal.reason === undefined ? 'Beat This analysis aborted' : String(signal.reason));
+  const error = new Error(signal.reason === undefined ? 'phân tích Beat This đã bị hủy' : String(signal.reason));
   error.name = 'AbortError';
   return error;
 }
@@ -231,7 +231,7 @@ function createWorkerAttemptLifecycle(
   const armTimeout = () => {
     clearTimeout(timer);
     timer = setTimeout(() => {
-      settle(() => reject(new Error(`${backend} worker timed out after ${timeoutMs / 1_000}s without progress`)));
+      settle(() => reject(new Error(`worker ${backend} quá thời gian chờ sau ${timeoutMs / 1_000}s không có tiến độ`)));
     }, timeoutMs);
   };
   const bindAbort = () => {

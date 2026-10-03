@@ -65,7 +65,7 @@ function openDatabase(): Promise<IDBDatabase> {
     }
   };
   request.onsuccess = () => resolve(request.result);
-  request.onerror = () => reject(request.error ?? new Error('Unable to open semantic index'));
+  request.onerror = () => reject(request.error ?? new Error('không thể mở chỉ mục ngữ nghĩa'));
   return promise;
 }
 

@@ -29,10 +29,10 @@ export function isMediaImportCancelled(error: unknown): error is MediaImportCanc
 export function mediaImportErrorMessage(error: unknown): string {
   if (isMediaImportCancelled(error)) return t('已取消上传同名素材');
   const message = error instanceof Error ? error.message : String(error ?? '');
-  const partFailure = message.match(/part\s+(\d+)\s+failed\s*\((\d+)\)/i);
+  const partFailure = message.match(/(?:part\s+|phần tải lên\s+)(\d+)\s+(?:failed|thất bại)\s*\((\d+)\)/i);
   if (partFailure) return t('上传第 {part} 个分片失败（{status}）', { part: partFailure[1]!, status: partFailure[2]! });
   if (/(?:upload session not found or expired|phiên upload không tồn tại hoặc đã hết hạn)/i.test(message)) return t('上传会话已失效，请重新导入');
-  if (/server returned no media path/i.test(message)) return t('服务器没有返回素材保存路径，请重试');
+  if (/(?:server returned no media path|máy chủ không trả về đường dẫn lưu media)/i.test(message)) return t('服务器没有返回素材保存路径，请重试');
   if (/failed to fetch|networkerror|network request failed|load failed/i.test(message)) {
     return t('网络连接失败，请检查网络后重试');
   }

@@ -14,7 +14,7 @@ try {
   });
   await assert.rejects(
     () => loadMigrationStatus(),
-    /Storage migration endpoint returned HTML instead of JSON \(HTTP 200\)/,
+    /endpoint di chuyển dữ liệu trả về HTML thay vì JSON \(HTTP 200\)/,
   );
 
   mockResponse(JSON.stringify({ error: 'database unavailable' }), {
@@ -29,7 +29,7 @@ try {
   });
   await assert.rejects(
     () => runStorageMigrationRequest(),
-    /Storage migration endpoint unavailable \(HTTP 404\): not found/,
+    /endpoint di chuyển dữ liệu không khả dụng \(HTTP 404\): not found/,
   );
 
   mockResponse('not found', {
@@ -38,7 +38,7 @@ try {
   });
   await assert.rejects(
     () => cleanupLegacyJson(),
-    /Storage migration endpoint unavailable \(HTTP 404\): not found/,
+    /endpoint di chuyển dữ liệu không khả dụng \(HTTP 404\): not found/,
   );
 
   console.log('storageMigration.verify: non-JSON endpoint responses produce actionable errors');

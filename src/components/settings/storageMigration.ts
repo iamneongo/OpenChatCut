@@ -27,15 +27,15 @@ async function readStorageMigrationJson<T>(response: Response): Promise<T> {
   if (!contentType.toLowerCase().includes('json')) {
     const preview = text.trim().replace(/\s+/g, ' ').slice(0, 120);
     if (preview.toLowerCase().startsWith('<!doctype') || preview.toLowerCase().startsWith('<html')) {
-      throw new Error(`Storage migration endpoint returned HTML instead of JSON (HTTP ${response.status})`);
+      throw new Error(`endpoint di chuyển dữ liệu trả về HTML thay vì JSON (HTTP ${response.status})`);
     }
-    throw new Error(`Storage migration endpoint unavailable (HTTP ${response.status})${preview ? `: ${preview}` : ''}`);
+    throw new Error(`endpoint di chuyển dữ liệu không khả dụng (HTTP ${response.status})${preview ? `: ${preview}` : ''}`);
   }
   try {
     return JSON.parse(text) as T;
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
-    throw new Error(`Storage migration endpoint returned invalid JSON (HTTP ${response.status}): ${message}`);
+    throw new Error(`endpoint di chuyển dữ liệu trả về JSON không hợp lệ (HTTP ${response.status}): ${message}`);
   }
 }
 
@@ -46,7 +46,7 @@ export async function cleanupLegacyJson(): Promise<{ removed: number; jsonKeyCou
   });
   const body = await readStorageMigrationJson<{ removed?: number; jsonKeyCount?: number; error?: string }>(response);
   if (!response.ok || typeof body.removed !== 'number') {
-    throw new Error(body.error ?? 'cleanup failed');
+    throw new Error(body.error ?? 'dọn dẹp dữ liệu cũ thất bại');
   }
   return { removed: body.removed, jsonKeyCount: body.jsonKeyCount ?? 0 };
 }
@@ -54,7 +54,7 @@ export async function cleanupLegacyJson(): Promise<{ removed: number; jsonKeyCou
 export async function loadMigrationStatus(): Promise<MigrationStatus> {
   const response = await fetchWithEditorSession('/api/project-store/migrate-status', { method: 'GET' });
   const body = await readStorageMigrationJson<MigrationStatus>(response);
-  if (!response.ok) throw new Error(body.error ?? `migration status failed (HTTP ${response.status})`);
+  if (!response.ok) throw new Error(body.error ?? `không đọc được trạng thái di chuyển dữ liệu (HTTP ${response.status})`);
   return body;
 }
 
@@ -62,7 +62,7 @@ export async function runStorageMigrationRequest(): Promise<MigrateResponse> {
   const response = await fetchWithEditorSession('/api/project-store/migrate', { method: 'POST' });
   const body = await readStorageMigrationJson<MigrateResponse>(response);
   if (!response.ok) {
-    throw new Error(body.error ?? 'migration failed');
+    throw new Error(body.error ?? 'di chuyển dữ liệu thất bại');
   }
   return body;
 }

@@ -56,7 +56,7 @@ async function loadGoogleFace(family: string): Promise<FontLoadResult> {
     case 'VT323': return (await import('@remotion/google-fonts/VT323')).loadFont();
     case 'ZCOOL QingKe HuangYou': return (await import('@remotion/google-fonts/ZCOOLQingKeHuangYou')).loadFont();
     default:
-      throw new Error(`font loader unavailable: ${family}`);
+      throw new Error(`bộ tải font không khả dụng: ${family}`);
   }
 }
 
