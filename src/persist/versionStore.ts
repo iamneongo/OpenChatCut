@@ -90,7 +90,7 @@ async function persistVersion(
 ): Promise<ProjectVersion> {
   const version: ProjectVersion = {
     id: newId(),
-    name: name.trim() || (automatic ? '自动保存' : '未命名版本'),
+    name: name.trim() || (automatic ? 'Tự động lưu' : 'Phiên bản chưa đặt tên'),
     createdAt: Date.now(),
     automatic,
     doc,

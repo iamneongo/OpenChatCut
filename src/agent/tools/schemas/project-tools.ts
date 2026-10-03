@@ -70,7 +70,7 @@ export const PROJECT_TOOL_SCHEMAS: AgentToolSchema[] = [
       type: 'object',
       properties: {
         projectId: { type: 'string', description: 'Id dự án nguồn; mặc định dự án hiện tại.' },
-        name: { type: 'string', description: 'Tên hiển thị bản sao; mặc định "[Copy] <source>".' },
+        name: { type: 'string', description: 'Tên hiển thị bản sao; mặc định "[Bản sao] <source>".' },
         activate: { type: 'boolean', description: 'Mở bản sao trong editor (mặc định true).' },
         editorBaseUrl: { type: 'string' },
       },
