@@ -4,29 +4,29 @@ export const MG_VIDEO_TOOL_SCHEMAS: AgentToolSchema[] = [
   {
     name: 'convert_motion_graphic_to_video',
     description:
-      'Bake a motion-graphic (or any non-audio clip) on the timeline into a real video asset in the media pool, so it can be reused/exported like footage. Renders the clip full-length via the headless renderer. Transparent MG/text/svg clips bake to a VP9 alpha WebM (transparency preserved, via the sandbox) so they composite over other clips; if the sandbox is unavailable it falls back to opaque h264. Raster clips (video/image/gif) bake to opaque h264. Pass opaque:true to force flatten, replace:true to also swap the source clip in place. Identify the clip by itemId (preferred) or assetId.',
+      'Nướng motion graphic (hoặc bất kỳ clip không phải audio nào) trên timeline thành asset video thật trong media pool để có thể tái sử dụng/export như footage. Render clip đủ thời lượng bằng headless renderer. Clip MG/text/svg trong suốt được nướng thành WebM VP9 alpha (giữ transparency, qua sandbox) để composite trên clip khác; nếu sandbox không khả dụng sẽ fallback sang h264 opaque. Clip raster (video/image/gif) được nướng thành h264 opaque. Truyền opaque:true để buộc flatten, replace:true để đồng thời thay clip nguồn tại chỗ. Xác định clip bằng itemId (ưu tiên) hoặc assetId.',
     input_schema: {
       type: 'object',
       properties: {
-        itemId: { type: 'string', description: 'Timeline clip id (prefix ok) to convert. Preferred.' },
-        assetId: { type: 'string', description: 'Fallback: convert the first placed clip that references this asset/template id.' },
-        replace: { type: 'boolean', description: 'Also replace the source clip in place with the baked video (default false = only add to media pool).' },
-        opaque: { type: 'boolean', description: 'Force an opaque h264 bake even for MG/text/svg (skip the transparent VP9 webm path).' },
+        itemId: { type: 'string', description: 'Id clip timeline (chấp nhận tiền tố) cần chuyển đổi. Ưu tiên.' },
+        assetId: { type: 'string', description: 'Fallback: chuyển clip đã đặt đầu tiên tham chiếu tới id asset/template này.' },
+        replace: { type: 'boolean', description: 'Cũng thay clip nguồn tại chỗ bằng video đã nướng (mặc định false = chỉ thêm vào media pool).' },
+        opaque: { type: 'boolean', description: 'Buộc nướng h264 opaque ngay cả với MG/text/svg (bỏ qua đường WebM VP9 trong suốt).' },
       },
     },
   },
   {
     name: 'register_converted_video',
     description:
-      'Import a finished MG→video render as a video asset in the media pool — step 2 of the MG→video convert flow. After track_export reports the render complete, call this with the renderId (preferred) to promote the render output into the media pool as a real video asset; the local backend resolves the output itself, no download URL needed. outputUrl is only a fallback when a renderId is unavailable. Returns the video asset id (re-running dedupes to the same asset). Afterwards place the video with edit_item (add a video item referencing the returned videoAssetId).',
+      'Import render MG→video đã hoàn tất thành asset video trong media pool — bước 2 của quy trình chuyển MG→video. Sau khi track_export báo render hoàn tất, gọi với renderId (ưu tiên) để đưa output render vào media pool thành asset video thật; backend cục bộ tự phân giải output, không cần URL tải. outputUrl chỉ là fallback khi không có renderId. Trả về id asset video (chạy lại sẽ dedupe về cùng asset). Sau đó đặt video bằng edit_item (thêm video item tham chiếu videoAssetId trả về).',
     input_schema: {
       type: 'object',
       properties: {
-        mgAssetId: { type: 'string', description: 'Source motion-graphic asset id (the mgAssetId of the converted clip).' },
-        renderId: { type: 'string', description: 'The convert render id (preferred; pass it once track_export reports the render complete).' },
-        outputUrl: { type: 'string', description: 'Raw render output URL — only as a fallback when a renderId is unavailable.' },
-        name: { type: 'string', description: 'Display name for the media-pool asset (defaults to "<MG name> (video)").' },
-        durationInFrames: { type: 'number', description: 'Duration in frames (defaults to the source MG length if omitted).' },
+        mgAssetId: { type: 'string', description: 'Id asset motion graphic nguồn (mgAssetId của clip đã chuyển đổi).' },
+        renderId: { type: 'string', description: 'Id render của thao tác chuyển đổi (ưu tiên; truyền sau khi track_export báo render hoàn tất).' },
+        outputUrl: { type: 'string', description: 'URL output render raw — chỉ fallback khi không có renderId.' },
+        name: { type: 'string', description: 'Tên hiển thị asset trong media pool (mặc định "<MG name> (video)").' },
+        durationInFrames: { type: 'number', description: 'Thời lượng tính bằng frame (mặc định theo độ dài MG nguồn nếu bỏ qua).' },
       },
       required: ['mgAssetId'],
     },
@@ -34,25 +34,25 @@ export const MG_VIDEO_TOOL_SCHEMAS: AgentToolSchema[] = [
   {
     name: 'export_motion_graphic_prores',
     description:
-      'Export motion-graphic clip(s) as transparent ProRes 4444 .mov file(s) (alpha preserved) — the NLE hand-off format, downloaded in the browser. Use before an XML export so the timeline can reference already-rendered MG media. Identify by itemId(s) (preferred) or assetId(s); batch exports each. Unlike convert_motion_graphic_to_video (opaque h264 into the pool), this keeps alpha and downloads a .mov.',
+      'Export clip motion graphic thành file .mov ProRes 4444 trong suốt (giữ alpha) — định dạng bàn giao cho NLE, tải xuống trong trình duyệt. Dùng trước khi export XML để timeline tham chiếu media MG đã render. Xác định bằng itemId(s) (ưu tiên) hoặc assetId(s); batch sẽ export từng mục. Khác convert_motion_graphic_to_video (h264 opaque vào pool), tool này giữ alpha và tải file .mov.',
     input_schema: {
       type: 'object',
       properties: {
-        itemId: { type: 'string', description: 'MG timeline item id (prefix ok). Preferred.' },
-        itemIds: { type: 'array', items: { type: 'string' }, description: 'Batch: several MG item ids/prefixes.' },
-        assetId: { type: 'string', description: 'MG asset id/prefix — exports its first placed timeline instance.' },
-        assetIds: { type: 'array', items: { type: 'string' }, description: 'Batch: several MG asset ids/prefixes.' },
+        itemId: { type: 'string', description: 'Id item MG trên timeline (chấp nhận tiền tố). Ưu tiên.' },
+        itemIds: { type: 'array', items: { type: 'string' }, description: 'Batch: nhiều id/tiền tố item MG.' },
+        assetId: { type: 'string', description: 'Id/tiền tố asset MG — export instance timeline đầu tiên đã đặt.' },
+        assetIds: { type: 'array', items: { type: 'string' }, description: 'Batch: nhiều id/tiền tố asset MG.' },
         filenameMode: {
           type: 'string',
           enum: ['asset', 'xml'],
-          description: 'asset = user-friendly asset-name .mov; xml = mg-<renderKey>.mov for submit_export XML compatibility. Defaults to asset.',
+          description: 'asset = .mov theo tên asset thân thiện; xml = mg-<renderKey>.mov để tương thích XML submit_export. Mặc định asset.',
         },
-        name: { type: 'string', description: 'Optional base filename (single export); ".mov" is appended.' },
+        name: { type: 'string', description: 'Tên file cơ sở tùy chọn (export đơn); sẽ thêm ".mov".' },
         preferTimelineInstance: {
           type: 'boolean',
-          description: 'When assetId is used, export the first timeline instance and its edited properties when present. Defaults to true. Set false to render the media-pool/template defaults.',
+          description: 'Khi dùng assetId, export instance timeline đầu tiên và props đã chỉnh nếu có. Mặc định true. Đặt false để render giá trị mặc định media-pool/template.',
         },
-        timelineId: { type: 'string', description: 'Optional timeline id/prefix used to resolve item or asset instances without switching timelines.' },
+        timelineId: { type: 'string', description: 'Id/tiền tố timeline tùy chọn để phân giải instance item hoặc asset mà không chuyển timeline.' },
       },
     },
   },

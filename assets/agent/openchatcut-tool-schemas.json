@@ -3418,54 +3418,54 @@
     },
     {
       "name": "convert_motion_graphic_to_video",
-      "description": "Bake a motion-graphic (or any non-audio clip) on the timeline into a real video asset in the media pool, so it can be reused/exported like footage. Renders the clip full-length via the headless renderer. Transparent MG/text/svg clips bake to a VP9 alpha WebM (transparency preserved, via the sandbox) so they composite over other clips; if the sandbox is unavailable it falls back to opaque h264. Raster clips (video/image/gif) bake to opaque h264. Pass opaque:true to force flatten, replace:true to also swap the source clip in place. Identify the clip by itemId (preferred) or assetId.",
+      "description": "Nướng motion graphic (hoặc bất kỳ clip không phải audio nào) trên timeline thành asset video thật trong media pool để có thể tái sử dụng/export như footage. Render clip đủ thời lượng bằng headless renderer. Clip MG/text/svg trong suốt được nướng thành WebM VP9 alpha (giữ transparency, qua sandbox) để composite trên clip khác; nếu sandbox không khả dụng sẽ fallback sang h264 opaque. Clip raster (video/image/gif) được nướng thành h264 opaque. Truyền opaque:true để buộc flatten, replace:true để đồng thời thay clip nguồn tại chỗ. Xác định clip bằng itemId (ưu tiên) hoặc assetId.",
       "input_schema": {
         "type": "object",
         "properties": {
           "itemId": {
             "type": "string",
-            "description": "Timeline clip id (prefix ok) to convert. Preferred."
+            "description": "Id clip timeline (chấp nhận tiền tố) cần chuyển đổi. Ưu tiên."
           },
           "assetId": {
             "type": "string",
-            "description": "Fallback: convert the first placed clip that references this asset/template id."
+            "description": "Fallback: chuyển clip đã đặt đầu tiên tham chiếu tới id asset/template này."
           },
           "replace": {
             "type": "boolean",
-            "description": "Also replace the source clip in place with the baked video (default false = only add to media pool)."
+            "description": "Cũng thay clip nguồn tại chỗ bằng video đã nướng (mặc định false = chỉ thêm vào media pool)."
           },
           "opaque": {
             "type": "boolean",
-            "description": "Force an opaque h264 bake even for MG/text/svg (skip the transparent VP9 webm path)."
+            "description": "Buộc nướng h264 opaque ngay cả với MG/text/svg (bỏ qua đường WebM VP9 trong suốt)."
           }
         }
       }
     },
     {
       "name": "register_converted_video",
-      "description": "Import a finished MG→video render as a video asset in the media pool — step 2 of the MG→video convert flow. After track_export reports the render complete, call this with the renderId (preferred) to promote the render output into the media pool as a real video asset; the local backend resolves the output itself, no download URL needed. outputUrl is only a fallback when a renderId is unavailable. Returns the video asset id (re-running dedupes to the same asset). Afterwards place the video with edit_item (add a video item referencing the returned videoAssetId).",
+      "description": "Import render MG→video đã hoàn tất thành asset video trong media pool — bước 2 của quy trình chuyển MG→video. Sau khi track_export báo render hoàn tất, gọi với renderId (ưu tiên) để đưa output render vào media pool thành asset video thật; backend cục bộ tự phân giải output, không cần URL tải. outputUrl chỉ là fallback khi không có renderId. Trả về id asset video (chạy lại sẽ dedupe về cùng asset). Sau đó đặt video bằng edit_item (thêm video item tham chiếu videoAssetId trả về).",
       "input_schema": {
         "type": "object",
         "properties": {
           "mgAssetId": {
             "type": "string",
-            "description": "Source motion-graphic asset id (the mgAssetId of the converted clip)."
+            "description": "Id asset motion graphic nguồn (mgAssetId của clip đã chuyển đổi)."
           },
           "renderId": {
             "type": "string",
-            "description": "The convert render id (preferred; pass it once track_export reports the render complete)."
+            "description": "Id render của thao tác chuyển đổi (ưu tiên; truyền sau khi track_export báo render hoàn tất)."
           },
           "outputUrl": {
             "type": "string",
-            "description": "Raw render output URL — only as a fallback when a renderId is unavailable."
+            "description": "URL output render raw — chỉ fallback khi không có renderId."
           },
           "name": {
             "type": "string",
-            "description": "Display name for the media-pool asset (defaults to \"<MG name> (video)\")."
+            "description": "Tên hiển thị asset trong media pool (mặc định \"<MG name> (video)\")."
           },
           "durationInFrames": {
             "type": "number",
-            "description": "Duration in frames (defaults to the source MG length if omitted)."
+            "description": "Thời lượng tính bằng frame (mặc định theo độ dài MG nguồn nếu bỏ qua)."
           }
         },
         "required": [
@@ -3475,31 +3475,31 @@
     },
     {
       "name": "export_motion_graphic_prores",
-      "description": "Export motion-graphic clip(s) as transparent ProRes 4444 .mov file(s) (alpha preserved) — the NLE hand-off format, downloaded in the browser. Use before an XML export so the timeline can reference already-rendered MG media. Identify by itemId(s) (preferred) or assetId(s); batch exports each. Unlike convert_motion_graphic_to_video (opaque h264 into the pool), this keeps alpha and downloads a .mov.",
+      "description": "Export clip motion graphic thành file .mov ProRes 4444 trong suốt (giữ alpha) — định dạng bàn giao cho NLE, tải xuống trong trình duyệt. Dùng trước khi export XML để timeline tham chiếu media MG đã render. Xác định bằng itemId(s) (ưu tiên) hoặc assetId(s); batch sẽ export từng mục. Khác convert_motion_graphic_to_video (h264 opaque vào pool), tool này giữ alpha và tải file .mov.",
       "input_schema": {
         "type": "object",
         "properties": {
           "itemId": {
             "type": "string",
-            "description": "MG timeline item id (prefix ok). Preferred."
+            "description": "Id item MG trên timeline (chấp nhận tiền tố). Ưu tiên."
           },
           "itemIds": {
             "type": "array",
             "items": {
               "type": "string"
             },
-            "description": "Batch: several MG item ids/prefixes."
+            "description": "Batch: nhiều id/tiền tố item MG."
           },
           "assetId": {
             "type": "string",
-            "description": "MG asset id/prefix — exports its first placed timeline instance."
+            "description": "Id/tiền tố asset MG — export instance timeline đầu tiên đã đặt."
           },
           "assetIds": {
             "type": "array",
             "items": {
               "type": "string"
             },
-            "description": "Batch: several MG asset ids/prefixes."
+            "description": "Batch: nhiều id/tiền tố asset MG."
           },
           "filenameMode": {
             "type": "string",
@@ -3507,19 +3507,19 @@
               "asset",
               "xml"
             ],
-            "description": "asset = user-friendly asset-name .mov; xml = mg-<renderKey>.mov for submit_export XML compatibility. Defaults to asset."
+            "description": "asset = .mov theo tên asset thân thiện; xml = mg-<renderKey>.mov để tương thích XML submit_export. Mặc định asset."
           },
           "name": {
             "type": "string",
-            "description": "Optional base filename (single export); \".mov\" is appended."
+            "description": "Tên file cơ sở tùy chọn (export đơn); sẽ thêm \".mov\"."
           },
           "preferTimelineInstance": {
             "type": "boolean",
-            "description": "When assetId is used, export the first timeline instance and its edited properties when present. Defaults to true. Set false to render the media-pool/template defaults."
+            "description": "Khi dùng assetId, export instance timeline đầu tiên và props đã chỉnh nếu có. Mặc định true. Đặt false để render giá trị mặc định media-pool/template."
           },
           "timelineId": {
             "type": "string",
-            "description": "Optional timeline id/prefix used to resolve item or asset instances without switching timelines."
+            "description": "Id/tiền tố timeline tùy chọn để phân giải instance item hoặc asset mà không chuyển timeline."
           }
         }
       }
@@ -3932,32 +3932,32 @@
     },
     {
       "name": "ask_followup_questions",
-      "description": "Ask the user up to 12 follow-up questions in an interactive card, then WAIT for the next user message. Each field accepts type \"single\", \"multi\", or \"text\" and variant \"default\", \"visual\", \"voice\", or \"scenario\". Options accept id/label (or value/display), description, preview/media, audioUrl, aspectRatio, and submitPrompt. Use text fields for free-form answers, visual for image choices, voice for playable voice choices, and scenario for workflow choices.",
+      "description": "Đặt tối đa 12 câu hỏi bổ sung cho người dùng trong card tương tác, sau đó CHỜ tin nhắn tiếp theo. Mỗi field nhận type \"single\", \"multi\" hoặc \"text\" và variant \"default\", \"visual\", \"voice\" hoặc \"scenario\". Option nhận id/label (hoặc value/display), description, preview/media, audioUrl, aspectRatio và submitPrompt. Dùng field text cho câu trả lời tự do, visual cho lựa chọn ảnh, voice cho lựa chọn giọng có thể phát và scenario cho lựa chọn workflow.",
       "input_schema": {
         "type": "object",
         "properties": {
           "fields": {
             "type": "array",
-            "description": "Fields: { id, label, type, variant?, description?, placeholder?, otherPlaceholder?, options?, required?, allowOther? }.",
+            "description": "Các field: { id, label, type, variant?, description?, placeholder?, otherPlaceholder?, options?, required?, allowOther? }.",
             "items": {
               "type": "object"
             }
           },
           "prompt": {
             "type": "string",
-            "description": "Optional text shown above the card."
+            "description": "Text tùy chọn hiển thị phía trên card."
           },
           "title": {
             "type": "string",
-            "description": "Optional card title."
+            "description": "Tiêu đề card tùy chọn."
           },
           "submitLabel": {
             "type": "string",
-            "description": "Optional submit button label."
+            "description": "Nhãn nút gửi tùy chọn."
           },
           "messagePrefix": {
             "type": "string",
-            "description": "Optional prefix prepended to the submitted answer."
+            "description": "Tiền tố tùy chọn đặt trước câu trả lời đã gửi."
           }
         },
         "required": [
@@ -4390,46 +4390,46 @@
     },
     {
       "name": "create_motion_graphic_from_code",
-      "description": "Create a new Motion Graphic asset from inline React/JSX code. Required: code, name, width, height. Duration via durationInFrames or durationInSeconds. The COMPLETE JSX must be in this single call — no declare-first-fill-later; a call without code is rejected. Code must pass the local MG sandbox (same as edit_asset). Does not auto-place on the timeline — use edit_item / add_motion_graphic / manage_media_pool to place after.",
+      "description": "Tạo asset Motion Graphic mới từ code React/JSX inline. Bắt buộc: code, name, width, height. Thời lượng qua durationInFrames hoặc durationInSeconds. JSX HOÀN CHỈNH phải nằm trong một lần gọi này — không khai báo trước rồi điền sau; gọi không có code sẽ bị từ chối. Code phải vượt qua sandbox MG cục bộ (giống edit_asset). Không tự đặt lên timeline — dùng edit_item / add_motion_graphic / manage_media_pool để đặt sau đó.",
       "input_schema": {
         "type": "object",
         "properties": {
           "code": {
             "type": "string",
-            "description": "Inline Motion Graphic React/JSX. Not a file path."
+            "description": "React/JSX Motion Graphic inline. Không phải path file."
           },
           "name": {
             "type": "string",
-            "description": "Asset display name."
+            "description": "Tên hiển thị asset."
           },
           "width": {
             "type": "number",
-            "description": "Natural box width in pixels."
+            "description": "Chiều rộng hộp tự nhiên tính bằng pixel."
           },
           "height": {
             "type": "number",
-            "description": "Natural box height in pixels."
+            "description": "Chiều cao hộp tự nhiên tính bằng pixel."
           },
           "durationInFrames": {
             "type": "number",
-            "description": "Duration in timeline frames (mutually exclusive with durationInSeconds)."
+            "description": "Thời lượng tính bằng frame timeline (loại trừ lẫn nhau với durationInSeconds)."
           },
           "durationInSeconds": {
             "type": "number",
-            "description": "Duration in seconds (mutually exclusive with durationInFrames)."
+            "description": "Thời lượng tính bằng giây (loại trừ lẫn nhau với durationInFrames)."
           },
           "description": {
             "type": "string",
-            "description": "Optional human description (stored in props)."
+            "description": "Mô tả dành cho người dùng, tùy chọn (lưu trong props)."
           },
           "properties": {
             "type": "array",
-            "description": "Editable props: { key, label?, type?, defaultValue }[].",
+            "description": "Props có thể chỉnh sửa: { key, label?, type?, defaultValue }[].",
             "items": {}
           },
           "projectId": {
             "type": "string",
-            "description": "Ignored; the active project is used."
+            "description": "Bỏ qua; dùng dự án đang hoạt động."
           }
         },
         "required": [
@@ -4931,17 +4931,17 @@
     },
     {
       "name": "detect_beats",
-      "description": "Detect musical beats and downbeats in a media asset's audio, on-device (no model, no network): returns bpm, a confidence ratio (trust results at ≥2; <1.2 yields no beats — speech/ambience are gated out), beats and downbeats in SOURCE seconds. Downbeats mark 4/4 bar starts — cut on downbeats for edits that land musically; beats suit faster montage rhythm. Works best on steady-tempo music; analyze tempo-changing tracks in sections via separate clips. Pass assetId (media pool) for raw analysis, or itemId (timeline clip) to ALSO get timelineFrames mapped through the clip's trim and speed — ready for split/move/markers. With itemId you can set markers:\"beats\"|\"downbeats\" to drop clip-anchored timeline markers at the detected points in one undoable batch (cyan=beat, purple=downbeat). To place a cut on a beat B (source seconds) manually: timelineFrame = startFrame + round((B×fps − srcInFrame) / playbackRate).",
+      "description": "Phát hiện beat và downbeat nhạc trong audio của asset media, ngay trên thiết bị (không model, không mạng): trả về bpm, tỷ lệ tin cậy (tin kết quả từ ≥2; <1.2 sẽ không có beat — speech/ambience bị loại), beat và downbeat theo giây NGUỒN. Downbeat đánh dấu đầu ô nhịp 4/4 — cắt tại downbeat để dựng khớp nhạc; beat phù hợp nhịp montage nhanh. Hiệu quả nhất với nhạc tempo ổn định; track đổi tempo nên phân tích theo từng đoạn bằng clip riêng. Truyền assetId (media pool) để phân tích raw, hoặc itemId (clip timeline) để NHẬN THÊM timelineFrames đã mapping qua trim và speed của clip — sẵn sàng cho split/move/markers. Với itemId có thể đặt markers:\"beats\"|\"downbeats\" để tạo marker neo vào clip tại các điểm phát hiện trong một batch có thể undo (cyan=beat, purple=downbeat). Để tự đặt điểm cắt tại beat B (giây nguồn): timelineFrame = startFrame + round((B×fps − srcInFrame) / playbackRate).",
       "input_schema": {
         "type": "object",
         "properties": {
           "assetId": {
             "type": "string",
-            "description": "Media-pool asset id (prefix ok) — raw source analysis."
+            "description": "Id asset trong media pool (chấp nhận tiền tố) — phân tích source raw."
           },
           "itemId": {
             "type": "string",
-            "description": "Timeline clip id (prefix ok) — adds timelineFrames mapping and enables markers."
+            "description": "Id clip timeline (chấp nhận tiền tố) — thêm mapping timelineFrames và bật marker."
           },
           "markers": {
             "type": "string",
@@ -4950,13 +4950,13 @@
               "beats",
               "downbeats"
             ],
-            "description": "itemId only: also create clip-anchored markers at these points (default none)."
+            "description": "Chỉ itemId: cũng tạo marker neo clip tại các điểm này (mặc định none)."
           },
           "markerLimit": {
             "type": "number",
             "minimum": 1,
             "maximum": 500,
-            "description": "Cap created markers (default 120)."
+            "description": "Giới hạn số marker tạo ra (mặc định 120)."
           }
         }
       }
