@@ -52,10 +52,10 @@ export function portableProposalRecord(
 ): StoredProposalRecord | undefined {
   if (raw === undefined) return undefined;
   const parsed = parseStoredProposalRecord(raw);
-  if (!parsed) throw new Error('工程包提案记录校验不通过');
+  if (!parsed) throw new Error('bản ghi proposal trong gói project không vượt qua kiểm tra');
   const { sessionGeneration: _sessionGeneration, ...proposal } = parsed;
   const portable = parseStoredProposalRecord(transformPortableValue(proposal, replacements));
-  if (!portable) throw new Error('工程包提案记录转换失败');
+  if (!portable) throw new Error('chuyển đổi bản ghi proposal trong gói project thất bại');
   return portable;
 }
 

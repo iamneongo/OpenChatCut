@@ -69,7 +69,7 @@ const doc = {
     assert.ok('error' in withBad, `坏媒体条目整包拒收:${JSON.stringify(bad.src)}`);
   }
 
-  assert.deepEqual(parseProjectEnvelope('not json'), { error: '不是合法的 JSON 文件' });
+  assert.deepEqual(parseProjectEnvelope('not json'), { error: 'không phải tệp JSON hợp lệ' });
   const wrongFormat = parseProjectEnvelope(JSON.stringify({ ...good, format: 'foreign-project@1' }));
   assert.ok('error' in wrongFormat, '插件包格式拒收');
   const badDoc = parseProjectEnvelope(JSON.stringify({ ...good, doc: { timelines: [] } }));

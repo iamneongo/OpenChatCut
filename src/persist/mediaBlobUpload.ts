@@ -12,7 +12,7 @@ export async function serverPathIsAuthoritative(src: string): Promise<boolean> {
 }
 
 export async function sha256Blob(blob: Blob): Promise<string> {
-  if (!globalThis.crypto?.subtle) throw new Error('当前环境不支持安全的媒体哈希');
+  if (!globalThis.crypto?.subtle) throw new Error('môi trường hiện tại không hỗ trợ hash media an toàn');
   const digest = await globalThis.crypto.subtle.digest('SHA-256', await blob.arrayBuffer());
   return Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, '0')).join('');
 }
@@ -29,18 +29,18 @@ export async function serverMediaHash(src: string): Promise<string | null> {
   try {
     response = await fetch(src, { cache: 'no-store' });
   } catch {
-    throw new Error(`无法确认媒体目标是否已存在: ${src}`);
+    throw new Error(`không thể xác nhận đích media đã tồn tại hay chưa: ${src}`);
   }
   if (response.status === 404
     || (isSpaFallback(response) && response.headers.get(MEDIA_AUTHORITY_HEADER) !== 'server')) return null;
-  if (!response.ok) throw new Error(`无法确认媒体目标是否已存在 (${response.status}): ${src}`);
+  if (!response.ok) throw new Error(`không thể xác nhận đích media đã tồn tại hay chưa (${response.status}): ${src}`);
   const declaredBytes = Number(response.headers.get('content-length'));
   if (Number.isFinite(declaredBytes) && declaredBytes > MAX_TOTAL_CACHE_BYTES) {
-    throw new Error(`现有媒体目标大小无效: ${src}`);
+    throw new Error(`kích thước đích media hiện có không hợp lệ: ${src}`);
   }
   const blob = await response.blob();
   if (blob.size <= 0 || blob.size > MAX_TOTAL_CACHE_BYTES) {
-    throw new Error(`现有媒体目标大小无效: ${src}`);
+    throw new Error(`kích thước đích media hiện có không hợp lệ: ${src}`);
   }
   return sha256Blob(blob);
 }
@@ -60,7 +60,7 @@ export function uploadAssetIdFromSrc(src: string): string | null {
 
 export function uploadPathForRecord(rec: MediaBlobRecord): string {
   const assetId = uploadAssetIdFromSrc(rec.src);
-  if (!assetId) throw new Error(`工程包媒体 src 无法生成 server 路径: ${rec.src}`);
+  if (!assetId) throw new Error(`không thể tạo đường dẫn server từ src media gói project: ${rec.src}`);
   return `/media/uploads/${assetId}${mediaExtension(rec.name)}`;
 }
 
@@ -87,7 +87,7 @@ export async function uploadMediaBlob(
   });
   if (!res.ok) {
     const info = (await res.json().catch(() => null)) as { error?: string } | null;
-    throw new Error(info?.error ?? `reupload failed (${res.status})`);
+    throw new Error(info?.error ?? `tải lại thất bại (${res.status})`);
   }
   const result = await res.json() as { path: string; created?: boolean; rollbackToken?: string };
   return { path: result.path, created: result.created !== false, rollbackToken: result.rollbackToken };

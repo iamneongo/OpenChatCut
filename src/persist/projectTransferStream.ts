@@ -67,10 +67,10 @@ function bytesToBase64(bytes: Uint8Array): string {
 
 export function base64ToBytes(value: string): Uint8Array {
   if (!value || value.length % 4 !== 0 || !/^[A-Za-z0-9+/]*={0,2}$/.test(value)) {
-    throw new Error('工程包媒体 base64 数据损坏');
+    throw new Error('dữ liệu base64 media trong gói project bị hỏng');
   }
   let binary: string;
-  try { binary = atob(value); } catch { throw new Error('工程包媒体 base64 数据损坏'); }
+  try { binary = atob(value); } catch { throw new Error('dữ liệu base64 media trong gói project bị hỏng'); }
   const bytes = new Uint8Array(binary.length);
   for (let index = 0; index < binary.length; index += 1) bytes[index] = binary.charCodeAt(index);
   return bytes;
@@ -154,17 +154,17 @@ async function* textLines(blob: Blob): AsyncGenerator<string> {
       const { done, value } = await reader.read();
       if (done) break;
       pending += decoder.decode(value, { stream: true });
-      if (pending.length > MAX_STREAM_LINE_CHARS && !pending.includes('\n')) throw new Error('工程包记录超过单行上限');
+      if (pending.length > MAX_STREAM_LINE_CHARS && !pending.includes('\n')) throw new Error('bản ghi gói project vượt giới hạn một dòng');
       let newline = pending.indexOf('\n');
       while (newline >= 0) {
-        if (newline > MAX_STREAM_LINE_CHARS) throw new Error('工程包记录超过单行上限');
+        if (newline > MAX_STREAM_LINE_CHARS) throw new Error('bản ghi gói project vượt giới hạn một dòng');
         yield pending.slice(0, newline);
         pending = pending.slice(newline + 1);
         newline = pending.indexOf('\n');
       }
     }
     pending += decoder.decode();
-    if (pending.length > MAX_STREAM_LINE_CHARS) throw new Error('工程包记录超过单行上限');
+    if (pending.length > MAX_STREAM_LINE_CHARS) throw new Error('bản ghi gói project vượt giới hạn một dòng');
     if (pending) yield pending;
   } finally { reader.releaseLock(); }
 }
@@ -192,7 +192,7 @@ async function finishMediaEntry(
   namespace: string,
   current: { entry: ProjectMediaManifestEntry; parts: ArrayBuffer[]; bytes: number },
 ): Promise<StagedMediaBlobImportEntry> {
-  if (current.bytes !== current.entry.bytes) throw new Error(`工程包媒体大小不匹配: ${current.entry.name}`);
+  if (current.bytes !== current.entry.bytes) throw new Error(`kích thước media trong gói project không khớp: ${current.entry.name}`);
   const blob = new Blob(current.parts, { type: current.entry.mime });
   return stageMediaBlobImport(namespace, current.entry.src, blob, {
     name: current.entry.name,
@@ -217,34 +217,34 @@ class StreamImportState {
   async consume(record: unknown, parseManifest: (value: unknown) => StreamProjectManifest): Promise<void> {
     if (!this.manifest) { this.manifest = parseManifest(record); return; }
     if (await this.runtimeReader.consume(record)) {
-      if (this.current) throw new Error('Agent runtime record interrupts a media entry.');
+      if (this.current) throw new Error('bản ghi runtime Agent ngắt một mục media.');
       return;
     }
-    if (!record || typeof record !== 'object' || Array.isArray(record)) throw new Error('工程包媒体记录不是对象');
+    if (!record || typeof record !== 'object' || Array.isArray(record)) throw new Error('bản ghi media trong gói project không phải object');
     const row = record as Record<string, unknown>;
     if (row.type === 'media-start') {
-      if (this.current) throw new Error('工程包媒体记录未结束');
+      if (this.current) throw new Error('bản ghi media trong gói project chưa kết thúc');
       const entry = mediaManifestEntry(row);
-      if (!entry) throw new Error('工程包媒体条目校验不通过');
-      if (this.packageSrcs.has(entry.src)) throw new Error(`工程包媒体 src 重复: ${entry.src}`);
+      if (!entry) throw new Error('mục media trong gói project không vượt qua kiểm tra');
+      if (this.packageSrcs.has(entry.src)) throw new Error(`src media trong gói project bị trùng: ${entry.src}`);
       this.packageSrcs.add(entry.src);
       this.current = { entry, parts: [], bytes: 0 };
       return;
     }
     if (row.type === 'media-chunk') {
-      if (!this.current || typeof row.data !== 'string') throw new Error('工程包媒体分片顺序错误');
+      if (!this.current || typeof row.data !== 'string') throw new Error('thứ tự phân mảnh media trong gói project không hợp lệ');
       const bytes = base64ToBytes(row.data);
       this.current.bytes += bytes.byteLength;
-      if (this.current.bytes > this.current.entry.bytes) throw new Error(`工程包媒体大小超限: ${this.current.entry.name}`);
+      if (this.current.bytes > this.current.entry.bytes) throw new Error(`media trong gói project vượt kích thước: ${this.current.entry.name}`);
       this.current.parts.push(arrayBufferBlobPart(bytes));
       return;
     }
     if (row.type !== 'media-end' || !this.current || row.src !== this.current.entry.src) {
-      throw new Error(row.type === 'media-end' ? '工程包媒体结束记录不匹配' : '工程包含未知记录');
+      throw new Error(row.type === 'media-end' ? 'bản ghi kết thúc media trong gói project không khớp' : 'gói project chứa bản ghi không xác định');
     }
     const staged = await finishMediaEntry(this.namespace, this.current);
     const sameTarget = this.stagedByTarget.get(staged.src);
-    if (sameTarget && sameTarget.sha256 !== staged.sha256) throw new Error(`工程包媒体安全名称冲突: ${staged.src}`);
+    if (sameTarget && sameTarget.sha256 !== staged.sha256) throw new Error(`xung đột tên an toàn media trong gói project: ${staged.src}`);
     if (!sameTarget) { this.stagedByTarget.set(staged.src, staged); this.stagedEntries.push(staged); }
     this.replacements.set(this.current.entry.src, staged.src);
     this.mediaRestored += 1;
@@ -258,8 +258,8 @@ class StreamImportState {
       replacements: ReadonlyMap<string, string>,
     ) => StoredProposalRecord,
   ): Promise<StagedStreamProject> {
-    if (!this.manifest) throw new Error('工程包缺 manifest');
-    if (this.current) throw new Error('工程包媒体记录被截断');
+    if (!this.manifest) throw new Error('gói project thiếu manifest');
+    if (this.current) throw new Error('bản ghi media trong gói project bị cắt ngắn');
     const runtime = await this.runtimeReader.finish(
       this.manifest.chat,
       this.manifest.agentRuntime === true,
@@ -292,13 +292,13 @@ export async function stageProjectStream(
     for await (const line of textLines(file)) {
       if (!line) continue;
       let record: unknown;
-      try { record = JSON.parse(line); } catch { throw new Error('工程包记录不是合法 JSON'); }
+      try { record = JSON.parse(line); } catch { throw new Error('bản ghi gói project không phải JSON hợp lệ'); }
       await state.consume(record, parseManifest);
     }
     return await state.finish(rewriteDoc, rewriteProposal);
   } catch (error) {
     try { await discardMediaBlobImport(state.namespace); }
-    catch (cleanupError) { throw new AggregateError([error, cleanupError], '工程包解析失败，临时媒体清理也失败'); }
+    catch (cleanupError) { throw new AggregateError([error, cleanupError], 'phân tích gói project thất bại, dọn dẹp media tạm cũng thất bại'); }
     throw error;
   }
 }
