@@ -1124,7 +1124,7 @@ export const VI: Record<string, string> = {
   '为避免覆盖已保存的内容，已停止打开该工程。数据仍保留在本机存储中，可稍后重试。': 'Đã dừng mở dự án để tránh ghi đè nội dung đã lưu. Dữ liệu vẫn được giữ trên máy và có thể thử lại sau.',
   '编辑器需要通过 localhost 或 HTTPS 访问': 'Trình chỉnh sửa cần được truy cập qua localhost hoặc HTTPS',
   '当前地址不是浏览器认可的安全上下文，编辑器依赖的 Web Crypto、WebCodecs 视频解码和剪贴板等能力在这里被禁用。请在运行 OpenChatCut 的电脑上打开 http://localhost 或 http://127.0.0.1，或通过 HTTPS 提供服务。': 'Địa chỉ hiện tại không phải ngữ cảnh bảo mật được trình duyệt chấp nhận, nên Web Crypto, giải mã video WebCodecs và bộ nhớ tạm bị vô hiệu hóa. Hãy mở http://localhost hoặc http://127.0.0.1 trên máy chạy OpenChatCut, hoặc cung cấp dịch vụ qua HTTPS.',
-  '已导出「{name}」;{n} 个素材两端都取不到,未随包': 'Đã xuất “{name}”; không lấy được hai đầu của {n} tư liệu nên không đưa vào gói',
+  '已导出「{name}」;{n} 个素材两端都取不到,未随包': 'Đã xuất “{name}”; không tìm thấy {n} tư liệu ở cả hai phía nên không được đưa vào gói',
   '已导出「{name}」(含 {n} 个素材)': 'Đã xuất “{name}” (gồm {n} tư liệu)',
   '导入失败:{error}': 'Nhập thất bại: {error}',
   '已导入「{name}」;缺 {n} 个素材({list})': 'Đã nhập “{name}”; thiếu {n} tư liệu ({list})',
