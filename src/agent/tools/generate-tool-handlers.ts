@@ -20,6 +20,7 @@ import {
   type GenerationRetryClass,
 } from '../../persist/jobRegistryStore';
 import { fontFallbackGate } from './font-tools';
+import { localizedCatalogText } from '../../i18n/locale';
 import {
   buildSubmitImageArgs,
   buildSubmitMusicArgs,
@@ -80,7 +81,7 @@ const submitSoundHandler: Handler = async (args, ctx) => {
     return { ok: true, assetId: asset.id, name: asset.name, src: asset.src, durationInFrames: asset.durationInFrames, addedTo: 'media-pool' };
   }
   const operationId = submissionOperationId(args);
-  const label = input.name || 'Generated SFX';
+  const label = input.name || localizedCatalogText('Generated SFX', '生成的音效', undefined, 'Hiệu ứng âm thanh đã tạo');
   const submitArgs: Record<string, unknown> = { ...input };
   await registerSubmissionIntent(ctx, operationId, 'submit_sound', label, submitArgs, 'sonilo', 'sonilo');
   let submission: SoundGenerationSubmission;
@@ -200,7 +201,8 @@ const submitMusicHandler: Handler = async (args, ctx) => {
   const input = buildSubmitMusicArgs(args);
   const operationId = submissionOperationId(args);
   const submitArgs: Record<string, unknown> = { ...input };
-  const label = input.name || input.prompt?.slice(0, 80) || input.mode || 'music';
+  const label = input.name || input.prompt?.slice(0, 80) || input.mode
+    || localizedCatalogText('Music', '音乐', undefined, 'Nhạc');
   await registerSubmissionIntent(ctx, operationId, 'submit_music', label, submitArgs, input.provider, input.provider);
   let submission: MusicGenerationSubmission;
   try {
