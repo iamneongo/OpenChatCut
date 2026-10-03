@@ -32,7 +32,7 @@ function migrateItem(item: TimelineItem): TimelineItem {
  * Remove unreleased preset fields while preserving every other project field.
  */
 export function normalizeDevelopmentBackgroundFillPresets(value: unknown): LooseProjectShape {
-  if (!isProjectShape(value)) throw new Error('invalid development ProjectDoc');
+  if (!isProjectShape(value)) throw new Error('ProjectDoc phát triển không hợp lệ');
   return {
     ...value,
     timelines: value.timelines.map((timeline) => ({

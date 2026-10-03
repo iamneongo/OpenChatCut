@@ -64,8 +64,8 @@ const clamped = layoutSlots('pip', { size: 5, margin: -1 });
 assert.ok(near(clamped.inset!.w, 0.6) && near(clamped.inset!.x, 0.4), 'pip 参数越界被钳制');
 
 // ──Illegal slot rejection──
-assert.throws(() => placeInSlot({ x: 0.8, y: 0, w: 0.5, h: 1 }), /invalid slot/, '越出画布的槽拒绝');
-assert.throws(() => placeInSlot({ x: 0, y: 0, w: 0, h: 1 }), /invalid slot/, '零宽槽拒绝');
+assert.throws(() => placeInSlot({ x: 0.8, y: 0, w: 0.5, h: 1 }), /slot không hợp lệ/, '越出画布的槽拒绝');
+assert.throws(() => placeInSlot({ x: 0, y: 0, w: 0, h: 1 }), /slot không hợp lệ/, '零宽槽拒绝');
 
 // ── Tool layer: verification, batch output, pip stacking and time overlap reminder ──
 assert.ok(LAYOUT_TOOL_NAMES.has('apply_layout'));
@@ -99,11 +99,11 @@ assert.ok(near(ok.applied[0]!.transform.x!, -25), '左槽 x=-25');
 assert.equal(ok.notes, undefined, '时间重叠正常 → 无提醒');
 
 const bad = execLayoutTool('apply_layout', { layout: 'grid-4', assignments: [{ slot: 'middle', itemId: 'a' }] }, ctx) as { error?: string };
-assert.match(bad.error ?? '', /unknown slot/, '未知槽名报错');
+assert.match(bad.error ?? '', /slot không được nhận diện/, '未知槽名报错');
 const dup = execLayoutTool('apply_layout', { layout: '2up-horizontal', assignments: [{ slot: 'left', itemId: 'a' }, { slot: 'left', itemId: 'b' }] }, ctx) as { error?: string };
-assert.match(dup.error ?? '', /assigned twice/, '重复槽报错');
+assert.match(dup.error ?? '', /đã được gán hai lần/, '重复槽报错');
 const audio = execLayoutTool('apply_layout', { layout: 'full', assignments: [{ slot: 'full', itemId: 'snd' }] }, ctx) as { error?: string };
-assert.match(audio.error ?? '', /visual clips/, '音频片段拒绝');
+assert.match(audio.error ?? '', /clip hình ảnh toàn khung/, '音频片段拒绝');
 
 // trackOrder V2 in front (upstream) → inset V1 (downstream) should be reminded; if the time does not overlap, it should also be reminded
 const warn = execLayoutTool('apply_layout', {

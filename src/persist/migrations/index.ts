@@ -33,10 +33,10 @@ function startingDocument(value: unknown): { value: unknown; version: number } |
 
 function collapseDevelopmentVersion(value: unknown, version: number): unknown {
   if (!isProjectShape(value) || version < 4 || version > MAX_READABLE_DEVELOPMENT_VERSION) {
-    throw new Error('invalid development ProjectDoc');
+    throw new Error('ProjectDoc phát triển không hợp lệ');
   }
   const compatible = version >= 6 ? normalizeDevelopmentBackgroundFillPresets(value) : value;
-  if (!isProjectShape(compatible)) throw new Error('invalid development ProjectDoc');
+  if (!isProjectShape(compatible)) throw new Error('ProjectDoc phát triển không hợp lệ');
   return { ...compatible, version: CURRENT_PROJECT_VERSION };
 }
 

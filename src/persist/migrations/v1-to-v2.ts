@@ -6,7 +6,7 @@ export const v1ToV2: ProjectMigrationStep = {
   fromVersion: 1,
   toVersion: 2,
   migrate(value: unknown): unknown {
-    if (!isProjectShape(value)) throw new Error('invalid ProjectDoc V1');
+    if (!isProjectShape(value)) throw new Error('ProjectDoc V1 không hợp lệ');
     const timelineAssets = value.timelines.flatMap((timeline) => timeline.assets ?? []);
     const projectAssets = Array.isArray(value.assets) ? value.assets : [];
     const mediaFolders = normalizeFolders(value.mediaFolders);

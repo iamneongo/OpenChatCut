@@ -30,7 +30,7 @@ function parseAssignments(raw: unknown, slots: Record<string, unknown>): Assignm
     const itemId = typeof (entry as Args)?.itemId === 'string' ? String((entry as Args).itemId) : '';
     if (!slot || !itemId) return { error: 'each assignment needs { slot, itemId }' };
     if (!(slot in slots)) return { error: `slot không được nhận diện "${slot}" — các slot hợp lệ: ${Object.keys(slots).join(', ')}` };
-    if (seenSlots.has(slot)) return { error: `slot "${slot}" assigned twice` };
+    if (seenSlots.has(slot)) return { error: `slot "${slot}" đã được gán hai lần` };
     if (seenItems.has(itemId)) return { error: `item "${itemId}" assigned to two slots` };
     seenSlots.add(slot);
     seenItems.add(itemId);
@@ -63,7 +63,7 @@ export function execLayoutTool(name: string, args: Args, ctx: AgentContext): unk
     const item = items.get(itemId);
     if (!item) return { error: `không tìm thấy item "${itemId}" trên timeline đang hoạt động` };
     if (!PLACEABLE_KINDS.has(item.kind)) {
-      return { error: `item "${itemId}" is ${item.kind} — apply_layout places full-canvas visual clips (video/image/gif/svg) only` };
+      return { error: `item "${itemId}" là ${item.kind} — apply_layout chỉ đặt clip hình ảnh toàn khung (video/image/gif/svg)` };
     }
   }
 

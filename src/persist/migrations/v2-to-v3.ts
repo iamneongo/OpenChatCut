@@ -6,7 +6,7 @@ export const v2ToV3: ProjectMigrationStep = {
   fromVersion: 2,
   toVersion: 3,
   migrate(value: unknown): unknown {
-    if (!isProjectShape(value)) throw new Error('invalid ProjectDoc V2');
+    if (!isProjectShape(value)) throw new Error('ProjectDoc V2 không hợp lệ');
     return {
       ...value,
       version: 3,

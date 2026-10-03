@@ -47,7 +47,7 @@ export async function minimaxMusicUrl(options: MusicOptions, input: ValidMusicRe
   if (result.base_resp && result.base_resp.status_code !== 0) {
     throw new Error(result.base_resp.status_msg || `tạo nhạc MiniMax thất bại (${result.base_resp.status_code})`);
   }
-  if (!result.data?.audio) throw new Error('MiniMax returned no audio');
+  if (!result.data?.audio) throw new Error('MiniMax không trả về audio');
   return result.data.audio;
 }
 

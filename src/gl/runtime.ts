@@ -35,13 +35,13 @@ export function activeGlRuntimeCount(): number {
 
 function compile(gl: WebGL2RenderingContext, type: number, src: string): WebGLShader {
   const sh = gl.createShader(type);
-  if (!sh) throw new Error('createShader failed');
+  if (!sh) throw new Error('không thể tạo shader');
   gl.shaderSource(sh, src);
   gl.compileShader(sh);
   if (!gl.getShaderParameter(sh, gl.COMPILE_STATUS)) {
     const log = gl.getShaderInfoLog(sh) ?? 'unknown error';
     gl.deleteShader(sh);
-    throw new Error(`shader compile failed: ${log}`);
+    throw new Error(`biên dịch shader thất bại: ${log}`);
   }
   return sh;
 }
@@ -52,7 +52,7 @@ function link(gl: WebGL2RenderingContext, frag: string): WebGLProgram {
   const vs = compile(gl, gl.VERTEX_SHADER, is300 ? VERTEX_300 : VERTEX_100);
   const fs = compile(gl, gl.FRAGMENT_SHADER, frag);
   const prog = gl.createProgram();
-  if (!prog) throw new Error('createProgram failed');
+  if (!prog) throw new Error('không thể tạo program');
   gl.attachShader(prog, vs);
   gl.attachShader(prog, fs);
   gl.linkProgram(prog);
@@ -61,14 +61,14 @@ function link(gl: WebGL2RenderingContext, frag: string): WebGLProgram {
   if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) {
     const log = gl.getProgramInfoLog(prog) ?? 'unknown error';
     gl.deleteProgram(prog);
-    throw new Error(`program link failed: ${log}`);
+    throw new Error(`liên kết program thất bại: ${log}`);
   }
   return prog;
 }
 
 function makeTexture(gl: WebGL2RenderingContext): WebGLTexture {
   const tex = gl.createTexture();
-  if (!tex) throw new Error('createTexture failed');
+  if (!tex) throw new Error('không thể tạo texture');
   gl.bindTexture(gl.TEXTURE_2D, tex);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
@@ -114,7 +114,7 @@ export function createGlRuntime(canvas: HTMLCanvasElement): GlRuntime {
       gl.bindTexture(gl.TEXTURE_2D, tex);
       gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, canvas.width, canvas.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
       const fb = gl.createFramebuffer();
-      if (!fb) throw new Error('createFramebuffer failed');
+      if (!fb) throw new Error('không thể tạo framebuffer');
       gl.bindFramebuffer(gl.FRAMEBUFFER, fb);
       gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, tex, 0);
       return { fb, tex };
@@ -167,7 +167,7 @@ export function createGlRuntime(canvas: HTMLCanvasElement): GlRuntime {
 
   const uploadLut3d = (size: number, data: Float32Array): WebGLTexture => {
     const tex = gl.createTexture();
-    if (!tex) throw new Error('createTexture failed');
+      if (!tex) throw new Error('không thể tạo texture');
     gl.bindTexture(gl.TEXTURE_3D, tex);
     gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1);
     // FLIP_Y/PREMULTIPLY is a sticky global state (set to true for 2D source upload), and WebGL2 is
@@ -263,7 +263,7 @@ export function createGlRuntime(canvas: HTMLCanvasElement): GlRuntime {
 
       const inputFrom = pass.inputFrom ?? index - 1;
       const inputTexture = index === 0 ? source : targets[offset + inputFrom]?.tex;
-      if (!inputTexture) throw new Error(`invalid FX input pass ${inputFrom} at ${index}`);
+      if (!inputTexture) throw new Error(`pass đầu vào FX không hợp lệ ${inputFrom} tại ${index}`);
       gl.activeTexture(gl.TEXTURE0);
       gl.bindTexture(gl.TEXTURE_2D, inputTexture);
       const locIn = gl.getUniformLocation(prog, 'u_input');
@@ -273,7 +273,7 @@ export function createGlRuntime(canvas: HTMLCanvasElement): GlRuntime {
       for (const [name, passIndex] of Object.entries(pass.samplers ?? {})) {
         const texture = targets[offset + passIndex]?.tex;
         if (!texture || passIndex >= index) {
-          throw new Error(`invalid FX sampler ${name}=${passIndex} at ${index}`);
+          throw new Error(`sampler FX không hợp lệ ${name}=${passIndex} tại ${index}`);
         }
         gl.activeTexture(gl.TEXTURE0 + unit);
         gl.bindTexture(gl.TEXTURE_2D, texture);
@@ -414,7 +414,7 @@ export function createGlRuntime(canvas: HTMLCanvasElement): GlRuntime {
         // Intermediate FBO textures are already GL-oriented — bind without re-upload/flip.
         const inputFrom = passes[i].inputFrom ?? i - 1;
         const inputTex = i === 0 ? texFx : rt[inputFrom]?.tex;
-        if (!inputTex) throw new Error(`invalid FX input pass ${inputFrom} at ${i}`);
+          if (!inputTex) throw new Error(`pass đầu vào FX không hợp lệ ${inputFrom} tại ${i}`);
         gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_2D, inputTex);
         const locIn = gl.getUniformLocation(prog, 'u_input');
@@ -422,7 +422,7 @@ export function createGlRuntime(canvas: HTMLCanvasElement): GlRuntime {
         let unit = 1;
         for (const [name, passIndex] of Object.entries(passes[i].samplers ?? {})) {
           const tex = rt[passIndex]?.tex;
-          if (!tex || passIndex >= i) throw new Error(`invalid FX sampler ${name}=${passIndex} at ${i}`);
+          if (!tex || passIndex >= i) throw new Error(`sampler FX không hợp lệ ${name}=${passIndex} tại ${i}`);
           gl.activeTexture(gl.TEXTURE0 + unit);
           gl.bindTexture(gl.TEXTURE_2D, tex);
           const loc = gl.getUniformLocation(prog, name);

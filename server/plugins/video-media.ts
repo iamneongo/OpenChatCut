@@ -267,7 +267,7 @@ async function probeVideo(file: string): Promise<{ durationSeconds: number; widt
         if (code !== 0 || !Number.isFinite(durationSeconds) || durationSeconds <= 0) throw new Error();
         resolvePromise({ durationSeconds, width: parsed.streams?.[0]?.width, height: parsed.streams?.[0]?.height });
       } catch {
-        reject(new Error('unable to probe generated video'));
+        reject(new Error('không thể thăm dò video đã tạo'));
       }
     });
   });

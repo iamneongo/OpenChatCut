@@ -61,13 +61,13 @@ function waitForMedia(
     else resolve(undefined);
   };
   const onEvent = () => finish();
-  const onError = () => finish(new Error(`geometry media ${event} failed`));
+  const onError = () => finish(new Error(`media hình học ${event} thất bại`));
   const onAbort = () => finish(new DOMException('aborted', 'AbortError'));
   video.addEventListener(event, onEvent, { once: true });
   video.addEventListener('error', onError, { once: true });
   signal.addEventListener('abort', onAbort, { once: true });
   timer = window.setTimeout(
-    () => finish(new Error(`geometry media ${event} timed out`)),
+    () => finish(new Error(`media hình học ${event} hết thời gian chờ`)),
     MEDIA_EVENT_TIMEOUT_MS,
   );
   return promise;

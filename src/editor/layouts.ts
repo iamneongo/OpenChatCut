@@ -86,7 +86,7 @@ export function placeInSlot(
 ): ClipTransform {
   if (!(slot.w > 0) || !(slot.h > 0) || slot.w > 1 || slot.h > 1
     || slot.x < 0 || slot.y < 0 || slot.x + slot.w > 1 + 1e-9 || slot.y + slot.h > 1 + 1e-9) {
-    throw new Error(`invalid slot rect: ${JSON.stringify(slot)}`);
+    throw new Error(`hình chữ nhật slot không hợp lệ: ${JSON.stringify(slot)}`);
   }
   const slotCx = slot.x + slot.w / 2;
   const slotCy = slot.y + slot.h / 2;

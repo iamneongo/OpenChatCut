@@ -34,7 +34,7 @@ export function parseCube(text: string): CubeLut {
     if (line.startsWith('LUT_3D_SIZE')) {
       const n = Number(line.split(/\s+/)[1]);
       if (!Number.isInteger(n) || n < MIN_SIZE || n > MAX_SIZE) {
-        throw new Error(`Invalid LUT_3D_SIZE ${line.split(/\s+/)[1]} (must be integer in [${MIN_SIZE}, ${MAX_SIZE}])`);
+        throw new Error(`LUT_3D_SIZE không hợp lệ ${line.split(/\s+/)[1]} (phải là số nguyên trong [${MIN_SIZE}, ${MAX_SIZE}])`);
       }
       size = n;
       continue;
@@ -56,7 +56,7 @@ export function parseCube(text: string): CubeLut {
     }
   }
 
-  if (size === null) throw new Error('Missing LUT_3D_SIZE header');
+  if (size === null) throw new Error('thiếu header LUT_3D_SIZE');
   const expected = size * size * size * 3;
   if (values.length !== expected) throw new Error(`Expected ${expected} values for ${size}³ LUT, got ${values.length}`);
   const span: [number, number, number] = [domainMax[0] - domainMin[0], domainMax[1] - domainMin[1], domainMax[2] - domainMin[2]];

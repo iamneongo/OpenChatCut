@@ -262,7 +262,7 @@ async function runSoniloSoundOperation(
   let licenseId: string | undefined;
   if (!checkpoint.complete) {
     const [primary] = await generateSoniloSoundTracks(options, input, registerProviderTask, providerTaskId);
-    if (!primary) throw new Error('Sonilo returned no SFX track');
+    if (!primary) throw new Error('Sonilo không trả về track hiệu ứng âm thanh');
     url = primary.url;
     licenseId = primary.licenseId;
   }
