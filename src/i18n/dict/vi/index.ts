@@ -559,7 +559,7 @@ export const VI: Record<string, string> = {
   '暖调复古': 'Cổ điển tông ấm',
   '冷调青蓝': 'Xanh lạnh',
   '日落暖金': 'Vàng ấm hoàng hôn',
-  '赛博霓虹': 'Neon cyberpunk',
+  '赛博霓虹': 'Neon viễn tưởng',
   '漂白旁路': 'Bleach bypass',
   '富士 Classic Chrome': 'Fuji Classic Chrome',
   '富士人像 Pro Neg': 'Fuji Pro Neg chân dung',
