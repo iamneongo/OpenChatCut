@@ -44,9 +44,9 @@ async function serviceFetch(input: RequestInfo | URL, init?: RequestInit): Promi
 
 async function uploadBlob(blob: Blob): Promise<string> {
   const r = await serviceFetch(`${BASE}/upload`, { method: 'POST', body: blob });
-  if (!r.ok) throw new Error(`upload failed: HTTP ${r.status}`);
+  if (!r.ok) throw new Error(`tải lên thất bại: HTTP ${r.status}`);
   const { upload_url } = await r.json();
-  if (!upload_url) throw new Error('upload: no upload_url returned');
+  if (!upload_url) throw new Error('upload: không nhận được upload_url');
   return upload_url;
 }
 
@@ -61,16 +61,16 @@ async function uploadLocalPath(path: string): Promise<string> {
     throw new TranscriptionError('source-unavailable', responseText.slice(0, 300));
   }
   if (!response.ok) {
-    throw new Error(`AssemblyAI server upload failed: HTTP ${response.status}${responseText ? `: ${responseText.slice(0, 300)}` : ''}`);
+    throw new Error(`tải lên AssemblyAI server thất bại: HTTP ${response.status}${responseText ? `: ${responseText.slice(0, 300)}` : ''}`);
   }
   let body: { uploadUrl?: unknown };
   try {
     body = JSON.parse(responseText) as { uploadUrl?: unknown };
   } catch {
-    throw new Error('AssemblyAI server upload returned invalid JSON');
+    throw new Error('tải lên AssemblyAI server trả về JSON không hợp lệ');
   }
   if (typeof body.uploadUrl !== 'string' || !body.uploadUrl) {
-    throw new Error('AssemblyAI server upload returned no upload URL');
+    throw new Error('tải lên AssemblyAI server không trả về upload URL');
   }
   return body.uploadUrl;
 }
@@ -128,10 +128,10 @@ async function createTranscript(audioUrl: string, opts: TranscribeOptions = {}):
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify(body),
   });
-  if (!r.ok) throw new Error(`create failed: HTTP ${r.status}`);
+  if (!r.ok) throw new Error(`tạo transcript thất bại: HTTP ${r.status}`);
   const { id, error } = await r.json();
   if (error) throw new Error(error);
-  if (!id) throw new Error('transcript: no id returned');
+  if (!id) throw new Error('transcript: không nhận được id');
   return id;
 }
 
@@ -146,10 +146,10 @@ async function poll(
   const deadline = Date.now() + ASSEMBLYAI_POLL_DEADLINE_MS;
   for (;;) {
     if (Date.now() > deadline) {
-      throw new Error('transcription timed out while waiting for the provider; please retry');
+      throw new Error('đã hết thời gian chờ provider transcription; hãy thử lại');
     }
     const r = await serviceFetch(`${BASE}/transcript/${id}`);
-    if (!r.ok) throw new Error(`poll failed: HTTP ${r.status}`);
+    if (!r.ok) throw new Error(`poll thất bại: HTTP ${r.status}`);
     const d = await r.json();
     const providerStatus = String(d.status ?? 'processing') as AssemblyAiProviderStatus;
     await onCheckpoint?.({ ...resume, providerJobId: id, providerStatus });
@@ -175,7 +175,7 @@ async function poll(
       }
       return { text: d.text ?? words.map((w: { text: string }) => w.text).join(''), words, utterances };
     }
-    if (d.status === 'error') throw new Error(d.error ?? 'transcription error');
+    if (d.status === 'error') throw new Error(d.error ?? 'transcription gặp lỗi');
     const waited = Math.max(0, Math.round((ASSEMBLYAI_POLL_DEADLINE_MS - (deadline - Date.now())) / 1000));
     onWait?.(`Đang chép lời trên đám mây (${String(d.status)}, đã chờ ${waited}s)`);
     await new Promise((res) => setTimeout(res, 2500));
