@@ -100,7 +100,7 @@ const PRESET_GUIDE_VI: Record<string, string> = {
   'Archive Typewriter': 'Phong cách máy đánh chữ lưu trữ: chữ xuất hiện từng ký tự, biểu đồ vẽ tuyến tính trên nền giấy da ấm và chữ đen.',
   'Cubist Collage': 'Phong cách tranh ghép lập thể: mảng màu bật từ tâm, chữ trượt từ nhiều hướng, dùng các hình học và màu bão hòa.',
   'Redline Tech': 'Phong cách công nghệ công nghiệp đường đỏ: bề mặt than đen, lưới chấm, bảng đỏ sắc và kiểu chữ cô đọng mạnh.',
-  'Black & White Neon': 'Phong cách studio đen trắng tiết chế: nền gần đen, chữ trắng phát sáng, đường tròn và biểu đồ tuyến tính, điểm tím dùng rất ít.',
+  'Black & White Neon': 'Phong cách đen trắng neon tiết chế: nền gần đen, chữ trắng phát sáng, đường tròn và biểu đồ tuyến tính, điểm tím dùng rất ít.',
   'Violet Aura': 'Phong cách hào quang tím mộng mơ: nền tím đen, quầng chuyển tím-hồng, số lớn mờ và thẻ bo góc với chữ trắng tương phản.',
   'Warm Paper': 'Phong cách biên tập trên giấy ấm: nền kem có vân, điểm nhấn cam san hô, hình sóng hữu cơ và kiểu chữ có chân thanh lịch.',
   'Modern Editorial': 'Phong cách biên tập hiện đại: giấy xám ấm, lưới sổ tay, tiêu đề có chân và chữ Roboto rõ ràng; cam hoặc vàng chỉ nhấn điểm quan trọng.',
