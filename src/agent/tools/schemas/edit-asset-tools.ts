@@ -4,22 +4,22 @@ export const EDIT_ASSET_TOOL_SCHEMAS: AgentToolSchema[] = [
   {
     name: 'edit_asset',
     description: [
-      'Update or delete media-pool assets, not timeline clips; use move_item/remove_item for clips.',
-      'action=update changes name, props, or exact sourceTimecode/captureClock metadata; code assets such as generated motion graphics may receive new code,',
-      'which must pass sandbox compilation before any change is saved. Clock metadata uses normalized frameCount + rational frameRate + dropFrame.',
+      'Cập nhật hoặc xóa asset trong media pool, không phải clip timeline; dùng move_item/remove_item cho clip.',
+      'action=update thay đổi name, props hoặc metadata sourceTimecode/captureClock chính xác; asset code như đồ họa chuyển động được sinh có thể nhận code mới,',
+      'nhưng code phải vượt qua bước biên dịch sandbox trước khi lưu thay đổi. Metadata đồng hồ dùng frameCount + frameRate dạng hữu tỉ + dropFrame đã chuẩn hóa.',
     ].join(' '),
     input_schema: {
       type: 'object',
       properties: {
         action: { type: 'string', enum: ['update', 'delete'] },
-        assetId: { type: 'string', description: 'Target asset id or unique prefix.' },
-        name: { type: 'string', description: 'update: new display name.' },
-        code: { type: 'string', description: 'update: new source for a code asset such as motion graphics; sandbox-validated.' },
-        props: { type: 'object', description: 'update: merge into asset props to change defaults.' },
-        favorite: { type: 'boolean', description: 'update: favorite flag.' },
+        assetId: { type: 'string', description: 'Id asset đích hoặc tiền tố duy nhất.' },
+        name: { type: 'string', description: 'update: tên hiển thị mới.' },
+        code: { type: 'string', description: 'update: source mới cho asset code như đồ họa chuyển động; được kiểm tra bằng sandbox.' },
+        props: { type: 'object', description: 'update: gộp vào props của asset để thay đổi giá trị mặc định.' },
+        favorite: { type: 'boolean', description: 'update: cờ yêu thích.' },
         sourceTimecode: {
           type: 'object',
-          description: 'Normalized embedded timecode: {frameCount, frameRate:{numerator,denominator}, dropFrame}.',
+          description: 'Timecode nhúng đã chuẩn hóa: {frameCount, frameRate:{numerator,denominator}, dropFrame}.',
           properties: {
             frameCount: { type: 'number' },
             frameRate: {
@@ -33,7 +33,7 @@ export const EDIT_ASSET_TOOL_SCHEMAS: AgentToolSchema[] = [
         },
         captureClock: {
           type: 'object',
-          description: 'Normalized capture clock with the same exact structure as sourceTimecode.',
+          description: 'Đồng hồ ghi hình đã chuẩn hóa với đúng cấu trúc như sourceTimecode.',
           properties: {
             frameCount: { type: 'number' },
             frameRate: {
@@ -45,9 +45,9 @@ export const EDIT_ASSET_TOOL_SCHEMAS: AgentToolSchema[] = [
           },
           required: ['frameCount', 'frameRate', 'dropFrame'],
         },
-        clearSourceTimecode: { type: 'boolean', description: 'update: remove embedded source timecode metadata.' },
-        clearCaptureClock: { type: 'boolean', description: 'update: remove capture clock metadata.' },
-        confirm: { type: 'boolean', description: 'delete: confirm deletion when clips still reference the asset (confirmImpact).' },
+        clearSourceTimecode: { type: 'boolean', description: 'update: xóa metadata timecode nguồn được nhúng.' },
+        clearCaptureClock: { type: 'boolean', description: 'update: xóa metadata đồng hồ ghi hình.' },
+        confirm: { type: 'boolean', description: 'delete: xác nhận xóa khi clip vẫn tham chiếu asset (confirmImpact).' },
       },
       required: ['action', 'assetId'],
     },

@@ -4,24 +4,24 @@ export const FONT_TOOL_SCHEMAS: AgentToolSchema[] = [
   {
     name: 'search_fonts',
     description: [
-      'Search the font catalog the local/headless renderer can load (Google Fonts bundled in-app',
-      '+ locally bundled Chinese foundry faces, source:"bundled"). Use when export reports unsupported',
-      'fonts or when picking fontFamily for motion-graphic items / captions. Returns canonical family',
-      'names to use verbatim. Substring-matches family AND native-name aliases',
-      '(case/punctuation-insensitive) — e.g. "inter", "playfair", "noto sc", "思源黑体", "得意黑",',
-      '"抖音美好体". loadable=false means catalogued only; prefer a loadable alternative or',
-      'confirmFontFallback on export.',
+      'Tìm trong catalog font mà renderer cục bộ/headless có thể tải (Google Fonts được đóng gói trong ứng dụng',
+      '+ các font chữ Hán của foundry được đóng gói cục bộ, source:"bundled"). Dùng khi export báo font không được hỗ trợ',
+      'hoặc khi chọn fontFamily cho item đồ họa chuyển động / phụ đề. Kết quả trả về tên family chuẩn',
+      'để dùng nguyên văn. Tìm theo chuỗi con trong tên family VÀ alias tên gốc',
+      '(không phân biệt hoa thường/dấu câu) — ví dụ "inter", "playfair", "noto sc", "思源黑体", "得意黑",',
+      '"抖音美好体". loadable=false nghĩa là font chỉ có trong catalog; hãy ưu tiên font thay thế có thể tải hoặc',
+      'gọi confirmFontFallback khi export.',
     ].join(' '),
     input_schema: {
       type: 'object',
       properties: {
         query: {
           type: 'string',
-          description: 'Substring to match against font family names or native-name aliases.',
+          description: 'Chuỗi con để khớp tên family font hoặc alias tên gốc.',
         },
         projectId: {
           type: 'string',
-          description: 'Ignored; the active project is used.',
+          description: 'Bỏ qua; dùng dự án đang hoạt động.',
         },
       },
       required: ['query'],

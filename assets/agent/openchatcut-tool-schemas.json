@@ -2439,7 +2439,7 @@
     },
     {
       "name": "manage_design_style",
-      "description": "Manage the project design style (brand). The applied style is the project brand and drives the colors and fonts used for motion graphics and captions. action: list | get | apply | update | clear | save | delete. list and get are read-only and never need approval; apply/clear and update without presetId change only the reversible ProjectDoc. apply applies a presetId (built-in or user-saved) or custom designSpec to the project; applyToProject defaults to true. save, delete, and update with presetId mutate the persistent global “My Style” library and always require a durable confirmation before execution. save stores designSpec, or the current project style when omitted, in the user library; name is required and scenarios/thumbnailUrl are optional; built-in presets cannot be updated or deleted. designSpec/patch shape: {colors:[{role,value}], fonts:[{family,role}], styleGuide}. role is free-form, for example \"accent copper\", \"text secondary\", or \"Chinese heading\". Common color roles: primary/secondary/accent/background/text; font roles: heading/body; other roles are allowed. styleGuide may contain detailed motion, spring, and stagger specifications. colors/fonts also accept the legacy object form, for example {colors:{primary:\"#...\"}, fonts:{heading:\"Inter\"}}; it is normalized to arrays.",
+      "description": "Quản lý phong cách thiết kế (thương hiệu) của dự án. Phong cách được áp dụng là thương hiệu của dự án và chi phối màu, font dùng cho đồ họa chuyển động và phụ đề. action: list | get | apply | update | clear | save | delete. list và get chỉ đọc, không bao giờ cần phê duyệt; apply/clear và update không đổi presetId chỉ thay đổi ProjectDoc theo cách có thể hoàn tác. apply áp dụng presetId (preset dựng sẵn hoặc do người dùng lưu) hoặc designSpec tùy chỉnh vào dự án; applyToProject mặc định là true. save, delete và update có presetId sẽ thay đổi thư viện bền vững “My Style” và luôn cần xác nhận lâu dài trước khi thực thi. save lưu designSpec, hoặc phong cách hiện tại của dự án nếu bỏ qua designSpec, vào thư viện người dùng; name là bắt buộc, scenarios/thumbnailUrl là tùy chọn; không thể cập nhật hoặc xóa preset dựng sẵn. Dạng designSpec/patch: {colors:[{role,value}], fonts:[{family,role}], styleGuide}. role là trường tự do, ví dụ \"accent copper\", \"text secondary\" hoặc \"Chinese heading\". Vai trò màu thường dùng: primary/secondary/accent/background/text; vai trò font: heading/body; cho phép các vai trò khác. styleGuide có thể chứa đặc tả chi tiết về chuyển động, spring và stagger. colors/fonts cũng nhận dạng object cũ, ví dụ {colors:{primary:\"#...\"}, fonts:{heading:\"Inter\"}}; hệ thống sẽ chuẩn hóa thành mảng.",
       "input_schema": {
         "type": "object",
         "additionalProperties": false,
@@ -2458,46 +2458,46 @@
           },
           "presetId": {
             "type": "string",
-            "description": "apply/delete: style id from a built-in or user-saved style; call list first."
+            "description": "apply/delete: id phong cách từ preset dựng sẵn hoặc phong cách người dùng đã lưu; gọi list trước."
           },
           "designSpec": {
             "type": "string",
-            "description": "apply/save: custom style JSON containing colors/fonts/styleGuide."
+            "description": "apply/save: JSON phong cách tùy chỉnh chứa colors/fonts/styleGuide."
           },
           "patch": {
             "type": "string",
-            "description": "update: partial JSON containing only fields to change."
+            "description": "update: JSON một phần chỉ chứa các trường cần thay đổi."
           },
           "applyToProject": {
             "type": "boolean",
-            "description": "apply: apply to the current project immediately; default true."
+            "description": "apply: áp dụng ngay vào dự án hiện tại; mặc định true."
           },
           "name": {
             "type": "string",
-            "description": "save: required saved-style name; replaces an existing style with the same name."
+            "description": "save: tên phong cách bắt buộc; thay thế phong cách hiện có cùng tên."
           },
           "rename": {
             "type": "string",
-            "description": "update + presetId: new saved-style name; duplicate names get a numeric suffix."
+            "description": "update + presetId: tên mới cho phong cách đã lưu; tên trùng được thêm hậu tố số."
           },
           "scenarios": {
             "type": "array",
             "items": {
               "type": "string"
             },
-            "description": "save/update: scenario tags; an empty array clears them."
+            "description": "save/update: các tag kịch bản; mảng rỗng sẽ xóa chúng."
           },
           "scenario": {
             "type": "string",
-            "description": "list: return only styles containing this scenario tag."
+            "description": "list: chỉ trả về các phong cách có tag kịch bản này."
           },
           "thumbnailUrl": {
             "type": "string",
-            "description": "save/update: cover URL for the style picker; not used for generation."
+            "description": "save/update: URL ảnh bìa cho bộ chọn phong cách; không dùng để sinh nội dung."
           },
           "clearThumbnail": {
             "type": "boolean",
-            "description": "update + presetId: clear the cover without deleting the style."
+            "description": "update + presetId: xóa ảnh bìa mà không xóa phong cách."
           }
         },
         "required": [
@@ -3526,7 +3526,7 @@
     },
     {
       "name": "edit_asset",
-      "description": "Update or delete media-pool assets, not timeline clips; use move_item/remove_item for clips. action=update changes name, props, or exact sourceTimecode/captureClock metadata; code assets such as generated motion graphics may receive new code, which must pass sandbox compilation before any change is saved. Clock metadata uses normalized frameCount + rational frameRate + dropFrame.",
+      "description": "Cập nhật hoặc xóa asset trong media pool, không phải clip timeline; dùng move_item/remove_item cho clip. action=update thay đổi name, props hoặc metadata sourceTimecode/captureClock chính xác; asset code như đồ họa chuyển động được sinh có thể nhận code mới, nhưng code phải vượt qua bước biên dịch sandbox trước khi lưu thay đổi. Metadata đồng hồ dùng frameCount + frameRate dạng hữu tỉ + dropFrame đã chuẩn hóa.",
       "input_schema": {
         "type": "object",
         "properties": {
@@ -3539,27 +3539,27 @@
           },
           "assetId": {
             "type": "string",
-            "description": "Target asset id or unique prefix."
+            "description": "Id asset đích hoặc tiền tố duy nhất."
           },
           "name": {
             "type": "string",
-            "description": "update: new display name."
+            "description": "update: tên hiển thị mới."
           },
           "code": {
             "type": "string",
-            "description": "update: new source for a code asset such as motion graphics; sandbox-validated."
+            "description": "update: source mới cho asset code như đồ họa chuyển động; được kiểm tra bằng sandbox."
           },
           "props": {
             "type": "object",
-            "description": "update: merge into asset props to change defaults."
+            "description": "update: gộp vào props của asset để thay đổi giá trị mặc định."
           },
           "favorite": {
             "type": "boolean",
-            "description": "update: favorite flag."
+            "description": "update: cờ yêu thích."
           },
           "sourceTimecode": {
             "type": "object",
-            "description": "Normalized embedded timecode: {frameCount, frameRate:{numerator,denominator}, dropFrame}.",
+            "description": "Timecode nhúng đã chuẩn hóa: {frameCount, frameRate:{numerator,denominator}, dropFrame}.",
             "properties": {
               "frameCount": {
                 "type": "number"
@@ -3591,7 +3591,7 @@
           },
           "captureClock": {
             "type": "object",
-            "description": "Normalized capture clock with the same exact structure as sourceTimecode.",
+            "description": "Đồng hồ ghi hình đã chuẩn hóa với đúng cấu trúc như sourceTimecode.",
             "properties": {
               "frameCount": {
                 "type": "number"
@@ -3623,15 +3623,15 @@
           },
           "clearSourceTimecode": {
             "type": "boolean",
-            "description": "update: remove embedded source timecode metadata."
+            "description": "update: xóa metadata timecode nguồn được nhúng."
           },
           "clearCaptureClock": {
             "type": "boolean",
-            "description": "update: remove capture clock metadata."
+            "description": "update: xóa metadata đồng hồ ghi hình."
           },
           "confirm": {
             "type": "boolean",
-            "description": "delete: confirm deletion when clips still reference the asset (confirmImpact)."
+            "description": "delete: xác nhận xóa khi clip vẫn tham chiếu asset (confirmImpact)."
           }
         },
         "required": [
@@ -3888,17 +3888,17 @@
     },
     {
       "name": "search_fonts",
-      "description": "Search the font catalog the local/headless renderer can load (Google Fonts bundled in-app + locally bundled Chinese foundry faces, source:\"bundled\"). Use when export reports unsupported fonts or when picking fontFamily for motion-graphic items / captions. Returns canonical family names to use verbatim. Substring-matches family AND native-name aliases (case/punctuation-insensitive) — e.g. \"inter\", \"playfair\", \"noto sc\", \"思源黑体\", \"得意黑\", \"抖音美好体\". loadable=false means catalogued only; prefer a loadable alternative or confirmFontFallback on export.",
+      "description": "Tìm trong catalog font mà renderer cục bộ/headless có thể tải (Google Fonts được đóng gói trong ứng dụng + các font chữ Hán của foundry được đóng gói cục bộ, source:\"bundled\"). Dùng khi export báo font không được hỗ trợ hoặc khi chọn fontFamily cho item đồ họa chuyển động / phụ đề. Kết quả trả về tên family chuẩn để dùng nguyên văn. Tìm theo chuỗi con trong tên family VÀ alias tên gốc (không phân biệt hoa thường/dấu câu) — ví dụ \"inter\", \"playfair\", \"noto sc\", \"思源黑体\", \"得意黑\", \"抖音美好体\". loadable=false nghĩa là font chỉ có trong catalog; hãy ưu tiên font thay thế có thể tải hoặc gọi confirmFontFallback khi export.",
       "input_schema": {
         "type": "object",
         "properties": {
           "query": {
             "type": "string",
-            "description": "Substring to match against font family names or native-name aliases."
+            "description": "Chuỗi con để khớp tên family font hoặc alias tên gốc."
           },
           "projectId": {
             "type": "string",
-            "description": "Ignored; the active project is used."
+            "description": "Bỏ qua; dùng dự án đang hoạt động."
           }
         },
         "required": [
@@ -4866,41 +4866,41 @@
     },
     {
       "name": "inspect_color",
-      "description": "Measure color scopes of a frame BY THE NUMBERS instead of eyeballing screenshots: luma black/white points, % clipped shadows/highlights, per-channel means, warm-cool (R−B) and green-magenta balance overall AND per luma band (shadows/mids/highlights), mean saturation, and a saturation-weighted 12-bin hue histogram (30° bins from red) with dominant-hue labels — e.g. an orange cluster is usually skin, cyan/azure is usually sky. Default mode measures the COMPOSITED timeline at `frame` or `seconds` (grades/filters/effects applied, all layers stacked — to read one clip, pick a frame where it fills the screen). Pass assetId (+ sourceSeconds) to measure a RAW media-pool asset frame before any grading instead. Typical loop: inspect_color → adjust via edit_item filters / color effects / LUT looks → inspect_color again to confirm the numbers moved as intended. Use view_timeline_frames when you also want to SEE the frame. To match another shot in one call, pass referenceFrame/referenceSeconds or referenceAssetId/referenceSourceSeconds. The result includes signed target-minus-reference deltas and dead-zone-filtered named control suggestions.",
+      "description": "Đo scope màu của frame BẰNG SỐ thay vì ước lượng bằng mắt qua ảnh chụp: điểm đen/trắng luma, % vùng bóng sáng bị cắt, giá trị trung bình từng kênh, cân bằng ấm-lạnh (R−B) và xanh lá-tím trên TOÀN ẢNH cũng như từng dải luma (bóng/tông trung/hightlight), độ bão hòa trung bình và histogram hue 12 nhóm có trọng số theo độ bão hòa (mỗi nhóm 30° tính từ đỏ) với nhãn hue chiếm ưu thế — ví dụ cụm màu cam thường là da, cyan/xanh thiên thanh thường là bầu trời. Chế độ mặc định đo timeline ĐÃ COMPOSITE tại `frame` hoặc `seconds` (đã áp dụng grade/filter/effect, xếp chồng mọi layer — để đọc một clip, hãy chọn frame tại đó clip phủ đầy màn hình). Truyền assetId (+ sourceSeconds) để đo frame của asset RAW trong media pool trước khi grade. Vòng lặp thường dùng: inspect_color → điều chỉnh bằng filter edit_item / hiệu ứng màu / LUT look → inspect_color lại để xác nhận các chỉ số đã thay đổi đúng ý. Dùng view_timeline_frames nếu muốn XEM frame nữa. Để khớp với shot khác trong một lần gọi, truyền referenceFrame/referenceSeconds hoặc referenceAssetId/referenceSourceSeconds. Kết quả gồm delta có dấu theo target-trừ-reference và các gợi ý control có tên sau khi lọc vùng chết.",
       "input_schema": {
         "type": "object",
         "properties": {
           "frame": {
             "type": "number",
-            "description": "Timeline frame to measure (composited). Default: middle of the content."
+            "description": "Frame timeline cần đo (đã composite). Mặc định: giữa nội dung."
           },
           "seconds": {
             "type": "number",
-            "description": "Timeline time in seconds (alternative to frame)."
+            "description": "Thời điểm trên timeline tính bằng giây (thay cho frame)."
           },
           "assetId": {
             "type": "string",
-            "description": "Measure a RAW media-pool asset instead of the timeline (prefix id ok)."
+            "description": "Đo asset RAW trong media pool thay vì timeline (được dùng tiền tố id)."
           },
           "sourceSeconds": {
             "type": "number",
-            "description": "Asset mode only: source time to sample (default: asset midpoint)."
+            "description": "Chỉ dùng ở chế độ asset: thời điểm nguồn cần lấy mẫu (mặc định: giữa asset)."
           },
           "referenceFrame": {
             "type": "number",
-            "description": "Reference timeline frame to compare against."
+            "description": "Frame timeline tham chiếu để so sánh."
           },
           "referenceSeconds": {
             "type": "number",
-            "description": "Reference timeline time in seconds (alternative to referenceFrame)."
+            "description": "Thời điểm timeline tham chiếu tính bằng giây (thay cho referenceFrame)."
           },
           "referenceAssetId": {
             "type": "string",
-            "description": "Compare against a RAW media-pool asset frame (prefix id ok)."
+            "description": "So sánh với frame của asset RAW trong media pool (được dùng tiền tố id)."
           },
           "referenceSourceSeconds": {
             "type": "number",
-            "description": "Reference asset source time (default: midpoint)."
+            "description": "Thời điểm nguồn của asset tham chiếu (mặc định: giữa asset)."
           }
         }
       }
@@ -5877,17 +5877,17 @@
     },
     {
       "name": "search_fonts",
-      "description": "Search the font catalog the local/headless renderer can load (Google Fonts bundled in-app + locally bundled Chinese foundry faces, source:\"bundled\"). Use when export reports unsupported fonts or when picking fontFamily for motion-graphic items / captions. Returns canonical family names to use verbatim. Substring-matches family AND native-name aliases (case/punctuation-insensitive) — e.g. \"inter\", \"playfair\", \"noto sc\", \"思源黑体\", \"得意黑\", \"抖音美好体\". loadable=false means catalogued only; prefer a loadable alternative or confirmFontFallback on export.",
+      "description": "Tìm trong catalog font mà renderer cục bộ/headless có thể tải (Google Fonts được đóng gói trong ứng dụng + các font chữ Hán của foundry được đóng gói cục bộ, source:\"bundled\"). Dùng khi export báo font không được hỗ trợ hoặc khi chọn fontFamily cho item đồ họa chuyển động / phụ đề. Kết quả trả về tên family chuẩn để dùng nguyên văn. Tìm theo chuỗi con trong tên family VÀ alias tên gốc (không phân biệt hoa thường/dấu câu) — ví dụ \"inter\", \"playfair\", \"noto sc\", \"思源黑体\", \"得意黑\", \"抖音美好体\". loadable=false nghĩa là font chỉ có trong catalog; hãy ưu tiên font thay thế có thể tải hoặc gọi confirmFontFallback khi export.",
       "input_schema": {
         "type": "object",
         "properties": {
           "query": {
             "type": "string",
-            "description": "Substring to match against font family names or native-name aliases."
+            "description": "Chuỗi con để khớp tên family font hoặc alias tên gốc."
           },
           "projectId": {
             "type": "string",
-            "description": "Ignored; the active project is used."
+            "description": "Bỏ qua; dùng dự án đang hoạt động."
           }
         },
         "required": [
