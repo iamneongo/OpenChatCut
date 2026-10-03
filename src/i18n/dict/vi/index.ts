@@ -1737,7 +1737,7 @@ export const VI: Record<string, string> = {
   'OFox · 多模型': 'OFox · nhiều mô hình',
   'OFox · 多模型网关': 'OFox · cổng trung gian nhiều mô hình',
   '使用 LLM_OFOX_API_KEY（在 Agent 供应商里配置 OFox）生成视频。一个 Key 覆盖 Seedance、Wan 等视频模型；支持文生视频、首帧/首尾帧图生视频与图片参考（最多 9 张）；时长/分辨率按模型由 API 校验，2–30 秒。': 'Dùng LLM_OFOX_API_KEY (cấu hình OFox trong nhà cung cấp tác nhân AI) để tạo video. Một khóa hỗ trợ các mô hình video như Seedance, Wan; hỗ trợ văn bản thành video, ảnh thành video từ khung đầu/cuối và ảnh tham chiếu (tối đa 9 ảnh); API kiểm tra thời lượng/độ phân giải theo mô hình, 2–30 giây.',
-  'xAI · Grok Imagine (视频)': 'xAI · Grok Imagine (video)',
+  'xAI · Grok Imagine (视频)': 'xAI · Grok Imagine (tạo video)',
   '验证地址与密钥，并读取该接口可用的模型': 'Xác minh địa chỉ và khóa, đồng thời đọc các mô hình khả dụng từ API',
   '该厂商暂不支持连接测试': 'Nhà cung cấp này hiện chưa hỗ trợ kiểm tra kết nối',
   '（按当前输入测试，记得保存）': '(Kiểm tra theo dữ liệu hiện tại, nhớ lưu)',
