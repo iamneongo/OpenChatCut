@@ -51,7 +51,7 @@ async function parseDocxText(data: ArrayBuffer): Promise<string> {
   const mammoth = await import('mammoth');
   const result = await mammoth.extractRawText({ arrayBuffer: data });
   const text = validatedProjectDocumentText(result.value);
-  if (!text) throw new Error('docx produced no readable text (images-only or malformed document)');
+  if (!text) throw new Error('DOCX không có văn bản để đọc (chỉ có hình ảnh hoặc tài liệu bị hỏng)');
   return text;
 }
 
@@ -74,7 +74,7 @@ async function parsePdfText(data: ArrayBuffer): Promise<string> {
   } finally {
     await document.cleanup().catch(() => undefined);
   }
-  if (!pages.length) throw new Error('pdf produced no readable text (scanned images or malformed document)');
+  if (!pages.length) throw new Error('PDF không có văn bản để đọc (ảnh quét hoặc tài liệu bị hỏng)');
   return pages.join('\n');
 }
 

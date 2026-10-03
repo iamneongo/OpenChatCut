@@ -54,7 +54,7 @@ async function requestUploadPlan(
     }
     try {
       await putPresigned(file, slot.uploadUrl, onProgress);
-      if (!path) throw new Error('presigned upload returned no destination path');
+      if (!path) throw new Error('Tải lên có ký trước không trả về đường dẫn đích');
       return await hydratePresignedUpload(path);
     } catch {
       return {
@@ -78,7 +78,7 @@ async function hydratePresignedUpload(path: string): Promise<UploadedMediaLocati
   const value = await response.json().catch(() => null);
   const location = uploadedMediaLocation(value);
   if (!response.ok || !location?.sourceContentHash) {
-    throw new Error(responseError(value) ?? 'uploaded media identity is unavailable');
+    throw new Error(responseError(value) ?? 'Không xác định được danh tính tệp media đã tải lên');
   }
   return location;
 }

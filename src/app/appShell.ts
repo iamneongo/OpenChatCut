@@ -93,7 +93,7 @@ async function syncClaudeCodeBackend(isActive: () => boolean, savedModel?: strin
 export async function syncAgentBackends(isActive: () => boolean): Promise<void> {
   const [keyResult, codexResult] = await Promise.allSettled([
     fetch('/api/keys').then(async (response): Promise<LiveAgentStatus> => {
-      if (!response.ok) throw new Error('Agent key status is unavailable.');
+      if (!response.ok) throw new Error('Không thể kiểm tra trạng thái khóa Agent.');
       return response.json() as Promise<LiveAgentStatus>;
     }),
     fetchCodexStatus(),
