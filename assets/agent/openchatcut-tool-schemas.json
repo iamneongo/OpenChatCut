@@ -2401,7 +2401,7 @@
     },
     {
       "name": "manage_effects",
-      "description": "Shorthand for per-clip WebGL effects. Prefer browse_library followed by edit_item adds:[{type:\"effect\",targetItemId,assetId}]. action=list returns catalog; add/update/remove mutate the clip effect stack. Also covers LUT assetIds. For zoom/transitions use edit_item.",
+      "description": "Cách viết tắt để quản lý hiệu ứng WebGL theo từng clip. Ưu tiên browse_library rồi dùng edit_item adds:[{type:\"effect\",targetItemId,assetId}]. action=list trả về catalog; add/update/remove thay đổi stack hiệu ứng của clip. Cũng hỗ trợ assetId của LUT. Với zoom/transition dùng edit_item.",
       "input_schema": {
         "type": "object",
         "properties": {
@@ -2413,23 +2413,23 @@
               "update",
               "remove"
             ],
-            "description": "What to do."
+            "description": "Thao tác cần thực hiện."
           },
           "targetItemId": {
             "type": "string",
-            "description": "Clip id to affect (prefix ok). Required for add/update/remove. Must be a video or image clip."
+            "description": "Id clip cần tác động (chấp nhận tiền tố). Bắt buộc cho add/update/remove. Phải là clip video hoặc image."
           },
           "effectId": {
             "type": "string",
-            "description": "update/remove: target effect instance id. Omit to target the first effect."
+            "description": "update/remove: id instance hiệu ứng đích. Bỏ qua để chọn hiệu ứng đầu tiên."
           },
           "assetId": {
             "type": "string",
-            "description": "add: which effect, e.g. \"builtin:fx-luma-key\". Get ids from action=\"list\" or browse_library."
+            "description": "add: hiệu ứng cần thêm, ví dụ \"builtin:fx-luma-key\". Lấy id từ action=\"list\" hoặc browse_library."
           },
           "propertyOverrides": {
             "type": "object",
-            "description": "add/update: sparse patch. Numeric properties use numbers; colors use RGB arrays in 0..1, e.g. {\"color\":[1,0,0]}. Omit for defaults."
+            "description": "add/update: patch một phần. Property số dùng number; màu dùng mảng RGB trong 0..1, ví dụ {\"color\":[1,0,0]}. Bỏ qua để dùng mặc định."
           }
         },
         "required": [
@@ -2693,24 +2693,24 @@
     },
     {
       "name": "read_captions",
-      "description": "Read one caption track's state and resolved pages. Pass captionTrackId as C1/C2 or a stable id; omit it for C1. Use list=true to discover every caption track.",
+      "description": "Đọc trạng thái và các trang đã phân giải của một track caption. Truyền captionTrackId dạng C1/C2 hoặc id ổn định; bỏ qua để dùng C1. Dùng list=true để khám phá mọi track caption.",
       "input_schema": {
         "type": "object",
         "properties": {
           "captionTrackId": {
             "type": "string",
-            "description": "Caption track alias (C1/C2) or stable id. Defaults to C1."
+            "description": "Alias track caption (C1/C2) hoặc id ổn định. Mặc định C1."
           },
           "list": {
             "type": "boolean",
-            "description": "List caption tracks instead of reading resolved pages."
+            "description": "Liệt kê track caption thay vì đọc các trang đã phân giải."
           }
         }
       }
     },
     {
       "name": "edit_captions",
-      "description": "Manage the captions/subtitles overlay via a single `action`. Read text first only for display_text (use read_captions); every other action is one direct call.\n- enable / disable: toggle captions data (enable optionally takes a built-in `preset` name).\n- hide_overlay / show_overlay: global captionsHidden flag (hiển thị phụ đề trên thanh công cụ) — ẩn lớp phụ đề trên màn hình và các clip text nhưng không xóa dữ liệu phụ đề; show_overlay bật lại.\n- template: no arg → list the 21 built-in presets; `templatePreset:\"netflix\"` → apply one (size/position preserved).\n- style: custom look via `json` — {font|fontFamily,sizePx|fontSizeRatio|fontSize,color,weight|fontWeight,fontStyle,textAlign|align,underline,strike,letterSpacing,lineHeight,strokeColor,strokeWidth,highlightColor,highlightBackground,shadow|shadowStrength,background|backgroundColor,backgroundOpacity,borderRadius,textTransform,displayMode,wordsPerPage,pacing}. Layered over the current template; unmapped fields are reported in `ignored`. sizePx is relative to CANVAS height — on 9:16 vertical (1080×1920) social captions want sizePx ≥ 86 (≈4.5% of height); leave size unset to keep the template default. pacing: 'phrase' (default, readable pages + karaoke highlight) — only use 'word' when the user explicitly wants single-word pop.\n- animation: deterministic burn-in motion shared by preview/export; set `motionPreset` to none, fade-up, pop, word-pop, or karaoke-pulse.\n- layout: place the whole block via `json` {preset:\"bottom-center|top-center|center|…3×3\", offsetXRatio, offsetYRatio, scale, rotation, opacity}; transforms may also be nested as `{transforms:{scale,rotation,opacity}}`.\n- display_text: per-word DISPLAY overrides via `json` {overrides:[{wordRef, text, hidden, forcePageBreak}], clearOverrides} — get the opaque wordRef from read_captions. wordIndex remains a legacy fallback; wordRef is stable across regrouping and source reorder. Set clear:true on an entry to clear that word by either selector. Doesn't touch the transcript.\n- source_set / source_add / source_remove / source_list: choose which transcribed track(s)/item(s) the captions read (json {mode:\"timeline\"} for all audible, or {sources:[{trackId|itemId}]}).\n  Multi-source entries accept a 0-based trackOrder. source_update can move an existing source with {sourceId|index, trackOrder}; source_list returns the normalized visual order.\n- language_mode / bilingual: switch caption language — json {mode:\"original|translation|bilingual\", languageCode} (create the translation first with manage_transcript translate).\n- track: legacy single-source trackId or internal 0-based trackOrder (prefer source_set for visible text sources).\n- layout_policy / positions / source_update: arrange, style, hide, and reorder individual source lanes. preset_* manages user-saved caption styles.",
+      "description": "Quản lý overlay caption/phụ đề qua một `action` duy nhất. Chỉ đọc text trước với display_text (dùng read_captions); mọi action khác là một lần gọi trực tiếp.\n- enable / disable: bật/tắt dữ liệu caption (enable có thể nhận tên `preset` dựng sẵn).\n- hide_overlay / show_overlay: global captionsHidden flag (hiển thị phụ đề trên thanh công cụ) — ẩn lớp phụ đề trên màn hình và các clip text nhưng không xóa dữ liệu phụ đề; show_overlay bật lại.\n- template: không có tham số → liệt kê 21 preset dựng sẵn; `templatePreset:\"netflix\"` → áp dụng một preset (giữ nguyên size/position).\n- style: giao diện tùy chỉnh qua `json` — {font|fontFamily,sizePx|fontSizeRatio|fontSize,color,weight|fontWeight,fontStyle,textAlign|align,underline,strike,letterSpacing,lineHeight,strokeColor,strokeWidth,highlightColor,highlightBackground,shadow|shadowStrength,background|backgroundColor,backgroundOpacity,borderRadius,textTransform,displayMode,wordsPerPage,pacing}. Phủ lên template hiện tại; field không ánh xạ được sẽ báo trong `ignored`. sizePx tính theo chiều cao CANVAS — trên khung dọc 9:16 (1080×1920), caption mạng xã hội nên có sizePx ≥ 86 (≈4.5% chiều cao); bỏ qua size để giữ mặc định template. pacing: 'phrase' (mặc định, trang dễ đọc + highlight karaoke) — chỉ dùng 'word' khi người dùng nói rõ muốn bật từng từ.\n- animation: chuyển động burn-in xác định, dùng chung cho preview/export; đặt `motionPreset` là none, fade-up, pop, word-pop hoặc karaoke-pulse.\n- layout: đặt toàn bộ block qua `json` {preset:\"bottom-center|top-center|center|…3×3\", offsetXRatio, offsetYRatio, scale, rotation, opacity}; transform cũng có thể lồng trong `{transforms:{scale,rotation,opacity}}`.\n- display_text: ghi đè DISPLAY theo từng từ qua `json` {overrides:[{wordRef, text, hidden, forcePageBreak}], clearOverrides} — lấy wordRef opaque từ read_captions. wordIndex vẫn là fallback cũ; wordRef ổn định khi nhóm lại và đổi thứ tự nguồn. Đặt clear:true trên entry để xóa từ đó theo một trong hai selector. Không tác động transcript.\n- source_set / source_add / source_remove / source_list: chọn track/item đã chuyển lời mà caption đọc (json {mode:\"timeline\"} cho mọi audio nghe được, hoặc {sources:[{trackId|itemId}]}).\n  Entry nhiều nguồn nhận trackOrder bắt đầu từ 0. source_update có thể di chuyển source hiện có với {sourceId|index, trackOrder}; source_list trả về thứ tự hình ảnh đã chuẩn hóa.\n- language_mode / bilingual: đổi ngôn ngữ caption — json {mode:\"original|translation|bilingual\", languageCode} (tạo bản dịch trước bằng manage_transcript translate).\n- track: trackId nguồn đơn cũ hoặc trackOrder nội bộ bắt đầu từ 0 (ưu tiên source_set cho source text hiển thị).\n- layout_policy / positions / source_update: sắp xếp, tạo style, ẩn và đổi thứ tự từng lane nguồn. preset_* quản lý style caption người dùng đã lưu.",
       "input_schema": {
         "type": "object",
         "properties": {
@@ -2742,19 +2742,19 @@
               "source_update",
               "track"
             ],
-            "description": "The caption operation to perform."
+            "description": "Thao tác caption cần thực hiện."
           },
           "json": {
             "type": "string",
-            "description": "JSON payload for the action (style fields, layout, display_text overrides, source scope, language). A JSON string or object."
+            "description": "Payload JSON cho action (field style, layout, ghi đè display_text, phạm vi source, ngôn ngữ). Có thể là chuỗi JSON hoặc object."
           },
           "templatePreset": {
             "type": "string",
-            "description": "For action=template: built-in preset id/name to apply (omit to list)."
+            "description": "Với action=template: id/tên preset dựng sẵn cần áp dụng (bỏ qua để liệt kê)."
           },
           "preset": {
             "type": "string",
-            "description": "For action=enable: optional built-in preset name (\"auto\"/omit = Plain default). For action=template: legacy alias for templatePreset."
+            "description": "Với action=enable: tên preset dựng sẵn tùy chọn (\"auto\"/bỏ qua = mặc định Plain). Với action=template: alias cũ của templatePreset."
           },
           "motionPreset": {
             "type": "string",
@@ -2765,11 +2765,11 @@
               "word-pop",
               "karaoke-pulse"
             ],
-            "description": "For action=animation: deterministic caption motion preset."
+            "description": "Với action=animation: preset chuyển động caption xác định."
           },
           "trackId": {
             "type": "string",
-            "description": "For action=track only: source track alias (V1/A1) or id. To choose visible caption text prefer source_set."
+            "description": "Chỉ với action=track: alias track nguồn (V1/A1) hoặc id. Để chọn text caption hiển thị, ưu tiên source_set."
           },
           "trackOrder": {
             "anyOf": [
@@ -2780,19 +2780,19 @@
                 "type": "string"
               }
             ],
-            "description": "Internal 0-based timeline track order for action=track only. Call action=track with list=true to inspect the exact order."
+            "description": "Thứ tự track timeline nội bộ bắt đầu từ 0, chỉ với action=track. Gọi action=track với list=true để xem đúng thứ tự."
           },
           "list": {
             "type": "boolean",
-            "description": "For action=track: list available source tracks instead of changing the source."
+            "description": "Với action=track: liệt kê track nguồn có sẵn thay vì đổi source."
           },
           "captionTrackId": {
             "type": "string",
-            "description": "Target caption track alias (C1/C2) or stable id. Defaults to C1."
+            "description": "Alias track caption đích (C1/C2) hoặc id ổn định. Mặc định C1."
           },
           "captionsItemId": {
             "type": "string",
-            "description": "Legacy alias for captionTrackId."
+            "description": "Alias cũ của captionTrackId."
           }
         },
         "required": [
@@ -5860,17 +5860,17 @@
     },
     {
       "name": "read_captions",
-      "description": "Read one caption track's state and resolved pages. Pass captionTrackId as C1/C2 or a stable id; omit it for C1. Use list=true to discover every caption track.",
+      "description": "Đọc trạng thái và các trang đã phân giải của một track caption. Truyền captionTrackId dạng C1/C2 hoặc id ổn định; bỏ qua để dùng C1. Dùng list=true để khám phá mọi track caption.",
       "input_schema": {
         "type": "object",
         "properties": {
           "captionTrackId": {
             "type": "string",
-            "description": "Caption track alias (C1/C2) or stable id. Defaults to C1."
+            "description": "Alias track caption (C1/C2) hoặc id ổn định. Mặc định C1."
           },
           "list": {
             "type": "boolean",
-            "description": "List caption tracks instead of reading resolved pages."
+            "description": "Liệt kê track caption thay vì đọc các trang đã phân giải."
           }
         }
       }
