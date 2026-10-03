@@ -237,7 +237,9 @@ export function TestConnectionRow({ page, ctx }: { page: SettingsVendorPage; ctx
         ctx.onModelsDiscovered(modelField.name, body.models);
       }
     } catch (err) {
-      setResult({ page: page.key, ok: false, message: err instanceof Error ? err.message : String(err) });
+      setResult({ page: page.key, ok: false, message: t('失败:{error}', {
+        error: err instanceof Error ? err.message : String(err),
+      }) });
     } finally {
       setBusy(false);
     }

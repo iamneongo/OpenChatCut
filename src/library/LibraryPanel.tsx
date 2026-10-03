@@ -183,7 +183,7 @@ export function LibraryPanel({ semanticScopeId, templates, onAddTemplate, onAddA
       setMainTab('字幕');
     } catch (error) {
       const detail = error instanceof Error ? error.message : String(error);
-      window.alert(`${t('SRT 导入失败')}：${t(detail)}`);
+      window.alert(t('失败:{error}', { error: `${t('SRT 导入失败')}：${t(detail)}` }));
     }
   };
 

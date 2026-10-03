@@ -88,7 +88,7 @@ function useExtensionActions(onInstalled: () => void) {
       setStatus({ ok: false, text: result.errors.slice(0, 3).join('；') });
     }).catch((error) => {
       setBusyId(null);
-      setStatus({ ok: false, text: error instanceof Error ? error.message : String(error) });
+      setStatus({ ok: false, text: t('失败:{error}', { error: error instanceof Error ? error.message : String(error) }) });
     });
   };
   const runAction = (id: string, task: Promise<void>, success: string, onSuccess?: () => void) => {
@@ -97,7 +97,7 @@ function useExtensionActions(onInstalled: () => void) {
       setBusyId(null); setStatus({ ok: true, text: success }); onSuccess?.();
     }).catch((error) => {
       setBusyId(null);
-      setStatus({ ok: false, text: error instanceof Error ? error.message : String(error) });
+      setStatus({ ok: false, text: t('失败:{error}', { error: error instanceof Error ? error.message : String(error) }) });
     });
   };
   return { busyId, status, runInstall, runAction };

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useT } from '../../i18n/locale';
+import { t, useT } from '../../i18n/locale';
 import { theme } from '../../theme';
 import {
   cancelModelPackInstall,
@@ -35,7 +35,7 @@ function usePackCatalog() {
       setPacks(await fetchModelPackCatalog());
       setLoadError(null);
     } catch (error) {
-      setLoadError(error instanceof Error ? error.message : String(error));
+      setLoadError(t('失败:{error}', { error: error instanceof Error ? error.message : String(error) }));
     }
   }, []);
   useEffect(() => { void refresh(); }, [refresh]);
@@ -58,7 +58,7 @@ function usePackActions(refresh: () => Promise<void>) {
       await executeModelPackMutation(id, action);
       await refresh();
     } catch (error) {
-      const message = error instanceof Error ? error.message : String(error);
+      const message = t('失败:{error}', { error: error instanceof Error ? error.message : String(error) });
       setErrors((current) => ({ ...current, [id]: message }));
     } finally {
       setBusyId(null);

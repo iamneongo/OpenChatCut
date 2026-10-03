@@ -92,9 +92,9 @@ export function LocalAsrPane({ fields, ctx }: { fields: readonly SettingsField[]
     void setDesktopNativeInferenceEnabled(enabled)
       .then(() => setNativeInference(enabled))
       .catch((error: unknown) => {
-        setLoadError(error instanceof Error ? error.message : String(error));
+        setLoadError(t('失败:{error}', { error: error instanceof Error ? error.message : String(error) }));
       });
-  }, []);
+  }, [t]);
   const toggleWebgpuAccel = useCallback((enabled: boolean) => {
     try {
       if (enabled) {
@@ -129,9 +129,9 @@ export function LocalAsrPane({ fields, ctx }: { fields: readonly SettingsField[]
       if (downloadingRef.current.size > 0 && current.size === 0) void warmUpLocalAsr(models);
       downloadingRef.current = current;
     } catch (error) {
-      setLoadError(error instanceof Error ? error.message : String(error));
+      setLoadError(t('失败:{error}', { error: error instanceof Error ? error.message : String(error) }));
     }
-  }, []);
+  }, [t]);
 
   useEffect(() => {
     void refresh();
