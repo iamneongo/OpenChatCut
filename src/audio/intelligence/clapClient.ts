@@ -42,7 +42,7 @@ interface PendingWorkerRequest {
 }
 function abortError(signal: AbortSignal): Error {
   if (signal.reason instanceof Error) return signal.reason;
-  const error = new Error(signal.reason === undefined ? 'CLAP analysis aborted' : String(signal.reason));
+  const error = new Error(signal.reason === undefined ? 'phân tích CLAP đã bị hủy' : String(signal.reason));
   error.name = 'AbortError';
   return error;
 }
@@ -77,7 +77,7 @@ export class ClapClient {
     validateInput(samples, sampleRate);
     throwIfAborted(signal);
     if (!await this.checkPacks([SEMANTIC_PACK_ID])) {
-      throw new Error('CLAP model pack music-semantics-lite is not installed');
+      throw new Error('chưa cài model pack CLAP music-semantics-lite');
     }
     throwIfAborted(signal);
     let completedProgress = 0;
@@ -96,7 +96,7 @@ export class ClapClient {
       return await this.runAttempt('wasm', samples, sampleRate, reportProgress, signal);
     } catch (wasmError) {
       throwIfAborted(signal);
-      throw new AggregateError([webGpuError, wasmError], 'CLAP failed on WebGPU and WASM');
+      throw new AggregateError([webGpuError, wasmError], 'CLAP thất bại trên WebGPU và WASM');
     }
   }
 
@@ -117,7 +117,7 @@ export class ClapClient {
         [],
         signal,
       );
-      if (loaded.type !== 'loaded') throw new Error('CLAP worker returned an unexpected load result');
+      if (loaded.type !== 'loaded') throw new Error('worker CLAP trả về kết quả tải không mong đợi');
       throwIfAborted(signal);
       return await embedWindows(
         worker,
@@ -152,7 +152,7 @@ function createClapWorker(): Worker {
 
 function positiveTimeout(value: number | undefined, fallback: number): number {
   if (value === undefined) return fallback;
-  if (!Number.isFinite(value) || value <= 0) throw new Error('CLAP timeout must be a positive number');
+  if (!Number.isFinite(value) || value <= 0) throw new Error('timeout CLAP phải là số dương');
   return value;
 }
 
@@ -178,7 +178,7 @@ function uniformlySelectStarts(candidates: readonly number[]): number[] {
 function normalizedMean(sum: Float64Array, count: number): number[] {
   const mean = Array.from(sum, (value) => value / count);
   const norm = Math.hypot(...mean);
-  if (!Number.isFinite(norm) || norm <= Number.EPSILON) throw new Error('CLAP returned a zero mean embedding');
+  if (!Number.isFinite(norm) || norm <= Number.EPSILON) throw new Error('CLAP trả về embedding trung bình bằng 0');
   return validateEmbedding(mean.map((value) => value / norm));
 }
 
@@ -204,7 +204,7 @@ async function embedWindows(
       [owned.buffer],
       signal,
     );
-    if (result.type !== 'embedding') throw new Error('CLAP worker returned no embedding');
+    if (result.type !== 'embedding') throw new Error('worker CLAP không trả về embedding');
     const vector = validateEmbedding(result.vector);
     for (let dimension = 0; dimension < sum.length; dimension += 1) sum[dimension] += vector[dimension]!;
   }
@@ -213,13 +213,13 @@ async function embedWindows(
 
 function validateInput(samples: Float32Array, sampleRate: number): void {
   if (!(samples instanceof Float32Array) || samples.length === 0) {
-    throw new Error('CLAP audio samples must be a non-empty Float32Array');
+    throw new Error('mẫu âm thanh CLAP phải là Float32Array không rỗng');
   }
   if (!Number.isInteger(sampleRate) || sampleRate < 8_000 || sampleRate > 192_000) {
-    throw new Error(`Invalid CLAP sample rate: ${sampleRate}`);
+    throw new Error(`tần số lấy mẫu CLAP không hợp lệ: ${sampleRate}`);
   }
   for (const sample of samples) {
-    if (!Number.isFinite(sample)) throw new Error('CLAP audio samples contain non-finite values');
+    if (!Number.isFinite(sample)) throw new Error('mẫu âm thanh CLAP chứa giá trị không hữu hạn');
   }
 }
 
@@ -236,7 +236,7 @@ function requestWorker(
     resolve,
     reject,
     timer: setTimeout(
-      () => settlePending(pending, new Error(`CLAP ${request.type} timed out after ${timeoutMs}ms`)),
+      () => settlePending(pending, new Error(`CLAP ${request.type} hết thời gian sau ${timeoutMs}ms`)),
       timeoutMs,
     ),
     settled: false,
@@ -255,7 +255,7 @@ function requestWorker(
       settlePending(pending, reason instanceof Error ? reason : new Error(String(reason)));
     }
   };
-  worker.onerror = (event) => settlePending(pending, new Error(event.message || 'CLAP worker failed'));
+  worker.onerror = (event) => settlePending(pending, new Error(event.message || 'worker CLAP thất bại'));
   try {
     worker.postMessage(request, transfer);
   } catch (reason) {
@@ -291,20 +291,20 @@ function settlePending(
   clearTimeout(pending.timer);
   if (error) pending.reject(error);
   else if (result) pending.resolve(result);
-  else pending.reject(new Error('CLAP worker returned no result'));
+  else pending.reject(new Error('worker CLAP không trả về kết quả'));
 }
 
 function validateWorkerResponse(value: unknown): ClapWorkerResponse {
-  if (!value || typeof value !== 'object') throw new Error('CLAP worker returned an invalid response');
+  if (!value || typeof value !== 'object') throw new Error('worker CLAP trả về phản hồi không hợp lệ');
   const response = value as Record<string, unknown>;
-  if (!Number.isSafeInteger(response.id)) throw new Error('CLAP worker returned an invalid request id');
+  if (!Number.isSafeInteger(response.id)) throw new Error('worker CLAP trả về request id không hợp lệ');
   if (response.type === 'error' && typeof response.message === 'string') return response as ClapWorkerResponse;
   if (response.type === 'progress' && typeof response.progress === 'number'
     && Number.isFinite(response.progress) && response.progress >= 0 && response.progress <= 1) {
     return response as ClapWorkerResponse;
   }
   if (response.type === 'result' && isWorkerResult(response.result)) return response as ClapWorkerResponse;
-  throw new Error('CLAP worker returned an invalid response payload');
+  throw new Error('worker CLAP trả về payload phản hồi không hợp lệ');
 }
 
 function isWorkerResult(value: unknown): value is ClapWorkerResult {
@@ -317,16 +317,16 @@ function isWorkerResult(value: unknown): value is ClapWorkerResult {
 
 function validateEmbedding(vector: number[]): number[] {
   if (vector.length !== CLAP_EMBEDDING_DIMENSION) {
-    throw new Error(`CLAP returned ${vector.length} dimensions; expected ${CLAP_EMBEDDING_DIMENSION}`);
+    throw new Error(`CLAP trả về ${vector.length} chiều; cần ${CLAP_EMBEDDING_DIMENSION}`);
   }
   let squaredLength = 0;
   for (const value of vector) {
-    if (!Number.isFinite(value)) throw new Error('CLAP returned a non-finite embedding');
+    if (!Number.isFinite(value)) throw new Error('CLAP trả về embedding có giá trị không hữu hạn');
     squaredLength += value * value;
   }
   const length = Math.sqrt(squaredLength);
   if (!Number.isFinite(length) || Math.abs(length - 1) > 1e-3) {
-    throw new Error(`CLAP returned a non-unit embedding (length ${length})`);
+    throw new Error(`CLAP trả về embedding chưa chuẩn hóa đơn vị (độ dài ${length})`);
   }
   return vector;
 }

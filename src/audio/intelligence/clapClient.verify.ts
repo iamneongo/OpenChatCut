@@ -131,7 +131,7 @@ const missingPackClient = new ClapClient({
 });
 await assert.rejects(
   missingPackClient.embed(samples, CLAP_SAMPLE_RATE),
-  /music-semantics-lite is not installed/,
+  /chưa cài model pack CLAP music-semantics-lite/,
 );
 assert.equal(forbiddenWorkers, 0, 'missing packs never start a model worker');
 
@@ -146,7 +146,7 @@ const timeoutClient = new ClapClient({
 });
 await assert.rejects(
   timeoutClient.embed(samples, CLAP_SAMPLE_RATE),
-  (error: unknown) => error instanceof AggregateError && /WebGPU and WASM/.test(error.message),
+    (error: unknown) => error instanceof AggregateError && /WebGPU và WASM/.test(error.message),
   'both backend attempts are bounded by the client timeout',
 );
 assert.equal(timeoutWorkers, 2, 'a timed-out WebGPU worker is replaced before WASM');
