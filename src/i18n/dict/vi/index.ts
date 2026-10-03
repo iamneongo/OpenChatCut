@@ -1397,7 +1397,7 @@ export const VI: Record<string, string> = {
   '手动字幕车道': 'Rãnh phụ đề thủ công',
   '新建手动字幕车道后，可在播放头位置添加字幕，不需要先转写或调用 AI。': 'Sau khi tạo rãnh phụ đề thủ công, có thể thêm phụ đề tại đầu phát mà không cần chép lời hoặc gọi AI trước.',
   '开始': 'Bắt đầu',
-  '取播放头': 'Lấy từ đầu phát',
+  '取播放头': 'Dùng đầu phát',
   '开始秒数': 'Giây bắt đầu',
   '结束秒数': 'Giây kết thúc',
   '字幕文字': 'Nội dung phụ đề',
