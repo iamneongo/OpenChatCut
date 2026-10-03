@@ -51,7 +51,7 @@ export function setGenerationResultUrlAt(
   url: string,
 ): string[] {
   if (!Number.isSafeInteger(resultIndex) || resultIndex < 0 || resultIndex > stored.length || !url) {
-    throw new Error('generation result URL checkpoint index is invalid');
+    throw new Error('chỉ mục checkpoint URL kết quả generation không hợp lệ');
   }
   const next = [...stored];
   next[resultIndex] = url;

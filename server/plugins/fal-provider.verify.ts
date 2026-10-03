@@ -15,8 +15,8 @@ assert.deepEqual(falTask(taskId), { endpoint: request.endpoint, requestId: 'paid
 calls.length = 0;
 await runFalQueue(client, request, async () => { throw new Error('must not resubmit'); }, taskId);
 assert.deepEqual(calls, ['poll', 'result']);
-assert.throws(() => falTask('fal:not-json'), /Invalid Fal task/);
-assert.throws(() => falTask('fal:' + JSON.stringify({ endpoint: 'https://attacker.test', requestId: 'x' })), /Invalid Fal task/);
+assert.throws(() => falTask('fal:not-json'), /checkpoint task Fal không hợp lệ/);
+assert.throws(() => falTask('fal:' + JSON.stringify({ endpoint: 'https://attacker.test', requestId: 'x' })), /checkpoint task Fal không hợp lệ/);
 const failing = { queue: { ...client.queue, result: async () => { throw new Error('Fal rejected request'); } } };
 await assert.rejects(runFalQueue(failing, request, async () => {}, taskId), /Fal rejected/);
 console.log('Fal queue submit, durable resume and failure verified (mock transport; no credits)');

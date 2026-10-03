@@ -14,7 +14,7 @@ export function falTask(id: string): { endpoint: string; requestId: string } {
     if ((!isFalEndpoint(value.endpoint) && !/^(bytedance\/seedance-2\.0\/(text|image|reference)-to-video|fal-ai\/kling-video\/(v3|o3)\/(standard|pro)\/(text|image|reference)-to-video|fal-ai\/nano-banana-2(?:\/edit)?)$/.test(value.endpoint))
       || typeof value.requestId !== 'string' || !value.requestId) throw new Error();
     return { endpoint: value.endpoint, requestId: value.requestId };
-  } catch { throw new Error('Invalid Fal task checkpoint'); }
+  } catch { throw new Error('checkpoint task Fal không hợp lệ'); }
 }
 
 /** Persist the request ID before polling. Resuming never submits a paid request. */
@@ -27,7 +27,7 @@ export async function runFalQueue(
   let task = existingTaskId ? falTask(existingTaskId) : undefined;
   if (!task) {
     const submitted = await client.queue.submit(request.endpoint, { input: request.input });
-    if (!submitted.request_id) throw new Error('Fal did not return a request ID');
+    if (!submitted.request_id) throw new Error('Fal không trả về request ID');
     task = { endpoint: request.endpoint, requestId: submitted.request_id };
     await register('fal', `fal:${JSON.stringify(task)}`);
   }

@@ -24,7 +24,7 @@ export async function generateSoniloMusic(
   const baseUrl = options.soniloBaseUrl.replace(/\/$/, '');
   let taskId = existingTaskId;
   if (!taskId) {
-    if (!input.sourceAssetPath) throw new Error('Sonilo v2m requires a project video sourceAssetId');
+    if (!input.sourceAssetPath) throw new Error('Sonilo v2m yêu cầu sourceAssetId video của project');
     await assertSoniloVideoDuration(input.sourceAssetPath, SONILO_MUSIC_MAX_VIDEO_SECONDS, 'music');
     taskId = await submitSoniloVideoTask(
       baseUrl,

@@ -202,12 +202,12 @@ async function verifyDownloadedFile(
   const info = await stat(path);
   if (info.size !== file.sizeBytes) {
     if (removeInvalid) await unlink(path).catch(() => undefined);
-    throw new Error(`${file.path} size mismatch: expected ${file.sizeBytes}, got ${info.size}`);
+    throw new Error(`${file.path} không khớp kích thước: cần ${file.sizeBytes}, nhận được ${info.size}`);
   }
   const actual = await sha256(path);
   if (actual !== file.sha256) {
     if (removeInvalid) await unlink(path).catch(() => undefined);
-    throw new Error(`${file.path} SHA-256 mismatch: expected ${file.sha256}, got ${actual}`);
+    throw new Error(`${file.path} không khớp SHA-256: cần ${file.sha256}, nhận được ${actual}`);
   }
 }
 
@@ -301,7 +301,7 @@ async function runDownload(
     await installStagedPack(pack, stage);
     inspections.delete(pack.id);
     const installed = await inspectPack(pack);
-    if (!installed.installed) throw new Error(installed.error || 'Pack verification failed after install');
+    if (!installed.installed) throw new Error(installed.error || 'xác minh pack sau khi cài đặt thất bại');
     task.status = 'installed';
     task.bytesDone = task.bytesTotal;
   } catch (error) {
@@ -314,7 +314,7 @@ async function runDownload(
 
 async function startDownload(id: string): Promise<ModelPackTask> {
   const pack = modelPackDefinition(id);
-  if (!pack) throw new Error(`Unknown model pack: ${id || '(empty)'}`);
+  if (!pack) throw new Error(`không tìm thấy pack model: ${id || '(empty)'}`);
   const current = tasks.get(pack.id);
   if (current?.status === 'downloading') return taskSnapshot(current);
   const task: MutableTask = {
@@ -351,7 +351,7 @@ async function startDownload(id: string): Promise<ModelPackTask> {
 }
 async function cancelDownload(id: string): Promise<void> {
   const pack = modelPackDefinition(id);
-  if (!pack) throw new Error(`Unknown model pack: ${id || '(empty)'}`);
+  if (!pack) throw new Error(`không tìm thấy pack model: ${id || '(empty)'}`);
   const task = tasks.get(pack.id);
   const controller = controllers.get(pack.id);
   if (task?.status !== 'downloading' || !controller) return;
@@ -366,9 +366,9 @@ async function cancelDownload(id: string): Promise<void> {
 
 async function deletePack(id: string): Promise<void> {
   const pack = modelPackDefinition(id);
-  if (!pack) throw new Error(`Unknown model pack: ${id || '(empty)'}`);
+  if (!pack) throw new Error(`không tìm thấy pack model: ${id || '(empty)'}`);
   await ensureRecovered();
-  if (tasks.get(pack.id)?.status === 'downloading') throw new Error(`Model pack ${id} is downloading`);
+  if (tasks.get(pack.id)?.status === 'downloading') throw new Error(`pack model ${id} đang được tải`);
   await removePackFiles(pack);
   await rm(stagingRoot(pack), { recursive: true, force: true });
   await rm(backupRoot(pack), { recursive: true, force: true });
@@ -428,7 +428,7 @@ export async function handleModelPackRequest(
   const taskMatch = /^\/api\/model-packs\/(?:download|tasks)\/([A-Za-z0-9_-]+)$/.exec(pathname);
   if (taskMatch && req.method === 'GET') {
     const pack = modelPackDefinition(taskMatch[1]);
-    if (!pack) throw new Error(`Unknown model pack: ${taskMatch[1]}`);
+    if (!pack) throw new Error(`không tìm thấy pack model: ${taskMatch[1]}`);
     const task = tasks.get(pack.id);
     sendJson(res, 200, { task: task ? taskSnapshot(task) : null });
     return;
