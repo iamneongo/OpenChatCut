@@ -11,7 +11,7 @@ function parsedSchema(value: unknown): AgentToolSchema {
     || typeof value.name !== 'string'
     || !objectRecord(value.input_schema)
     || value.input_schema.type !== 'object') {
-    throw new Error('Invalid generated server tool schema.');
+    throw new Error('Schema tool server được tạo không hợp lệ.');
   }
   const description = typeof value.description === 'string'
     ? value.description
@@ -19,12 +19,12 @@ function parsedSchema(value: unknown): AgentToolSchema {
   const properties = value.input_schema.properties;
   const required = value.input_schema.required;
   if (properties !== undefined && !objectRecord(properties)) {
-    throw new Error(`Invalid properties for generated tool ${value.name}.`);
+    throw new Error(`Các thuộc tính của tool được tạo ${value.name} không hợp lệ.`);
   }
   if (required !== undefined
     && (!Array.isArray(required)
       || required.some((item) => typeof item !== 'string'))) {
-    throw new Error(`Invalid required fields for generated tool ${value.name}.`);
+    throw new Error(`Các trường bắt buộc của tool được tạo ${value.name} không hợp lệ.`);
   }
   return {
     name: value.name,
@@ -42,7 +42,7 @@ function generatedCatalog(key: 'edit' | 'ask'): readonly AgentToolSchema[] {
   if (!objectRecord(catalogData)
     || catalogData.version !== 1
     || !Array.isArray(catalogData[key])) {
-    throw new Error('Invalid generated server tool catalog.');
+    throw new Error('Danh mục tool server được tạo không hợp lệ.');
   }
   const schemas = catalogData[key].map(parsedSchema);
   assertValidAgentToolSchemas(schemas);
@@ -89,14 +89,14 @@ export function resolveServerRunToolCatalog(
   const names = new Set<string>();
   for (const value of requested) {
     if (!objectRecord(value)) {
-      throw new Error('Invalid server run tool schema.');
+      throw new Error('Schema tool của lượt chạy server không hợp lệ.');
     }
     const name = typeof value.name === 'string' ? value.name : '';
     const schema = byName.get(name);
     if (!schema || !sameSchema(value, schema)) {
-      throw new Error(`Non-canonical or inactive server run tool schema: ${name || '[unknown]'}.`);
+      throw new Error(`Schema tool của lượt chạy server không chính tắc hoặc không hoạt động: ${name || '[unknown]'}.`);
     }
-    if (names.has(name)) throw new Error(`Duplicate server run tool schema: ${name}.`);
+    if (names.has(name)) throw new Error(`Schema tool của lượt chạy server bị trùng: ${name}.`);
     names.add(name);
     selected.push(schema);
   }
@@ -109,12 +109,12 @@ export function assertCanonicalToolInvocation(
   active: readonly AgentToolSchema[],
 ): void {
   const expected = active.find((candidate) => candidate.name === schema.name);
-  if (!expected) throw new Error(`Tool is not active for this request: ${schema.name}`);
+  if (!expected) throw new Error(`Tool không hoạt động trong request này: ${schema.name}`);
   if (canonicalJson(schema.input_schema) !== canonicalJson(expected.input_schema)) {
-    throw new Error('Tool schema changed during request.');
+    throw new Error('Schema tool đã thay đổi trong lúc xử lý request.');
   }
   if (!args || typeof args !== 'object' || Array.isArray(args)) {
-    throw new Error(`Invalid arguments for tool ${schema.name}.`);
+    throw new Error(`Đối số của tool ${schema.name} không hợp lệ.`);
   }
   const validation = validateAgentToolInvocation(schema, args, active);
   if (!validation.ok) throw new Error(validation.error);

@@ -110,7 +110,7 @@ export async function persistServerCheckpoint(
       body: checkpoint.sourceText,
     });
     if (!stored) {
-      throw new Error('Server context checkpoint source could not be archived.');
+      throw new Error('Không thể lưu trữ nguồn checkpoint ngữ cảnh server.');
     }
     try {
       await addAgentCheckpoint({

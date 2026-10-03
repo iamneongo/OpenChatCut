@@ -90,7 +90,7 @@ const first = executeBrowserTool(duplicateRun, readProject, {}, 'call-dup', dupl
 await untilRegistered(duplicateRun, 'call-dup');
 await assert.rejects(
   executeBrowserTool(duplicateRun, readProject, {}, 'call-dup', duplicateActivation),
-  /Duplicate toolCallId/,
+  /toolCallId bị trùng/,
 );
 assert.equal(claimToolRequest(duplicateRun, { toolCallId: 'call-dup', argsDigest, claimId: 'browser' }), 'claimed');
 assert.equal(settleToolResult(duplicateRun, {
@@ -128,12 +128,12 @@ const cancelling = cancelRun(settlingRun);
 assert.notEqual(settlingRun.status, 'cancelled', 'settlement is still in progress');
 assert.throws(
   () => registerToolRequest(settlingRun, 'call-late', 'read_project', argsDigest),
-  /already settled/,
+  /đã được hoàn tất/,
 );
 await cancelling;
 await assert.rejects(
   executeBrowserTool(settlingRun, readProject, {}, 'call-after', newActivation()),
-  /already settled/,
+  /đã được hoàn tất/,
 );
 assert.equal(announced(settlingRun, 'call-after'), 0, 'a request refused after settlement is not announced');
 

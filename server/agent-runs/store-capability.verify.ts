@@ -63,7 +63,7 @@ assert.throws(
     provider: 'deepseek',
     model: 'test',
   }, 'not-a-capability'),
-  /Invalid Agent run capability/,
+  /Capability lượt chạy Agent không hợp lệ/,
 );
 resetServerRunStoreForTest();
 

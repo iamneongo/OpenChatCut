@@ -175,7 +175,7 @@ function createRunWithVerifier(
     throw new RunStoreLimitError(`Active Agent run limit reached (${MAX_ACTIVE_SERVER_RUNS}).`);
   }
   const id = input.id?.trim() || randomUUID();
-  if (runs.has(id)) throw new Error(`Agent run already exists: ${id}`);
+  if (runs.has(id)) throw new Error(`Lượt chạy Agent đã tồn tại: ${id}`);
   const createdAt = Date.now();
   const digest = input.requestShapeHash ?? digestValue({
     id,
@@ -205,8 +205,8 @@ export function createRunWithPresentedCapability(
   input: CreateServerRunInput,
   capability: string,
 ): CreatedServerRun {
-  if (!input.id?.trim()) throw new Error('Client-presented Agent run id is required.');
-  if (!isServerRunCapability(capability)) throw new Error('Invalid Agent run capability.');
+  if (!input.id?.trim()) throw new Error('Cần có ID lượt chạy Agent do client cung cấp.');
+  if (!isServerRunCapability(capability)) throw new Error('Capability lượt chạy Agent không hợp lệ.');
   return {
     run: createRunWithVerifier(input, serverRunCapabilityVerifier(capability)),
     capability,

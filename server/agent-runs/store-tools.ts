@@ -90,9 +90,9 @@ export function registerToolRequest(
   // Once settlement starts, pending requests have been cancelled and new
   // events are dropped, so a request registered now would never be served.
   if (dependencies.isRunTerminal(run) || run.terminalPromise) {
-    throw new Error('Agent run is already settled.');
+    throw new Error('Lượt chạy Agent đã được hoàn tất.');
   }
-  if (run.toolRequests.has(toolCallId)) throw new Error(`Duplicate toolCallId: ${toolCallId}`);
+  if (run.toolRequests.has(toolCallId)) throw new Error(`toolCallId bị trùng: ${toolCallId}`);
   const { promise, resolve, reject } = Promise.withResolvers<unknown>();
   const request: ServerToolRequest = {
     toolCallId,
