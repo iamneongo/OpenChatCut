@@ -11,6 +11,7 @@ import { generateImage } from 'ai';
 import { createOpenAI } from '@ai-sdk/openai';
 
 import { uploadDir } from '../media-dir.ts';
+import { localized } from '../ui-locale.ts';
 import { fetchGeneratedResult } from './result-download.ts';
 import {
   callByteplusImageProvider,
@@ -404,7 +405,7 @@ export function imageGenerationPlugin(options: ImagePluginOptions): Plugin {
               prompt, count, aspectRatio, imageSize, referencePaths,
             });
           } else if (model === 'image-01') {
-            if (!options.minimaxApiKey) throw new Error('MiniMax is not configured. Set MINIMAX_API_KEY in .env.local or 设置面板.');
+            if (!options.minimaxApiKey) throw new Error(localized({ zh: 'MiniMax is not configured. Set MINIMAX_API_KEY in .env.local or 设置面板.', en: 'MiniMax is not configured. Set MINIMAX_API_KEY in .env.local or Settings.', vi: 'Chưa cấu hình MiniMax. Hãy đặt MINIMAX_API_KEY trong .env.local hoặc phần Cài đặt.' }));
             // aspect_ratio is passed straight through; imageSize/quality do not apply to MiniMax.
             // Actual MiniMax model id comes from settings (image-01 / image-01-live).
             images = await callMinimaxProvider(options.minimaxBaseUrl, options.minimaxApiKey, options.minimaxModel, {

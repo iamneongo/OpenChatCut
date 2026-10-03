@@ -2,6 +2,7 @@ import { proxyDispatcher } from '../outbound-proxy.ts';
 import { randomUUID } from 'node:crypto';
 
 import type { ValidVoiceRequest, VoiceOptions } from './voice-types.ts';
+import { localized } from '../ui-locale.ts';
 // Proxy-aware fetch: attaches the configured outbound proxy (keystore
 // PROXY_URL or HTTPS_PROXY/HTTP_PROXY env) via undici dispatcher.
 type FetchInit = Parameters<typeof fetch>[1] & { dispatcher?: unknown };
@@ -212,7 +213,7 @@ export async function speechifyVoice(options: VoiceOptions, input: ValidVoiceReq
 }
 
 export async function minimaxVoice(options: VoiceOptions, input: ValidVoiceRequest): Promise<MinimaxVoiceResult> {
-  if (!options.minimaxApiKey) throw new Error('MiniMax is not configured. Set MINIMAX_API_KEY in .env.local or 设置面板.');
+  if (!options.minimaxApiKey) throw new Error(localized({ zh: 'MiniMax is not configured. Set MINIMAX_API_KEY in .env.local or 设置面板.', en: 'MiniMax is not configured. Set MINIMAX_API_KEY in .env.local or Settings.', vi: 'Chưa cấu hình MiniMax. Hãy đặt MINIMAX_API_KEY trong .env.local hoặc phần Cài đặt.' }));
   const body = minimaxVoiceBody(options.minimaxModel, input);
   const response = await fetchWithProxy(`${options.minimaxBaseUrl.replace(/\/$/, '')}/v1/t2a_v2`, {
     method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${options.minimaxApiKey}` }, body: JSON.stringify(body),

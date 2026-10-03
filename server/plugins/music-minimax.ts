@@ -1,6 +1,7 @@
 import { proxyDispatcher } from '../outbound-proxy.ts';
 import { musicProviderError, referenceAudioBase64 } from './music-media.ts';
 import type { MusicOptions, ValidMusicRequest } from './music-types.ts';
+import { localized } from '../ui-locale.ts';
 // Proxy-aware fetch: attaches the configured outbound proxy (keystore
 // PROXY_URL or HTTPS_PROXY/HTTP_PROXY env) via undici dispatcher.
 type FetchInit = Parameters<typeof fetch>[1] & { dispatcher?: unknown };
@@ -20,7 +21,7 @@ export function isMinimaxCoverModel(modelName: string): boolean {
 export async function minimaxMusicUrl(options: MusicOptions, input: ValidMusicRequest): Promise<string> {
   if (input.coverMode !== isMinimaxCoverModel(options.minimaxModel)) {
     throw new Error(input.coverMode
-      ? 'music-cover requires a music-cover model in Settings → 生音乐'
+      ? localized({ zh: 'music-cover requires a music-cover model in Settings → 生音乐', en: 'music-cover requires a music-cover model in Settings → Music', vi: 'music-cover cần model music-cover trong Cài đặt → Nhạc' })
       : 'music-cover model requires mode=cover and referenceAssetId or coverFeatureId');
   }
   const body: Record<string, unknown> = {

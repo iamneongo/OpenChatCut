@@ -7,6 +7,7 @@ import type { IncomingMessage, ServerResponse } from 'node:http';
 import type { Plugin } from 'vite';
 
 import { uploadDir } from '../media-dir.ts';
+import { localized } from '../ui-locale.ts';
 import {
   createGenerationJob,
   generationResultCheckpoint,
@@ -295,7 +296,7 @@ export function soundGenerationPlugin(options: SoundOptions): Plugin {
           const raw = await readJson(req);
           const input = validate(raw);
           if (input.provider === 'sonilo') {
-            if (!options.soniloApiKey) throw new Error('Sonilo is not configured. Set SONILO_API_KEY in .env.local or 设置面板.');
+            if (!options.soniloApiKey) throw new Error(localized({ zh: 'Sonilo is not configured. Set SONILO_API_KEY in .env.local or 设置面板.', en: 'Sonilo is not configured. Set SONILO_API_KEY in .env.local or Settings.', vi: 'Chưa cấu hình Sonilo. Hãy đặt SONILO_API_KEY trong .env.local hoặc phần Cài đặt.' }));
             const submitArgs = Object.fromEntries(Object.entries(raw).filter(([key]) => key !== 'operationId'));
             const submission = await createGenerationJob(
               { kind: 'sound', model: 'v1', ...input },

@@ -19,6 +19,7 @@ import { generateSoniloMusic, soniloMusicResult } from './music-sonilo.ts';
 import type { MusicOptions, MusicRequest, ValidMusicRequest } from './music-types.ts';
 import { validateMusicRequest } from './music-validation.ts';
 import { fetchGeneratedResult } from './result-download.ts';
+import { localized } from '../ui-locale.ts';
 
 export { isMinimaxCoverModel, pickMurekaAudioUrl, validateMusicRequest };
 
@@ -143,16 +144,16 @@ export function musicGenerationPlugin(options: MusicOptions): Plugin {
           const raw = await readJson(req);
           const input = validateMusicRequest(raw);
           if (input.provider === 'minimax' && !options.minimaxApiKey) {
-            throw new Error('MiniMax is not configured. Set MINIMAX_API_KEY in .env.local or 设置面板.');
+            throw new Error(localized({ zh: 'MiniMax is not configured. Set MINIMAX_API_KEY in .env.local or 设置面板.', en: 'MiniMax is not configured. Set MINIMAX_API_KEY in .env.local or Settings.', vi: 'Chưa cấu hình MiniMax. Hãy đặt MINIMAX_API_KEY trong .env.local hoặc phần Cài đặt.' }));
           }
           if (input.provider === 'mureka' && !options.apiKey) {
-            throw new Error('Mureka is not configured. Set MUREKA_API_KEY in .env.local or 设置面板.');
+            throw new Error(localized({ zh: 'Mureka is not configured. Set MUREKA_API_KEY in .env.local or 设置面板.', en: 'Mureka is not configured. Set MUREKA_API_KEY in .env.local or Settings.', vi: 'Chưa cấu hình Mureka. Hãy đặt MUREKA_API_KEY trong .env.local hoặc phần Cài đặt.' }));
           }
           if (input.provider === 'atlas' && !options.atlasApiKey) {
-            throw new Error('Atlas Cloud is not configured. Set ATLASCLOUD_API_KEY in .env.local or 设置面板.');
+            throw new Error(localized({ zh: 'Atlas Cloud is not configured. Set ATLASCLOUD_API_KEY in .env.local or 设置面板.', en: 'Atlas Cloud is not configured. Set ATLASCLOUD_API_KEY in .env.local or Settings.', vi: 'Chưa cấu hình Atlas Cloud. Hãy đặt ATLASCLOUD_API_KEY trong .env.local hoặc phần Cài đặt.' }));
           }
           if (input.provider === 'sonilo' && !options.soniloApiKey) {
-            throw new Error('Sonilo is not configured. Set SONILO_API_KEY in .env.local or 设置面板.');
+            throw new Error(localized({ zh: 'Sonilo is not configured. Set SONILO_API_KEY in .env.local or 设置面板.', en: 'Sonilo is not configured. Set SONILO_API_KEY in .env.local or Settings.', vi: 'Chưa cấu hình Sonilo. Hãy đặt SONILO_API_KEY trong .env.local hoặc phần Cài đặt.' }));
           }
           // Sonilo has no client-selected model: /v1 routes to the latest server-side.
           const model = input.provider === 'minimax' ? options.minimaxModel

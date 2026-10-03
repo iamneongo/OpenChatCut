@@ -20,6 +20,7 @@ import {
   providerMediaUrl,
   ServerReferencePreflightError,
 } from './video-media.ts';
+import { localized } from '../ui-locale.ts';
 import { generateGrokVideo } from './grok-video-provider.ts';
 import { hailuoRequestBody } from './minimax-video.ts';
 import { generateOfoxVideo } from './ofox-video-provider.ts';
@@ -299,7 +300,7 @@ async function generateHailuo(
   registerProviderTask: RegisterGenerationProviderTask,
   existingTaskId?: string,
 ): Promise<string> {
-  if (!options.minimaxApiKey) throw new Error('MiniMax is not configured. Set MINIMAX_API_KEY in .env.local or 设置面板.');
+  if (!options.minimaxApiKey) throw new Error(localized({ zh: 'MiniMax is not configured. Set MINIMAX_API_KEY in .env.local or 设置面板.', en: 'MiniMax is not configured. Set MINIMAX_API_KEY in .env.local or Settings.', vi: 'Chưa cấu hình MiniMax. Hãy đặt MINIMAX_API_KEY trong .env.local hoặc phần Cài đặt.' }));
   const baseUrl = options.minimaxBaseUrl.replace(/\/$/, '');
   const headers = { Authorization: `Bearer ${options.minimaxApiKey}`, 'Content-Type': 'application/json' };
   let taskId = existingTaskId;
