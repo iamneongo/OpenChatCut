@@ -14,15 +14,15 @@ export class NativeInferenceBudget {
   claim(ownerId: number, requestId: string, inputBytes: number): void {
     if (!Number.isSafeInteger(ownerId) || ownerId < 0
       || !Number.isSafeInteger(inputBytes) || inputBytes < 0) {
-      throw new Error('invalid desktop inference request budget');
+      throw new Error('ngân sách request suy luận desktop không hợp lệ');
     }
-    if (this.active.has(requestId)) throw new Error('duplicate desktop inference request id');
-    if (this.active.size >= MAX_ACTIVE_REQUESTS) throw new Error('too many active desktop inference requests');
+    if (this.active.has(requestId)) throw new Error('request id suy luận desktop bị trùng');
+    if (this.active.size >= MAX_ACTIVE_REQUESTS) throw new Error('quá nhiều request suy luận desktop đang hoạt động');
     if (this.active.size > 0 && !this.ownerRequests.has(ownerId)) {
-      throw new Error('desktop inference is busy in another renderer');
+      throw new Error('suy luận desktop đang bận ở renderer khác');
     }
     if (this.activeInputBytes + inputBytes > MAX_ACTIVE_INPUT_BYTES) {
-      throw new Error('desktop inference input limit exceeded');
+      throw new Error('đã vượt giới hạn đầu vào suy luận desktop');
     }
     this.active.set(requestId, { ownerId, inputBytes });
     this.activeInputBytes += inputBytes;

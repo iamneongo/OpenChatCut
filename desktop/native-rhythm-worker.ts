@@ -38,7 +38,7 @@ interface LoadedRhythmModel {
 }
 
 const port = process.parentPort;
-if (!port) throw new Error('native rhythm process requires a parent port');
+if (!port) throw new Error('process rhythm native yêu cầu parent port');
 let runtime: NativeRhythmConfig | null = null;
 let loaded: LoadedRhythmModel | null = null;
 let loading: Promise<LoadedRhythmModel> | null = null;
@@ -46,7 +46,7 @@ let queue = Promise.resolve();
 const canceled = new Set<string>();
 
 function initialize(value: unknown): void {
-  if (typeof value !== 'object' || value === null) throw new Error('invalid native rhythm configuration');
+  if (typeof value !== 'object' || value === null) throw new Error('cấu hình rhythm native không hợp lệ');
   const config = value as Partial<NativeRhythmConfig>;
   if ((config.platform !== 'darwin' && config.platform !== 'win32' && config.platform !== 'linux')
     || !isNativeRhythmBackend(config.preferredBackend)
@@ -55,7 +55,7 @@ function initialize(value: unknown): void {
     || basename(config.modelPath) !== RHYTHM_INFERENCE_CONTRACT.files.model.path
     || basename(config.filterbankPath) !== RHYTHM_INFERENCE_CONTRACT.files.filterbank.path
     || dirname(config.modelPath) !== dirname(config.filterbankPath)) {
-    throw new Error('invalid native rhythm configuration');
+    throw new Error('cấu hình rhythm native không hợp lệ');
   }
   runtime = config as NativeRhythmConfig;
 }
@@ -71,7 +71,7 @@ function executionProvider(backend: DesktopInferenceBackend): 'coreml' | 'cuda' 
 }
 
 function requireRuntime(): NativeRhythmConfig {
-  if (!runtime) throw new Error('native rhythm process is not initialized');
+  if (!runtime) throw new Error('process rhythm native chưa được khởi tạo');
   return runtime;
 }
 
@@ -108,7 +108,7 @@ async function createLoaded(requestId: string): Promise<LoadedRhythmModel> {
   const config = requireRuntime();
   const bytes = await readFile(config.filterbankPath);
   if (bytes.byteLength !== RHYTHM_INFERENCE_CONTRACT.files.filterbank.sizeBytes) {
-    throw new Error('native rhythm filterbank size changed after verification');
+    throw new Error('kích thước filterbank rhythm native đã thay đổi sau khi xác minh');
   }
   const copied = bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength);
   const filterbank = new Float32Array(copied);
@@ -143,7 +143,7 @@ function outputData(tensor: ort.Tensor, expected: number): Float32Array {
     throw new Error(`native rhythm output shape mismatch: expected ${expected}`);
   }
   for (const value of tensor.data) {
-    if (!Number.isFinite(value)) throw new Error('native rhythm model returned a non-finite logit');
+    if (!Number.isFinite(value)) throw new Error('model rhythm native trả về logit không hữu hạn');
   }
   return tensor.data;
 }
@@ -155,7 +155,7 @@ async function runWindow(
   const input = new ort.Tensor('float32', window.values, [1, window.frames, BEAT_THIS_MEL_BINS]);
   const result = await session.run({ spect: input });
   if (!result.beat || !result.downbeat) {
-    throw new Error('native rhythm model returned no beat/downbeat tensors');
+    throw new Error('model rhythm native không trả về tensor beat/downbeat');
   }
   return {
     beat: outputData(result.beat, window.frames),
@@ -206,7 +206,7 @@ async function analyze(
     throwIfCanceled(request.requestId);
     const completed = starts.length - index - 1;
     const window = preprocessBeatThisWindow(request.samples, active.filterbank, starts[index]!);
-    if (window.frames > BEAT_THIS_CHUNK_FRAMES) throw new Error('native rhythm chunk exceeds model limit');
+    if (window.frames > BEAT_THIS_CHUNK_FRAMES) throw new Error('chunk rhythm native vượt giới hạn model');
     report(request.requestId, 0.4 + (completed / starts.length) * 0.59);
     const result = await runWindowWithFallback(active, window);
     active = result.active;
@@ -230,7 +230,7 @@ async function handle(value: unknown): Promise<void> {
   const request = parseDesktopRhythmRequest(value);
   try {
     const response = await respond(request);
-    if (!isDesktopRhythmResponse(response)) throw new Error('native rhythm response failed validation');
+  if (!isDesktopRhythmResponse(response)) throw new Error('phản hồi rhythm native không vượt qua xác minh');
     port.postMessage({ type: 'result', response });
   } catch (error) {
     const name = error instanceof Error ? error.name : 'Error';
@@ -249,7 +249,7 @@ port.on('message', (event) => {
   }
   if (typeof value === 'object' && value !== null && Reflect.get(value, 'type') === 'cancel') {
     const requestId = Reflect.get(value, 'requestId');
-    if (!isDesktopInferenceRequestId(requestId)) throw new Error('invalid native rhythm cancellation');
+    if (!isDesktopInferenceRequestId(requestId)) throw new Error('hủy rhythm native không hợp lệ');
     canceled.add(requestId);
     return;
   }

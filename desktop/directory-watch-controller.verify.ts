@@ -98,19 +98,19 @@ const ownerB = new FakeSender(2);
 selected = uploadDirectory;
 await assert.rejects(
   controller.start(ownerA, 'project-a', []),
-  /media destination cannot overlap/,
+  /đích media không được chồng lấn/,
   'the upload root itself must be rejected',
 );
 selected = '/media';
 await assert.rejects(
   controller.start(ownerA, 'project-a', []),
-  /media destination cannot overlap/,
+  /đích media không được chồng lấn/,
   'an ancestor containing the upload root must be rejected',
 );
 selected = '/media/uploads/child';
 await assert.rejects(
   controller.start(ownerA, 'project-a', []),
-  /media destination cannot overlap/,
+  /đích media không được chồng lấn/,
   'a watched root inside the upload root must be rejected',
 );
 
@@ -170,7 +170,7 @@ uploadDirectory = '/changed-media';
 selected = '/changed-media';
 await assert.rejects(
   controller.start(ownerB, 'project-b', []),
-  /media destination cannot overlap/,
+  /đích media không được chồng lấn/,
   'root checks must use the current MEDIA_DIR destination, not a cached path',
 );
 

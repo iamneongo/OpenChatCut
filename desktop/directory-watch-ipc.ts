@@ -56,7 +56,7 @@ export function installDirectoryWatchIpc(trustedOrigin: string): DirectoryWatchC
     assertTrustedDesktopSenderUrl(event.senderFrame?.url ?? '', trustedOrigin);
     const normalizedHashes = normalizeDirectoryImportHashes(hashes);
     if (!isDirectoryImportProjectId(projectId) || !normalizedHashes) {
-      throw new Error('invalid directory watch start request');
+      throw new Error('request khởi động theo dõi thư mục không hợp lệ');
     }
     return invokeDirectoryWatch(
       'start',
@@ -65,7 +65,7 @@ export function installDirectoryWatchIpc(trustedOrigin: string): DirectoryWatchC
   });
   ipcMain.handle(DIRECTORY_IMPORT_CHANNELS.activate, async (event, watchId: unknown) => {
     assertTrustedDesktopSenderUrl(event.senderFrame?.url ?? '', trustedOrigin);
-    if (!isDirectoryImportOpaqueId(watchId)) throw new Error('invalid directory watch grant');
+    if (!isDirectoryImportOpaqueId(watchId)) throw new Error('grant theo dõi thư mục không hợp lệ');
     await invokeDirectoryWatch(
       'activate',
       () => controller.activate(event.sender, watchId),
@@ -78,7 +78,7 @@ export function installDirectoryWatchIpc(trustedOrigin: string): DirectoryWatchC
     if (!isDirectoryImportOpaqueId(watchId)
       || !isDirectoryImportOpaqueId(importId)
       || !isDirectoryImportDisposition(disposition)) {
-      throw new Error('invalid directory import acknowledgement');
+      throw new Error('acknowledgement nhập thư mục không hợp lệ');
     }
     await invokeDirectoryWatch(
       'acknowledge',
@@ -87,7 +87,7 @@ export function installDirectoryWatchIpc(trustedOrigin: string): DirectoryWatchC
   });
   ipcMain.handle(DIRECTORY_IMPORT_CHANNELS.stop, async (event, watchId: unknown) => {
     assertTrustedDesktopSenderUrl(event.senderFrame?.url ?? '', trustedOrigin);
-    if (!isDirectoryImportOpaqueId(watchId)) throw new Error('invalid directory watch grant');
+    if (!isDirectoryImportOpaqueId(watchId)) throw new Error('grant theo dõi thư mục không hợp lệ');
     await invokeDirectoryWatch(
       'stop',
       () => controller.stop(event.sender, watchId),

@@ -177,7 +177,7 @@ assert.equal(verificationWorkers.length, 0, 'verification cancellation must abor
   });
   await assert.rejects(
     readinessService.transcribe({ ...request, requestId: 'readiness-onnx-0001' }),
-    /whisper\.cpp GGML\) is not installed/,
+    /model ASR native \(whisper\.cpp GGML\) chưa được cài đặt/,
     'an ONNX-only install must be refused with the missing companion named',
   );
   assert.equal(readinessWorkers.length, 0, 'a refused install must not start a worker');
@@ -332,7 +332,7 @@ const disposeRequest = transcribeWithLeases(
 );
 await secondWorker.waitForRequestCount(2);
 service.dispose();
-await assert.rejects(disposeRequest, /native ASR service is disposed/);
+await assert.rejects(disposeRequest, /service ASR native đã được giải phóng/);
 assert.equal(secondWorker.killCount, 1, 'dispose must terminate the active utility process');
 assert.equal(budget.activeCount, 0, 'dispose must release active request budget through terminal rejection');
 assert.equal(forceKillTasks.length, 2, 'a thrown graceful kill must still schedule force termination');
@@ -343,7 +343,7 @@ secondWorker.emit('exit', 9);
 assert.equal(forceKillTasks[1]?.canceled, true, 'forced worker retirement ends only on exit');
 await assert.rejects(
   service.transcribe({ ...request, requestId: 'after-dispose-0001' }),
-  /native ASR service is disposed/,
+  /service ASR native đã được giải phóng/,
 );
 assert.equal(workers.length, 2, 'a disposed service must never create another worker');
 

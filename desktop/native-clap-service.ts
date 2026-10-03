@@ -60,7 +60,7 @@ function clapPack(): ModelPackDefinition {
   const pack = modelPackDefinition('music-semantics-lite');
   if (!pack || pack.modelId !== CLAP_INFERENCE_CONTRACT.modelId
     || pack.revision !== CLAP_INFERENCE_CONTRACT.revision) {
-    throw new Error('native CLAP contract does not match the verified music-semantics-lite pack');
+    throw new Error('contract CLAP native không khớp pack music-semantics-lite đã xác minh');
   }
   return pack;
 }
@@ -79,11 +79,11 @@ async function inspectPack(cacheDir: string, cached: VerifiedPack | null): Promi
     const path = await realpath(join(root, file.path));
     const traversal = relative(root, path);
     if (traversal.startsWith('..') || traversal === '') {
-      throw new Error(`native CLAP pack contains an invalid path for ${file.path}`);
+      throw new Error(`pack CLAP native chứa path không hợp lệ: ${file.path}`);
     }
     const info = await stat(path);
     if (!info.isFile() || info.size !== file.sizeBytes) {
-      throw new Error(`native CLAP pack file failed size verification: ${file.path}`);
+      throw new Error(`tệp trong pack CLAP native không vượt qua xác minh kích thước: ${file.path}`);
     }
     records.push({ path, fingerprint: `${path}:${info.size}:${info.mtimeMs}:${info.ctimeMs}` });
   }
@@ -91,7 +91,7 @@ async function inspectPack(cacheDir: string, cached: VerifiedPack | null): Promi
   if (cached?.fingerprint === fingerprint) return cached;
   for (let index = 0; index < pack.files.length; index += 1) {
     if (await sha256(records[index]!.path) !== pack.files[index]!.sha256) {
-      throw new Error(`native CLAP pack file failed SHA-256 verification: ${pack.files[index]!.path}`);
+      throw new Error(`tệp trong pack CLAP native không vượt qua xác minh SHA-256: ${pack.files[index]!.path}`);
     }
   }
   return { fingerprint };
@@ -131,15 +131,15 @@ export class NativeClapService {
     onProgress: (progress: DesktopInferenceProgress) => void = () => {},
   ): Promise<DesktopClapResponse> {
     const parsed = parseDesktopClapRequest(request);
-    if (this.disposed) throw new Error('native CLAP service is disposed');
+    if (this.disposed) throw new Error('service CLAP native đã được giải phóng');
     if (!this.capabilities.clap.available) {
-      throw new Error(this.capabilities.clap.reason ?? 'native CLAP is unavailable');
+      throw new Error(this.capabilities.clap.reason ?? 'CLAP native không khả dụng');
     }
-    if (this.inflight.has(parsed.requestId)) throw new Error('duplicate native CLAP request id');
+    if (this.inflight.has(parsed.requestId)) throw new Error('request id CLAP native bị trùng');
     this.inflight.add(parsed.requestId);
     try {
       this.verifiedPack = await inspectPack(this.cacheDir, this.verifiedPack);
-      if (this.disposed) throw new Error('native CLAP service is disposed');
+      if (this.disposed) throw new Error('service CLAP native đã được giải phóng');
       if (this.cancelRequested.has(parsed.requestId)) {
         throw new DOMException('Native CLAP request canceled', 'AbortError');
       }
@@ -147,7 +147,7 @@ export class NativeClapService {
       return await new Promise<DesktopClapResponse>((resolve, reject) => {
         const timeoutMs = parsed.action === 'load' ? LOAD_TIMEOUT_MS : REQUEST_TIMEOUT_MS;
         const timer = setTimeout(
-          () => this.failWorker(new Error('native CLAP request timed out')),
+          () => this.failWorker(new Error('request CLAP native đã hết thời gian chờ')),
           timeoutMs,
         );
         this.pending.set(parsed.requestId, { action: parsed.action, resolve, reject, onProgress, timer });
@@ -164,7 +164,7 @@ export class NativeClapService {
   }
 
   cancel(requestId: string): void {
-    if (!isDesktopInferenceRequestId(requestId)) throw new Error('invalid native CLAP request id');
+    if (!isDesktopInferenceRequestId(requestId)) throw new Error('request id CLAP native không hợp lệ');
     if (!this.inflight.has(requestId)) return;
     this.cancelRequested.add(requestId);
     if (!this.pending.has(requestId)) return;
@@ -178,7 +178,7 @@ export class NativeClapService {
   dispose(): void {
     if (this.disposed) return;
     this.disposed = true;
-    this.failWorker(new Error('native CLAP service is disposed'));
+    this.failWorker(new Error('service CLAP native đã được giải phóng'));
   }
 
   private ensureWorker(): UtilityProcess {
@@ -192,7 +192,7 @@ export class NativeClapService {
     worker.on('message', (value: unknown) => this.handleWorkerMessage(value));
     worker.on('exit', (code) => {
       if (this.worker === worker) {
-        this.failWorker(new Error(`native CLAP process exited with code ${code}`));
+        this.failWorker(new Error(`process CLAP native đã thoát với mã ${code}`));
       }
     });
     worker.postMessage({
@@ -210,7 +210,7 @@ export class NativeClapService {
 
   private handleWorkerMessage(value: unknown): void {
     if (typeof value !== 'object' || value === null) {
-      this.failWorker(new Error('invalid native CLAP worker response'));
+      this.failWorker(new Error('phản hồi worker CLAP native không hợp lệ'));
       return;
     }
     const message = value as {
@@ -239,7 +239,7 @@ export class NativeClapService {
       this.settle(message.requestId, error);
       return;
     }
-    this.failWorker(new Error('invalid native CLAP worker response'));
+    this.failWorker(new Error('phản hồi worker CLAP native không hợp lệ'));
   }
 
   private handleResult(response: DesktopClapResponse): void {
@@ -247,7 +247,7 @@ export class NativeClapService {
     if (!pending) return;
     const expectedResult = pending.action === 'load' ? 'loaded' : 'embedding';
     if (response.result.type !== expectedResult) {
-      this.failWorker(new Error('native CLAP worker returned an unexpected result'));
+      this.failWorker(new Error('worker CLAP native trả về kết quả ngoài dự kiến'));
       return;
     }
     this.settle(response.requestId, undefined, response);

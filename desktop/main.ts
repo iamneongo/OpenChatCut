@@ -278,7 +278,7 @@ function registerDesktopHandlers(trustedOrigin: string): void {
   // caught it as "transcript payload timed out".
   ipcMain.handle(TRANSCRIPT_WINDOW_CHANNELS.request, trustedDesktopHandler(trustedOrigin, () => transcriptPayload));
   ipcMain.handle(TRANSCRIPT_WINDOW_CHANNELS.open, trustedDesktopHandler(trustedOrigin, (_event, value: unknown) => {
-    if (!isTranscriptWindowPayload(value)) throw new Error('invalid transcript window payload');
+    if (!isTranscriptWindowPayload(value)) throw new Error('payload cửa sổ transcript không hợp lệ');
     openTranscriptWindow(value);
   }));
   ipcMain.handle('openchatcut:window-action', trustedDesktopHandler(trustedOrigin, (event, action: unknown) => {
@@ -297,7 +297,7 @@ function registerDesktopHandlers(trustedOrigin: string): void {
   ipcMain.handle('openchatcut:zoom-step', trustedDesktopHandler(trustedOrigin, async (event, step: unknown) => {
     const win = BrowserWindow.fromWebContents(event.sender);
     if (!win) return;
-    if (step !== 'reset' && (typeof step !== 'number' || step === 0)) throw new Error('invalid zoom step');
+    if (step !== 'reset' && (typeof step !== 'number' || step === 0)) throw new Error('bước zoom không hợp lệ');
     const current = parseUserUiScale(getKey('UI_SCALE' as never));
     const next = step === 'reset'
       ? 1
@@ -373,7 +373,7 @@ async function boot(): Promise<void> {
       : [];
     if (!paths.length || paths.length > 100 || paths.length !== (value.paths as unknown[]).length
       || typeof value?.projectId !== 'string') {
-      throw new Error('invalid agent path import request');
+      throw new Error('request nhập path của Agent không hợp lệ');
     }
     return importAgentPathsWithGrant({ paths, projectId: value.projectId, knownHashes }, {
       chooseRoot: async (requestedPath) => {

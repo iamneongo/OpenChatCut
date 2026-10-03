@@ -124,7 +124,7 @@ class DesktopInferenceState {
   }
 
   setEnabled(value: unknown): void {
-    if (typeof value !== 'boolean') throw new Error('invalid desktop inference preference');
+    if (typeof value !== 'boolean') throw new Error('tùy chọn suy luận desktop không hợp lệ');
     if (this.enabled === value) return;
     this.enabled = value;
     if (!value) this.resetServices();
@@ -138,7 +138,7 @@ class DesktopInferenceState {
     residentBytes: number,
     operation: (services: NativeServices, onProgress: (progress: DesktopInferenceProgress) => void) => Promise<T>,
   ): Promise<T> {
-    if (!this.enabled) throw new Error('desktop native inference is disabled');
+    if (!this.enabled) throw new Error('suy luận native desktop đã bị tắt');
     this.budget.claim(event.sender.id, requestId, inputBytes);
     let releaseResidency: (() => void) | undefined;
     try {
@@ -155,10 +155,10 @@ class DesktopInferenceState {
   }
 
   cancel(event: IpcMainInvokeEvent, requestId: unknown): void {
-    if (!isDesktopInferenceRequestId(requestId)) throw new Error('invalid desktop inference request id');
+    if (!isDesktopInferenceRequestId(requestId)) throw new Error('request id suy luận desktop không hợp lệ');
     const ownerId = this.budget.ownerOf(requestId);
     if (ownerId === undefined) return;
-    if (ownerId !== event.sender.id) throw new Error('desktop inference request owner mismatch');
+    if (ownerId !== event.sender.id) throw new Error('owner của request suy luận desktop không khớp');
     this.cancelServices(requestId);
   }
 

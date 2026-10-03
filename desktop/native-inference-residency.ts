@@ -54,7 +54,7 @@ export function estimateAsrResidentBytes(modelId: string, revision: string): num
 
 export function modelPackResidentBytes(id: ModelPackId): number {
   const pack = MODEL_PACKS.find((entry) => entry.id === id);
-  if (!pack) throw new Error(`unknown native model pack: ${id}`);
+  if (!pack) throw new Error(`không biết pack model native: ${id}`);
   return pack.recommendedMemoryBytes;
 }
 
@@ -67,7 +67,7 @@ export class NativeInferenceResidency {
   constructor(limitBytes = defaultNativeResidencyLimit()) {
     this.limitBytes = limitBytes;
     if (!Number.isSafeInteger(limitBytes) || limitBytes <= 0) {
-      throw new Error('invalid native inference resident memory limit');
+      throw new Error('giới hạn bộ nhớ thường trú của suy luận native không hợp lệ');
     }
   }
 
@@ -77,13 +77,13 @@ export class NativeInferenceResidency {
     evict: (kind: NativeInferenceKind) => void,
   ): () => void {
     if (!Number.isSafeInteger(bytes) || bytes < 0) {
-      throw new Error('invalid native inference resident memory estimate');
+      throw new Error('ước tính bộ nhớ thường trú của suy luận native không hợp lệ');
     }
     const current = this.entries.get(kind);
     const additionalBytes = Math.max(0, bytes - (current?.bytes ?? 0));
     this.evictIdleUntilFits(kind, additionalBytes, evict);
     if (this.totalBytes() + additionalBytes > this.limitBytes) {
-      throw new Error('desktop native inference resident memory limit exceeded');
+      throw new Error('đã vượt giới hạn bộ nhớ thường trú của suy luận native desktop');
     }
     const entry = current ?? { active: 0, bytes, lastUsed: 0 };
     entry.active += 1;

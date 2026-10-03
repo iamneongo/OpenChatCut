@@ -54,34 +54,34 @@ interface LoadedEngine {
 }
 
 const port = process.parentPort;
-if (!port) throw new Error('native ASR process requires a parent port');
+if (!port) throw new Error('process ASR native yêu cầu parent port');
 let runtime: NativeWorkerData | null = null;
 let loaded: LoadedEngine | null = null;
 let whisperServer: { child: ChildProcess; port: number; ggmlPath: string } | null = null;
 const lifecycle = new NativeAsrWorkerLifecycle();
 
 function initialize(value: unknown): void {
-  if (typeof value !== 'object' || value === null) throw new Error('invalid native ASR configuration');
+  if (typeof value !== 'object' || value === null) throw new Error('cấu hình ASR native không hợp lệ');
   const config = value as Partial<NativeWorkerData>;
   if (typeof config.ffmpegPath !== 'string' || config.ffmpegPath.length === 0
     || typeof config.cacheDir !== 'string' || config.cacheDir.length === 0
     || typeof config.whisperCliPath !== 'string' || config.whisperCliPath.length === 0
     || typeof config.platform !== 'string') {
-    throw new Error('invalid native ASR configuration');
+    throw new Error('cấu hình ASR native không hợp lệ');
   }
   runtime = config as NativeWorkerData;
 }
 
 function requireRuntime(): NativeWorkerData {
-  if (!runtime) throw new Error('native ASR process is not initialized');
+  if (!runtime) throw new Error('process ASR native chưa được khởi tạo');
   return runtime;
 }
 
 function parseNativeTranscriptionRequest(value: unknown): DesktopAsrRequest {
-  if (typeof value !== 'object' || value === null) throw new Error('invalid native ASR request');
+  if (typeof value !== 'object' || value === null) throw new Error('request ASR native không hợp lệ');
   const sourcePath = Reflect.get(value, 'sourcePath');
   if (typeof sourcePath !== 'string' || !isAbsolute(sourcePath)) {
-    throw new Error('invalid native ASR source');
+    throw new Error('nguồn ASR native không hợp lệ');
   }
   const request = parseDesktopAsrRequest({ ...value, sourcePath: '/media/uploads/native-input' });
   return { ...request, sourcePath };
@@ -117,13 +117,13 @@ function runWhisperCli(
       if (settled) return;
       settled = true;
       child.kill('SIGKILL');
-      reject(new Error('whisper-cli timed out.'));
+      reject(new Error('whisper-cli đã hết thời gian chờ.'));
     }, WHISPER_CLI_TIMEOUT_MS);
     const onAbort = (): void => {
       if (settled) return;
       settled = true;
       child.kill('SIGKILL');
-      reject(new Error('native ASR request aborted.'));
+      reject(new Error('request ASR native đã bị hủy.'));
     };
     signal?.addEventListener('abort', onAbort, { once: true });
     child.stderr?.on('data', (chunk: Buffer) => {
@@ -180,7 +180,7 @@ async function ensureWhisperServer(ggmlPath: string): Promise<{ child: ChildProc
   }
   await stopWhisperServer();
   const bin = serverBinaryPath();
-  if (!existsSync(bin)) throw new Error('whisper-server is unavailable; falling back to whisper-cli.');
+  if (!existsSync(bin)) throw new Error('whisper-server không khả dụng; chuyển sang whisper-cli.');
   const serverPort = await freePort();
   const child = spawn(bin, [
     '-m', ggmlPath,
@@ -203,7 +203,7 @@ async function ensureWhisperServer(ggmlPath: string): Promise<{ child: ChildProc
     await new Promise((resolve) => setTimeout(resolve, 250));
   }
   child.kill();
-  throw new Error('whisper-server failed to become ready.');
+  throw new Error('whisper-server không thể sẵn sàng.');
 }
 
 async function transcribeViaServer(
@@ -300,11 +300,11 @@ async function ensureEngine(request: DesktopAsrRequest | DesktopAsrPreloadReques
   loaded = null;
   const cliPath = requireRuntime().whisperCliPath;
   if (!existsSync(cliPath)) {
-    throw new Error('whisper-cli is unavailable; reinstall the desktop app or run npm run sync:whisper-cli.');
+    throw new Error('whisper-cli không khả dụng; hãy cài lại desktop app hoặc chạy npm run sync:whisper-cli.');
   }
   const ggmlPath = ggmlPathFor(request.modelId);
   if (!ggmlPath) {
-    throw new Error(`Desktop ASR requires the GGML model for ${request.modelId}; download the model first.`);
+    throw new Error(`ASR desktop yêu cầu model GGML cho ${request.modelId}; hãy tải model trước.`);
   }
   const preferred: DesktopAsrBackend = requireRuntime().platform === 'darwin' ? 'native-metal' : 'native-cpu';
   loaded = { modelId: request.modelId, revision: request.revision, ggmlPath, backend: preferred };

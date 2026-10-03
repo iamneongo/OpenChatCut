@@ -28,7 +28,7 @@ interface ActiveNativeClapWorkerConfig extends NativeClapWorkerConfig {
 }
 
 const port = process.parentPort;
-if (!port) throw new Error('native CLAP process requires a parent port');
+if (!port) throw new Error('process CLAP native yêu cầu parent port');
 
 let runtime: ActiveNativeClapWorkerConfig | null = null;
 let processor: Processor | null = null;
@@ -39,17 +39,17 @@ let queue = Promise.resolve();
 const canceled = new Set<string>();
 
 function initialize(value: unknown): void {
-  if (typeof value !== 'object' || value === null) throw new Error('invalid native CLAP configuration');
+  if (typeof value !== 'object' || value === null) throw new Error('cấu hình CLAP native không hợp lệ');
   const config = value as Partial<NativeClapWorkerConfig>;
   if (typeof config.origin !== 'string'
     || typeof config.cacheDir !== 'string' || config.cacheDir.length === 0
     || (config.platform !== 'win32' && config.platform !== 'darwin' && config.platform !== 'linux')
     || !isNativeModelBackend(config.preferredBackend)) {
-    throw new Error('invalid native CLAP configuration');
+    throw new Error('cấu hình CLAP native không hợp lệ');
   }
   const parsedOrigin = new URL(config.origin);
   if (parsedOrigin.protocol !== 'http:' && parsedOrigin.protocol !== 'https:') {
-    throw new Error('invalid native CLAP origin');
+    throw new Error('origin CLAP native không hợp lệ');
   }
   runtime = { ...config as NativeClapWorkerConfig, parsedOrigin };
   env.localModelPath = config.cacheDir;
@@ -70,7 +70,7 @@ function backendDevice(backend: DesktopInferenceBackend): 'cpu' | 'cuda' | 'dml'
 }
 
 function requireRuntime(): ActiveNativeClapWorkerConfig {
-  if (!runtime) throw new Error('native CLAP process is not initialized');
+  if (!runtime) throw new Error('process CLAP native chưa được khởi tạo');
   return runtime;
 }
 
@@ -149,7 +149,7 @@ async function ensureLoaded(requestId: string): Promise<DesktopInferenceBackend>
     });
   }
   await loading;
-  if (!model || !processor || !backend) throw new Error('native CLAP model failed to load');
+  if (!model || !processor || !backend) throw new Error('model CLAP native không thể tải');
   return backend;
 }
 
@@ -160,29 +160,29 @@ function normalizedVector(values: ArrayLike<number>): number[] {
   let squaredLength = 0;
   for (let index = 0; index < values.length; index += 1) {
     const value = values[index]!;
-    if (!Number.isFinite(value)) throw new Error('CLAP returned a non-finite embedding');
+    if (!Number.isFinite(value)) throw new Error('CLAP trả về embedding không hữu hạn');
     squaredLength += value * value;
   }
   const length = Math.sqrt(squaredLength);
   if (!Number.isFinite(length) || length <= Number.EPSILON) {
-    throw new Error('CLAP returned a zero-length embedding');
+    throw new Error('CLAP trả về embedding có độ dài bằng không');
   }
   return Array.from(values, (value) => value / length);
 }
 
 function embeddingData(output: unknown): ArrayLike<number> {
-  if (!output || typeof output !== 'object') throw new Error('CLAP returned an invalid response');
+  if (!output || typeof output !== 'object') throw new Error('CLAP trả về phản hồi không hợp lệ');
   const tensor = (output as Record<string, unknown>).audio_embeds;
-  if (!tensor || typeof tensor !== 'object') throw new Error('CLAP returned no audio embedding');
+  if (!tensor || typeof tensor !== 'object') throw new Error('CLAP không trả về embedding audio');
   const data = (tensor as Record<string, unknown>).data;
   const numericView = ArrayBuffer.isView(data) && !(data instanceof DataView) && 'length' in data;
-  if (!Array.isArray(data) && !numericView) throw new Error('CLAP returned invalid embedding data');
+  if (!Array.isArray(data) && !numericView) throw new Error('CLAP trả về dữ liệu embedding không hợp lệ');
   return data as ArrayLike<number>;
 }
 
 async function embed(request: Extract<DesktopClapRequest, { action: 'embed' }>): Promise<DesktopClapResponse> {
   const activeBackend = await ensureLoaded(request.requestId);
-  if (!model || !processor) throw new Error('native CLAP model is not loaded');
+  if (!model || !processor) throw new Error('model CLAP native chưa được tải');
   const inputs = await processor(request.samples);
   const vector = normalizedVector(embeddingData(await model(inputs)));
   if (!canceled.has(request.requestId)) postProgress({ requestId: request.requestId, progress: 1 });

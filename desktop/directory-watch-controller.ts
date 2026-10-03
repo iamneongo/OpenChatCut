@@ -71,7 +71,7 @@ export class DirectoryWatchController {
     if (!this.isCurrent(owner, projectId, generation)) return null;
     this.assertOwnerAvailable(owner);
     if (isPathInside(root, uploadDirectory) || isPathInside(uploadDirectory, root)) {
-      throw new Error('the media destination cannot overlap the import directory');
+      throw new Error('đích media không được chồng lấn với thư mục nhập');
     }
     const watchId = this.dependencies.randomId();
     const session = this.createOwnedSession(
@@ -169,7 +169,7 @@ export class DirectoryWatchController {
     session: DirectoryWatchSessionContract,
   ): void {
     if (!this.isCurrent(owner, projectId, generation)) {
-      throw new Error('directory watch generation is unavailable');
+      throw new Error('generation theo dõi thư mục không khả dụng');
     }
     this.watches.set(session.watchId, { owner, projectId, generation, session });
     const owned = this.watchesByOwner.get(owner.id) ?? new Set<string>();
@@ -277,6 +277,6 @@ export class DirectoryWatchController {
   }
 
   private assertOwnerAvailable(owner: DirectoryWatchSender): void {
-    if (owner.isDestroyed()) throw new Error('directory watch owner is unavailable');
+    if (owner.isDestroyed()) throw new Error('owner theo dõi thư mục không khả dụng');
   }
 }

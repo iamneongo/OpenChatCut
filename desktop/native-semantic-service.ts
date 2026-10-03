@@ -59,7 +59,7 @@ function semanticPack(): ModelPackDefinition {
   const pack = modelPackDefinition('visual-semantics-lite');
   if (!pack || pack.modelId !== SEMANTIC_INFERENCE_CONTRACT.modelId
     || pack.revision !== SEMANTIC_INFERENCE_CONTRACT.revision) {
-    throw new Error('native semantic contract does not match the verified visual-semantics-lite pack');
+    throw new Error('contract semantic native không khớp pack visual-semantics-lite đã xác minh');
   }
   return pack;
 }
@@ -78,11 +78,11 @@ async function inspectPack(cacheDir: string, cached: VerifiedPack | null): Promi
     const path = await realpath(join(root, file.path));
     const traversal = relative(root, path);
     if (traversal.startsWith('..') || traversal === '') {
-      throw new Error(`native semantic pack contains an invalid path for ${file.path}`);
+      throw new Error(`pack semantic native chứa path không hợp lệ: ${file.path}`);
     }
     const info = await stat(path);
     if (!info.isFile() || info.size !== file.sizeBytes) {
-      throw new Error(`native semantic pack file failed size verification: ${file.path}`);
+      throw new Error(`tệp trong pack semantic native không vượt qua xác minh kích thước: ${file.path}`);
     }
     records.push({ path, fingerprint: `${path}:${info.size}:${info.mtimeMs}:${info.ctimeMs}` });
   }
@@ -90,7 +90,7 @@ async function inspectPack(cacheDir: string, cached: VerifiedPack | null): Promi
   if (cached?.fingerprint === fingerprint) return cached;
   for (let index = 0; index < pack.files.length; index += 1) {
     if (await sha256(records[index]!.path) !== pack.files[index]!.sha256) {
-      throw new Error(`native semantic pack file failed SHA-256 verification: ${pack.files[index]!.path}`);
+      throw new Error(`tệp trong pack semantic native không vượt qua xác minh SHA-256: ${pack.files[index]!.path}`);
     }
   }
   return { fingerprint };
@@ -128,18 +128,18 @@ export class NativeSemanticService {
     value: DesktopSemanticRequest,
     onProgress: (progress: DesktopInferenceProgress) => void = () => {},
   ): Promise<DesktopSemanticResponse> {
-    if (this.disposed) throw new Error('native semantic service is disposed');
+    if (this.disposed) throw new Error('service semantic native đã được giải phóng');
     if (!this.capabilities.semantic.available) {
-      throw new Error(this.capabilities.semantic.reason ?? 'native semantic inference is unavailable');
+      throw new Error(this.capabilities.semantic.reason ?? 'suy luận semantic native không khả dụng');
     }
     const request = parseDesktopSemanticRequest(value);
-    if (this.inflight.has(request.requestId)) throw new Error('duplicate native semantic request id');
+    if (this.inflight.has(request.requestId)) throw new Error('request id semantic native bị trùng');
     this.inflight.add(request.requestId);
     try {
       if (request.action !== 'find-duplicates') {
         this.verifiedPack = await inspectPack(this.cacheDir, this.verifiedPack);
       }
-      if (this.disposed) throw new Error('native semantic service is disposed');
+      if (this.disposed) throw new Error('service semantic native đã được giải phóng');
       if (this.cancelRequested.has(request.requestId)) {
         throw new DOMException('Native semantic request canceled', 'AbortError');
       }
@@ -147,7 +147,7 @@ export class NativeSemanticService {
       return await new Promise<DesktopSemanticResponse>((resolve, reject) => {
         const timeoutMs = request.action === 'load' ? LOAD_TIMEOUT_MS : REQUEST_TIMEOUT_MS;
         const timer = setTimeout(
-          () => this.failWorker(new Error('native semantic request timed out')),
+          () => this.failWorker(new Error('request semantic native đã hết thời gian chờ')),
           timeoutMs,
         );
         this.pending.set(request.requestId, { resolve, reject, onProgress, timer });
@@ -160,7 +160,7 @@ export class NativeSemanticService {
   }
 
   cancel(requestId: string): void {
-    if (!isDesktopInferenceRequestId(requestId)) throw new Error('invalid native semantic request id');
+    if (!isDesktopInferenceRequestId(requestId)) throw new Error('request id semantic native không hợp lệ');
     if (!this.inflight.has(requestId)) return;
     this.cancelRequested.add(requestId);
     if (!this.pending.has(requestId)) return;
@@ -174,7 +174,7 @@ export class NativeSemanticService {
   dispose(): void {
     if (this.disposed) return;
     this.disposed = true;
-    this.failWorker(new Error('native semantic service is disposed'));
+    this.failWorker(new Error('service semantic native đã được giải phóng'));
   }
 
   private ensureWorker(): UtilityProcess {
@@ -188,7 +188,7 @@ export class NativeSemanticService {
     worker.on('message', (value: unknown) => this.handleWorkerMessage(value));
     worker.on('exit', (code) => {
       if (this.worker === worker) {
-        this.failWorker(new Error(`native semantic process exited with code ${code}`));
+        this.failWorker(new Error(`process semantic native đã thoát với mã ${code}`));
       }
     });
     worker.postMessage({
@@ -206,7 +206,7 @@ export class NativeSemanticService {
 
   private handleWorkerMessage(value: unknown): void {
     if (typeof value !== 'object' || value === null) {
-      this.failWorker(new Error('invalid native semantic worker response'));
+      this.failWorker(new Error('phản hồi worker semantic native không hợp lệ'));
       return;
     }
     const message = value as {
@@ -234,7 +234,7 @@ export class NativeSemanticService {
       this.settle(message.requestId, error);
       return;
     }
-    this.failWorker(new Error('invalid native semantic worker response'));
+    this.failWorker(new Error('phản hồi worker semantic native không hợp lệ'));
   }
 
   private settle(requestId: string, error?: Error, response?: DesktopSemanticResponse): void {

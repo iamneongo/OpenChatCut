@@ -21,7 +21,7 @@ try {
   assert.equal(await resolvePersistedExportDestination(statePath, firstId), resolvedRoot);
   assert.equal(validDesktopExportFilename('video.mp4'), true);
   assert.equal(validDesktopExportFilename('../video.mp4'), false);
-  await assert.rejects(persistExportDirectory(statePath, root, 'short'), /identity/);
+  await assert.rejects(persistExportDirectory(statePath, root, 'short'), /định danh/);
 } finally {
   await rm(root, { recursive: true, force: true });
 }

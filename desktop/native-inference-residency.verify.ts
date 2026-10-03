@@ -55,7 +55,7 @@ assert.deepEqual(residency.residentKinds(), ['semantic', 'clap']);
 
 assert.throws(
   () => residency.claim('rhythm', 70, (kind) => evicted.push(kind)),
-  /resident memory limit exceeded/,
+  /đã vượt giới hạn bộ nhớ thường trú/,
   'an active model is never evicted to admit another model',
 );
 assert.deepEqual(evicted, ['asr', 'semantic'], 'idle models may be evicted before a safe rejection');

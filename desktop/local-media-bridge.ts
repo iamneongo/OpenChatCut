@@ -50,7 +50,7 @@ export function createLocalMediaImportHandler(importMedia: LocalMediaImporter): 
       throw new Error('nguồn media cục bộ phải là một đường dẫn tuyệt đối');
     }
     if (typeof originalName !== 'string' || !originalName || basename(originalName) !== originalName) {
-      throw new Error('invalid local media filename');
+      throw new Error('tên tệp media cục bộ không hợp lệ');
     }
     return importMedia(sourcePath, originalName);
   };

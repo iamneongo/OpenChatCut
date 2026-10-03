@@ -74,7 +74,7 @@ export async function listenWithAffinity(
       server.off('error', onError);
       const addr = server.address();
       if (addr && typeof addr === 'object') resolvePort(addr.port);
-      else reject(new Error('embedded server failed to bind'));
+      else reject(new Error('máy chủ nhúng không thể liên kết'));
     });
   });
   const inUse = (err: unknown): boolean => (err as NodeJS.ErrnoException).code === 'EADDRINUSE';

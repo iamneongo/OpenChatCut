@@ -59,7 +59,7 @@ function rhythmPack(): ModelPackDefinition {
   const pack = modelPackDefinition('rhythm-lite');
   if (!pack || pack.modelId !== RHYTHM_INFERENCE_CONTRACT.modelId
     || pack.revision !== RHYTHM_INFERENCE_CONTRACT.revision) {
-    throw new Error('native rhythm contract does not match the verified rhythm-lite pack');
+    throw new Error('contract rhythm native không khớp pack rhythm-lite đã xác minh');
   }
   return pack;
 }
@@ -78,11 +78,11 @@ async function inspectPack(cacheDir: string, cached: VerifiedPack | null): Promi
     const path = await realpath(join(root, file.path));
     const traversal = relative(root, path);
     if (traversal.startsWith('..') || traversal === '') {
-      throw new Error(`native rhythm pack contains an invalid path for ${file.path}`);
+      throw new Error(`pack rhythm native chứa path không hợp lệ: ${file.path}`);
     }
     const info = await stat(path);
     if (!info.isFile() || info.size !== file.sizeBytes) {
-      throw new Error(`native rhythm pack file failed size verification: ${file.path}`);
+      throw new Error(`tệp trong pack rhythm native không vượt qua xác minh kích thước: ${file.path}`);
     }
     records.push({ path, fingerprint: `${path}:${info.size}:${info.mtimeMs}:${info.ctimeMs}` });
   }
@@ -90,14 +90,14 @@ async function inspectPack(cacheDir: string, cached: VerifiedPack | null): Promi
   if (cached?.fingerprint === fingerprint) return cached;
   for (let index = 0; index < pack.files.length; index += 1) {
     if (await sha256(records[index]!.path) !== pack.files[index]!.sha256) {
-      throw new Error(`native rhythm pack file failed SHA-256 verification: ${pack.files[index]!.path}`);
+      throw new Error(`tệp trong pack rhythm native không vượt qua xác minh SHA-256: ${pack.files[index]!.path}`);
     }
   }
   const modelIndex = pack.files.findIndex((file) => file.path === RHYTHM_INFERENCE_CONTRACT.files.model.path);
   const filterIndex = pack.files.findIndex((file) => file.path === RHYTHM_INFERENCE_CONTRACT.files.filterbank.path);
   const modelPath = records[modelIndex]?.path;
   const filterbankPath = records[filterIndex]?.path;
-  if (!modelPath || !filterbankPath) throw new Error('native rhythm pack is incomplete');
+  if (!modelPath || !filterbankPath) throw new Error('pack rhythm native chưa đầy đủ');
   return { fingerprint, modelPath, filterbankPath };
 }
 
@@ -133,16 +133,16 @@ export class NativeRhythmService {
     value: DesktopRhythmRequest,
     onProgress: (progress: DesktopInferenceProgress) => void = () => {},
   ): Promise<DesktopRhythmResponse> {
-    if (this.disposed) throw new Error('native rhythm service is disposed');
+    if (this.disposed) throw new Error('service rhythm native đã được giải phóng');
     if (!this.capabilities.rhythm.available) {
-      throw new Error(this.capabilities.rhythm.reason ?? 'native rhythm inference is unavailable');
+      throw new Error(this.capabilities.rhythm.reason ?? 'suy luận rhythm native không khả dụng');
     }
     const request = parseDesktopRhythmRequest(value);
-    if (this.inflight.has(request.requestId)) throw new Error('duplicate native rhythm request id');
+    if (this.inflight.has(request.requestId)) throw new Error('request id rhythm native bị trùng');
     this.inflight.add(request.requestId);
     try {
       this.verifiedPack = await inspectPack(this.cacheDir, this.verifiedPack);
-      if (this.disposed) throw new Error('native rhythm service is disposed');
+      if (this.disposed) throw new Error('service rhythm native đã được giải phóng');
       if (this.cancelRequested.has(request.requestId)) {
         throw new DOMException('Native rhythm request canceled', 'AbortError');
       }
@@ -150,7 +150,7 @@ export class NativeRhythmService {
       return await new Promise<DesktopRhythmResponse>((resolve, reject) => {
         const timeoutMs = request.action === 'load' ? LOAD_TIMEOUT_MS : REQUEST_TIMEOUT_MS;
         const timer = setTimeout(
-          () => this.failWorker(new Error('native rhythm request timed out')),
+          () => this.failWorker(new Error('request rhythm native đã hết thời gian chờ')),
           timeoutMs,
         );
         this.pending.set(request.requestId, { resolve, reject, onProgress, timer });
@@ -162,7 +162,7 @@ export class NativeRhythmService {
     }
   }
   cancel(requestId: string): void {
-    if (!isDesktopInferenceRequestId(requestId)) throw new Error('invalid native rhythm request id');
+    if (!isDesktopInferenceRequestId(requestId)) throw new Error('request id rhythm native không hợp lệ');
     if (!this.inflight.has(requestId)) return;
     this.cancelRequested.add(requestId);
     if (!this.pending.has(requestId)) return;
@@ -176,12 +176,12 @@ export class NativeRhythmService {
   dispose(): void {
     if (this.disposed) return;
     this.disposed = true;
-    this.failWorker(new Error('native rhythm service is disposed'));
+    this.failWorker(new Error('service rhythm native đã được giải phóng'));
   }
 
   private ensureWorker(pack: VerifiedPack): UtilityProcess {
     if (this.worker && this.workerFingerprint === pack.fingerprint) return this.worker;
-    if (this.pending.size > 0) throw new Error('native rhythm pack changed during inference');
+    if (this.pending.size > 0) throw new Error('pack rhythm native đã thay đổi trong lúc suy luận');
     this.resetWorker();
     const worker = utilityProcess.fork(
       fileURLToPath(new URL('./native-rhythm-worker.mjs', import.meta.url)),
@@ -191,7 +191,7 @@ export class NativeRhythmService {
     lowerNativeWorkerPriority(worker);
     worker.on('message', (value: unknown) => this.handleWorkerMessage(value));
     worker.on('exit', (code) => {
-      if (this.worker === worker) this.failWorker(new Error(`native rhythm process exited with code ${code}`));
+      if (this.worker === worker) this.failWorker(new Error(`process rhythm native đã thoát với mã ${code}`));
     });
     worker.postMessage({ type: 'initialize', config: {
       platform: this.platform,
@@ -206,7 +206,7 @@ export class NativeRhythmService {
 
   private handleWorkerMessage(value: unknown): void {
     if (typeof value !== 'object' || value === null) {
-      this.failWorker(new Error('invalid native rhythm worker response'));
+      this.failWorker(new Error('phản hồi worker rhythm native không hợp lệ'));
       return;
     }
     const message = value as Record<string, unknown>;
@@ -227,7 +227,7 @@ export class NativeRhythmService {
       this.settle(message.requestId, error);
       return;
     }
-    this.failWorker(new Error('invalid native rhythm worker response'));
+    this.failWorker(new Error('phản hồi worker rhythm native không hợp lệ'));
   }
 
   private settle(requestId: string, error?: Error, response?: DesktopRhythmResponse): void {

@@ -87,10 +87,10 @@ function resolveNativeAsrSourcePath(sourcePath: string): string {
   try {
     name = decodeURIComponent(encodedName);
   } catch {
-    throw new Error('native ASR source is invalid');
+    throw new Error('nguồn ASR native không hợp lệ');
   }
   const file = resolveUploadFile(name);
-  if (!file) throw new Error('native ASR source is not a local uploaded file');
+  if (!file) throw new Error('nguồn ASR native không phải tệp cục bộ đã upload');
   return file;
 }
 
@@ -195,7 +195,7 @@ export class NativeAsrService {
     onProgress: (progress: DesktopInferenceProgress) => void = () => {},
   ): Promise<DesktopModelLoadResponse> {
     const response = await this.run(request, onProgress);
-    if (!isDesktopModelLoadResponse(response)) throw new Error('native ASR returned an invalid preload response');
+    if (!isDesktopModelLoadResponse(response)) throw new Error('ASR native trả về phản hồi preload không hợp lệ');
     return response;
   }
 
@@ -204,7 +204,7 @@ export class NativeAsrService {
     onProgress: (progress: DesktopInferenceProgress) => void = () => {},
   ): Promise<DesktopAsrResponse> {
     const response = await this.run(request, onProgress);
-    if (!isDesktopAsrResponse(response)) throw new Error('native ASR returned an invalid transcription response');
+    if (!isDesktopAsrResponse(response)) throw new Error('ASR native trả về phản hồi transcript không hợp lệ');
     return response;
   }
 
@@ -214,12 +214,12 @@ export class NativeAsrService {
   ): Promise<void> {
     const model = ASR_MODELS.find((entry) =>
       entry.modelId === request.modelId && entry.revision === request.revision);
-    if (!model) throw new Error('native ASR model is not in the verified catalog');
+    if (!model) throw new Error('model ASR native không có trong catalog đã xác minh');
     // whisper.cpp loads only the GGML companion; the browser engine's ONNX
     // export is irrelevant here and must not gate the desktop engine (#168).
     const installed = await this.inspectModel(model, this.cacheDir, signal);
     if (!installed.ggmlDownloaded) {
-      throw new Error('native ASR model (whisper.cpp GGML) is not installed or failed verification');
+      throw new Error('model ASR native (whisper.cpp GGML) chưa được cài đặt hoặc xác minh thất bại');
     }
   }
 
@@ -227,11 +227,11 @@ export class NativeAsrService {
     request: DesktopAsrRequest | DesktopAsrPreloadRequest,
     onProgress: (progress: DesktopInferenceProgress) => void,
   ): Promise<NativeAsrServiceResponse> {
-    if (this.disposed) throw new Error('native ASR service is disposed');
+    if (this.disposed) throw new Error('service ASR native đã được giải phóng');
     if (!this.capabilities.asr.available) {
       throw new Error(this.capabilities.asr.reason ?? 'native ASR is unavailable');
     }
-    if (this.inflight.has(request.requestId)) throw new Error('duplicate native ASR request id');
+    if (this.inflight.has(request.requestId)) throw new Error('request id ASR native bị trùng');
     const abortController = new AbortController();
     this.inflight.add(request.requestId);
     this.abortControllers.set(request.requestId, abortController);
@@ -245,7 +245,7 @@ export class NativeAsrService {
       const worker = this.ensureWorker();
       const deferred = Promise.withResolvers<NativeAsrServiceResponse>();
       const timer = setTimeout(
-        () => this.failWorker(new Error('native ASR request timed out')),
+        () => this.failWorker(new Error('request ASR native đã hết thời gian chờ')),
         REQUEST_TIMEOUT_MS,
       );
       this.pending.set(request.requestId, {
@@ -267,7 +267,7 @@ export class NativeAsrService {
   }
 
   cancel(requestId: string): void {
-    if (!isDesktopInferenceRequestId(requestId)) throw new Error('invalid native ASR request id');
+    if (!isDesktopInferenceRequestId(requestId)) throw new Error('request id ASR native không hợp lệ');
     const abortController = this.abortControllers.get(requestId);
     if (!abortController) return;
     const error = nativeAsrAbortError();
@@ -276,14 +276,14 @@ export class NativeAsrService {
 
     this.settle(requestId, error);
     this.resetWorker();
-    const interrupted = new Error('native ASR worker terminated because a request was canceled');
+    const interrupted = new Error('worker ASR native dừng vì request đã bị hủy');
     for (const [pendingRequestId] of this.pending) this.settle(pendingRequestId, interrupted);
   }
 
   dispose(): void {
     if (this.disposed) return;
     this.disposed = true;
-    const error = new Error('native ASR service is disposed');
+    const error = new Error('service ASR native đã được giải phóng');
     for (const controller of this.abortControllers.values()) controller.abort(error);
     this.failWorker(error);
   }
@@ -317,7 +317,7 @@ export class NativeAsrService {
 
   private handleWorkerMessage(value: unknown): void {
     if (typeof value !== 'object' || value === null) {
-      this.failWorker(new Error('invalid native ASR worker response'));
+      this.failWorker(new Error('phản hồi worker ASR native không hợp lệ'));
       return;
     }
     const message = value as {
@@ -350,7 +350,7 @@ export class NativeAsrService {
       this.settle(message.requestId, error);
       return;
     }
-    this.failWorker(new Error('invalid native ASR worker response'));
+    this.failWorker(new Error('phản hồi worker ASR native không hợp lệ'));
   }
 
   private settle(requestId: string, error?: Error, response?: NativeAsrServiceResponse): void {

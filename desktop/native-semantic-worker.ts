@@ -59,7 +59,7 @@ interface LoadedSemanticModel extends SharedSemanticInputs {
 }
 
 const port = process.parentPort;
-if (!port) throw new Error('native semantic process requires a parent port');
+if (!port) throw new Error('process semantic native yêu cầu parent port');
 let runtime: NativeSemanticWorkerConfig | null = null;
 let loaded: LoadedSemanticModel | null = null;
 let loading: Promise<LoadedSemanticModel> | null = null;
@@ -74,18 +74,18 @@ function throwIfCanceled(requestId: string): void {
 
 function initialize(value: unknown): void {
   if (typeof value !== 'object' || value === null) {
-    throw new Error('invalid native semantic configuration');
+    throw new Error('cấu hình semantic native không hợp lệ');
   }
   const config = value as Partial<NativeSemanticWorkerConfig>;
   if (typeof config.origin !== 'string'
     || typeof config.cacheDir !== 'string' || config.cacheDir.length === 0
     || typeof config.platform !== 'string'
     || !isNativeModelBackend(config.preferredBackend)) {
-    throw new Error('invalid native semantic configuration');
+    throw new Error('cấu hình semantic native không hợp lệ');
   }
   const origin = new URL(config.origin);
   if (origin.protocol !== 'http:' && origin.protocol !== 'https:') {
-    throw new Error('invalid native semantic origin');
+    throw new Error('origin semantic native không hợp lệ');
   }
   runtime = {
     origin: origin.origin,
@@ -111,7 +111,7 @@ function backendDevice(backend: DesktopInferenceBackend): 'cpu' | 'cuda' | 'dml'
 }
 
 function requireRuntime(): NativeSemanticWorkerConfig {
-  if (!runtime) throw new Error('native semantic process is not initialized');
+  if (!runtime) throw new Error('process semantic native chưa được khởi tạo');
   return runtime;
 }
 
@@ -194,16 +194,16 @@ async function ensureLoaded(requestId: string): Promise<LoadedSemanticModel> {
 
 function readEmbedding(output: unknown, key: EmbeddingKey): ArrayLike<number> {
   if (typeof output !== 'object' || output === null) {
-    throw new Error('native semantic model returned an invalid response');
+    throw new Error('model semantic native trả về phản hồi không hợp lệ');
   }
   const embedding = (output as Record<string, unknown>)[key];
   if (typeof embedding !== 'object' || embedding === null) {
-    throw new Error('native semantic model returned no embedding');
+    throw new Error('model semantic native không trả về embedding');
   }
   const data = (embedding as Record<string, unknown>).data;
   const numericView = ArrayBuffer.isView(data) && !(data instanceof DataView) && 'length' in data;
   if (!Array.isArray(data) && !numericView) {
-    throw new Error('native semantic model returned invalid embedding data');
+    throw new Error('model semantic native trả về dữ liệu embedding không hợp lệ');
   }
   return data as ArrayLike<number>;
 }
@@ -274,7 +274,7 @@ port.on('message', (event) => {
   }
   if (typeof value === 'object' && value !== null && Reflect.get(value, 'type') === 'cancel') {
     const requestId = Reflect.get(value, 'requestId');
-    if (!isDesktopInferenceRequestId(requestId)) throw new Error('invalid native semantic cancellation');
+    if (!isDesktopInferenceRequestId(requestId)) throw new Error('hủy semantic native không hợp lệ');
     canceled.add(requestId);
     return;
   }

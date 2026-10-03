@@ -45,10 +45,10 @@ async function readExportDirectoryState(statePath: string): Promise<ExportDirect
   try {
     const info = await stat(statePath);
     if (!info.isFile() || info.size > MAX_EXPORT_DESTINATION_STATE_BYTES) {
-      throw new Error('invalid export destination state');
+      throw new Error('trạng thái đích export không hợp lệ');
     }
     const stored = JSON.parse(await readFile(statePath, 'utf8')) as unknown;
-    if (typeof stored !== 'object' || stored === null) throw new Error('invalid export destination');
+    if (typeof stored !== 'object' || stored === null) throw new Error('đích export không hợp lệ');
     const version = 'version' in stored ? stored.version : undefined;
     if (version === 1) {
       const legacyPath = 'path' in stored ? stored.path : undefined;
@@ -59,7 +59,7 @@ async function readExportDirectoryState(statePath: string): Promise<ExportDirect
       : undefined;
     const rawDestinations = 'destinations' in stored ? stored.destinations : undefined;
     if (version !== 2 || typeof currentDestinationId !== 'string' || !Array.isArray(rawDestinations)) {
-      throw new Error('unsupported export destination version');
+      throw new Error('phiên bản đích export không được hỗ trợ');
     }
     const destinations = rawDestinations.flatMap((entry): StoredExportDirectory['destinations'] => {
       if (!entry || typeof entry !== 'object') return [];
@@ -86,7 +86,7 @@ export async function persistExportDirectory(
   destinationId: string,
   previousState?: ExportDirectoryState | null,
 ): Promise<void> {
-  if (!DESKTOP_DESTINATION_ID.test(destinationId)) throw new Error('invalid export destination identity');
+  if (!DESKTOP_DESTINATION_ID.test(destinationId)) throw new Error('định danh đích export không hợp lệ');
   const prior = previousState ?? await readExportDirectoryState(statePath);
   const destinations = [
     { destinationId, path },
