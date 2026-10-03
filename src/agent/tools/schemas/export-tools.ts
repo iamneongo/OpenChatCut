@@ -18,8 +18,8 @@ export const EXPORT_TOOL_SCHEMAS: AgentToolSchema[] = [
         name: { type: 'string', description: 'Tên tệp tải xuống.' },
         startFrame: { type: 'integer', minimum: 0 },
         endFrameExclusive: { type: 'integer', minimum: 1 },
-        startSeconds: { type: 'number', minimum: 0, description: 'Legacy; prefer startFrame.' },
-        endSeconds: { type: 'number', minimum: 0, description: 'Legacy; prefer endFrameExclusive.' },
+        startSeconds: { type: 'number', minimum: 0, description: 'Cũ; ưu tiên startFrame.' },
+        endSeconds: { type: 'number', minimum: 0, description: 'Cũ; ưu tiên endFrameExclusive.' },
         saveToMediaPool: {
           type: 'boolean',
           description: 'Nếu true, giữ tệp hoàn tất trong Tư liệu của tôi và lưu sequence nguồn cùng các vùng asset nguồn. Mặc định false.',

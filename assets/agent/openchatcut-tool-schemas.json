@@ -3024,12 +3024,12 @@
           "startSeconds": {
             "type": "number",
             "minimum": 0,
-            "description": "Legacy; prefer startFrame."
+            "description": "Cũ; ưu tiên startFrame."
           },
           "endSeconds": {
             "type": "number",
             "minimum": 0,
-            "description": "Legacy; prefer endFrameExclusive."
+            "description": "Cũ; ưu tiên endFrameExclusive."
           },
           "saveToMediaPool": {
             "type": "boolean",
@@ -3203,13 +3203,13 @@
     },
     {
       "name": "isolate_voice",
-      "description": "AI Voice Isolation: reduce background noise on a video/audio clip so speech is clearer. action=apply (default) creates an immutable full-wet ffmpeg isolation artifact and attaches it as denoisedSrc; strength controls non-destructive dry/wet playback while the master src stays unchanged. action=attach points the clip at an existing audio asset after validating denoisedAssetId and sourceAssetId. action=clear removes isolation and restores original audio. strength 0..100 (default 70). Requires /media/uploads source (upload/finalize first).",
+      "description": "Tách giọng nói bằng AI: giảm nhiễu nền trên clip video/audio để lời nói rõ hơn. action=apply (mặc định) tạo artifact tách giọng ffmpeg full-wet bất biến và gắn vào denoisedSrc; strength điều khiển playback dry/wet không phá hủy trong khi src master giữ nguyên. action=attach trỏ clip tới asset audio hiện có sau khi kiểm tra denoisedAssetId và sourceAssetId. action=clear xóa tách giọng và khôi phục audio gốc. strength 0..100 (mặc định 70). Yêu cầu source /media/uploads (upload/finalize trước).",
       "input_schema": {
         "type": "object",
         "properties": {
           "itemId": {
             "type": "string",
-            "description": "Target video/audio clip id (prefix ok)."
+            "description": "Id clip video/audio đích (chấp nhận tiền tố)."
           },
           "action": {
             "type": "string",
@@ -3218,25 +3218,25 @@
               "attach",
               "clear"
             ],
-            "description": "apply = run isolation; attach = use an existing isolated audio asset; clear = detach it."
+            "description": "apply = chạy tách giọng; attach = dùng asset audio đã tách hiện có; clear = tháo liên kết."
           },
           "sourceAssetId": {
             "type": "string",
-            "description": "attach: source audio/video asset id or unique prefix. It must match the target clip source."
+            "description": "attach: id hoặc tiền tố duy nhất của asset audio/video nguồn. Phải khớp source của clip đích."
           },
           "denoisedAssetId": {
             "type": "string",
-            "description": "attach: existing audio asset id or unique prefix containing the isolated full-source audio."
+            "description": "attach: id hoặc tiền tố duy nhất của asset audio hiện có chứa audio full-source đã tách."
           },
           "strength": {
             "type": "number",
             "minimum": 0,
             "maximum": 100,
-            "description": "Dry/wet isolation mix 0..100 (default 70). 0 keeps the master dry; 100 uses the isolated artifact."
+            "description": "Mix tách giọng dry/wet 0..100 (mặc định 70). 0 giữ master dry; 100 dùng artifact đã tách."
           },
           "force": {
             "type": "boolean",
-            "description": "apply: create a new immutable artifact even when the same revision/engine/strength artifact already exists."
+            "description": "apply: tạo artifact bất biến mới ngay cả khi artifact cùng revision/engine/strength đã tồn tại."
           }
         },
         "required": [
@@ -4831,35 +4831,35 @@
     },
     {
       "name": "remove_silence",
-      "description": "Remove dead air — quiet, speech-free stretches — from clips, ripple-closing each gap on its own track (ONE undoable batch). Detection is on-device and relative: a stretch counts as silence only when its level sits well below the clip's own speech level (so music beds and loud ambience are never cut), it lasts at least minSilenceMs, and a padMs breathing room is kept on both sides. Use this to tighten pacing (long pauses, dead space between takes). It complements word-level editing: transcribed clips that already have word edits or gap caps are skipped — use clean_script there, it trims pauses word-precisely. Clips with playbackRate≠1 or an animated zoom are skipped (reported in skipped[]). Ripple is per-track: other tracks do not shift. Call once with NO itemId to sweep every audio/video clip on the active timeline; pass itemId for a single clip. Pass dryRun:true to preview the cut list (seconds) without editing.",
+      "description": "Xóa khoảng chết — đoạn yên lặng, không có lời — khỏi clip, ripple để đóng từng khoảng trên track tương ứng (MỘT batch có thể undo). Phát hiện trên thiết bị và theo tương đối: một đoạn chỉ được tính là im lặng khi mức âm thấp hơn rõ rệt mức lời nói riêng của clip (vì vậy nhạc nền và ambience lớn không bị cắt), kéo dài ít nhất minSilenceMs và giữ khoảng đệm padMs ở hai phía. Dùng để làm nhịp dựng gọn hơn (pause dài, khoảng chết giữa các take). Tool bổ sung cho chỉnh sửa cấp từ: clip đã chuyển lời mà đã có chỉnh sửa từ hoặc giới hạn gap sẽ bị bỏ qua — dùng clean_script vì tool đó cắt pause chính xác theo từ. Clip có playbackRate≠1 hoặc zoom animation sẽ bị bỏ qua (báo trong skipped[]). Ripple theo từng track: track khác không dịch chuyển. Gọi một lần KHÔNG có itemId để quét mọi clip audio/video trên timeline đang hoạt động; truyền itemId cho một clip duy nhất. Truyền dryRun:true để xem trước danh sách điểm cắt (giây) mà không chỉnh sửa.",
       "input_schema": {
         "type": "object",
         "properties": {
           "itemId": {
             "type": "string",
-            "description": "Only this clip (prefix id ok). Omit to process every audio/video clip."
+            "description": "Chỉ clip này (chấp nhận tiền tố id). Bỏ qua để xử lý mọi clip audio/video."
           },
           "thresholdDb": {
             "type": "number",
             "minimum": -60,
             "maximum": -6,
-            "description": "Silence gate relative to the clip's speech level in dB (default -26; more negative = more conservative)."
+            "description": "Ngưỡng silence tương đối với mức lời của clip tính bằng dB (mặc định -26; càng âm = càng thận trọng)."
           },
           "minSilenceMs": {
             "type": "number",
             "minimum": 200,
             "maximum": 10000,
-            "description": "Only remove pauses at least this long (default 600ms)."
+            "description": "Chỉ xóa pause dài ít nhất giá trị này (mặc định 600ms)."
           },
           "padMs": {
             "type": "number",
             "minimum": 0,
             "maximum": 1000,
-            "description": "Breathing room kept on each side of a cut (default 150ms)."
+            "description": "Khoảng đệm giữ ở mỗi phía của điểm cắt (mặc định 150ms)."
           },
           "dryRun": {
             "type": "boolean",
-            "description": "true = report the would-be cuts without editing."
+            "description": "true = báo các điểm cắt dự kiến mà không chỉnh sửa."
           }
         }
       }
