@@ -188,7 +188,7 @@ function assertRetryableStale(live: LiveEditor, result: ToolResult): void {
   assert.equal(result.retryable, true);
   assert.equal(result.changed, false);
   assert.equal(live.applyStateCalls, 0, 'stale completion must not call applyState');
-  assert.match(String(result.message), /retry/i);
+  assert.match(String(result.message), /thử lại/i);
 }
 
 const originalFetch = globalThis.fetch;

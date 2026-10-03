@@ -290,7 +290,7 @@ async function executeIdempotentGeneration(
     const accepted = acceptedSubmissions.get(key);
     if (accepted && now - accepted.acceptedAt <= IDEMPOTENCY_WINDOW_MS) {
       return {
-        error: `an identical ${name} request was already accepted`,
+        error: `Một yêu cầu ${name} giống hệt đã được chấp nhận`,
         code: 'duplicate_submission',
         duplicateOf: accepted.operationId ?? accepted.jobId,
       };
@@ -304,7 +304,7 @@ async function executeIdempotentGeneration(
       const projectId = ctx.getProjectId?.();
       if (!projectId) {
         return {
-          error: `${name} requires a persisted project id for safe submission`,
+          error: `${name} cần project id đã được lưu để gửi an toàn`,
           code: 'generation_project_required',
         };
       }
@@ -322,7 +322,7 @@ async function executeIdempotentGeneration(
           result: undefined,
         });
         return {
-          error: `an identical ${name} request was already accepted`,
+          error: `Một yêu cầu ${name} giống hệt đã được chấp nhận`,
           code: 'duplicate_submission',
           duplicateOf: reservation.operationId,
         };
