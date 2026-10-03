@@ -53,7 +53,11 @@ function publish(assetId: string, key: string, status: MusicAnalysisStatus): voi
 }
 
 function errorMessage(error: unknown): string {
-  return error instanceof Error ? error.message : String(error);
+  const message = error instanceof Error ? error.message : String(error);
+  if (/aborted|cancelled|canceled/i.test(message)) return t('已取消');
+  if (/timed out|timeout/i.test(message)) return t('超时');
+  if (/^music analysis failed$/i.test(message)) return t('分析失败');
+  return t('失败:{error}', { error: message });
 }
 
 function cancellationError(message: string, name: 'AbortError' | 'TimeoutError'): Error {
@@ -88,7 +92,7 @@ async function runAttempt(
   const stop = (error: Error) => {
     if (stopped) return;
     stopped = true;
-    publish(asset.id, key, { state: 'error', message: error.message });
+    publish(asset.id, key, { state: 'error', message: errorMessage(error) });
     controller.abort(error);
     deadline.reject(error);
   };
