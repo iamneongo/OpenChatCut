@@ -10,6 +10,8 @@ export default {
   '正在重启并安装 OpenChatCut…': 'Restarting to install OpenChatCut…',
   '下载更新失败，请重试': 'The update download failed. Try again.',
   '安装更新失败，请重试': 'The update installation failed. Try again.',
+  'Upstream did not return a valid release version': 'Upstream did not return a valid release version',
+  'Upstream release check failed ({status})': 'Upstream release check failed ({status})',
   '下载更新': 'Download update',
   '查看发布页': 'View release',
   '下载中 {percent}%': 'Downloading {percent}%',

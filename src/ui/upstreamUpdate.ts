@@ -2,6 +2,7 @@ import type {
   DesktopUpdateOperation,
   DesktopUpdateState,
 } from '../../shared/desktop-update';
+import { t } from '../i18n/locale';
 
 export const UPSTREAM_LATEST_RELEASE_URL = 'https://api.github.com/repos/0xsline/OpenChatCut/releases/latest';
 export const UPSTREAM_RELEASES_URL = 'https://github.com/0xsline/OpenChatCut/releases/latest';
@@ -89,7 +90,7 @@ function comparePrerelease(candidate: readonly string[], current: readonly strin
 function isNewerVersion(candidate: string, current: string): boolean {
   const next = parseVersion(candidate);
   const installed = parseVersion(current);
-  if (!next || !installed) throw new Error('Upstream did not return a valid release version');
+  if (!next || !installed) throw new Error(t('Upstream did not return a valid release version'));
   for (let index = 0; index < next.core.length; index += 1) {
     if (next.core[index] !== installed.core[index]) return next.core[index]! > installed.core[index]!;
   }
@@ -106,10 +107,10 @@ export async function queryLatestUpstreamRelease(
   signal?: AbortSignal,
 ): Promise<UpstreamReleaseResult> {
   const response = await fetcher(UPSTREAM_LATEST_RELEASE_URL, { signal });
-  if (!response.ok) throw new Error(`Upstream release check failed (${response.status})`);
+  if (!response.ok) throw new Error(t('Upstream release check failed ({status})', { status: response.status }));
   const payload = await response.json() as { tag_name?: unknown };
   if (typeof payload.tag_name !== 'string' || !parseVersion(payload.tag_name)) {
-    throw new Error('Upstream did not return a valid release version');
+    throw new Error(t('Upstream did not return a valid release version'));
   }
   return {
     latestVersion: payload.tag_name,
