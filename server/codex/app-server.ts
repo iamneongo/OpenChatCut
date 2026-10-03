@@ -111,7 +111,7 @@ export class CodexRpcError extends Error {
   readonly code: number | null;
 
   constructor(method: string, code: number | null) {
-    super(`Codex app-server rejected ${method}.`);
+    super(`Codex app-server đã từ chối ${method}.`);
     this.name = 'CodexRpcError';
     this.method = method;
     this.code = code;
@@ -215,7 +215,7 @@ export class CodexAppServerClient {
   }
 
   stop(): void {
-    this.restart('Codex app-server stopped.');
+    this.restart('Codex app-server đã dừng.');
   }
 
   private async ensureStarted(): Promise<void> {
