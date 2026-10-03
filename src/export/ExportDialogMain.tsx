@@ -79,11 +79,14 @@ function StructuredExportFailure({ model }: { model: ExportDialogModel }) {
   const t = useT();
   const failure = model.workflow.failure;
   if (!failure) return model.workflow.error
-    ? <p className="cc-export-error">{model.workflow.error}</p>
+    ? <p className="cc-export-error">{t('失败:{error}', { error: model.workflow.error })}</p>
     : null;
+  const localizedMessage = t(failure.message);
   return (
     <div className="cc-export-error" role="alert">
-      <strong>{t(failure.message)}</strong>
+      <strong>{localizedMessage === failure.message
+        ? t('失败:{error}', { error: failure.message })
+        : localizedMessage}</strong>
       <div>{t(FAILURE_STAGE_LABELS[failure.stage])} · {failure.code} · {t(failure.retryable ? '可重试' : '不可重试')}</div>
       <div>{t('清理')}：{t(CLEANUP_STATUS_LABELS[failure.cleanupStatus])}</div>
       {failure.targetPath && <div>{failure.targetPath}</div>}
@@ -91,7 +94,7 @@ function StructuredExportFailure({ model }: { model: ExportDialogModel }) {
         <ul>
           {failure.mediaIssues.map((issue, index) => (
             <li key={`${issue.code}-${issue.itemId ?? issue.source ?? index}`}>
-              {issue.itemId ? `${issue.itemId}: ` : ''}{issue.message}
+              {issue.itemId ? `${issue.itemId}: ` : ''}{t('失败:{error}', { error: issue.message })}
             </li>
           ))}
         </ul>

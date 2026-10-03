@@ -55,7 +55,7 @@ export function ExportQaCard({ qa }: { qa: ExportQaUiState }) {
     return (
       <div className="cc-export-qa-card error">
         <strong>{t('自动质量检查未完成')}</strong>
-        <p>{t('成片仍会正常下载；你可以稍后重新导出复检。')} {qa.message}</p>
+        <p>{t('成片仍会正常下载；你可以稍后重新导出复检。')} {t('失败:{error}', { error: qa.message ?? t('失败') })}</p>
       </div>
     );
   }
