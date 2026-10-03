@@ -62,13 +62,13 @@ assert.throws(
   () => validateMusicRequest({
     provider: 'sonilo', sourceAssetPath: '/media/uploads/cut.mp4', sourceAssetKind: 'video', count: 2,
   }),
-  /count must be 1/,
+  /count phải là 1/,
 );
 assert.throws(
   () => validateMusicRequest({
     provider: 'sonilo', sourceAssetPath: '/media/uploads/cut.mp4', sourceAssetKind: 'video', audioFormat: 'mp3',
   }),
-  /not configurable/,
+  /không thể cấu hình định dạng đầu ra/,
 );
 // sonilo controls must not leak into the other providers
 assert.throws(() => validateMusicRequest({ provider: 'minimax', prompt: 'lofi', mode: 'v2m' }), /t2m or cover/);
