@@ -21,7 +21,7 @@ function applyHistoryTarget(
     timelines: target.timelines.length,
     activeTimelineId: target.activeTimelineId,
     note: before.activeTimelineId !== target.activeTimelineId
-      ? 'The active timeline also reverts to the one open in that snapshot.'
+      ? 'Dòng thời gian đang hoạt động cũng được đưa về dòng thời gian mở trong bản chụp đó.'
       : undefined,
   };
 }
@@ -29,16 +29,16 @@ function applyHistoryTarget(
 /** Tool execution: Get undo/redo target → proposed as whole project replacement. */
 export function execUndoTool(name: string, ctx: HistoryCtx): unknown {
   if (name === 'undo_last_change') {
-    if (!ctx.getUndoTarget) return { error: 'undo is unavailable in this session' };
+    if (!ctx.getUndoTarget) return { error: 'undo không khả dụng trong phiên này' };
     const target = ctx.getUndoTarget();
-    if (!target) return { error: 'nothing to undo — no applied change in this session yet' };
+    if (!target) return { error: 'không có gì để undo — phiên này chưa có thay đổi nào được áp dụng' };
     return applyHistoryTarget('undo', target, ctx);
   }
   if (name === 'redo_last_change') {
-    if (!ctx.getRedoTarget) return { error: 'redo is unavailable in this session' };
+    if (!ctx.getRedoTarget) return { error: 'redo không khả dụng trong phiên này' };
     const target = ctx.getRedoTarget();
     if (!target) {
-      return { error: 'nothing to redo — redo only works after undo, until a new edit clears the redo stack' };
+      return { error: 'không có gì để redo — redo chỉ hoạt động sau undo, cho đến khi chỉnh sửa mới xóa redo stack' };
     }
     return applyHistoryTarget('redo', target, ctx);
   }

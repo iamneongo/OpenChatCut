@@ -314,7 +314,7 @@ export function buildCommands(dispatch: ProjectDispatch, getDoc: () => ProjectDo
           return { ok: false, error: referenceError.message, sequenceError: referenceError.toJSON() };
         }
         const target = doc.timelines.find((timeline) => timeline.id === timelineId);
-        if (!target) return { ok: false, error: `Cannot add missing timeline ${timelineId}` };
+        if (!target) return { ok: false, error: `Không thể thêm timeline không tồn tại ${timelineId}` };
         const sourceDuration = resolveTimelineRenderPlan(doc, timelineId).durationInFrames;
         const sourceStartFrame = Math.max(0, Math.round(at?.sourceStartFrame ?? 0));
         const availableSourceFrames = Math.max(0, sourceDuration - sourceStartFrame);

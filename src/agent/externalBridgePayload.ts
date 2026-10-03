@@ -26,7 +26,7 @@ function isFailureOutcome(
 
 export function parseExternalCall(value: unknown): ExternalCall {
   if (!value || typeof value !== 'object' || Array.isArray(value)) {
-    throw new Error('invalid external editor call');
+    throw new Error('lời gọi editor bên ngoài không hợp lệ');
   }
   if (
     !('id' in value)
@@ -48,7 +48,7 @@ export function parseExternalCall(value: unknown): ExternalCall {
     || !('baseRevision' in value.binding)
     || typeof value.binding.baseRevision !== 'string'
   ) {
-    throw new Error('invalid external editor call');
+    throw new Error('lời gọi editor bên ngoài không hợp lệ');
   }
   const args = value.arguments as Record<string, unknown>;
   return {
@@ -65,7 +65,7 @@ export function parseExternalCall(value: unknown): ExternalCall {
 
 export function parseExternalCancellation(value: unknown): ExternalCancellation {
   if (!value || typeof value !== 'object' || Array.isArray(value)) {
-    throw new Error('invalid external editor cancellation');
+    throw new Error('yêu cầu hủy editor bên ngoài không hợp lệ');
   }
   if (
     !('id' in value)
@@ -75,7 +75,7 @@ export function parseExternalCancellation(value: unknown): ExternalCancellation 
     || !('message' in value)
     || typeof value.message !== 'string'
   ) {
-    throw new Error('invalid external editor cancellation');
+    throw new Error('yêu cầu hủy editor bên ngoài không hợp lệ');
   }
   const ownerGone = 'ownerGone' in value && Array.isArray(value.ownerGone)
     ? value.ownerGone.filter((entry): entry is string => typeof entry === 'string')

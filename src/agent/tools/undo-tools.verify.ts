@@ -25,7 +25,7 @@ const docOf = (items: TimelineItem[], activeTimelineId = 'tl1'): ProjectDoc => (
 {
   assert.deepEqual([...UNDO_TOOL_NAMES].sort(), ['redo_last_change', 'undo_last_change']);
   assert.equal(UNDO_TOOL_SCHEMAS.length, 2);
-  assert.match(UNDO_TOOL_SCHEMAS[0]!.description ?? '', /confirm|proposed/i);
+  assert.match(UNDO_TOOL_SCHEMAS[0]!.description ?? '', /confirm|proposed|xác nhận|đề xuất/i);
   assert.match(UNDO_TOOL_SCHEMAS[1]!.description ?? '', /redo/i);
 }
 
@@ -65,19 +65,19 @@ const docOf = (items: TimelineItem[], activeTimelineId = 'tl1'): ProjectDoc => (
     (execUndoTool('undo_last_change', {
       commands: guardCommands, getDoc: () => docOf([]), getUndoTarget: () => null,
     }) as { error?: string }).error ?? '',
-    /nothing to undo/,
+    /nothing to undo|không có gì để undo/,
   );
   assert.match(
     (execUndoTool('redo_last_change', {
       commands: guardCommands, getDoc: () => docOf([]), getRedoTarget: () => null,
     }) as { error?: string }).error ?? '',
-    /nothing to redo/,
+    /nothing to redo|không có gì để redo/,
   );
   assert.match(
     (execUndoTool('redo_last_change', {
       commands: guardCommands, getDoc: () => docOf([]), getRedoTarget: undefined,
     }) as { error?: string }).error ?? '',
-    /unavailable/,
+    /unavailable|không khả dụng/,
   );
 }
 
@@ -87,7 +87,7 @@ const docOf = (items: TimelineItem[], activeTimelineId = 'tl1'): ProjectDoc => (
     getDoc: () => docOf([], 'tl2'),
     getUndoTarget: () => docOf([], 'tl1'),
   }) as Record<string, unknown>;
-  assert.match(String(r.note ?? ''), /active timeline/i);
+  assert.match(String(r.note ?? ''), /active timeline|dòng thời gian đang hoạt động/i);
 }
 
 {

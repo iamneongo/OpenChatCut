@@ -23,6 +23,6 @@ export async function analyzeAutoGrade(
     body: JSON.stringify(request),
   });
   const body = (await response.json().catch(() => ({}))) as AutoGradeResponse & { error?: string };
-  if (!response.ok) throw new Error(body.error ?? `auto grade analysis failed (${response.status})`);
+  if (!response.ok) throw new Error(body.error ?? `phân tích chấm màu tự động thất bại (${response.status})`);
   return body;
 }

@@ -94,7 +94,7 @@ export class SaveCoordinator {
       if (!persisted.saved) {
         return {
           projectId, revision, epoch, status: 'failed', saved: false,
-          indexUpdated: persisted.indexUpdated, error: new Error('project save failed'),
+          indexUpdated: persisted.indexUpdated, error: new Error('lưu dự án thất bại'),
         };
       }
       return {

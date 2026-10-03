@@ -232,7 +232,7 @@ export async function pollExport(
 export async function deleteExportJob(renderId: string): Promise<void> {
   const response = await fetch(`/export/job/${encodeURIComponent(renderId)}`, { method: 'DELETE' });
   if (!response.ok && response.status !== 404) {
-    throw new Error(`server export cleanup failed (${response.status})`);
+    throw new Error(`dọn dẹp bản xuất trên máy chủ thất bại (${response.status})`);
   }
 }
 

@@ -189,7 +189,7 @@ async function manageTranscript(args: Args, ctx: AgentContext, track: TrackId, a
     const cleaned = args.playOrder
       .map((v) => (typeof v === 'number' && Number.isFinite(v) ? Math.round(v) : NaN))
       .filter((i) => Number.isInteger(i) && i >= 0 && i < n);
-    if (!cleaned.length) return { error: `playOrder must list word indices in 0..${n - 1}` };
+    if (!cleaned.length) return { error: `playOrder phải liệt kê chỉ số từ trong khoảng 0..${n - 1}` };
     ctx.commands.setTranscriptPlayOrder(it.id, cleaned);
     const after = ctx.getState().items.find((x) => x.id === it.id);
     return {

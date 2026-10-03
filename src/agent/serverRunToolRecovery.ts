@@ -54,7 +54,7 @@ function recoveredOutcome(
   return {
     argsDigest: attempt.argsDigest,
     error: recovered
-      ? 'Recovered tool arguments do not match the server request.'
+      ? 'Tham số tool khôi phục không khớp với yêu cầu máy chủ.'
       : 'Browser reloaded after this tool began; the operation was not replayed automatically.',
   };
 }

@@ -45,7 +45,7 @@ function resolveAssetIds(ctx: AgentContext, raw: unknown): { ids: string[]; unre
 
 export async function execTranscriptionProgress(args: Args, ctx: AgentContext): Promise<unknown> {
   const action = args.action as 'params' | 'status' | 'wait';
-  if (!['params', 'status', 'wait'].includes(action)) return { error: 'action must be params, status, or wait' };
+  if (!['params', 'status', 'wait'].includes(action)) return { error: 'action phải là params, status hoặc wait' };
   const projectId = ctx.getProjectId?.();
   if (!projectId) return { error: 'transcription progress requires a persisted project id' };
 

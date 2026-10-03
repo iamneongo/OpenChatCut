@@ -19,7 +19,7 @@ export async function stageBrowserExport(
   const result = (await response.json().catch(() => null)) as Partial<StagedBrowserExport> & { error?: string } | null;
   signal?.throwIfAborted();
   if (!response.ok || typeof result?.path !== 'string' || typeof result.sizeBytes !== 'number') {
-    throw new Error(result?.error ?? `failed to stage browser export (${response.status})`);
+    throw new Error(result?.error ?? `không thể chuẩn bị bản xuất trình duyệt (${response.status})`);
   }
   return { path: result.path, sizeBytes: result.sizeBytes };
 }
@@ -29,5 +29,5 @@ export async function removeStagedBrowserExport(path: string): Promise<void> {
   if (!path.startsWith(prefix)) return;
   const name = path.slice('/media/uploads/'.length);
   const response = await fetch(`/export/stage/${encodeURIComponent(name)}`, { method: 'DELETE' });
-  if (!response.ok) throw new Error(`failed to remove staged browser export (${response.status})`);
+  if (!response.ok) throw new Error(`không thể xóa bản xuất trình duyệt đã chuẩn bị (${response.status})`);
 }

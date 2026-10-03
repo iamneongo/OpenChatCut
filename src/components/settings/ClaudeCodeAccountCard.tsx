@@ -140,7 +140,7 @@ function CopyButton({ value }: { value: string }) {
   useEffect(() => () => window.clearTimeout(timer.current), []);
   const copy = async (): Promise<void> => {
     try {
-      if (!navigator.clipboard) throw new Error('clipboard unavailable');
+      if (!navigator.clipboard) throw new Error('clipboard không khả dụng');
       await navigator.clipboard.writeText(value);
       setState('copied');
     } catch {

@@ -176,7 +176,7 @@ export class ServerRunToolExecutor {
   ): Promise<boolean> {
     const replay = outcome.argsDigest === argsDigest
       ? outcome
-      : { argsDigest, error: 'Recovered tool arguments do not match the server request.' };
+      : { argsDigest, error: 'Tham số tool khôi phục không khớp với yêu cầu máy chủ.' };
     if (!await this.postResult(session, toolCallId, replay)) {
       this.scheduleResultRetry(session, toolCallId, replay);
       return false;

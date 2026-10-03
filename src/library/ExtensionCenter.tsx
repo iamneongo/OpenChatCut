@@ -42,7 +42,7 @@ async function fetchRegistry(locale: Locale, signal: AbortSignal): Promise<Regis
   const url = new URL(REGISTRY_URL, window.location.origin);
   url.searchParams.set('locale', locale);
   const response = await fetch(url, { cache: 'no-store', signal });
-  if (!response.ok) throw new Error(`Registry request failed: ${response.status}`);
+  if (!response.ok) throw new Error(`Yêu cầu registry thất bại: ${response.status}`);
   return parseRegistry(await response.json());
 }
 

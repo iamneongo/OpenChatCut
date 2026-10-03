@@ -17,7 +17,7 @@ export function throwIfExternalCallCancelled(signal?: AbortSignal): void {
   if (signal?.aborted) {
     throw new ExternalEditSessionOutcomeError(
       'cancelled',
-      'The external editor call was cancelled before it completed.',
+      'Lời gọi editor bên ngoài đã bị hủy trước khi hoàn tất.',
     );
   }
 }
