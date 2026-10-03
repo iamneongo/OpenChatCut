@@ -55,17 +55,17 @@ async function checkCloneBoundaries(): Promise<void> {
   await mkdir(stage);
   await writeFile(outside, 'outside fixture');
   await symlink(outside, join(source, 'SKILL.md'));
-  await assert.rejects(stageCloneSkillFiles(source, stage), /symbolic links/);
+  await assert.rejects(stageCloneSkillFiles(source, stage), /không cho phép symbolic link/);
   assert.deepEqual(await readdir(stage), []);
   await rm(join(source, 'SKILL.md'));
   await writeFile(join(source, 'SKILL.md'), skill);
   await symlink(root, join(source, 'references'), process.platform === 'win32' ? 'junction' : 'dir');
-  await assert.rejects(stageCloneSkillFiles(source, stage), /symbolic links/);
+  await assert.rejects(stageCloneSkillFiles(source, stage), /không cho phép symbolic link/);
   await rm(join(source, 'references'));
   const large = await open(join(source, 'large.bin'), 'w');
   await large.truncate(MAX_FILE_BYTES + 1);
   await large.close();
-  await assert.rejects(stageCloneSkillFiles(source, stage), /exceeds 4 MB/);
+  await assert.rejects(stageCloneSkillFiles(source, stage), /vượt quá 4 MB/);
   assert.deepEqual(await readdir(stage), [], 'size checks precede clone file reads');
 }
 
@@ -73,10 +73,10 @@ async function checkStreamBounds(): Promise<void> {
   const stage = join(root, 'stream-stage');
   const file = { path: 'SKILL.md', size: MAX_FILE_BYTES };
   await assert.rejects(stageSkillFile(Readable.from([Buffer.alloc(MAX_FILE_BYTES), Buffer.from('x')]),
-    stage, file, { total: 0 }), /size limit/);
+    stage, file, { total: 0 }), /giới hạn kích thước/);
   await rm(stage, { recursive: true, force: true });
   await assert.rejects(stageSkillFile(Readable.from([Buffer.from('x')]), stage,
-    { path: 'SKILL.md', size: 1 }, { total: MAX_TOTAL_BYTES }), /size limit/);
+    { path: 'SKILL.md', size: 1 }, { total: MAX_TOTAL_BYTES }), /giới hạn kích thước/);
 }
 
 async function checkRealGitFallback(): Promise<void> {
@@ -141,18 +141,18 @@ try {
   assert.deepEqual(result.files, paths);
   assert.deepEqual(await readFile(join(installed, result.slug, paths[1]!)), contents[1]);
   assert.equal((await readFile(join(installed, result.slug, paths[2]!))).length, 0);
-  await rejectsTree([{ ...tree[0]!, mode: '120000' }], /symbolic links/);
-  await rejectsTree([{ ...tree[0]!, path: '../SKILL.md' }], /invalid skill file path/);
-  await rejectsTree([{ ...tree[0]!, size: MAX_FILE_BYTES + 1 }], /exceeds 4 MB/);
-  await rejectsTree([{ ...tree[0]!, size: undefined as unknown as number }], /invalid file size/);
+  await rejectsTree([{ ...tree[0]!, mode: '120000' }], /không cho phép symbolic link/);
+  await rejectsTree([{ ...tree[0]!, path: '../SKILL.md' }], /đường dẫn tệp skill không hợp lệ/);
+  await rejectsTree([{ ...tree[0]!, size: MAX_FILE_BYTES + 1 }], /vượt quá 4 MB/);
+  await rejectsTree([{ ...tree[0]!, size: undefined as unknown as number }], /kích thước tệp không hợp lệ/);
   await rejectsTree([...tree, ...Array.from({ length: 17 }, (_, index) => ({
     ...tree[1]!, path: `assets/${index}.bin`, size: MAX_FILE_BYTES,
-  }))], /exceed 64 MB/);
+  }))], /vượt quá 64 MB/);
   const dir = join(installed, result.slug);
   await writeFile(join(dir, 'custom.txt'), 'keep user-added support file');
   await writeFile(join(dir, 'SKILL.md'), 'old skill');
   failBlob = 1;
-  await assert.rejects(installGitHubSkill('fixtures/skill'), /GitHub blob 500/);
+  await assert.rejects(installGitHubSkill('fixtures/skill'), /blob GitHub 500/);
   assert.equal(await readFile(join(dir, 'SKILL.md'), 'utf8'), 'old skill');
   failBlob = -1;
   await installGitHubSkill('fixtures/skill');
@@ -161,7 +161,7 @@ try {
   const outside = join(root, 'outside');
   await mkdir(outside);
   await symlink(outside, join(dir, 'assets'), process.platform === 'win32' ? 'junction' : 'dir');
-  await assert.rejects(installGitHubSkill('fixtures/skill'), /destination must be a directory/);
+  await assert.rejects(installGitHubSkill('fixtures/skill'), /đích skill phải là một thư mục/);
   assert.deepEqual(await readdir(outside), []);
   assert.equal(await readFile(join(dir, 'SKILL.md'), 'utf8'), skill);
   await checkCloneBoundaries();

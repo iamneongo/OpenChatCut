@@ -23,7 +23,7 @@ export function validateSkillPath(path: unknown): asserts path is string {
   if (typeof path !== 'string' || path.includes('\\') || path.includes(':')
     || path.split('/').some((part) => !part || part === '.' || part === '..')
     || [...path].some((char) => char.charCodeAt(0) < 32 || char.charCodeAt(0) === 127)) {
-    throw new Error('invalid skill file path');
+    throw new Error('đường dẫn tệp skill không hợp lệ');
   }
 }
 
@@ -32,15 +32,15 @@ export function validateSkillFiles(files: SkillInstallFile[]): void {
   const paths = new Set<string>();
   for (const file of files) {
     validateSkillPath(file.path);
-    if (paths.has(file.path.toLowerCase())) throw new Error(`duplicate skill file: ${file.path}`);
+    if (paths.has(file.path.toLowerCase())) throw new Error(`tệp skill bị trùng: ${file.path}`);
     paths.add(file.path.toLowerCase());
-    if (!Number.isSafeInteger(file.size) || file.size < 0) throw new Error(`invalid file size: ${file.path}`);
-    if (file.size > MAX_FILE_BYTES) throw new Error(`skill file exceeds 4 MB: ${file.path}`);
+    if (!Number.isSafeInteger(file.size) || file.size < 0) throw new Error(`kích thước tệp không hợp lệ: ${file.path}`);
+    if (file.size > MAX_FILE_BYTES) throw new Error(`tệp skill vượt quá 4 MB: ${file.path}`);
     total += file.size;
-    if (total > MAX_TOTAL_BYTES) throw new Error('skill files exceed 64 MB');
+    if (total > MAX_TOTAL_BYTES) throw new Error('các tệp skill vượt quá 64 MB');
   }
   if (!paths.has('skill.md') || !files.some((file) => file.path === 'SKILL.md')) {
-    throw new Error('repo has no SKILL.md at its root');
+    throw new Error('repo không có SKILL.md ở thư mục gốc');
   }
 }
 
@@ -52,10 +52,10 @@ export async function listCloneSkillFiles(root: string, relative = ''): Promise<
     const path = relative ? `${relative}/${entry.name}` : entry.name;
     validateSkillPath(path);
     const info = await lstat(join(root, path));
-    if (info.isSymbolicLink()) throw new Error(`symbolic links are not allowed in skills: ${path}`);
+    if (info.isSymbolicLink()) throw new Error(`skill không cho phép symbolic link: ${path}`);
     if (info.isDirectory()) files.push(...await listCloneSkillFiles(root, path));
     else if (isSkillPath(path)) {
-      if (!info.isFile()) throw new Error(`skill entry must be a regular file: ${path}`);
+      if (!info.isFile()) throw new Error(`entry skill phải là tệp thông thường: ${path}`);
       files.push({ path, size: info.size });
     }
   }
@@ -75,7 +75,7 @@ export async function stageSkillFile(
       bytes += chunk.length;
       budget.total += chunk.length;
       if (bytes > MAX_FILE_BYTES || budget.total > MAX_TOTAL_BYTES || bytes > file.size) {
-        callback(new Error(`skill file exceeds size limit: ${file.path}`));
+        callback(new Error(`tệp skill vượt giới hạn kích thước: ${file.path}`));
       } else callback(null, chunk);
     },
   });
@@ -83,7 +83,7 @@ export async function stageSkillFile(
   try {
     await mkdir(dirname(target), { recursive: true });
     await pipeline(source, limit, createWriteStream(target, { flags: 'wx' }));
-    if (bytes !== file.size) throw new Error(`skill file size mismatch: ${file.path}`);
+    if (bytes !== file.size) throw new Error(`kích thước tệp skill không khớp: ${file.path}`);
   } finally {
     source.destroy();
   }
@@ -97,7 +97,7 @@ export async function stageCloneSkillFiles(source: string, stage: string): Promi
     const handle = await open(join(source, file.path), constants.O_RDONLY | constants.O_NOFOLLOW);
     try {
       const info = await handle.stat();
-      if (!info.isFile() || info.size !== file.size) throw new Error(`skill file changed: ${file.path}`);
+      if (!info.isFile() || info.size !== file.size) throw new Error(`tệp skill đã thay đổi: ${file.path}`);
       await stageSkillFile(handle.createReadStream(), stage, file, budget);
     } finally {
       await handle.close();
@@ -112,7 +112,7 @@ async function existingDirectory(dir: string): Promise<boolean> {
     throw error;
   });
   if (!info) return false;
-  if (!info.isDirectory() || info.isSymbolicLink()) throw new Error('skill destination must be a directory');
+  if (!info.isDirectory() || info.isSymbolicLink()) throw new Error('đích skill phải là một thư mục');
   return true;
 }
 

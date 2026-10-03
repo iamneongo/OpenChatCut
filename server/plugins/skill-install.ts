@@ -91,18 +91,18 @@ async function fetchTree(owner: string, repo: string): Promise<SkillInstallFile[
   });
   if (!res.ok) {
     if (isRateLimited(res.status)) throw new RateLimitedError(`GitHub API ${res.status}`);
-    throw new Error(`GitHub API ${res.status}: ${(await res.text()).slice(0, 200)}`);
+    throw new Error(`API GitHub ${res.status}: ${(await res.text()).slice(0, 200)}`);
   }
   const data = (await res.json()) as { tree?: Array<{ path: string; sha: string; size: number; type: string; mode: string }>; truncated?: boolean };
-  if (data.truncated === true) throw new Error('repo tree too large for recursive listing');
+  if (data.truncated === true) throw new Error('cây repo quá lớn để liệt kê đệ quy');
   const files: SkillInstallFile[] = [];
   for (const entry of data.tree ?? []) {
     validateSkillPath(entry.path);
-    if (entry.mode === '120000') throw new Error(`symbolic links are not allowed in skills: ${entry.path}`);
+    if (entry.mode === '120000') throw new Error(`skill không cho phép symbolic link: ${entry.path}`);
     if (entry.type === 'tree') continue;
     if (!isSkillPath(entry.path)) continue;
     if (entry.type !== 'blob' || !['100644', '100755'].includes(entry.mode)
-      || !/^[a-f0-9]{40,64}$/i.test(entry.sha)) throw new Error(`invalid skill blob: ${entry.path}`);
+      || !/^[a-f0-9]{40,64}$/i.test(entry.sha)) throw new Error(`blob skill không hợp lệ: ${entry.path}`);
     files.push({ path: entry.path, sha: entry.sha, size: entry.size });
   }
   validateSkillFiles(files);
@@ -126,11 +126,11 @@ async function installViaApi(owner: string, repo: string, stage: string): Promis
       signal: AbortSignal.timeout(30_000),
     });
     if (isRateLimited(res.status)) throw new RateLimitedError(`GitHub blob ${res.status}`);
-    if (!res.ok) throw new Error(`GitHub blob ${res.status}: ${file.path}`);
-    if (!res.body) throw new Error(`empty blob response: ${file.path}`);
+    if (!res.ok) throw new Error(`blob GitHub ${res.status}: ${file.path}`);
+    if (!res.body) throw new Error(`phản hồi blob rỗng: ${file.path}`);
     if (res.headers.has('content-length') && Number(res.headers.get('content-length')) > file.size) {
       await res.body.cancel();
-      throw new Error(`skill file exceeds size limit: ${file.path}`);
+      throw new Error(`tệp skill vượt giới hạn kích thước: ${file.path}`);
     }
     const body = Readable.fromWeb(res.body as Parameters<typeof Readable.fromWeb>[0]);
     await stageSkillFile(body, stage, file, budget);
@@ -154,7 +154,7 @@ export async function installGitHubSkill(
   slugOverride?: string,
 ): Promise<{ slug: string; installedAt: string; files: string[]; source: string }> {
   const parsed = parseRepo(repo);
-  if (!parsed) throw new Error('repo must be a GitHub URL or owner/repo');
+  if (!parsed) throw new Error('repo phải là URL GitHub hoặc owner/repo');
   const { owner, repo: repoName } = parsed;
   const stage = await mkdtemp(join(tmpdir(), 'occ-skill-stage-'));
   try {
@@ -173,7 +173,7 @@ export async function installGitHubSkill(
     const frontmatterName = skill.match(/^name:\s*([A-Za-z0-9_-]+)\s*$/m)?.[1] ?? '';
     const slug = deriveSlug(SAFE_SLUG.test(slugOverride ?? '') ? slugOverride : undefined, frontmatterName, repoName);
     const dir = skillDirFor(skillFilesRoot(), slug);
-    if (!dir) throw new Error('invalid skill slug');
+  if (!dir) throw new Error('slug skill không hợp lệ');
     await publishSkillFiles(stage, dir, files);
     return { slug, installedAt: join('~', '.openchatcut', 'skills', slug), files: files.map((file) => file.path), source };
   } finally {
