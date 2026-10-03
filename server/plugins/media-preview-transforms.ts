@@ -18,7 +18,7 @@ const FFMPEG_TIMEOUT_MS = 5 * 60_000;
 const MAX_STRIP_WIDTH = 2048;
 
 function abortError(): Error {
-  const error = new Error('derivative request cancelled');
+  const error = new Error('request tạo dẫn xuất đã bị hủy');
   error.name = 'AbortError';
   return error;
 }
@@ -45,7 +45,7 @@ function run(cmd: string, args: string[], signal: AbortSignal, timeoutMs = FFMPE
       clearTimeout(timer);
       signal.removeEventListener('abort', abort);
       if (signal.aborted) reject(abortError());
-      else if (timedOut) reject(new Error(`${cmd} timed out`));
+      else if (timedOut) reject(new Error(`${cmd} đã hết thời gian chờ`));
       else if (code === 0) resolve();
       else reject(new Error(`${cmd} exit ${code}: ${stderr.slice(-400)}`));
     });
@@ -126,7 +126,7 @@ export function computePeaks(file: string, durationMs: number, signal: AbortSign
       clearTimeout(timer);
       signal.removeEventListener('abort', abort);
       if (signal.aborted) reject(abortError());
-      else if (timedOut) reject(new Error('ffmpeg peaks timed out'));
+      else if (timedOut) reject(new Error('ffmpeg peaks đã hết thời gian chờ'));
       else if (code !== 0) reject(new Error(`ffmpeg peaks exit ${code}: ${stderr.slice(-300)}`));
       else {
         if (state.inBin > 0) state.peaks.push(Math.round(state.binMax * 1000) / 1000);

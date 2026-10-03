@@ -51,7 +51,7 @@ function readJson(req: IncomingMessage): Promise<unknown> {
     req.on('data', (chunk: Buffer) => {
       size += chunk.length;
       if (size > MAX_JSON_BYTES) {
-        reject(new Error('body too large'));
+        reject(new Error('thân request quá lớn'));
         req.destroy();
         return;
       }
@@ -82,7 +82,7 @@ function runProcess(command: string, args: string[], timeoutMs = PROCESS_TIMEOUT
     let stderr = '';
     const timer = setTimeout(() => {
       child.kill('SIGKILL');
-      reject(new Error(`${command} timed out`));
+      reject(new Error(`${command} đã hết thời gian chờ`));
     }, timeoutMs);
     child.stdout?.on('data', (chunk: Buffer) => { stdout += String(chunk); });
     child.stderr?.on('data', (chunk: Buffer) => {

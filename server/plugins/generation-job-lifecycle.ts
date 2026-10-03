@@ -132,7 +132,7 @@ async function runGenerationJob(job: GenerationJob, task: GenerationJobTask, opt
         job.acceptance?.resolve(acceptanceOf(job));
       },
       async (provider, providerTaskId) => {
-        if (!providerTaskId.trim()) throw new Error(`${provider} did not return a provider task id`);
+        if (!providerTaskId.trim()) throw new Error(`${provider} không trả về provider task id`);
         job.provider = provider;
         job.providerTaskId = providerTaskId;
         job.timestamps.acceptedAt ??= Date.now();
@@ -210,9 +210,9 @@ export async function createGenerationJob(
 export async function waitForGenerationAcceptance(operationId: string): Promise<GenerationAcceptance> {
   await initializeGenerationJobs();
   const job = jobs.get(operationId);
-  if (!job) throw new Error(`generation operation not found: ${operationId}`);
+  if (!job) throw new Error(`không tìm thấy operation tạo nội dung: ${operationId}`);
   if (job.timestamps.acceptedAt) return acceptanceOf(job);
-  if (job.status === 'failed') throw new Error(job.error ?? 'generation provider rejected the request');
+  if (job.status === 'failed') throw new Error(job.error ?? 'provider tạo nội dung đã từ chối request');
   if (!job.acceptance) job.acceptance = makeAcceptanceWaiter();
   return job.acceptance.promise;
 }

@@ -38,7 +38,7 @@ export async function acceptExportSubmission(
     if (plan.project && plan.timelineId) {
       project = materialized.snapshot as ProjectDoc;
       const selected = project.timelines.find((timeline) => timeline.id === plan.timelineId);
-      if (!selected) throw new Error(`materialized timeline ${plan.timelineId} not found in project`);
+      if (!selected) throw new Error(`không tìm thấy timeline đã materialize ${plan.timelineId} trong project`);
       state = selected;
     } else {
       state = materialized.snapshot as TimelineState;

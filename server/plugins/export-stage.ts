@@ -69,7 +69,7 @@ function byteLimiter(onBytes: (value: number) => void): Transform {
   return new Transform({
     transform(chunk: Buffer, _encoding, callback) {
       bytes += chunk.length;
-      if (bytes > MAX_STAGE_BYTES) callback(new Error('staged export exceeds 64 GiB limit'));
+      if (bytes > MAX_STAGE_BYTES) callback(new Error('export staging vượt giới hạn 64 GiB'));
       else { onBytes(bytes); callback(null, chunk); }
     },
   });
@@ -82,7 +82,7 @@ async function stageRequest(req: IncomingMessage, extension: string) {
   let sizeBytes = 0;
   try {
     await pipeline(req, byteLimiter((value) => { sizeBytes = value; }), createWriteStream(partialPath, { flags: 'wx' }));
-    if (sizeBytes < 1) throw new Error('staged export body is empty');
+    if (sizeBytes < 1) throw new Error('thân export staging rỗng');
     await rename(partialPath, finalPath);
     return { filename, sizeBytes: (await stat(finalPath)).size };
   } catch (error) {

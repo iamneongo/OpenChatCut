@@ -32,7 +32,7 @@ export async function resolveE2bFileBytes(file: E2bFile): Promise<string | Array
       const name = clean.slice('media/uploads/'.length);
       if (!isSafeUploadName(name)) throw new Error(`illegal local path ${url}`);
       const hit = resolveUploadFile(name);
-      if (!hit) throw new Error(`local media not found: ${name}`);
+      if (!hit) throw new Error(`không tìm thấy media cục bộ: ${name}`);
       const data = await readFile(hit);
       return data.buffer.slice(data.byteOffset, data.byteOffset + data.byteLength) as ArrayBuffer;
     }
@@ -42,13 +42,13 @@ export async function resolveE2bFileBytes(file: E2bFile): Promise<string | Array
       const data = await readFile(product);
       return data.buffer.slice(data.byteOffset, data.byteOffset + data.byteLength) as ArrayBuffer;
     }
-    throw new Error(`local path not found: ${url} (looked in uploads + ${PRODUCT_ASSETS_DIR})`);
+    throw new Error(`không tìm thấy path cục bộ: ${url} (đã tìm trong uploads + ${PRODUCT_ASSETS_DIR})`);
   }
   if (!/^https?:\/\//.test(url)) throw new Error(`unsupported url ${url}`);
   const response = await safePublicFetch(url, { signal: AbortSignal.timeout(30_000) });
-  if (!response.ok) throw new Error(`fetch ${url} failed (${response.status})`);
+  if (!response.ok) throw new Error(`fetch ${url} thất bại (${response.status})`);
   const buf = await response.arrayBuffer();
-  if (buf.byteLength > MAX_FETCH) throw new Error(`fetched file too large (${buf.byteLength} bytes)`);
+  if (buf.byteLength > MAX_FETCH) throw new Error(`tệp đã fetch quá lớn (${buf.byteLength} bytes)`);
   return buf;
 }
 
@@ -177,7 +177,7 @@ export function e2bPlugin(options: E2bOptions): Plugin {
             await sandbox.commands.run(cmd, { timeoutMs: Math.min(input.timeoutMs ?? 240_000, MAX_TIMEOUT) });
           } catch (error) {
             const r = asCommandResult(error); // non-zero exit → surface ffmpeg's stderr
-            throw new Error(`ffmpeg vp9-alpha failed (exit ${r.exitCode}): ${r.stderr.slice(-400)}`);
+            throw new Error(`ffmpeg vp9-alpha thất bại (thoát với mã ${r.exitCode}): ${r.stderr.slice(-400)}`);
           }
           const webm = await sandbox.files.read('out.webm', { format: 'bytes' });
           if (!webm || webm.byteLength === 0) throw new Error('transcode tạo ra tệp rỗng');

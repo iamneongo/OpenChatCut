@@ -109,9 +109,9 @@ async function atomicPreviewBuild(path: string, build: (tmp: string) => Promise<
   const generation = capturePreviewGenerationEpoch(path);
   try {
     await build(tmp);
-    if (!isPreviewGenerationCurrent(generation)) throw new Error('preview source was deleted during generation');
+    if (!isPreviewGenerationCurrent(generation)) throw new Error('nguồn preview đã bị xóa trong lúc tạo');
     await rename(tmp, path);
-    if (!isPreviewGenerationCurrent(generation)) throw new Error('preview source was deleted during rename');
+    if (!isPreviewGenerationCurrent(generation)) throw new Error('nguồn preview đã bị xóa trong lúc đổi tên');
   } catch (error) {
     await unlink(tmp).catch(() => {});
     if (!isPreviewGenerationCurrent(generation)) await unlink(path).catch(() => {});

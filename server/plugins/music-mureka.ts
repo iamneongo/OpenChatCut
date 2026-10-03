@@ -32,19 +32,19 @@ async function fetchTask(url: string, apiKey: string): Promise<MurekaTask> {
 }
 
 async function awaitChoices(baseUrl: string, apiKey: string, initial: MurekaTask, queryKind: 'instrumental' | 'song'): Promise<MurekaTask> {
-  if (!initial.id) throw new Error('Mureka did not return a task id');
+  if (!initial.id) throw new Error('Mureka không trả về task id');
   const deadline = Date.now() + 10 * 60_000;
   let task = initial;
   while (Date.now() < deadline) {
     if (task.status === 'succeeded') {
-      if (!task.choices?.length) throw new Error('Mureka succeeded without audio choices');
+      if (!task.choices?.length) throw new Error('Mureka thành công nhưng không có lựa chọn audio');
       return task;
     }
     if (task.status && TERMINAL_FAILURES.has(task.status)) throw new Error(task.failed_reason || `Mureka generation ${task.status}`);
     await wait(2_000);
     task = await fetchTask(`${baseUrl}/v1/${queryKind}/query/${encodeURIComponent(initial.id)}`, apiKey);
   }
-  throw new Error('Mureka generation timed out');
+  throw new Error('tạo nội dung Mureka đã hết thời gian chờ');
 }
 
 async function sourceId(baseUrl: string, apiKey: string, input: ValidMusicRequest): Promise<string | undefined> {
@@ -119,11 +119,11 @@ export async function generateMureka(
     });
     if (!response.ok) throw new Error(await musicProviderError(response));
     initial = await response.json() as MurekaTask;
-    if (!initial.id) throw new Error('Mureka did not return a task id');
+    if (!initial.id) throw new Error('Mureka không trả về task id');
     await onTaskAccepted(String(initial.id));
   }
   const task = await awaitChoices(baseUrl, options.apiKey, initial, query);
   const urls = pickMurekaAudioUrls(task, input.audioFormat);
-  if (!urls.length) throw new Error(`Mureka returned no ${input.audioFormat} audio URL`);
+  if (!urls.length) throw new Error(`Mureka không trả về URL audio ${input.audioFormat} nào`);
   return urls;
 }

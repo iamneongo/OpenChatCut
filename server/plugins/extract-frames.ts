@@ -31,7 +31,7 @@ function readJson(req: IncomingMessage, max = MAX_JSON): Promise<unknown> {
     req.on('data', (c: Buffer) => {
       size += c.length;
       if (size > max) {
-        reject(new Error('body too large'));
+        reject(new Error('thân request quá lớn'));
         req.destroy();
         return;
       }
@@ -61,7 +61,7 @@ function run(cmd: string, args: string[], timeoutMs: number): Promise<void> {
     let stderr = '';
     const timer = setTimeout(() => {
       child.kill('SIGKILL');
-      reject(new Error(`${cmd} timed out`));
+      reject(new Error(`${cmd} đã hết thời gian chờ`));
     }, timeoutMs);
     child.stderr?.on('data', (c: Buffer) => {
       stderr += String(c);
@@ -93,7 +93,7 @@ async function probeDurationMs(path: string): Promise<number> {
     child.on('close', (code) => {
       const sec = Number(out.trim());
       if (code === 0 && Number.isFinite(sec) && sec > 0) resolve(Math.round(sec * 1000));
-      else reject(new Error('ffprobe duration failed'));
+      else reject(new Error('thăm dò thời lượng bằng ffprobe thất bại'));
     });
   });
 }

@@ -25,38 +25,38 @@ const styled = validateMusicRequest({
 assert.equal(styled.prompt, 'warm indie folk, no drums');
 assert.equal(styled.name, 'Score · final cut');
 
-assert.throws(() => validateMusicRequest({ provider: 'sonilo' }), /video sourceAssetId/);
+assert.throws(() => validateMusicRequest({ provider: 'sonilo' }), /sourceAssetId video của project/);
 assert.throws(
   () => validateMusicRequest({ provider: 'sonilo', sourceAssetPath: '/media/uploads/a.png', sourceAssetKind: 'image' }),
-  /video sourceAssetId/,
+  /sourceAssetId video của project/,
 );
 assert.throws(
   () => validateMusicRequest({ provider: 'sonilo', mode: 'soundtrack', sourceAssetPath: '/media/uploads/cut.mp4', sourceAssetKind: 'video' }),
-  /mode must be v2m/,
+  /mode sonilo phải là v2m/,
 );
 assert.throws(
   () => validateMusicRequest({
     provider: 'sonilo', sourceAssetPath: '/media/uploads/cut.mp4', sourceAssetKind: 'video', prompt: 'x'.repeat(501),
   }),
-  /at most 500/,
+  /dài tối đa 500/,
 );
 assert.throws(
   () => validateMusicRequest({
     provider: 'sonilo', sourceAssetPath: '/media/uploads/cut.mp4', sourceAssetKind: 'video', lyrics: 'hello',
   }),
-  /does not take lyrics/,
+  /không nhận lyrics/,
 );
 assert.throws(
   () => validateMusicRequest({
     provider: 'sonilo', sourceAssetPath: '/media/uploads/cut.mp4', sourceAssetKind: 'video', styles: ['pop'],
   }),
-  /mureka provider only/,
+  /provider mureka hỗ trợ/,
 );
 assert.throws(
   () => validateMusicRequest({
     provider: 'sonilo', sourceAssetPath: '/media/uploads/cut.mp4', sourceAssetKind: 'video', bitrate: 128_000,
   }),
-  /not supported by sonilo/,
+  /không hỗ trợ các tùy chọn chỉ dành cho MiniMax/,
 );
 assert.throws(
   () => validateMusicRequest({

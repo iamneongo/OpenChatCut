@@ -34,13 +34,13 @@ export function atlasRequestBody(input: ValidMusicRequest, model: string): Recor
 }
 
 export function parseAtlasPrediction(payload: unknown): AtlasPrediction {
-  if (!payload || typeof payload !== 'object') throw new Error('Atlas returned an invalid response');
+  if (!payload || typeof payload !== 'object') throw new Error('Atlas trả về phản hồi không hợp lệ');
   const envelope = payload as AtlasEnvelope;
   if (envelope.code !== undefined && envelope.code !== 0 && envelope.code !== 200) {
-    throw new Error(envelope.message || `Atlas request failed (${envelope.code})`);
+    throw new Error(envelope.message || `request Atlas thất bại (${envelope.code})`);
   }
   const prediction = envelope.data ?? payload as AtlasPrediction;
-  if (!prediction || typeof prediction !== 'object') throw new Error('Atlas returned an invalid prediction');
+  if (!prediction || typeof prediction !== 'object') throw new Error('Atlas trả về prediction không hợp lệ');
   return prediction;
 }
 
@@ -50,12 +50,12 @@ async function atlasJson(response: Response): Promise<AtlasPrediction> {
   try {
     payload = JSON.parse(text);
   } catch {
-    if (!response.ok) throw new Error(text.slice(0, 300) || `Atlas request failed (${response.status})`);
-    throw new Error('Atlas returned invalid JSON');
+    if (!response.ok) throw new Error(text.slice(0, 300) || `request Atlas thất bại (${response.status})`);
+    throw new Error('Atlas trả về JSON không hợp lệ');
   }
   if (!response.ok) {
     const envelope = payload as AtlasEnvelope;
-    throw new Error(envelope.message || (envelope.data as { error?: string } | undefined)?.error || `Atlas request failed (${response.status})`);
+    throw new Error(envelope.message || (envelope.data as { error?: string } | undefined)?.error || `request Atlas thất bại (${response.status})`);
   }
   return parseAtlasPrediction(payload);
 }
@@ -64,7 +64,7 @@ function completedOutputs(prediction: AtlasPrediction): string[] {
   const outputs = Array.isArray(prediction.outputs)
     ? prediction.outputs.filter((output): output is string => typeof output === 'string' && output.length > 0)
     : [];
-  if (!outputs.length) throw new Error('Atlas completed without an audio URL');
+  if (!outputs.length) throw new Error('Atlas hoàn tất nhưng không có URL audio');
   return outputs;
 }
 
@@ -91,11 +91,11 @@ async function awaitAtlasPrediction(baseUrl: string, apiKey: string, predictionI
     const prediction = await atlasJson(response);
     const status = String(prediction.status ?? '').toLowerCase();
     if (status === 'completed' || status === 'succeeded') return completedOutputs(prediction);
-    if (TERMINAL_FAILURES.has(status)) throw new Error(prediction.error || `Atlas music generation ${status}`);
+    if (TERMINAL_FAILURES.has(status)) throw new Error(prediction.error || `tạo music Atlas ở trạng thái ${status}`);
     await wait(delayMs);
     delayMs = Math.min(Math.round(delayMs * 1.5), 10_000);
   }
-  throw new Error('Atlas music generation timed out');
+  throw new Error('tạo music Atlas đã hết thời gian chờ');
 }
 
 export async function generateAtlasMusic(
@@ -114,11 +114,11 @@ export async function generateAtlasMusic(
     });
     const prediction = await atlasJson(response);
     predictionId = String(prediction.id ?? '').trim();
-    if (!predictionId) throw new Error('Atlas did not return a prediction id');
+    if (!predictionId) throw new Error('Atlas không trả về prediction id');
     await onTaskAccepted(predictionId);
     const status = String(prediction.status ?? '').toLowerCase();
     if (status === 'completed' || status === 'succeeded') return completedOutputs(prediction);
-    if (TERMINAL_FAILURES.has(status)) throw new Error(prediction.error || `Atlas music generation ${status}`);
+    if (TERMINAL_FAILURES.has(status)) throw new Error(prediction.error || `tạo music Atlas ở trạng thái ${status}`);
   }
   return awaitAtlasPrediction(baseUrl, options.atlasApiKey, predictionId);
 }

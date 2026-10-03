@@ -178,14 +178,14 @@ async function materializeRemote(
         if (done) break;
         bytes += value.byteLength;
         if (bytes > options.maxMaterializedBytes) {
-          throw new Error(`Media source exceeds the materialization limit: ${reference.source}`);
+          throw new Error(`nguồn media vượt giới hạn materialize: ${reference.source}`);
         }
         let offset = 0;
         while (offset < value.byteLength) {
           fetchSignal.throwIfAborted();
           const { bytesWritten } = await handle.write(value.subarray(offset));
           fetchSignal.throwIfAborted();
-          if (bytesWritten < 1) throw new Error(`Media source could not be written: ${reference.source}`);
+          if (bytesWritten < 1) throw new Error(`không thể ghi nguồn media: ${reference.source}`);
           offset += bytesWritten;
         }
       }
@@ -193,7 +193,7 @@ async function materializeRemote(
       await reader.cancel(error).catch(() => undefined);
       throw error;
     }
-    if (bytes < 1) throw new Error(`Media source returned an empty body: ${reference.source}`);
+    if (bytes < 1) throw new Error(`nguồn media trả về thân rỗng: ${reference.source}`);
     await handle.sync();
     fetchSignal.throwIfAborted();
     await handle.close();

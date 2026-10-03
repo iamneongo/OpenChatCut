@@ -47,7 +47,7 @@ export async function saveAudioResponse(
   rawSampleRate = 44_100,
 ): Promise<{ path: string; durationSeconds: number }> {
   if (!response.ok) throw new Error(await musicProviderError(response));
-  if (!response.body) throw new Error('music provider returned empty audio');
+  if (!response.body) throw new Error('provider music trả về audio rỗng');
   const ext = ['wav', 'pcm', 'flac'].includes(format) ? format : 'mp3';
   const dir = uploadDir();
   await mkdir(dir, { recursive: true });
@@ -60,7 +60,7 @@ export async function saveAudioResponse(
       createWriteStream(partial, { flags: 'wx' }),
     );
     const bytes = (await stat(partial)).size;
-    if (!bytes) throw new Error('music provider returned empty audio');
+    if (!bytes) throw new Error('provider music trả về audio rỗng');
     const durationSeconds = ext === 'pcm' ? bytes / (rawSampleRate * 2) : await probeDuration(partial);
     if (!Number.isFinite(durationSeconds) || durationSeconds <= 0) throw new Error('unable to determine generated music duration');
     await rename(partial, file);
@@ -73,19 +73,19 @@ export async function saveAudioResponse(
 
 function localUpload(uploadPath: string): { file: string; name: string } {
   const clean = uploadPath.split(/[?#]/, 1)[0];
-  if (!clean.startsWith('/media/uploads/')) throw new Error('music reference must be a project upload');
+  if (!clean.startsWith('/media/uploads/')) throw new Error('media tham chiếu music phải là upload của project');
   const name = clean.slice('/media/uploads/'.length);
-  if (!isSafeUploadName(name)) throw new Error('invalid music reference path');
+  if (!isSafeUploadName(name)) throw new Error('đường dẫn media tham chiếu music không hợp lệ');
   const file = resolveUploadFile(name);
-  if (!file) throw new Error(`music reference not found: ${uploadPath}`);
+  if (!file) throw new Error(`không tìm thấy media tham chiếu music: ${uploadPath}`);
   return { file, name };
 }
 
 export async function referenceAudioBase64(uploadPath: string): Promise<string> {
   const { file } = localUpload(uploadPath);
   const bytes = await readFile(file);
-  if (bytes.length > 50 * 1024 * 1024) throw new Error('reference audio must be at most 50MB');
-  if (!bytes.length) throw new Error('reference audio is empty');
+  if (bytes.length > 50 * 1024 * 1024) throw new Error('audio tham chiếu dài tối đa 50MB');
+  if (!bytes.length) throw new Error('audio tham chiếu rỗng');
   return bytes.toString('base64');
 }
 
@@ -109,7 +109,7 @@ export async function uploadMurekaFile(
   const { file, name } = localUpload(uploadPath);
   const bytes = await readFile(file);
   const maxBytes = purpose === 'soundtrack' ? 100 * 1024 * 1024 : 10 * 1024 * 1024;
-  if (bytes.length > maxBytes) throw new Error(`Mureka ${purpose} upload exceeds ${maxBytes / 1024 / 1024}MB`);
+  if (bytes.length > maxBytes) throw new Error(`upload ${purpose} của Mureka vượt quá ${maxBytes / 1024 / 1024}MB`);
   const form = new FormData();
   form.append('purpose', purpose);
   form.append('file', new Blob([bytes], { type: mimeFor(file) }), name);
@@ -118,6 +118,6 @@ export async function uploadMurekaFile(
   });
   if (!response.ok) throw new Error(await musicProviderError(response));
   const result = await response.json() as { id?: string };
-  if (!result.id) throw new Error('Mureka file upload did not return an id');
+  if (!result.id) throw new Error('upload tệp Mureka không trả về id');
   return result.id;
 }
