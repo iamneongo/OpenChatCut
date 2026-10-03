@@ -71,7 +71,7 @@ try {
   assert.equal(result.ok, true);
   assert.equal(result.cutCount, 1);
   assert.equal(result.__images[0]!.base64, 'ZmFrZS1qcGVn');
-  assert.match(result.next, /passed/i);
+  assert.match(result.next, /vượt qua kiểm tra tự động/i);
   assert.equal(requestBody.durationSeconds, 4);
   assert.equal(requestBody.expectsAudio, true);
   assert.deepEqual(requestBody.cutTimesSeconds, [2]);

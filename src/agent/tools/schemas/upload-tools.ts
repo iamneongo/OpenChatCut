@@ -6,12 +6,12 @@ export const UPLOAD_TOOL_SCHEMAS: AgentToolSchema[] = [
   {
     name: 'import_media',
     description: [
-      'Create a formal external import session with one short-lived, single-use upload slot.',
-      'The slot is bound to session, project, asset, filename, POST method, MIME type, and exact byte size.',
-      'Upload the declared bytes, then pass the opaque server receipt and echoed assetType to finalize_uploaded_asset.',
-      'No media-pool asset is published before finalize succeeds.',
-      'Provide assetId only to replace an existing pool asset; omit it for a new asset.',
-      'Prefer download_media for public URLs.',
+      'Tạo một phiên import bên ngoài chính thức với một slot upload ngắn hạn, chỉ dùng một lần.',
+      'Slot được ràng buộc với session, project, asset, filename, phương thức POST, MIME type và số byte chính xác.',
+      'Upload đúng số byte đã khai báo, sau đó truyền receipt opaque của server và assetType được phản hồi vào finalize_uploaded_asset.',
+      'Không asset nào trong media pool được publish trước khi finalize thành công.',
+      'Chỉ truyền assetId khi muốn thay thế asset hiện có trong pool; bỏ qua khi tạo asset mới.',
+      'Ưu tiên download_media cho URL công khai.',
     ].join(' '),
     input_schema: {
       type: 'object',
@@ -19,21 +19,21 @@ export const UPLOAD_TOOL_SCHEMAS: AgentToolSchema[] = [
         action: {
           type: 'string',
           enum: ['create_session'],
-          description: 'Must be create_session.',
+          description: 'Bắt buộc là create_session.',
         },
         assetId: {
           type: 'string',
-          description: 'Optional existing media-pool asset id or unique prefix to replace.',
+          description: 'Id asset hiện có trong media pool hoặc tiền tố duy nhất cần thay thế, tùy chọn.',
         },
         assetType: {
           type: 'string',
           enum: [...ASSET_TYPES],
           description: 'audio|gif|image|svg|video.',
         },
-        filename: { type: 'string', description: 'Safe original filename used to scope the upload.' },
-        contentType: { type: 'string', description: 'MIME type, e.g. video/mp4.' },
-        size: { type: 'integer', minimum: 1, description: 'Required exact byte size of the upload.' },
-        projectId: { type: 'string', description: 'Ignored; the active project is used.' },
+        filename: { type: 'string', description: 'Tên file gốc an toàn dùng để giới hạn phạm vi upload.' },
+        contentType: { type: 'string', description: 'MIME type, ví dụ video/mp4.' },
+        size: { type: 'integer', minimum: 1, description: 'Số byte chính xác bắt buộc của file upload.' },
+        projectId: { type: 'string', description: 'Bỏ qua; dùng dự án đang hoạt động.' },
       },
       required: ['action', 'assetType', 'filename', 'contentType', 'size'],
     },
@@ -41,24 +41,24 @@ export const UPLOAD_TOOL_SCHEMAS: AgentToolSchema[] = [
   {
     name: 'finalize_uploaded_asset',
     description: [
-      'Finalize bytes uploaded through an external upload handoff.',
-      'Pass the opaque receipt plus assetType from the successful upload response; path, hash, size, filename, and authoritative media type are resolved server-side.',
-      'The receipt is claimed during validation and normalization, then consumed only after the asset commit succeeds.',
-      'durationInSeconds is schema-required for audio/video/gif; width/height may supply media metadata.',
+      'Hoàn tất số byte đã upload qua quy trình bàn giao upload bên ngoài.',
+      'Truyền receipt opaque cùng assetType từ phản hồi upload thành công; path, hash, size, filename và media type có thẩm quyền sẽ được server phân giải.',
+      'Receipt được claim trong quá trình kiểm tra và chuẩn hóa, sau đó chỉ bị tiêu thụ khi commit asset thành công.',
+      'durationInSeconds là bắt buộc trong schema với audio/video/gif; width/height có thể cung cấp metadata media.',
     ].join(' '),
     input_schema: {
       type: 'object',
       properties: {
-        receipt: { type: 'string', description: 'Opaque one-time receipt from the successful upload response.' },
+        receipt: { type: 'string', description: 'Receipt opaque chỉ dùng một lần từ phản hồi upload thành công.' },
         assetType: {
           type: 'string',
           enum: [...ASSET_TYPES],
-          description: 'Media type echoed by the upload response; it must match the trusted receipt.',
+          description: 'Media type được phản hồi upload gửi lại; phải khớp với receipt đáng tin cậy.',
         },
-        durationInSeconds: { type: 'number', exclusiveMinimum: 0, description: 'Duration for audio, gif, or video.' },
+        durationInSeconds: { type: 'number', exclusiveMinimum: 0, description: 'Thời lượng của audio, gif hoặc video.' },
         width: { type: 'number', exclusiveMinimum: 0 },
         height: { type: 'number', exclusiveMinimum: 0 },
-        fps: { type: 'number', exclusiveMinimum: 0, description: 'Optional video fps metadata (stored only if useful).' },
+        fps: { type: 'number', exclusiveMinimum: 0, description: 'Metadata fps video tùy chọn (chỉ lưu khi hữu ích).' },
         hasAudioTrack: { type: 'boolean' },
         projectId: { type: 'string' },
       },
@@ -75,14 +75,14 @@ export const UPLOAD_TOOL_SCHEMAS: AgentToolSchema[] = [
   {
     name: 'request_asset_download',
     description: [
-      'Return a user-facing download URL/path for a media-pool asset.',
-      'Local-dev: returns the asset.src (usually /media/uploads/…). Not for motion-graphics without src.',
+      'Trả về URL/path download dành cho người dùng của một asset trong media pool.',
+      'Local-dev: trả về asset.src (thường là /media/uploads/…). Không dùng cho motion graphic không có src.',
     ].join(' '),
     input_schema: {
       type: 'object',
       properties: {
-        assetId: { type: 'string', description: 'Project asset ID or unique prefix.' },
-        variant: { type: 'string', description: 'Only "source" is supported.' },
+        assetId: { type: 'string', description: 'ID asset của dự án hoặc tiền tố duy nhất.' },
+        variant: { type: 'string', description: 'Chỉ hỗ trợ "source".' },
         projectId: { type: 'string' },
       },
       required: ['assetId'],

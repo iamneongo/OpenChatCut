@@ -7,13 +7,13 @@ export function withProgressTargets(schemas: AgentToolSchema[]): AgentToolSchema
     const properties = (tool.input_schema.properties ?? {}) as Record<string, unknown>;
     return {
       ...tool,
-      description: `${tool.description} For target=transcription, poll automatic ingest-time ASR readiness by assetIds instead of jobIds; a succeeded asset then carries a word-level transcript that clips inherit. target=upload checks whether each asset's media file is reachable (blob placeholders report running until relinked to /media/uploads); target=visual-analysis polls contact-sheet warm / frame-readiness jobs (enqueue on ingest; use view_asset_frames / view_timeline_frames for actual vision).`,
+      description: `${tool.description} Với target=transcription, kiểm tra độ sẵn sàng ASR tự động lúc ingest bằng assetIds thay vì jobIds; asset thành công sẽ mang transcript cấp từ mà clip kế thừa. target=upload kiểm tra file media của từng asset có thể truy cập hay không (blob placeholder báo running cho tới khi được liên kết lại với /media/uploads); target=visual-analysis theo dõi job làm nóng contact sheet / sẵn sàng frame (được xếp hàng khi ingest; dùng view_asset_frames / view_timeline_frames để xem hình ảnh thực tế).`,
       input_schema: {
         ...tool.input_schema,
         properties: {
           ...properties,
-          target: { type: 'string', enum: ['generation', 'transcription', 'upload', 'visual-analysis'], description: 'Which async task kind to inspect: generation (default), transcription, upload, or visual-analysis.' },
-          assetIds: { type: 'string', description: 'Comma-separated asset IDs/prefixes, for target=transcription / upload / visual-analysis.' },
+          target: { type: 'string', enum: ['generation', 'transcription', 'upload', 'visual-analysis'], description: 'Loại tác vụ bất đồng bộ cần kiểm tra: generation (mặc định), transcription, upload hoặc visual-analysis.' },
+          assetIds: { type: 'string', description: 'Các ID/tiền tố asset phân tách bằng dấu phẩy, dùng cho target=transcription / upload / visual-analysis.' },
         },
         required: ['action'],
       },
