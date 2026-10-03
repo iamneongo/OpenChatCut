@@ -205,7 +205,7 @@ export async function inspectAsrModel(
 }
 
 function catalogState(cacheDir = modelCacheDir()): Promise<Array<AsrModelInspection & {
-  id: string; modelId: string; label: string; sizeLabel: string; language: string;
+  id: string; modelId: string; label: string; labelVi?: string; sizeLabel: string; sizeLabelVi?: string; language: string; languageVi?: string;
   task?: AsrDownloadTask;
 }>> {
   return Promise.all(ASR_MODELS.map(async (entry) => {
@@ -214,8 +214,11 @@ function catalogState(cacheDir = modelCacheDir()): Promise<Array<AsrModelInspect
       id: entry.id,
       modelId: entry.modelId,
       label: entry.label,
+      labelVi: entry.labelVi,
       sizeLabel: entry.sizeLabel,
+      sizeLabelVi: entry.sizeLabelVi,
       language: entry.language,
+      languageVi: entry.languageVi,
       downloaded: state.downloaded,
       onnxDownloaded: state.onnxDownloaded,
       ggmlDownloaded: state.ggmlDownloaded,

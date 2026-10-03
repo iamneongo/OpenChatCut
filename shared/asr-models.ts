@@ -39,9 +39,13 @@ export interface AsrModelEntry {
   readonly files: readonly AsrModelFile[];
   readonly ggmlFile?: GgmlAsrModelFile;
   readonly label: string;
+  readonly labelVi?: string;
   readonly sizeLabel: string;
+  readonly sizeLabelVi?: string;
   readonly language: string;
+  readonly languageVi?: string;
   readonly note: string;
+  readonly noteVi?: string;
 }
 
 export const ASR_MODELS: readonly AsrModelEntry[] = [
@@ -65,7 +69,7 @@ export const ASR_MODELS: readonly AsrModelEntry[] = [
       sha256: '818710568da3ca15689e31a743197b520007872ff9576237bda97bd1b469c3d7',
       revision: '5359861c739e955e79d9a303bcbc70fb988958b1',
     },
-    label: 'Whisper Tiny', sizeLabel: '约 176MB', language: '中文 / English / Italiano / Русский', note: '最快最省，适合低配置设备；识别精度一般。',
+    label: 'Whisper Tiny', labelVi: 'Whisper Tiny', sizeLabel: '约 176MB', sizeLabelVi: '~176 MB', language: '中文 / English / Italiano / Русский', languageVi: 'Tiếng Việt / English / Italiano / Русский', note: '最快最省，适合低配置设备；识别精度一般。', noteVi: 'Nhẹ và nhanh nhất, phù hợp thiết bị cấu hình thấp; độ chính xác ở mức vừa phải.',
   },
   {
     id: 'base', modelId: 'onnx-community/whisper-base_timestamped', revision: '608c49e61301901684bc36cac8f74b95ff6b5a8e',
@@ -87,7 +91,7 @@ export const ASR_MODELS: readonly AsrModelEntry[] = [
       sha256: '422f1ae452ade6f30a004d7e5c6a43195e4433bc370bf23fac9cc591f01a8898',
       revision: '5359861c739e955e79d9a303bcbc70fb988958b1',
     },
-    label: 'Whisper Base', sizeLabel: '约 351MB', language: '中文 / English / Italiano / Русский', note: '轻量均衡，日常口播可用；timestamped 转写更快。',
+    label: 'Whisper Base', labelVi: 'Whisper Base', sizeLabel: '约 351MB', sizeLabelVi: '~351 MB', language: '中文 / English / Italiano / Русский', languageVi: 'Tiếng Việt / English / Italiano / Русский', note: '轻量均衡，日常口播可用；timestamped 转写更快。', noteVi: 'Cân bằng và gọn nhẹ, phù hợp lời thoại hằng ngày; chép lời có timestamp nhanh hơn.',
   },
   {
     id: 'small', modelId: 'Xenova/whisper-small', revision: '2d67713f236afa48a18992566e7647f6ca848e13',
@@ -109,7 +113,7 @@ export const ASR_MODELS: readonly AsrModelEntry[] = [
       sha256: 'ae85e4a935d7a567bd102fe55afc16bb595bdb618e11b2fc7591bc08120411bb',
       revision: '5359861c739e955e79d9a303bcbc70fb988958b1',
     },
-    label: 'Whisper Small', sizeLabel: '约 1.2GB', language: '中文 / English / Italiano / Русский', note: '推荐：多语言识别均衡，词级时间戳稳定。',
+    label: 'Whisper Small', labelVi: 'Whisper Small', sizeLabel: '约 1.2GB', sizeLabelVi: '~1,2 GB', language: '中文 / English / Italiano / Русский', languageVi: 'Tiếng Việt / English / Italiano / Русский', note: '推荐：多语言识别均衡，词级时间戳稳定。', noteVi: 'Khuyến nghị: nhận dạng đa ngôn ngữ cân bằng, timestamp theo từ ổn định.',
   },
   {
     id: 'medium', modelId: 'Xenova/whisper-medium', revision: '8c5b90880ab9f79487ab33613413431bf661d595',
@@ -127,7 +131,7 @@ export const ASR_MODELS: readonly AsrModelEntry[] = [
       sha256: '19fea4b380c3a618ec4723c3eef2eb785ffba0d0538cf43f8f235e7b3b34220f',
       revision: '5359861c739e955e79d9a303bcbc70fb988958b1',
     },
-    label: 'Whisper Medium', sizeLabel: '约 1.2GB', language: '中文 / English / Italiano / Русский', note: '精度最高但体积大；浏览器端 wasm 内存吃紧，桌面端本地推理体验最佳。',
+    label: 'Whisper Medium', labelVi: 'Whisper Medium', sizeLabel: '约 1.2GB', sizeLabelVi: '~1,2 GB', language: '中文 / English / Italiano / Русский', languageVi: 'Tiếng Việt / English / Italiano / Русский', note: '精度最高但体积大；浏览器端 wasm 内存吃紧，桌面端本地推理体验最佳。', noteVi: 'Độ chính xác cao nhất nhưng dung lượng lớn; WASM trên trình duyệt cần nhiều bộ nhớ, trải nghiệm suy luận cục bộ tốt nhất trên desktop.',
   },
   {
     // Issue #127: the catalog capped out at medium. large-v3-turbo is the
@@ -153,8 +157,8 @@ export const ASR_MODELS: readonly AsrModelEntry[] = [
       sha256: '394221709cd5ad1f40c46e6031ca61bce88931e6e088c188294c6d5a55ffa7e2',
       revision: '5359861c739e955e79d9a303bcbc70fb988958b1',
     },
-    label: 'Whisper Large v3 Turbo', sizeLabel: '约 1.5GB', language: '中文 / English / Italiano / Русский',
-    note: '多语言精度最强；浏览器端较慢，桌面端本地推理体验最佳。',
+    label: 'Whisper Large v3 Turbo', labelVi: 'Whisper Large v3 Turbo', sizeLabel: '约 1.5GB', sizeLabelVi: '~1,5 GB', language: '中文 / English / Italiano / Русский', languageVi: 'Tiếng Việt / English / Italiano / Русский',
+    note: '多语言精度最强；浏览器端较慢，桌面端本地推理体验最佳。', noteVi: 'Độ chính xác đa ngôn ngữ mạnh nhất; chạy chậm hơn trên trình duyệt, suy luận cục bộ tốt nhất trên desktop.',
   },
 ];
 
