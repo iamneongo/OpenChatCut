@@ -80,12 +80,12 @@ try {
     history = { ...history, present: { ...getDoc(), timelines: [{ ...getDoc().timelines[0],
       items: [audio('first', '/relinked.wav'), getState().items[1]] }] } };
   };
-  await assert.rejects(normalizeSelectedLoudness(getState().items, getState, getDoc, commands), /source changed/);
+  await assert.rejects(normalizeSelectedLoudness(getState().items, getState, getDoc, commands), /nguồn âm thanh đã thay đổi/);
   assert.equal(history.past.length, 0, 'relink cannot apply gain measured from the old source');
 
   reset();
   beforeResponse = () => { history.present = { ...getDoc(), activeTimelineId: 'other' }; };
-  await assert.rejects(normalizeSelectedLoudness(getState().items, getState, getDoc, commands), /source changed/);
+  await assert.rejects(normalizeSelectedLoudness(getState().items, getState, getDoc, commands), /nguồn âm thanh đã thay đổi/);
   assert.equal(history.past.length, 0, 'switching timelines aborts the entire UI operation');
 
   reset([audio('first', '/one.wav'), audio('second', '/one.wav'), audio('bad', '/broken.wav'), audio('missing', '')]);

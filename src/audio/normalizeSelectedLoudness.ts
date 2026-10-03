@@ -23,10 +23,10 @@ export async function normalizeSelectedLoudness(
   const live = getState();
   if (getDoc().activeTimelineId !== doc.activeTimelineId
     || validateTimelineItemSourceBatch(snapshots, live.items, getDoc().assets, results).status === 'stale') {
-    throw new Error('Audio source changed during loudness analysis');
+    throw new Error('nguồn âm thanh đã thay đổi trong lúc phân tích âm lượng');
   }
   const plan = planInspectorBatch(live, snapshots.map((snapshot) => snapshot.itemId),
     (item) => ({ type: 'setVolume', id: item.id, volume: results.get(item.id)!.gain }),
     (item) => item.kind === 'audio' && results.has(item.id));
-  if (plan.ok) commands.batch(plan.actions, 'Normalize selected loudness');
+  if (plan.ok) commands.batch(plan.actions, 'Chuẩn hóa âm lượng đã chọn');
 }
