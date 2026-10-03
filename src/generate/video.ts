@@ -1,5 +1,6 @@
 import type { MediaAsset, TimelineItem, TimelineState } from '../editor/types';
 import { sourceWindowForTimelineRange } from '../editor/sourceLimit';
+import { localizedCatalogText } from '../i18n/locale';
 
 export interface SubmitVideoArgs {
   operationId?: string;
@@ -105,10 +106,10 @@ function sameOriginUploadPath(rawPath: string, ref: string): string {
   let pathname = rawPath;
   if (rawPath.startsWith('http')) {
     const url = new URL(rawPath, location.origin);
-    if (url.origin !== location.origin) throw new Error(`external asset URLs are not accepted: ${ref}`);
+    if (url.origin !== location.origin) throw new Error(localizedCatalogText(`external asset URLs are not accepted: ${ref}`, `不接受外部素材 URL：${ref}`, undefined, `Không chấp nhận URL tệp bên ngoài: ${ref}`));
     pathname = url.pathname;
   }
-  if (!pathname.startsWith('/media/uploads/')) throw new Error(`generation reference must be a project upload: ${ref}`);
+  if (!pathname.startsWith('/media/uploads/')) throw new Error(localizedCatalogText(`generation reference must be a project upload: ${ref}`, `生成参考素材必须是项目上传素材：${ref}`, undefined, `Tệp tham chiếu tạo nội dung phải là tệp đã tải lên dự án: ${ref}`));
   return pathname;
 }
 
@@ -118,8 +119,10 @@ function resolveAssetForReference(ref: string, state: TimelineState, kind: Media
   const all = state.assets ?? [];
   const exact = all.filter((asset) => asset.id === cleanRef || asset.name === cleanRef || asset.src === path);
   const candidates = exact.length ? exact : all.filter((asset) => asset.id.startsWith(cleanRef));
-  if (candidates.length !== 1) throw new Error(candidates.length ? `asset reference is ambiguous: ${ref}` : `asset not found: ${ref}`);
-  if (candidates[0].kind !== kind) throw new Error(`asset is not ${kind}: ${ref}`);
+  if (candidates.length !== 1) throw new Error(candidates.length
+    ? localizedCatalogText(`asset reference is ambiguous: ${ref}`, `素材引用不明确：${ref}`, undefined, `Tài liệu tham chiếu không xác định duy nhất: ${ref}`)
+    : localizedCatalogText(`asset not found: ${ref}`, `未找到素材：${ref}`, undefined, `Không tìm thấy tệp: ${ref}`));
+  if (candidates[0].kind !== kind) throw new Error(localizedCatalogText(`asset is not ${kind}: ${ref}`, `素材不是 ${kind}：${ref}`, undefined, `Tệp không phải ${kind}: ${ref}`));
   return candidates[0];
 }
 
@@ -131,7 +134,7 @@ function resolveReference(
 ): GenerationReference {
   const cleanRef = ref.replace(/^asset:\/\//, '');
   const item = state.items.find((candidate) => candidate.id === cleanRef || candidate.name === cleanRef);
-  if (item && item.kind !== kind) throw new Error(`timeline reference is not ${kind}: ${ref}`);
+  if (item && item.kind !== kind) throw new Error(localizedCatalogText(`timeline reference is not ${kind}: ${ref}`, `时间线引用不是 ${kind}：${ref}`, undefined, `Tham chiếu dòng thời gian không phải ${kind}: ${ref}`));
   const asset = resolveAssetForReference(ref, state, kind, item);
   const path = sameOriginUploadPath(item?.src ?? asset.src, ref);
   const sourceRevision = item?.sourceRevision ?? asset.sourceRevision;
@@ -174,36 +177,36 @@ export function preflightGenerationReferences(
     const expected = reference.role === 'reference-video' ? 'video'
       : reference.role === 'reference-audio' ? 'audio' : 'image';
     if (reference.kind === 'timeline-slice' && expected === 'image') {
-      issues.push({ code: 'role_slice_unsupported', model, role: reference.role, message: `${model} ${reference.role} must use an image asset master, not a timeline slice` });
+      issues.push({ code: 'role_slice_unsupported', model, role: reference.role, message: localizedCatalogText(`${model} ${reference.role} must use an image asset master, not a timeline slice`, `${model} 的 ${reference.role} 必须使用图片素材主文件，不能使用时间线片段`, undefined, `${model} ${reference.role} phải dùng tệp ảnh gốc, không dùng lát cắt dòng thời gian`) });
     }
     if (reference.kind === 'timeline-slice' && !(reference.srcOutFrame > reference.srcInFrame)) {
-      issues.push({ code: 'empty_timeline_slice', model, role: reference.role, message: `${model} ${reference.role} timeline slice is empty` });
+      issues.push({ code: 'empty_timeline_slice', model, role: reference.role, message: localizedCatalogText(`${model} ${reference.role} timeline slice is empty`, `${model} 的 ${reference.role} 时间线片段为空`, undefined, `Lát cắt dòng thời gian ${reference.role} của ${model} đang trống`) });
     }
   }
   if (lastFrames && !firstFrames) {
-    issues.push({ code: 'last_frame_requires_first', model, role: 'last-frame', message: `${model} lastFrame requires firstFrame` });
+    issues.push({ code: 'last_frame_requires_first', model, role: 'last-frame', message: localizedCatalogText(`${model} lastFrame requires firstFrame`, `${model} 的 lastFrame 需要先提供 firstFrame`, undefined, `${model} lastFrame yêu cầu có firstFrame`) });
   }
   if (model === 'hailuo' && (images || videos || audios)) {
-    issues.push({ code: 'hailuo_reference_role', model, message: 'hailuo does not support reference arrays; use firstFrame and optional lastFrame' });
+    issues.push({ code: 'hailuo_reference_role', model, message: localizedCatalogText('hailuo does not support reference arrays; use firstFrame and optional lastFrame', 'hailuo 不支持参考素材数组；请使用 firstFrame 和可选的 lastFrame', undefined, 'hailuo không hỗ trợ mảng tệp tham chiếu; hãy dùng firstFrame và lastFrame nếu cần') });
   }
   if (model === 'seedance2' || model === 'byteplus') {
     if (lastFrames && (images || videos || audios)) {
-      issues.push({ code: 'seedance_last_frame_conflict', model, role: 'last-frame', message: `${model} lastFrame cannot be combined with reference arrays` });
+      issues.push({ code: 'seedance_last_frame_conflict', model, role: 'last-frame', message: localizedCatalogText(`${model} lastFrame cannot be combined with reference arrays`, `${model} 的 lastFrame 不能与参考素材数组同时使用`, undefined, `${model} lastFrame không thể dùng cùng mảng tệp tham chiếu`) });
     }
     if (images > 9 || videos > 3 || audios > 3) {
-      issues.push({ code: 'seedance_reference_limit', model, message: `${model} supports at most 9 images, 3 videos, and 3 audio references` });
+      issues.push({ code: 'seedance_reference_limit', model, message: localizedCatalogText(`${model} supports at most 9 images, 3 videos, and 3 audio references`, `${model} 最多支持 9 个图片、3 个视频和 3 个音频参考素材`, undefined, `${model} hỗ trợ tối đa 9 ảnh, 3 video và 3 tệp âm thanh tham chiếu`) });
     }
     if (audios && !firstFrames && !images && !videos) {
-      issues.push({ code: 'seedance_audio_requires_visual', model, role: 'reference-audio', message: `${model} audio references require a visual reference` });
+      issues.push({ code: 'seedance_audio_requires_visual', model, role: 'reference-audio', message: localizedCatalogText(`${model} audio references require a visual reference`, `${model} 的音频参考素材需要同时提供视觉参考`, undefined, `Tệp âm thanh tham chiếu của ${model} cần có tệp hình ảnh hoặc video tham chiếu`) });
     }
   }
   if (model === 'kling') {
-    if (audios) issues.push({ code: 'kling_audio_unsupported', model, role: 'reference-audio', message: 'kling does not support audio references' });
-    if (videos > 1) issues.push({ code: 'kling_video_limit', model, role: 'reference-video', message: 'kling accepts at most one reference video' });
+    if (audios) issues.push({ code: 'kling_audio_unsupported', model, role: 'reference-audio', message: localizedCatalogText('kling does not support audio references', 'kling 不支持音频参考素材', undefined, 'kling không hỗ trợ tệp âm thanh tham chiếu') });
+    if (videos > 1) issues.push({ code: 'kling_video_limit', model, role: 'reference-video', message: localizedCatalogText('kling accepts at most one reference video', 'kling 最多接受一个视频参考素材', undefined, 'kling chỉ chấp nhận tối đa một video tham chiếu') });
     const imageCount = firstFrames + lastFrames + images;
     const maxImages = videos ? 4 : 7;
     if (imageCount > maxImages) {
-      issues.push({ code: 'kling_image_limit', model, role: 'reference-image', message: `kling accepts at most ${maxImages} total image references for this request` });
+      issues.push({ code: 'kling_image_limit', model, role: 'reference-image', message: localizedCatalogText(`kling accepts at most ${maxImages} total image references for this request`, `本次请求中 kling 最多接受 ${maxImages} 个图片参考素材`, undefined, `Yêu cầu này của kling chỉ chấp nhận tối đa ${maxImages} ảnh tham chiếu`) });
     }
   }
   if (issues.length) throw new GenerationReferencePreflightError(issues);
@@ -240,7 +243,7 @@ export async function submitVideo(args: SubmitVideoArgs, state: TimelineState): 
     }
     throw new Error(result.error ?? `video generation failed (${response.status})`);
   }
-  if (!result.operationId || !result.jobId || result.status !== 'queued') throw new Error('video generation returned an invalid job submission');
+  if (!result.operationId || !result.jobId || result.status !== 'queued') throw new Error(localizedCatalogText('video generation returned an invalid job submission', '视频生成返回了无效的任务提交结果', undefined, 'Tạo video trả về yêu cầu tác vụ không hợp lệ'));
   return {
     operationId: result.operationId,
     jobId: result.jobId,

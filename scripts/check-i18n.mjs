@@ -87,7 +87,11 @@ function isInsideTranslation(node, sf) {
     if (
       ts.isCallExpression(parent)
       && ts.isIdentifier(parent.expression)
-      && (parent.expression.text === 't' || parent.expression.text === 'tData')
+      && (
+        parent.expression.text === 't'
+        || parent.expression.text === 'tData'
+        || parent.expression.text === 'localizedCatalogText'
+      )
     ) {
       return true;
     }

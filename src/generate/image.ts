@@ -1,4 +1,5 @@
 import type { MediaAsset, TimelineState } from '../editor/types';
+import { localizedCatalogText } from '../i18n/locale';
 
 export interface SubmitImageArgs {
   model?: 'gpt-image-2' | 'nano-banana' | 'image-01' | 'wavespeed' | 'byteplus' | 'grok-imagine' | 'fal';
@@ -44,19 +45,19 @@ const newId = () => crypto.randomUUID?.() ?? `generated_${Date.now()}_${Math.ran
 export async function submitImage(args: SubmitImageArgs, state: TimelineState): Promise<MediaAsset[]> {
   const prompt = args.prompt.trim();
   const name = args.name.trim();
-  if (!prompt) throw new Error('prompt is required');
-  if (!name) throw new Error('name is required');
+  if (!prompt) throw new Error(localizedCatalogText('prompt is required', '需要填写提示词', undefined, 'Cần nhập prompt'));
+  if (!name) throw new Error(localizedCatalogText('name is required', '需要填写名称', undefined, 'Cần nhập tên'));
   const referencePaths = (args.referenceAssetIds ?? []).map((id) => {
     const asset = (state.assets ?? []).find((candidate) => candidate.id === id);
-    if (!asset) throw new Error(`reference asset not found: ${id}`);
-    if (asset.kind !== 'image') throw new Error(`reference asset is not an image: ${id}`);
+    if (!asset) throw new Error(localizedCatalogText(`reference asset not found: ${id}`, `未找到参考素材：${id}`, undefined, `Không tìm thấy tệp tham chiếu: ${id}`));
+    if (asset.kind !== 'image') throw new Error(localizedCatalogText(`reference asset is not an image: ${id}`, `参考素材不是图片：${id}`, undefined, `Tệp tham chiếu không phải hình ảnh: ${id}`));
     return asset.src;
   });
   const maskPath = args.maskAssetId
     ? (() => {
       const asset = (state.assets ?? []).find((candidate) => candidate.id === args.maskAssetId);
-      if (!asset) throw new Error(`mask asset not found: ${args.maskAssetId}`);
-      if (asset.kind !== 'image') throw new Error(`mask asset is not an image: ${args.maskAssetId}`);
+      if (!asset) throw new Error(localizedCatalogText(`mask asset not found: ${args.maskAssetId}`, `未找到蒙版素材：${args.maskAssetId}`, undefined, `Không tìm thấy tệp mặt nạ: ${args.maskAssetId}`));
+      if (asset.kind !== 'image') throw new Error(localizedCatalogText(`mask asset is not an image: ${args.maskAssetId}`, `蒙版素材不是图片：${args.maskAssetId}`, undefined, `Tệp mặt nạ không phải hình ảnh: ${args.maskAssetId}`));
       return asset.src;
     })()
     : undefined;
@@ -67,8 +68,8 @@ export async function submitImage(args: SubmitImageArgs, state: TimelineState): 
     body: JSON.stringify({ ...args, prompt, name, referencePaths, maskPath }),
   });
   const result = await response.json().catch(() => ({})) as ImageResponse;
-  if (!response.ok) throw new Error(result.error ?? `image generation failed (${response.status})`);
-  if (!result.paths?.length) throw new Error('image generation returned no assets');
+  if (!response.ok) throw new Error(result.error ?? localizedCatalogText(`image generation failed (${response.status})`, `图片生成失败（${response.status}）`, undefined, `Tạo hình ảnh thất bại (${response.status})`));
+  if (!result.paths?.length) throw new Error(localizedCatalogText('image generation returned no assets', '图片生成未返回素材', undefined, 'Tạo hình ảnh không trả về tệp'));
   // a still defaults to 3s (CapCut-style photo default) — 5s felt too long on
   // a fresh timeline; trim/extend per clip as needed.
   const durationInFrames = Math.round(state.fps * 3);

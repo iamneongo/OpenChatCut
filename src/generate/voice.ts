@@ -1,5 +1,6 @@
 import type { MediaAsset, TimelineState } from '../editor/types';
 import type { MinimaxLanguageBoost } from '../../shared/media-provider-params';
+import { localizedCatalogText } from '../i18n/locale';
 
 export type VoiceProvider =
   | 'elevenlabs'
@@ -92,16 +93,16 @@ function probeAudio(src: string, fps: number): Promise<number> {
 export async function submitVoice(args: SubmitVoiceArgs, state: TimelineState): Promise<MediaAsset> {
   const text = args.text.trim();
   const voiceId = args.voiceId.trim();
-  if (!text) throw new Error('text is required');
-  if (!voiceId && !args.timbreWeights?.length) throw new Error('voiceId is required unless MiniMax timbreWeights are provided');
+  if (!text) throw new Error(localizedCatalogText('text is required', '需要填写文本', undefined, 'Cần nhập nội dung văn bản'));
+  if (!voiceId && !args.timbreWeights?.length) throw new Error(localizedCatalogText('voiceId is required unless MiniMax timbreWeights are provided', '除非提供 MiniMax timbreWeights，否则必须填写 voiceId', undefined, 'Cần có voiceId, trừ khi đã cung cấp timbreWeights của MiniMax'));
   const response = await fetch('/generate/voice', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ ...args, text, voiceId }),
   });
   const result = await response.json().catch(() => ({})) as VoiceResponse;
-  if (!response.ok) throw new Error(result.error ?? `voice generation failed (${response.status})`);
-  if (!result.path) throw new Error('voice generation returned no audio asset');
+  if (!response.ok) throw new Error(result.error ?? localizedCatalogText(`voice generation failed (${response.status})`, `语音生成失败（${response.status}）`, undefined, `Tạo giọng nói thất bại (${response.status})`));
+  if (!result.path) throw new Error(localizedCatalogText('voice generation returned no audio asset', '语音生成未返回音频素材', undefined, 'Tạo giọng nói không trả về tệp âm thanh'));
   const durationInFrames = result.durationSeconds && Number.isFinite(result.durationSeconds)
     ? Math.max(1, Math.round(result.durationSeconds * state.fps))
     : await probeAudio(result.path, state.fps);

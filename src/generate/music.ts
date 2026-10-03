@@ -1,5 +1,6 @@
 import type { MediaAsset, TimelineState } from '../editor/types';
 import { findAssetByReference } from './asset-reference';
+import { localizedCatalogText } from '../i18n/locale';
 
 export interface SubmitMusicArgs {
   operationId?: string;
@@ -57,17 +58,17 @@ export interface MusicGenerationSubmission {
 }
 
 function resolveAsset(ref: string, state?: TimelineState, kind?: MediaAsset['kind']): MediaAsset {
-  if (!state) throw new Error('project state required to resolve music source asset');
+  if (!state) throw new Error(localizedCatalogText('project state required to resolve music source asset', '解析音乐来源素材需要项目状态', undefined, 'Cần trạng thái dự án để xác định tệp nguồn nhạc'));
   const asset = findAssetByReference(ref, state.assets ?? []);
-  if (!asset) throw new Error(`music source asset not found: ${ref}`);
-  if (kind && asset.kind !== kind) throw new Error(`music source asset is not ${kind}: ${ref}`);
+  if (!asset) throw new Error(localizedCatalogText(`music source asset not found: ${ref}`, `未找到音乐来源素材：${ref}`, undefined, `Không tìm thấy tệp nguồn nhạc: ${ref}`));
+  if (kind && asset.kind !== kind) throw new Error(localizedCatalogText(`music source asset is not ${kind}: ${ref}`, `音乐来源素材不是 ${kind}：${ref}`, undefined, `Tệp nguồn nhạc không phải ${kind}: ${ref}`));
   let pathname = asset.src;
   if (pathname.startsWith('http')) {
     const url = new URL(pathname, location.origin);
-    if (url.origin !== location.origin) throw new Error(`external audio URLs are not accepted: ${ref}`);
+    if (url.origin !== location.origin) throw new Error(localizedCatalogText(`external audio URLs are not accepted: ${ref}`, `不接受外部音频 URL：${ref}`, undefined, `Không chấp nhận URL âm thanh bên ngoài: ${ref}`));
     pathname = url.pathname;
   }
-  if (!pathname.startsWith('/media/uploads/')) throw new Error(`music source must be a project upload: ${ref}`);
+  if (!pathname.startsWith('/media/uploads/')) throw new Error(localizedCatalogText(`music source must be a project upload: ${ref}`, `音乐来源必须是项目上传素材：${ref}`, undefined, `Nguồn nhạc phải là tệp đã tải lên dự án: ${ref}`));
   return { ...asset, src: pathname };
 }
 
@@ -94,8 +95,8 @@ export async function submitMusic(args: SubmitMusicArgs, state?: TimelineState):
     }),
   });
   const result = await response.json().catch(() => ({})) as MusicResponse;
-  if (!response.ok) throw new Error(result.error ?? `music generation failed (${response.status})`);
-  if (!result.operationId || !result.jobId || result.status !== 'queued') throw new Error('music generation returned an invalid job submission');
+  if (!response.ok) throw new Error(result.error ?? localizedCatalogText(`music generation failed (${response.status})`, `音乐生成失败（${response.status}）`, undefined, `Tạo nhạc thất bại (${response.status})`));
+  if (!result.operationId || !result.jobId || result.status !== 'queued') throw new Error(localizedCatalogText('music generation returned an invalid job submission', '音乐生成返回了无效的任务提交结果', undefined, 'Tạo nhạc trả về yêu cầu tác vụ không hợp lệ'));
   return {
     operationId: result.operationId,
     jobId: result.jobId,

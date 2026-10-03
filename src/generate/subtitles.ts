@@ -2,6 +2,7 @@ import { CAPTION_MAX_CHARS_PER_LINE, CAPTION_MAX_VISUAL_LINES, activeTranslation
 import { resolveCaptionWords, resolveCaptionWordIndices, resolveCaptionWordRefs, applyWordOverrides } from '../captions/resolve';
 import { effectivePreset } from '../captions/renderStyles';
 import { captionsOnTrack, defaultTrackId, resolveTrackId, type TimelineState } from '../editor/types';
+import { localizedCatalogText } from '../i18n/locale';
 
 export interface SubmitSubtitleExportArgs {
   subtitleFormat?: 'srt' | 'txt';
@@ -31,9 +32,9 @@ export async function submitSubtitleExport(args: SubmitSubtitleExportArgs, state
   const target = args.captionTrackId
     ? resolveTrackId(state, args.captionTrackId, 'caption')
     : defaultTrackId(state, 'caption');
-  if (args.captionTrackId && !target) throw new Error(`caption track not found: ${args.captionTrackId}`);
+  if (args.captionTrackId && !target) throw new Error(localizedCatalogText(`caption track not found: ${args.captionTrackId}`, `未找到字幕轨道：${args.captionTrackId}`, undefined, `Không tìm thấy rãnh phụ đề: ${args.captionTrackId}`));
   const captions = target ? captionsOnTrack(state, target) : null;
-  if (!captions) throw new Error('the caption track has no captions to export');
+  if (!captions) throw new Error(localizedCatalogText('the caption track has no captions to export', '字幕轨道没有可导出的字幕', undefined, 'Rãnh phụ đề không có nội dung để xuất'));
   const words = resolveCaptionWords(captions, state.items, state.fps);
   // Word-by-word overwriting (hide/wrap text/force page break) also works on exported SRT/TXT - what you see on the screen,
   // The export is all about keeping the text consistent. When there is no override, displayWords === words, the behavior remains unchanged.
@@ -50,7 +51,7 @@ export async function submitSubtitleExport(args: SubmitSubtitleExportArgs, state
   );
   const startMs = typeof args.startFrame === 'number' ? args.startFrame / state.fps * 1_000 : (args.startSeconds ?? 0) * 1_000;
   const endMs = typeof args.endFrameExclusive === 'number' ? args.endFrameExclusive / state.fps * 1_000 : typeof args.endSeconds === 'number' ? args.endSeconds * 1_000 : Number.POSITIVE_INFINITY;
-  if (startMs < 0 || endMs <= startMs) throw new Error('invalid subtitle export range');
+  if (startMs < 0 || endMs <= startMs) throw new Error(localizedCatalogText('invalid subtitle export range', '字幕导出范围无效', undefined, 'Phạm vi xuất phụ đề không hợp lệ'));
   const cues = pages.flatMap((page) => {
     const start = Math.max(page.start, startMs);
     const end = Math.min(page.end, endMs);
@@ -68,8 +69,8 @@ export async function submitSubtitleExport(args: SubmitSubtitleExportArgs, state
     body: JSON.stringify({ format: args.subtitleFormat ?? 'srt', name: args.name, cues }),
   });
   const result = await response.json().catch(() => ({})) as SubtitleResponse;
-  if (!response.ok) throw new Error(result.error ?? `subtitle export failed (${response.status})`);
-  if (!result.downloadUrl) throw new Error('subtitle export returned no download URL');
+  if (!response.ok) throw new Error(result.error ?? localizedCatalogText(`subtitle export failed (${response.status})`, `字幕导出失败（${response.status}）`, undefined, `Xuất phụ đề thất bại (${response.status})`));
+  if (!result.downloadUrl) throw new Error(localizedCatalogText('subtitle export returned no download URL', '字幕导出未返回下载地址', undefined, 'Xuất phụ đề không trả về địa chỉ tải xuống'));
   const anchor = document.createElement('a');
   anchor.href = result.downloadUrl;
   anchor.download = result.name ?? `subtitles.${args.subtitleFormat ?? 'srt'}`;
