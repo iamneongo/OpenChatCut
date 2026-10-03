@@ -48,7 +48,7 @@ export const VI: Record<string, string> = {
   '时间线': 'Dòng thời gian',
   '音频': 'Âm thanh',
   '视频': 'Video',
-  '媒体': 'Phương tiện',
+  '媒体': 'Tư liệu',
   '设置': 'Cài đặt',
   '项目': 'Dự án',
   '新建项目': 'Tạo dự án mới',
