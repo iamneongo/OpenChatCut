@@ -2114,7 +2114,7 @@ export const VI: Record<string, string> = {
   '图片生成': 'Tạo hình ảnh',
   '视频生成': 'Tạo video',
   '音乐生成': 'Tạo nhạc',
-  '把黑色背景变透明、保留亮部，像 Screen 混合——叠加火焰/烟雾/漏光/粒子等黑底素材。': 'Biến nền đen thành trong suốt, giữ vùng sáng như phép trộn Screen — chồng tư liệu nền đen như lửa/khói/rò sáng/hạt.',
+  '把黑色背景变透明、保留亮部，像 Screen 混合——叠加火焰/烟雾/漏光/粒子等黑底素材。': 'Biến nền đen thành trong suốt, giữ vùng sáng như phép trộn màn hình (Screen) — chồng tư liệu nền đen như lửa/khói/rò sáng/hạt.',
   '对矩形区域打码，可调位置/尺寸/块大小/羽化。': 'Làm vỡ điểm ảnh vùng chữ nhật, có thể chỉnh vị trí/kích thước/cỡ ô/làm mềm mép.',
   '在指定圆心加一个放大镜头，可调半径/倍率/边框。': 'Thêm kính phóng đại tại tâm chỉ định, có thể chỉnh bán kính/tỷ lệ/viền.',
   '把画面裁成圆角矩形，可调位置/尺寸/圆角/羽化/反转。': 'Cắt hình thành chữ nhật bo góc, có thể chỉnh vị trí/kích thước/bo góc/làm mềm biên/đảo.',
