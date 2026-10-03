@@ -5,6 +5,7 @@ import type { MediaAsset } from '../../editor/types';
 import { prepareTemplate } from '../../template-host';
 import { generateAgentText } from '../client';
 import { designStyleHint } from '../systemPrompt';
+import { localizedCatalogText } from '../../i18n/locale';
 import { execCoreDataTool } from './core-data-tools';
 import { execJianyingExport } from './jianying-export-tool';
 
@@ -102,7 +103,8 @@ function generatedAsset(args: Args, code: string, ctx: AgentContext): MediaAsset
       : fallback
   );
   return {
-    id: crypto.randomUUID(), name: String(args.name ?? '').trim() || 'Generated MG',
+    id: crypto.randomUUID(),
+    name: String(args.name ?? '').trim() || localizedCatalogText('Generated MG', '生成的 MG', undefined, 'Hoạt ảnh MG đã tạo'),
     kind: 'motion-graphic', src: '', code,
     durationInFrames: Number.isFinite(requestedFrames)
       ? Math.min(MAX_MG_FRAMES, Math.max(15, requestedFrames))
