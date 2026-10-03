@@ -26,12 +26,12 @@ export async function serverToolCatalogForGeneration(
   const cloned = structuredClone(schemas);
   const loadSkill = cloned.find((schema) => schema.name === 'load_skill');
   if (!loadSkill) return [...cloned];
-  if (!loadSkill.description?.endsWith('Bundled skills: .')) {
+  if (!loadSkill.description?.endsWith('Skill đóng gói: .')) {
     throw new Error('load_skill schema description format changed.');
   }
   loadSkill.description = loadSkill.description.replace(
-    'Bundled skills: .',
-    `Bundled skills: ${(await bundledSkillIds()).join(', ')}.`,
+    'Skill đóng gói: .',
+    `Skill đóng gói: ${(await bundledSkillIds()).join(', ')}.`,
   );
   return [...cloned];
 }

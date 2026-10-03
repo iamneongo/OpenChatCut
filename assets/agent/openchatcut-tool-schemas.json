@@ -2507,7 +2507,7 @@
     },
     {
       "name": "download_media",
-      "description": "Download a media file from a public URL into the project media pool. Accepts a single url or array of urls. Type inferred from extension / Content-Type; pass type to override. Local-dev: server fetches bytes into /media/uploads (S3 stand-in). Returns { failed, succeeded, results } like push_asset. Serial: each call has a 75s window to start URLs, so pass at most 3 urls per call and call again for the rest. An unreachable host is a failed row, never a remote fallback. Each successful row carries probe (duration, dimensions, fps, audio/video tracks, codecs, qualityRisks) measured by the local ffprobe at import time — do not call probe_media for a file you just downloaded. Bytes that are not readable media fail as not_media and never enter the pool.",
+      "description": "Tải file media từ URL công khai vào media pool của dự án. Nhận một url hoặc mảng url. Type được suy ra từ extension / Content-Type; truyền type để ghi đè. Local-dev: server tải byte vào /media/uploads (đóng vai S3). Trả về { failed, succeeded, results } giống push_asset. Tuần tự: mỗi lần gọi có cửa sổ 75s để bắt đầu URL, nên truyền tối đa 3 URL mỗi lần và gọi lại cho phần còn lại. Host không truy cập được sẽ là dòng failed, không bao giờ fallback sang remote. Mỗi dòng thành công có probe (thời lượng, kích thước, fps, track audio/video, codec, qualityRisks) được đo bằng ffprobe cục bộ lúc import — không gọi probe_media cho file vừa tải. Byte không phải media đọc được sẽ lỗi not_media và không bao giờ vào pool.",
       "input_schema": {
         "type": "object",
         "properties": {
@@ -2525,11 +2525,11 @@
                 }
               }
             ],
-            "description": "HTTP(S) URL or array of URLs."
+            "description": "URL HTTP(S) hoặc mảng URL."
           },
           "name": {
             "type": "string",
-            "description": "Override display name. Ignored for batch (>1 url)."
+            "description": "Ghi đè tên hiển thị. Bị bỏ qua khi chạy batch (>1 url)."
           },
           "type": {
             "type": "string",
@@ -2540,11 +2540,11 @@
               "svg",
               "video"
             ],
-            "description": "Asset type override; auto-detected from Content-Type / URL extension when omitted."
+            "description": "Ghi đè loại asset; tự phát hiện từ Content-Type / extension URL khi bỏ qua."
           },
           "projectId": {
             "type": "string",
-            "description": "Ignored because OpenChatCut uses the active project."
+            "description": "Bỏ qua vì OpenChatCut dùng dự án đang hoạt động."
           }
         },
         "required": [
@@ -2554,16 +2554,16 @@
     },
     {
       "name": "push_asset",
-      "description": "Register a public http(s) media URL as a project asset. filePath = public URL (string or array). Local-dev downloads into /media/uploads when possible. type may be motion-graphic (with duration / durationInFrames / properties). effect/transition types are not pool media here. Do NOT pass local filesystem paths. Returns { failed, succeeded, results: [{ assetId, name, type, success } | { error, success:false }] }.",
+      "description": "Đăng ký URL media http(s) công khai thành asset của dự án. filePath = URL công khai (chuỗi hoặc mảng). Local-dev sẽ tải vào /media/uploads khi có thể. type có thể là motion-graphic (kèm duration / durationInFrames / properties). type effect/transition không phải media pool ở đây. KHÔNG truyền path filesystem cục bộ. Trả về { failed, succeeded, results: [{ assetId, name, type, success } | { error, success:false }] }.",
       "input_schema": {
         "type": "object",
         "properties": {
           "filePath": {
-            "description": "Public http(s) media URL or array of URLs. Local paths are not accepted."
+            "description": "URL media http(s) công khai hoặc mảng URL. Không nhận path cục bộ."
           },
           "name": {
             "type": "string",
-            "description": "Override display name. Ignored for batch (>1 filePath)."
+            "description": "Ghi đè tên hiển thị. Bị bỏ qua khi chạy batch (>1 filePath)."
           },
           "type": {
             "type": "string",
@@ -2577,15 +2577,15 @@
               "transition",
               "video"
             ],
-            "description": "Asset type override; auto-detected from extension when omitted."
+            "description": "Ghi đè loại asset; tự phát hiện từ extension khi bỏ qua."
           },
           "duration": {
             "type": "number",
-            "description": "Duration in seconds (motion-graphic if durationInFrames omitted; also media fallback)."
+            "description": "Thời lượng tính bằng giây (motion-graphic khi bỏ qua durationInFrames; cũng là fallback cho media)."
           },
           "durationInFrames": {
             "type": "number",
-            "description": "Duration in frames at timeline fps (motion-graphic alternative to duration)."
+            "description": "Thời lượng tính bằng frame theo fps timeline (thay thế duration cho motion-graphic)."
           },
           "width": {
             "type": "number"
@@ -2595,7 +2595,7 @@
           },
           "properties": {
             "type": "array",
-            "description": "Motion-graphic editable properties (objects with key, label, type, defaultValue).",
+            "description": "Property chỉnh sửa được của motion-graphic (object có key, label, type, defaultValue).",
             "items": {}
           },
           "projectId": {
@@ -2610,17 +2610,17 @@
     },
     {
       "name": "import_url_asset",
-      "description": "Legacy alias of push_asset: register a public http(s) media URL as a project asset. Prefer download_media to fetch into the library or push_asset to register a URL. Same local behaviour.",
+      "description": "Alias cũ của push_asset: đăng ký URL media http(s) công khai thành asset dự án. Ưu tiên download_media để tải vào thư viện hoặc push_asset để đăng ký URL. Hành vi cục bộ giống nhau.",
       "input_schema": {
         "type": "object",
         "properties": {
           "url": {
             "type": "string",
-            "description": "Public http(s) URL of the media file."
+            "description": "URL http(s) công khai của file media."
           },
           "name": {
             "type": "string",
-            "description": "Display name; defaults to the URL filename."
+            "description": "Tên hiển thị; mặc định theo tên file trong URL."
           },
           "kind": {
             "type": "string",
@@ -2629,7 +2629,7 @@
               "image",
               "audio"
             ],
-            "description": "Override kind detection when the URL extension is ambiguous."
+            "description": "Ghi đè phát hiện kind khi extension URL không rõ ràng."
           }
         },
         "required": [
@@ -2639,7 +2639,7 @@
     },
     {
       "name": "search_stock_media",
-      "description": "Search curated stock platforms for B-roll, photos, sounds, or music; returns unified results with importUrl. kind=any|video|audio|music|image (default video). platforms is an optional comma-separated provider list. Use category to narrow intent and horizontal|square|vertical for orientation; legacy orientation names remain accepted. Unsupported provider/type combinations are skipped with warnings. Official keys are preferred; eligible visual searches can use Firecrawl fallback. On success, pass a result importUrl to download_media or push_asset.",
+      "description": "Tìm B-roll, ảnh, âm thanh hoặc nhạc trên các nền tảng stock được tuyển chọn; trả về kết quả thống nhất có importUrl. kind=any|video|audio|music|image (mặc định video). platforms là danh sách provider phân tách bằng dấu phẩy, tùy chọn. Dùng category để thu hẹp ý định và horizontal|square|vertical cho hướng khung; tên orientation cũ vẫn được chấp nhận. Tổ hợp provider/type không hỗ trợ sẽ bị bỏ qua kèm cảnh báo. Ưu tiên key chính thức; tìm hình ảnh đủ điều kiện có thể fallback qua Firecrawl. Khi thành công, truyền importUrl của kết quả vào download_media hoặc push_asset.",
       "input_schema": {
         "type": "object",
         "properties": {
@@ -2649,7 +2649,7 @@
           },
           "category": {
             "type": "string",
-            "description": "Optional category, such as business, nature, technology, whoosh, piano, or ambient."
+            "description": "Category tùy chọn, như business, nature, technology, whoosh, piano hoặc ambient."
           },
           "kind": {
             "type": "string",
@@ -2660,7 +2660,7 @@
               "music",
               "image"
             ],
-            "description": "Default video. music searches Freesound and returns importable audio results."
+            "description": "Mặc định video. music tìm trên Freesound và trả về audio có thể import."
           },
           "orientation": {
             "type": "string",
@@ -2672,18 +2672,18 @@
               "portrait",
               "squarish"
             ],
-            "description": "Preferred horizontal|square|vertical; legacy landscape|portrait|squarish values are accepted."
+            "description": "Ưu tiên horizontal|square|vertical; vẫn chấp nhận giá trị cũ landscape|portrait|squarish."
           },
           "platforms": {
             "type": "string",
-            "description": "Optional comma-separated list: pexels,pixabay,unsplash,freesound."
+            "description": "Danh sách tùy chọn phân tách bằng dấu phẩy: pexels,pixabay,unsplash,freesound."
           },
           "limitPerPlatform": {
             "type": "integer",
             "minimum": 1,
             "maximum": 6,
             "default": 3,
-            "description": "Max results per platform and media type."
+            "description": "Số kết quả tối đa cho mỗi platform và loại media."
           }
         },
         "required": [
@@ -3246,7 +3246,7 @@
     },
     {
       "name": "manage_skill",
-      "description": "A custom creative skill is reusable workflow guidance in bodyMarkdown. It appears beside built-in skills in the Creative Mode picker and is loaded through load_skill after selection. action: list | get | current | activate | create | update | delete. list returns all read-only built-in and custom skills with id/slug/name/summary plus activeSkillId. get with skillId returns details including the full body and a builtin flag. current returns the active creative mode or active:null. activate with skillId switches the project creative mode; pass an empty string to clear it. The next message is instructed to load the selected skill before acting. create with name + body and optional summary/scenarios creates a custom skill and id; a SKILL.md frontmatter name becomes its load_skill slug. update with skillId and changed fields edits a custom skill; built-ins are read-only. delete with skillId removes a custom skill; built-ins cannot be deleted.",
+      "description": "Skill sáng tạo tùy chỉnh là hướng dẫn workflow có thể tái sử dụng trong bodyMarkdown. Skill xuất hiện cạnh skill dựng sẵn trong bộ chọn Creative Mode và được tải qua load_skill sau khi chọn. action: list | get | current | activate | create | update | delete. list trả về mọi skill dựng sẵn và tùy chỉnh chỉ đọc với id/slug/name/summary cùng activeSkillId. get với skillId trả về chi tiết gồm toàn bộ body và cờ builtin. current trả về creative mode đang hoạt động hoặc active:null. activate với skillId chuyển creative mode của dự án; truyền chuỗi rỗng để xóa. Tin nhắn tiếp theo được hướng dẫn tải skill đã chọn trước khi hành động. create với name + body và summary/scenarios tùy chọn sẽ tạo skill tùy chỉnh và id; name trong frontmatter SKILL.md trở thành slug load_skill. update với skillId và các field thay đổi sẽ sửa skill tùy chỉnh; skill dựng sẵn chỉ đọc. delete với skillId xóa skill tùy chỉnh; không thể xóa skill dựng sẵn.",
       "input_schema": {
         "type": "object",
         "properties": {
@@ -3264,26 +3264,26 @@
           },
           "skillId": {
             "type": "string",
-            "description": "Target skill id for get/update/delete/activate; call list first. Pass an empty string to activate to clear Creative Mode."
+            "description": "Id skill đích cho get/update/delete/activate; gọi list trước. Truyền chuỗi rỗng cho activate để xóa Creative Mode."
           },
           "name": {
             "type": "string",
-            "description": "create/update: display name; required and non-empty for create."
+            "description": "create/update: tên hiển thị; bắt buộc và không rỗng khi create."
           },
           "body": {
             "type": "string",
-            "description": "create/update: Markdown workflow returned by load_skill; required and non-empty for create."
+            "description": "create/update: workflow Markdown do load_skill trả về; bắt buộc và không rỗng khi create."
           },
           "summary": {
             "type": "string",
-            "description": "create/update: optional one-line description; create defaults to name."
+            "description": "create/update: mô tả một dòng tùy chọn; create mặc định theo name."
           },
           "scenarios": {
             "type": "array",
             "items": {
               "type": "string"
             },
-            "description": "create/update: optional trigger-scenario keywords."
+            "description": "create/update: từ khóa kịch bản kích hoạt, tùy chọn."
           }
         },
         "required": [
@@ -4442,21 +4442,21 @@
     },
     {
       "name": "load_skill",
-      "description": "Load one bundled or selected custom skill under the active model round input budget. Omit selectors for SKILL.md; if it is paged, follow nextOffset until null before support files. Exactly one selector per call: either files=[...] to load whole omitted files, or file with offset and limit to page a single file. Never send file and files in the same call. Bundled skills: ai-cinematic-short-film, asset-import, batch-montage-variants, beat-sync-montage, create-motion-graphics, ecommerce-product-montage, explainer-video, export, image-gen, known-errors, livestream-to-clips, long-video-to-shorts, motion-graphic-placement, multi-clips-to-reels, music, music-intelligence, news-rough-cut, openchatcut-plugin-basics, product-ad-video-script, product-help, shader-gen, skill-creator, storyboard-shot-breakdown, talking-head-guide, transcription, verification, video-gen, video-thumbnail-generator, voice, widget-forms.",
+      "description": "Tải một skill đóng gói hoặc skill tùy chỉnh đã chọn trong giới hạn input của lượt model hiện tại. Bỏ selector để tải SKILL.md; nếu bị phân trang, theo nextOffset tới null trước khi tải file hỗ trợ. Mỗi lần gọi chỉ một selector: hoặc files=[...] để tải nguyên các file bị bỏ qua, hoặc file cùng offset và limit để phân trang một file. Không bao giờ gửi file và files cùng lần gọi. Skill đóng gói: ai-cinematic-short-film, asset-import, batch-montage-variants, beat-sync-montage, create-motion-graphics, ecommerce-product-montage, explainer-video, export, image-gen, known-errors, livestream-to-clips, long-video-to-shorts, motion-graphic-placement, multi-clips-to-reels, music, music-intelligence, news-rough-cut, openchatcut-plugin-basics, product-ad-video-script, product-help, shader-gen, skill-creator, storyboard-shot-breakdown, talking-head-guide, transcription, verification, video-gen, video-thumbnail-generator, voice, widget-forms.",
       "input_schema": {
         "type": "object",
         "properties": {
           "name": {
             "type": "string",
-            "description": "Skill id, e.g. \"talking-head-guide\", \"voice\", \"shader-gen\"."
+            "description": "Id skill, ví dụ \"talking-head-guide\", \"voice\", \"shader-gen\"."
           },
           "file": {
             "type": "string",
-            "description": "One safe relative file path to page; use returned nextOffset for the next call. Omit the key entirely when sending files; never pass an empty string."
+            "description": "Một path tương đối an toàn của file cần phân trang; dùng nextOffset trả về cho lần gọi tiếp theo. Bỏ hẳn key khi gửi files; không bao giờ truyền chuỗi rỗng."
           },
           "files": {
             "type": "array",
-            "description": "Optional safe relative paths from omittedFiles. When present, only these whole files are returned. Omit the key entirely when paging with file; never pass an empty array.",
+            "description": "Các path tương đối an toàn tùy chọn lấy từ omittedFiles. Khi có, chỉ trả về nguyên các file này. Bỏ hẳn key khi phân trang bằng file; không bao giờ truyền mảng rỗng.",
             "items": {
               "type": "string"
             },
@@ -4466,13 +4466,13 @@
           "offset": {
             "type": "integer",
             "minimum": 0,
-            "description": "UTF-16 character offset for file paging; must not split a surrogate pair."
+            "description": "Offset ký tự UTF-16 để phân trang file; không được cắt đôi surrogate pair."
           },
           "limit": {
             "type": "integer",
             "minimum": 1,
             "maximum": 48000,
-            "description": "Maximum UTF-16 characters requested; the runtime may return a smaller exact page to fit the active input budget."
+            "description": "Số ký tự UTF-16 tối đa yêu cầu; runtime có thể trả trang nhỏ hơn nhưng chính xác để vừa giới hạn input hiện tại."
           }
         },
         "required": [
@@ -4963,65 +4963,65 @@
     },
     {
       "name": "analyze_music",
-      "description": "Run the installed on-device Beat This + CLAP models for a media-pool asset or timeline clip and wait for completion. Returns compact BPM, meter, confidence, tags, sections, and bounded beat/downbeat points; embeddings are never exposed. Reuses a valid cache by default; set force to recompute. This tool never downloads model packs or edits the timeline.",
+      "description": "Chạy model Beat This + CLAP đã cài trên thiết bị cho asset media pool hoặc clip timeline và chờ hoàn tất. Trả về BPM, meter, độ tin cậy, tag, section và các điểm beat/downbeat giới hạn ở dạng gọn; không bao giờ lộ embedding. Mặc định dùng lại cache hợp lệ; đặt force để tính lại. Tool này không tải model pack và không sửa timeline.",
       "input_schema": {
         "type": "object",
         "properties": {
           "itemId": {
             "type": "string",
-            "description": "Timeline audio/video clip id (unique prefix accepted). Its media-pool asset and trim/speed mapping are used."
+            "description": "Id clip audio/video trên timeline (chấp nhận tiền tố duy nhất). Dùng asset trong media pool cùng mapping trim/speed của clip."
           },
           "assetId": {
             "type": "string",
-            "description": "Media-pool asset id (unique prefix accepted). Use itemId instead when timeline mapping is needed."
+            "description": "Id asset trong media pool (chấp nhận tiền tố duy nhất). Dùng itemId khi cần mapping theo timeline."
           },
           "force": {
             "type": "boolean",
-            "description": "Recompute even when a valid cached analysis exists. Defaults to false."
+            "description": "Tính lại ngay cả khi đã có phân tích cache hợp lệ. Mặc định false."
           },
           "optional": {
             "type": "boolean",
-            "description": "When true, missing packs or an analysis failure returns available=false so a larger edit can continue with simpler audio evidence. Invalid targets still fail."
+            "description": "Khi true, thiếu pack hoặc phân tích lỗi sẽ trả available=false để chỉnh sửa lớn hơn tiếp tục với bằng chứng audio đơn giản hơn. Target không hợp lệ vẫn lỗi."
           }
         }
       }
     },
     {
       "name": "inspect_music",
-      "description": "Read an already-cached local Beat This + CLAP analysis for a media-pool asset or timeline clip. Returns compact BPM, meter, confidence, tags, sections, and bounded beat/downbeat points; embeddings are never exposed. This tool never starts analysis or downloads models. If no cache exists it explains how to install the required packs and analyze first.",
+      "description": "Đọc phân tích Beat This + CLAP cục bộ đã cache cho asset media pool hoặc clip timeline. Trả về BPM, meter, độ tin cậy, tag, section và các điểm beat/downbeat giới hạn ở dạng gọn; không bao giờ lộ embedding. Tool này không bắt đầu phân tích và không tải model. Nếu chưa có cache, tool giải thích cách cài pack cần thiết và phân tích trước.",
       "input_schema": {
         "type": "object",
         "properties": {
           "itemId": {
             "type": "string",
-            "description": "Timeline audio/video clip id (unique prefix accepted). Its media-pool asset and trim/speed mapping are used."
+            "description": "Id clip audio/video trên timeline (chấp nhận tiền tố duy nhất). Dùng asset trong media pool cùng mapping trim/speed của clip."
           },
           "assetId": {
             "type": "string",
-            "description": "Media-pool asset id (unique prefix accepted). Use itemId instead when timeline mapping is needed."
+            "description": "Id asset trong media pool (chấp nhận tiền tố duy nhất). Dùng itemId khi cần mapping theo timeline."
           },
           "fromMs": {
             "type": "number",
             "minimum": 0,
-            "description": "Optional source-millisecond range start."
+            "description": "Bắt đầu phạm vi mili giây nguồn, tùy chọn."
           },
           "toMs": {
             "type": "number",
             "minimum": 1,
-            "description": "Optional exclusive source-millisecond range end."
+            "description": "Kết thúc phạm vi mili giây nguồn, không bao gồm, tùy chọn."
           }
         }
       }
     },
     {
       "name": "music_edit_plan",
-      "description": "Build a deterministic, read-only cut plan from cached music analysis, the BGM clip trim/speed mapping, and overlapping video clips. Returns a bounded frame plan and opaque analysisRef without embeddings or unbounded analysis arrays. Call this to inspect the proposed rhythm edit before sync_cuts_to_music.",
+      "description": "Tạo kế hoạch cắt xác định, chỉ đọc từ phân tích nhạc đã cache, mapping trim/speed của clip BGM và các clip video chồng phạm vi. Trả về kế hoạch frame có giới hạn và analysisRef opaque, không có embedding hay mảng phân tích không giới hạn. Gọi tool này để xem chỉnh sửa nhịp đề xuất trước sync_cuts_to_music.",
       "input_schema": {
         "type": "object",
         "properties": {
           "itemId": {
             "type": "string",
-            "description": "BGM timeline audio/video clip id (unique prefix accepted)."
+            "description": "Id clip audio/video BGM trên timeline (chấp nhận tiền tố duy nhất)."
           },
           "timing": {
             "type": "string",
@@ -5031,7 +5031,7 @@
               "downbeat",
               "section"
             ],
-            "description": "Cut timing. auto chooses section/downbeat/beat deterministically from density and available analysis."
+            "description": "Timing cắt. auto chọn section/downbeat/beat một cách xác định dựa trên density và phân tích có sẵn."
           },
           "density": {
             "type": "string",
@@ -5040,17 +5040,17 @@
               "medium",
               "dense"
             ],
-            "description": "How many analyzed timing points to retain."
+            "description": "Số điểm timing đã phân tích cần giữ lại."
           },
           "fromFrame": {
             "type": "number",
             "minimum": 0,
-            "description": "Optional inclusive timeline-frame range start; defaults to the BGM clip start."
+            "description": "Frame bắt đầu của phạm vi timeline, bao gồm, tùy chọn; mặc định đầu clip BGM."
           },
           "toFrame": {
             "type": "number",
             "minimum": 1,
-            "description": "Optional exclusive timeline-frame range end; defaults to the BGM clip end."
+            "description": "Frame kết thúc phạm vi timeline, không bao gồm, tùy chọn; mặc định cuối clip BGM."
           },
           "targetItemIds": {
             "type": "array",
@@ -5058,7 +5058,7 @@
               "type": "string"
             },
             "maxItems": 64,
-            "description": "Optional video clip ids/prefixes to constrain targets. Defaults to video clips overlapping the range."
+            "description": "Id/tiền tố clip video tùy chọn để giới hạn target. Mặc định các clip video chồng lên phạm vi."
           }
         },
         "required": [
@@ -5070,13 +5070,13 @@
     },
     {
       "name": "sync_cuts_to_music",
-      "description": "Recompute a cached music cut plan at execution time and split only unlocked video clips at its planned frames. Pass the analysisRef returned by music_edit_plan to reject stale analysis. All splits are one EditorCommands batch and one undo step. This never starts analysis and never edits the BGM clip itself.",
+      "description": "Tính lại kế hoạch cắt nhạc đã cache tại thời điểm thực thi và chỉ tách các clip video không khóa tại frame đã lập kế hoạch. Truyền analysisRef do music_edit_plan trả về để từ chối phân tích cũ. Mọi lần tách là một batch EditorCommands và một bước undo. Tool này không bắt đầu phân tích và không sửa chính clip BGM.",
       "input_schema": {
         "type": "object",
         "properties": {
           "itemId": {
             "type": "string",
-            "description": "BGM timeline audio/video clip id (unique prefix accepted)."
+            "description": "Id clip audio/video BGM trên timeline (chấp nhận tiền tố duy nhất)."
           },
           "timing": {
             "type": "string",
@@ -5086,7 +5086,7 @@
               "downbeat",
               "section"
             ],
-            "description": "Cut timing. auto chooses section/downbeat/beat deterministically from density and available analysis."
+            "description": "Timing cắt. auto chọn section/downbeat/beat một cách xác định dựa trên density và phân tích có sẵn."
           },
           "density": {
             "type": "string",
@@ -5095,17 +5095,17 @@
               "medium",
               "dense"
             ],
-            "description": "How many analyzed timing points to retain."
+            "description": "Số điểm timing đã phân tích cần giữ lại."
           },
           "fromFrame": {
             "type": "number",
             "minimum": 0,
-            "description": "Optional inclusive timeline-frame range start; defaults to the BGM clip start."
+            "description": "Frame bắt đầu của phạm vi timeline, bao gồm, tùy chọn; mặc định đầu clip BGM."
           },
           "toFrame": {
             "type": "number",
             "minimum": 1,
-            "description": "Optional exclusive timeline-frame range end; defaults to the BGM clip end."
+            "description": "Frame kết thúc phạm vi timeline, không bao gồm, tùy chọn; mặc định cuối clip BGM."
           },
           "targetItemIds": {
             "type": "array",
@@ -5113,11 +5113,11 @@
               "type": "string"
             },
             "maxItems": 64,
-            "description": "Optional video clip ids/prefixes to constrain targets. Defaults to video clips overlapping the range."
+            "description": "Id/tiền tố clip video tùy chọn để giới hạn target. Mặc định các clip video chồng lên phạm vi."
           },
           "analysisRef": {
             "type": "string",
-            "description": "Opaque ref from music_edit_plan. Execution rejects missing or stale analysis."
+            "description": "Ref opaque từ music_edit_plan. Khi thực thi sẽ từ chối nếu thiếu hoặc phân tích đã cũ."
           }
         },
         "required": [
@@ -5130,13 +5130,13 @@
     },
     {
       "name": "music_image_plan",
-      "description": "Build a deterministic, read-only photo placement plan from cached music analysis and the BGM clip trim/speed mapping. The plan fills the requested range with media-pool images, changing images at beat/downbeat/section boundaries and cycling the selected image order. Call this before sync_images_to_music so the user can review the bounded placement plan. This tool never starts analysis.",
+      "description": "Tạo kế hoạch đặt ảnh xác định, chỉ đọc từ phân tích nhạc đã cache và mapping trim/speed của clip BGM. Kế hoạch lấp đầy phạm vi yêu cầu bằng image trong media pool, đổi ảnh tại ranh giới beat/downbeat/section và lặp vòng theo thứ tự ảnh đã chọn. Gọi trước sync_images_to_music để người dùng xem kế hoạch placement có giới hạn. Tool này không bắt đầu phân tích.",
       "input_schema": {
         "type": "object",
         "properties": {
           "itemId": {
             "type": "string",
-            "description": "BGM timeline audio/video clip id (unique prefix accepted)."
+            "description": "Id clip audio/video BGM trên timeline (chấp nhận tiền tố duy nhất)."
           },
           "timing": {
             "type": "string",
@@ -5146,7 +5146,7 @@
               "downbeat",
               "section"
             ],
-            "description": "Photo-change timing. auto chooses section/downbeat/beat deterministically from density and available analysis."
+            "description": "Timing đổi ảnh. auto chọn section/downbeat/beat một cách xác định dựa trên density và phân tích có sẵn."
           },
           "density": {
             "type": "string",
@@ -5155,17 +5155,17 @@
               "medium",
               "dense"
             ],
-            "description": "How many analyzed timing points to retain."
+            "description": "Số điểm timing đã phân tích cần giữ lại."
           },
           "fromFrame": {
             "type": "number",
             "minimum": 0,
-            "description": "Optional inclusive timeline-frame range start; defaults to the BGM clip start."
+            "description": "Frame bắt đầu của phạm vi timeline, bao gồm, tùy chọn; mặc định đầu clip BGM."
           },
           "toFrame": {
             "type": "number",
             "minimum": 1,
-            "description": "Optional exclusive timeline-frame range end; defaults to the BGM clip end."
+            "description": "Frame kết thúc phạm vi timeline, không bao gồm, tùy chọn; mặc định cuối clip BGM."
           },
           "imageAssetIds": {
             "type": "array",
@@ -5173,11 +5173,11 @@
               "type": "string"
             },
             "maxItems": 64,
-            "description": "Optional image asset ids/prefixes in display order. Defaults to all image assets in media-pool order and cycles when needed."
+            "description": "Id/tiền tố asset image theo thứ tự hiển thị, tùy chọn. Mặc định mọi asset image theo thứ tự media pool và lặp vòng khi cần."
           },
           "track": {
             "type": "string",
-            "description": "Optional target video track id or alias, default V1. The target range must be empty and unlocked."
+            "description": "Id hoặc alias track video đích, mặc định V1. Phạm vi đích phải rỗng và không bị khóa."
           }
         },
         "required": [
@@ -5189,13 +5189,13 @@
     },
     {
       "name": "sync_images_to_music",
-      "description": "Recompute a cached music image plan and add one image clip per planned beat interval. Pass the analysisRef returned by music_image_plan to reject stale analysis. All image additions are one EditorCommands batch and one undo step. The target video track must be unlocked and empty in the requested range; this never starts analysis and never edits the BGM clip.",
+      "description": "Tính lại kế hoạch ảnh nhạc đã cache và thêm một clip image cho mỗi khoảng beat đã lập kế hoạch. Truyền analysisRef do music_image_plan trả về để từ chối phân tích cũ. Mọi lần thêm ảnh là một batch EditorCommands và một bước undo. Track video đích phải không khóa và rỗng trong phạm vi yêu cầu; tool này không bắt đầu phân tích và không sửa clip BGM.",
       "input_schema": {
         "type": "object",
         "properties": {
           "itemId": {
             "type": "string",
-            "description": "BGM timeline audio/video clip id (unique prefix accepted)."
+            "description": "Id clip audio/video BGM trên timeline (chấp nhận tiền tố duy nhất)."
           },
           "timing": {
             "type": "string",
@@ -5205,7 +5205,7 @@
               "downbeat",
               "section"
             ],
-            "description": "Photo-change timing. auto chooses section/downbeat/beat deterministically from density and available analysis."
+            "description": "Timing đổi ảnh. auto chọn section/downbeat/beat một cách xác định dựa trên density và phân tích có sẵn."
           },
           "density": {
             "type": "string",
@@ -5214,17 +5214,17 @@
               "medium",
               "dense"
             ],
-            "description": "How many analyzed timing points to retain."
+            "description": "Số điểm timing đã phân tích cần giữ lại."
           },
           "fromFrame": {
             "type": "number",
             "minimum": 0,
-            "description": "Optional inclusive timeline-frame range start; defaults to the BGM clip start."
+            "description": "Frame bắt đầu của phạm vi timeline, bao gồm, tùy chọn; mặc định đầu clip BGM."
           },
           "toFrame": {
             "type": "number",
             "minimum": 1,
-            "description": "Optional exclusive timeline-frame range end; defaults to the BGM clip end."
+            "description": "Frame kết thúc phạm vi timeline, không bao gồm, tùy chọn; mặc định cuối clip BGM."
           },
           "imageAssetIds": {
             "type": "array",
@@ -5232,15 +5232,15 @@
               "type": "string"
             },
             "maxItems": 64,
-            "description": "Optional image asset ids/prefixes in display order. Defaults to all image assets in media-pool order and cycles when needed."
+            "description": "Id/tiền tố asset image theo thứ tự hiển thị, tùy chọn. Mặc định mọi asset image theo thứ tự media pool và lặp vòng khi cần."
           },
           "track": {
             "type": "string",
-            "description": "Optional target video track id or alias, default V1. The target range must be empty and unlocked."
+            "description": "Id hoặc alias track video đích, mặc định V1. Phạm vi đích phải rỗng và không bị khóa."
           },
           "analysisRef": {
             "type": "string",
-            "description": "Opaque ref from music_image_plan. Execution rejects missing or stale analysis."
+            "description": "Ref opaque từ music_image_plan. Khi thực thi sẽ từ chối nếu thiếu hoặc phân tích đã cũ."
           }
         },
         "required": [
@@ -5806,7 +5806,7 @@
     },
     {
       "name": "search_stock_media",
-      "description": "Search curated stock platforms for B-roll, photos, sounds, or music; returns unified results with importUrl. kind=any|video|audio|music|image (default video). platforms is an optional comma-separated provider list. Use category to narrow intent and horizontal|square|vertical for orientation; legacy orientation names remain accepted. Unsupported provider/type combinations are skipped with warnings. Official keys are preferred; eligible visual searches can use Firecrawl fallback. On success, pass a result importUrl to download_media or push_asset.",
+      "description": "Tìm B-roll, ảnh, âm thanh hoặc nhạc trên các nền tảng stock được tuyển chọn; trả về kết quả thống nhất có importUrl. kind=any|video|audio|music|image (mặc định video). platforms là danh sách provider phân tách bằng dấu phẩy, tùy chọn. Dùng category để thu hẹp ý định và horizontal|square|vertical cho hướng khung; tên orientation cũ vẫn được chấp nhận. Tổ hợp provider/type không hỗ trợ sẽ bị bỏ qua kèm cảnh báo. Ưu tiên key chính thức; tìm hình ảnh đủ điều kiện có thể fallback qua Firecrawl. Khi thành công, truyền importUrl của kết quả vào download_media hoặc push_asset.",
       "input_schema": {
         "type": "object",
         "properties": {
@@ -5816,7 +5816,7 @@
           },
           "category": {
             "type": "string",
-            "description": "Optional category, such as business, nature, technology, whoosh, piano, or ambient."
+            "description": "Category tùy chọn, như business, nature, technology, whoosh, piano hoặc ambient."
           },
           "kind": {
             "type": "string",
@@ -5827,7 +5827,7 @@
               "music",
               "image"
             ],
-            "description": "Default video. music searches Freesound and returns importable audio results."
+            "description": "Mặc định video. music tìm trên Freesound và trả về audio có thể import."
           },
           "orientation": {
             "type": "string",
@@ -5839,18 +5839,18 @@
               "portrait",
               "squarish"
             ],
-            "description": "Preferred horizontal|square|vertical; legacy landscape|portrait|squarish values are accepted."
+            "description": "Ưu tiên horizontal|square|vertical; vẫn chấp nhận giá trị cũ landscape|portrait|squarish."
           },
           "platforms": {
             "type": "string",
-            "description": "Optional comma-separated list: pexels,pixabay,unsplash,freesound."
+            "description": "Danh sách tùy chọn phân tách bằng dấu phẩy: pexels,pixabay,unsplash,freesound."
           },
           "limitPerPlatform": {
             "type": "integer",
             "minimum": 1,
             "maximum": 6,
             "default": 3,
-            "description": "Max results per platform and media type."
+            "description": "Số kết quả tối đa cho mỗi platform và loại media."
           }
         },
         "required": [
@@ -5947,21 +5947,21 @@
     },
     {
       "name": "load_skill",
-      "description": "Load one bundled or selected custom skill under the active model round input budget. Omit selectors for SKILL.md; if it is paged, follow nextOffset until null before support files. Exactly one selector per call: either files=[...] to load whole omitted files, or file with offset and limit to page a single file. Never send file and files in the same call. Bundled skills: ai-cinematic-short-film, asset-import, batch-montage-variants, beat-sync-montage, create-motion-graphics, ecommerce-product-montage, explainer-video, export, image-gen, known-errors, livestream-to-clips, long-video-to-shorts, motion-graphic-placement, multi-clips-to-reels, music, music-intelligence, news-rough-cut, openchatcut-plugin-basics, product-ad-video-script, product-help, shader-gen, skill-creator, storyboard-shot-breakdown, talking-head-guide, transcription, verification, video-gen, video-thumbnail-generator, voice, widget-forms.",
+      "description": "Tải một skill đóng gói hoặc skill tùy chỉnh đã chọn trong giới hạn input của lượt model hiện tại. Bỏ selector để tải SKILL.md; nếu bị phân trang, theo nextOffset tới null trước khi tải file hỗ trợ. Mỗi lần gọi chỉ một selector: hoặc files=[...] để tải nguyên các file bị bỏ qua, hoặc file cùng offset và limit để phân trang một file. Không bao giờ gửi file và files cùng lần gọi. Skill đóng gói: ai-cinematic-short-film, asset-import, batch-montage-variants, beat-sync-montage, create-motion-graphics, ecommerce-product-montage, explainer-video, export, image-gen, known-errors, livestream-to-clips, long-video-to-shorts, motion-graphic-placement, multi-clips-to-reels, music, music-intelligence, news-rough-cut, openchatcut-plugin-basics, product-ad-video-script, product-help, shader-gen, skill-creator, storyboard-shot-breakdown, talking-head-guide, transcription, verification, video-gen, video-thumbnail-generator, voice, widget-forms.",
       "input_schema": {
         "type": "object",
         "properties": {
           "name": {
             "type": "string",
-            "description": "Skill id, e.g. \"talking-head-guide\", \"voice\", \"shader-gen\"."
+            "description": "Id skill, ví dụ \"talking-head-guide\", \"voice\", \"shader-gen\"."
           },
           "file": {
             "type": "string",
-            "description": "One safe relative file path to page; use returned nextOffset for the next call. Omit the key entirely when sending files; never pass an empty string."
+            "description": "Một path tương đối an toàn của file cần phân trang; dùng nextOffset trả về cho lần gọi tiếp theo. Bỏ hẳn key khi gửi files; không bao giờ truyền chuỗi rỗng."
           },
           "files": {
             "type": "array",
-            "description": "Optional safe relative paths from omittedFiles. When present, only these whole files are returned. Omit the key entirely when paging with file; never pass an empty array.",
+            "description": "Các path tương đối an toàn tùy chọn lấy từ omittedFiles. Khi có, chỉ trả về nguyên các file này. Bỏ hẳn key khi phân trang bằng file; không bao giờ truyền mảng rỗng.",
             "items": {
               "type": "string"
             },
@@ -5971,13 +5971,13 @@
           "offset": {
             "type": "integer",
             "minimum": 0,
-            "description": "UTF-16 character offset for file paging; must not split a surrogate pair."
+            "description": "Offset ký tự UTF-16 để phân trang file; không được cắt đôi surrogate pair."
           },
           "limit": {
             "type": "integer",
             "minimum": 1,
             "maximum": 48000,
-            "description": "Maximum UTF-16 characters requested; the runtime may return a smaller exact page to fit the active input budget."
+            "description": "Số ký tự UTF-16 tối đa yêu cầu; runtime có thể trả trang nhỏ hơn nhưng chính xác để vừa giới hạn input hiện tại."
           }
         },
         "required": [
@@ -5987,65 +5987,65 @@
     },
     {
       "name": "analyze_music",
-      "description": "Run the installed on-device Beat This + CLAP models for a media-pool asset or timeline clip and wait for completion. Returns compact BPM, meter, confidence, tags, sections, and bounded beat/downbeat points; embeddings are never exposed. Reuses a valid cache by default; set force to recompute. This tool never downloads model packs or edits the timeline.",
+      "description": "Chạy model Beat This + CLAP đã cài trên thiết bị cho asset media pool hoặc clip timeline và chờ hoàn tất. Trả về BPM, meter, độ tin cậy, tag, section và các điểm beat/downbeat giới hạn ở dạng gọn; không bao giờ lộ embedding. Mặc định dùng lại cache hợp lệ; đặt force để tính lại. Tool này không tải model pack và không sửa timeline.",
       "input_schema": {
         "type": "object",
         "properties": {
           "itemId": {
             "type": "string",
-            "description": "Timeline audio/video clip id (unique prefix accepted). Its media-pool asset and trim/speed mapping are used."
+            "description": "Id clip audio/video trên timeline (chấp nhận tiền tố duy nhất). Dùng asset trong media pool cùng mapping trim/speed của clip."
           },
           "assetId": {
             "type": "string",
-            "description": "Media-pool asset id (unique prefix accepted). Use itemId instead when timeline mapping is needed."
+            "description": "Id asset trong media pool (chấp nhận tiền tố duy nhất). Dùng itemId khi cần mapping theo timeline."
           },
           "force": {
             "type": "boolean",
-            "description": "Recompute even when a valid cached analysis exists. Defaults to false."
+            "description": "Tính lại ngay cả khi đã có phân tích cache hợp lệ. Mặc định false."
           },
           "optional": {
             "type": "boolean",
-            "description": "When true, missing packs or an analysis failure returns available=false so a larger edit can continue with simpler audio evidence. Invalid targets still fail."
+            "description": "Khi true, thiếu pack hoặc phân tích lỗi sẽ trả available=false để chỉnh sửa lớn hơn tiếp tục với bằng chứng audio đơn giản hơn. Target không hợp lệ vẫn lỗi."
           }
         }
       }
     },
     {
       "name": "inspect_music",
-      "description": "Read an already-cached local Beat This + CLAP analysis for a media-pool asset or timeline clip. Returns compact BPM, meter, confidence, tags, sections, and bounded beat/downbeat points; embeddings are never exposed. This tool never starts analysis or downloads models. If no cache exists it explains how to install the required packs and analyze first.",
+      "description": "Đọc phân tích Beat This + CLAP cục bộ đã cache cho asset media pool hoặc clip timeline. Trả về BPM, meter, độ tin cậy, tag, section và các điểm beat/downbeat giới hạn ở dạng gọn; không bao giờ lộ embedding. Tool này không bắt đầu phân tích và không tải model. Nếu chưa có cache, tool giải thích cách cài pack cần thiết và phân tích trước.",
       "input_schema": {
         "type": "object",
         "properties": {
           "itemId": {
             "type": "string",
-            "description": "Timeline audio/video clip id (unique prefix accepted). Its media-pool asset and trim/speed mapping are used."
+            "description": "Id clip audio/video trên timeline (chấp nhận tiền tố duy nhất). Dùng asset trong media pool cùng mapping trim/speed của clip."
           },
           "assetId": {
             "type": "string",
-            "description": "Media-pool asset id (unique prefix accepted). Use itemId instead when timeline mapping is needed."
+            "description": "Id asset trong media pool (chấp nhận tiền tố duy nhất). Dùng itemId khi cần mapping theo timeline."
           },
           "fromMs": {
             "type": "number",
             "minimum": 0,
-            "description": "Optional source-millisecond range start."
+            "description": "Bắt đầu phạm vi mili giây nguồn, tùy chọn."
           },
           "toMs": {
             "type": "number",
             "minimum": 1,
-            "description": "Optional exclusive source-millisecond range end."
+            "description": "Kết thúc phạm vi mili giây nguồn, không bao gồm, tùy chọn."
           }
         }
       }
     },
     {
       "name": "music_edit_plan",
-      "description": "Build a deterministic, read-only cut plan from cached music analysis, the BGM clip trim/speed mapping, and overlapping video clips. Returns a bounded frame plan and opaque analysisRef without embeddings or unbounded analysis arrays. Call this to inspect the proposed rhythm edit before sync_cuts_to_music.",
+      "description": "Tạo kế hoạch cắt xác định, chỉ đọc từ phân tích nhạc đã cache, mapping trim/speed của clip BGM và các clip video chồng phạm vi. Trả về kế hoạch frame có giới hạn và analysisRef opaque, không có embedding hay mảng phân tích không giới hạn. Gọi tool này để xem chỉnh sửa nhịp đề xuất trước sync_cuts_to_music.",
       "input_schema": {
         "type": "object",
         "properties": {
           "itemId": {
             "type": "string",
-            "description": "BGM timeline audio/video clip id (unique prefix accepted)."
+            "description": "Id clip audio/video BGM trên timeline (chấp nhận tiền tố duy nhất)."
           },
           "timing": {
             "type": "string",
@@ -6055,7 +6055,7 @@
               "downbeat",
               "section"
             ],
-            "description": "Cut timing. auto chooses section/downbeat/beat deterministically from density and available analysis."
+            "description": "Timing cắt. auto chọn section/downbeat/beat một cách xác định dựa trên density và phân tích có sẵn."
           },
           "density": {
             "type": "string",
@@ -6064,17 +6064,17 @@
               "medium",
               "dense"
             ],
-            "description": "How many analyzed timing points to retain."
+            "description": "Số điểm timing đã phân tích cần giữ lại."
           },
           "fromFrame": {
             "type": "number",
             "minimum": 0,
-            "description": "Optional inclusive timeline-frame range start; defaults to the BGM clip start."
+            "description": "Frame bắt đầu của phạm vi timeline, bao gồm, tùy chọn; mặc định đầu clip BGM."
           },
           "toFrame": {
             "type": "number",
             "minimum": 1,
-            "description": "Optional exclusive timeline-frame range end; defaults to the BGM clip end."
+            "description": "Frame kết thúc phạm vi timeline, không bao gồm, tùy chọn; mặc định cuối clip BGM."
           },
           "targetItemIds": {
             "type": "array",
@@ -6082,7 +6082,7 @@
               "type": "string"
             },
             "maxItems": 64,
-            "description": "Optional video clip ids/prefixes to constrain targets. Defaults to video clips overlapping the range."
+            "description": "Id/tiền tố clip video tùy chọn để giới hạn target. Mặc định các clip video chồng lên phạm vi."
           }
         },
         "required": [
@@ -6094,13 +6094,13 @@
     },
     {
       "name": "music_image_plan",
-      "description": "Build a deterministic, read-only photo placement plan from cached music analysis and the BGM clip trim/speed mapping. The plan fills the requested range with media-pool images, changing images at beat/downbeat/section boundaries and cycling the selected image order. Call this before sync_images_to_music so the user can review the bounded placement plan. This tool never starts analysis.",
+      "description": "Tạo kế hoạch đặt ảnh xác định, chỉ đọc từ phân tích nhạc đã cache và mapping trim/speed của clip BGM. Kế hoạch lấp đầy phạm vi yêu cầu bằng image trong media pool, đổi ảnh tại ranh giới beat/downbeat/section và lặp vòng theo thứ tự ảnh đã chọn. Gọi trước sync_images_to_music để người dùng xem kế hoạch placement có giới hạn. Tool này không bắt đầu phân tích.",
       "input_schema": {
         "type": "object",
         "properties": {
           "itemId": {
             "type": "string",
-            "description": "BGM timeline audio/video clip id (unique prefix accepted)."
+            "description": "Id clip audio/video BGM trên timeline (chấp nhận tiền tố duy nhất)."
           },
           "timing": {
             "type": "string",
@@ -6110,7 +6110,7 @@
               "downbeat",
               "section"
             ],
-            "description": "Photo-change timing. auto chooses section/downbeat/beat deterministically from density and available analysis."
+            "description": "Timing đổi ảnh. auto chọn section/downbeat/beat một cách xác định dựa trên density và phân tích có sẵn."
           },
           "density": {
             "type": "string",
@@ -6119,17 +6119,17 @@
               "medium",
               "dense"
             ],
-            "description": "How many analyzed timing points to retain."
+            "description": "Số điểm timing đã phân tích cần giữ lại."
           },
           "fromFrame": {
             "type": "number",
             "minimum": 0,
-            "description": "Optional inclusive timeline-frame range start; defaults to the BGM clip start."
+            "description": "Frame bắt đầu của phạm vi timeline, bao gồm, tùy chọn; mặc định đầu clip BGM."
           },
           "toFrame": {
             "type": "number",
             "minimum": 1,
-            "description": "Optional exclusive timeline-frame range end; defaults to the BGM clip end."
+            "description": "Frame kết thúc phạm vi timeline, không bao gồm, tùy chọn; mặc định cuối clip BGM."
           },
           "imageAssetIds": {
             "type": "array",
@@ -6137,11 +6137,11 @@
               "type": "string"
             },
             "maxItems": 64,
-            "description": "Optional image asset ids/prefixes in display order. Defaults to all image assets in media-pool order and cycles when needed."
+            "description": "Id/tiền tố asset image theo thứ tự hiển thị, tùy chọn. Mặc định mọi asset image theo thứ tự media pool và lặp vòng khi cần."
           },
           "track": {
             "type": "string",
-            "description": "Optional target video track id or alias, default V1. The target range must be empty and unlocked."
+            "description": "Id hoặc alias track video đích, mặc định V1. Phạm vi đích phải rỗng và không bị khóa."
           }
         },
         "required": [

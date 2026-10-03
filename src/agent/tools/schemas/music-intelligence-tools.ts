@@ -3,81 +3,81 @@ import type { AgentToolSchema } from '../../tool-schema';
 const TARGET_PROPERTIES = {
   itemId: {
     type: 'string',
-    description: 'Timeline audio/video clip id (unique prefix accepted). Its media-pool asset and trim/speed mapping are used.',
+    description: 'Id clip audio/video trên timeline (chấp nhận tiền tố duy nhất). Dùng asset trong media pool cùng mapping trim/speed của clip.',
   },
   assetId: {
     type: 'string',
-    description: 'Media-pool asset id (unique prefix accepted). Use itemId instead when timeline mapping is needed.',
+    description: 'Id asset trong media pool (chấp nhận tiền tố duy nhất). Dùng itemId khi cần mapping theo timeline.',
   },
 } as const;
 
 const PLAN_PROPERTIES = {
   itemId: {
     type: 'string',
-    description: 'BGM timeline audio/video clip id (unique prefix accepted).',
+    description: 'Id clip audio/video BGM trên timeline (chấp nhận tiền tố duy nhất).',
   },
   timing: {
     type: 'string',
     enum: ['auto', 'beat', 'downbeat', 'section'],
-    description: 'Cut timing. auto chooses section/downbeat/beat deterministically from density and available analysis.',
+    description: 'Timing cắt. auto chọn section/downbeat/beat một cách xác định dựa trên density và phân tích có sẵn.',
   },
   density: {
     type: 'string',
     enum: ['sparse', 'medium', 'dense'],
-    description: 'How many analyzed timing points to retain.',
+    description: 'Số điểm timing đã phân tích cần giữ lại.',
   },
   fromFrame: {
     type: 'number',
     minimum: 0,
-    description: 'Optional inclusive timeline-frame range start; defaults to the BGM clip start.',
+    description: 'Frame bắt đầu của phạm vi timeline, bao gồm, tùy chọn; mặc định đầu clip BGM.',
   },
   toFrame: {
     type: 'number',
     minimum: 1,
-    description: 'Optional exclusive timeline-frame range end; defaults to the BGM clip end.',
+    description: 'Frame kết thúc phạm vi timeline, không bao gồm, tùy chọn; mặc định cuối clip BGM.',
   },
   targetItemIds: {
     type: 'array',
     items: { type: 'string' },
     maxItems: 64,
-    description: 'Optional video clip ids/prefixes to constrain targets. Defaults to video clips overlapping the range.',
+    description: 'Id/tiền tố clip video tùy chọn để giới hạn target. Mặc định các clip video chồng lên phạm vi.',
   },
 } as const;
 
 const IMAGE_PLAN_PROPERTIES = {
   itemId: {
     type: 'string',
-    description: 'BGM timeline audio/video clip id (unique prefix accepted).',
+    description: 'Id clip audio/video BGM trên timeline (chấp nhận tiền tố duy nhất).',
   },
   timing: {
     type: 'string',
     enum: ['auto', 'beat', 'downbeat', 'section'],
-    description: 'Photo-change timing. auto chooses section/downbeat/beat deterministically from density and available analysis.',
+    description: 'Timing đổi ảnh. auto chọn section/downbeat/beat một cách xác định dựa trên density và phân tích có sẵn.',
   },
   density: {
     type: 'string',
     enum: ['sparse', 'medium', 'dense'],
-    description: 'How many analyzed timing points to retain.',
+    description: 'Số điểm timing đã phân tích cần giữ lại.',
   },
   fromFrame: {
     type: 'number',
     minimum: 0,
-    description: 'Optional inclusive timeline-frame range start; defaults to the BGM clip start.',
+    description: 'Frame bắt đầu của phạm vi timeline, bao gồm, tùy chọn; mặc định đầu clip BGM.',
   },
   toFrame: {
     type: 'number',
     minimum: 1,
-    description: 'Optional exclusive timeline-frame range end; defaults to the BGM clip end.',
+    description: 'Frame kết thúc phạm vi timeline, không bao gồm, tùy chọn; mặc định cuối clip BGM.',
   },
   imageAssetIds: {
     type: 'array',
     items: { type: 'string' },
     maxItems: 64,
-    description: 'Optional image asset ids/prefixes in display order. Defaults to all image assets in media-pool order and cycles when needed.',
+    description: 'Id/tiền tố asset image theo thứ tự hiển thị, tùy chọn. Mặc định mọi asset image theo thứ tự media pool và lặp vòng khi cần.',
   },
   track: {
     type: 'string',
-    description: 'Optional target video track id or alias, default V1. The target range must be empty and unlocked.',
+    description: 'Id hoặc alias track video đích, mặc định V1. Phạm vi đích phải rỗng và không bị khóa.',
   },
 } as const;
 
@@ -85,41 +85,41 @@ export const MUSIC_INTELLIGENCE_TOOL_SCHEMAS: AgentToolSchema[] = [
   {
     name: 'analyze_music',
     description: [
-      'Run the installed on-device Beat This + CLAP models for a media-pool asset or timeline clip and wait for completion.',
-      'Returns compact BPM, meter, confidence, tags, sections, and bounded beat/downbeat points; embeddings are never exposed.',
-      'Reuses a valid cache by default; set force to recompute. This tool never downloads model packs or edits the timeline.',
+      'Chạy model Beat This + CLAP đã cài trên thiết bị cho asset media pool hoặc clip timeline và chờ hoàn tất.',
+      'Trả về BPM, meter, độ tin cậy, tag, section và các điểm beat/downbeat giới hạn ở dạng gọn; không bao giờ lộ embedding.',
+      'Mặc định dùng lại cache hợp lệ; đặt force để tính lại. Tool này không tải model pack và không sửa timeline.',
     ].join(' '),
     input_schema: {
       type: 'object',
       properties: {
         ...TARGET_PROPERTIES,
-        force: { type: 'boolean', description: 'Recompute even when a valid cached analysis exists. Defaults to false.' },
-        optional: { type: 'boolean', description: 'When true, missing packs or an analysis failure returns available=false so a larger edit can continue with simpler audio evidence. Invalid targets still fail.' },
+        force: { type: 'boolean', description: 'Tính lại ngay cả khi đã có phân tích cache hợp lệ. Mặc định false.' },
+        optional: { type: 'boolean', description: 'Khi true, thiếu pack hoặc phân tích lỗi sẽ trả available=false để chỉnh sửa lớn hơn tiếp tục với bằng chứng audio đơn giản hơn. Target không hợp lệ vẫn lỗi.' },
       },
     },
   },
   {
     name: 'inspect_music',
     description: [
-      'Read an already-cached local Beat This + CLAP analysis for a media-pool asset or timeline clip.',
-      'Returns compact BPM, meter, confidence, tags, sections, and bounded beat/downbeat points; embeddings are never exposed.',
-      'This tool never starts analysis or downloads models. If no cache exists it explains how to install the required packs and analyze first.',
+      'Đọc phân tích Beat This + CLAP cục bộ đã cache cho asset media pool hoặc clip timeline.',
+      'Trả về BPM, meter, độ tin cậy, tag, section và các điểm beat/downbeat giới hạn ở dạng gọn; không bao giờ lộ embedding.',
+      'Tool này không bắt đầu phân tích và không tải model. Nếu chưa có cache, tool giải thích cách cài pack cần thiết và phân tích trước.',
     ].join(' '),
     input_schema: {
       type: 'object',
       properties: {
         ...TARGET_PROPERTIES,
-        fromMs: { type: 'number', minimum: 0, description: 'Optional source-millisecond range start.' },
-        toMs: { type: 'number', minimum: 1, description: 'Optional exclusive source-millisecond range end.' },
+        fromMs: { type: 'number', minimum: 0, description: 'Bắt đầu phạm vi mili giây nguồn, tùy chọn.' },
+        toMs: { type: 'number', minimum: 1, description: 'Kết thúc phạm vi mili giây nguồn, không bao gồm, tùy chọn.' },
       },
     },
   },
   {
     name: 'music_edit_plan',
     description: [
-      'Build a deterministic, read-only cut plan from cached music analysis, the BGM clip trim/speed mapping, and overlapping video clips.',
-      'Returns a bounded frame plan and opaque analysisRef without embeddings or unbounded analysis arrays.',
-      'Call this to inspect the proposed rhythm edit before sync_cuts_to_music.',
+      'Tạo kế hoạch cắt xác định, chỉ đọc từ phân tích nhạc đã cache, mapping trim/speed của clip BGM và các clip video chồng phạm vi.',
+      'Trả về kế hoạch frame có giới hạn và analysisRef opaque, không có embedding hay mảng phân tích không giới hạn.',
+      'Gọi tool này để xem chỉnh sửa nhịp đề xuất trước sync_cuts_to_music.',
     ].join(' '),
     input_schema: {
       type: 'object',
@@ -130,9 +130,9 @@ export const MUSIC_INTELLIGENCE_TOOL_SCHEMAS: AgentToolSchema[] = [
   {
     name: 'sync_cuts_to_music',
     description: [
-      'Recompute a cached music cut plan at execution time and split only unlocked video clips at its planned frames.',
-      'Pass the analysisRef returned by music_edit_plan to reject stale analysis. All splits are one EditorCommands batch and one undo step.',
-      'This never starts analysis and never edits the BGM clip itself.',
+      'Tính lại kế hoạch cắt nhạc đã cache tại thời điểm thực thi và chỉ tách các clip video không khóa tại frame đã lập kế hoạch.',
+      'Truyền analysisRef do music_edit_plan trả về để từ chối phân tích cũ. Mọi lần tách là một batch EditorCommands và một bước undo.',
+      'Tool này không bắt đầu phân tích và không sửa chính clip BGM.',
     ].join(' '),
     input_schema: {
       type: 'object',
@@ -140,7 +140,7 @@ export const MUSIC_INTELLIGENCE_TOOL_SCHEMAS: AgentToolSchema[] = [
         ...PLAN_PROPERTIES,
         analysisRef: {
           type: 'string',
-          description: 'Opaque ref from music_edit_plan. Execution rejects missing or stale analysis.',
+          description: 'Ref opaque từ music_edit_plan. Khi thực thi sẽ từ chối nếu thiếu hoặc phân tích đã cũ.',
         },
       },
       required: ['itemId', 'timing', 'density', 'analysisRef'],
@@ -149,9 +149,9 @@ export const MUSIC_INTELLIGENCE_TOOL_SCHEMAS: AgentToolSchema[] = [
   {
     name: 'music_image_plan',
     description: [
-      'Build a deterministic, read-only photo placement plan from cached music analysis and the BGM clip trim/speed mapping.',
-      'The plan fills the requested range with media-pool images, changing images at beat/downbeat/section boundaries and cycling the selected image order.',
-      'Call this before sync_images_to_music so the user can review the bounded placement plan. This tool never starts analysis.',
+      'Tạo kế hoạch đặt ảnh xác định, chỉ đọc từ phân tích nhạc đã cache và mapping trim/speed của clip BGM.',
+      'Kế hoạch lấp đầy phạm vi yêu cầu bằng image trong media pool, đổi ảnh tại ranh giới beat/downbeat/section và lặp vòng theo thứ tự ảnh đã chọn.',
+      'Gọi trước sync_images_to_music để người dùng xem kế hoạch placement có giới hạn. Tool này không bắt đầu phân tích.',
     ].join(' '),
     input_schema: {
       type: 'object',
@@ -162,9 +162,9 @@ export const MUSIC_INTELLIGENCE_TOOL_SCHEMAS: AgentToolSchema[] = [
   {
     name: 'sync_images_to_music',
     description: [
-      'Recompute a cached music image plan and add one image clip per planned beat interval.',
-      'Pass the analysisRef returned by music_image_plan to reject stale analysis. All image additions are one EditorCommands batch and one undo step.',
-      'The target video track must be unlocked and empty in the requested range; this never starts analysis and never edits the BGM clip.',
+      'Tính lại kế hoạch ảnh nhạc đã cache và thêm một clip image cho mỗi khoảng beat đã lập kế hoạch.',
+      'Truyền analysisRef do music_image_plan trả về để từ chối phân tích cũ. Mọi lần thêm ảnh là một batch EditorCommands và một bước undo.',
+      'Track video đích phải không khóa và rỗng trong phạm vi yêu cầu; tool này không bắt đầu phân tích và không sửa clip BGM.',
     ].join(' '),
     input_schema: {
       type: 'object',
@@ -172,7 +172,7 @@ export const MUSIC_INTELLIGENCE_TOOL_SCHEMAS: AgentToolSchema[] = [
         ...IMAGE_PLAN_PROPERTIES,
         analysisRef: {
           type: 'string',
-          description: 'Opaque ref from music_image_plan. Execution rejects missing or stale analysis.',
+          description: 'Ref opaque từ music_image_plan. Khi thực thi sẽ từ chối nếu thiếu hoặc phân tích đã cũ.',
         },
       },
       required: ['itemId', 'timing', 'density', 'analysisRef'],
