@@ -87,17 +87,17 @@ function resolveAfterWordIndex(
   }
   if (typeof args.gapIndex === 'number' && Number.isFinite(args.gapIndex)) {
     const g = gaps[Math.round(args.gapIndex)];
-    if (!g) return { error: `gapIndex ${args.gapIndex} out of range (0..${Math.max(0, gaps.length - 1)})` };
+    if (!g) return { error: `gapIndex ${args.gapIndex} nằm ngoài phạm vi (0..${Math.max(0, gaps.length - 1)})` };
     return { afterWordIndex: g.afterWordIndex };
   }
   if (typeof args.afterText === 'string' && args.afterText.trim()) {
     const m = findPhrase(it.transcript!, args.afterText);
     if (!m) return { error: `không tìm thấy afterText: ${args.afterText}` };
     // gap is immediately before the first word of the match
-    if (m.start <= 0) return { error: 'afterText matches the start of the transcript; no gap before it' };
+    if (m.start <= 0) return { error: 'afterText khớp ngay đầu bản chép lời; không có khoảng trống phía trước' };
     return { afterWordIndex: m.start };
   }
-  return { error: 'provide afterWordIndex, gapIndex, or afterText to locate the gap' };
+  return { error: 'hãy cung cấp afterWordIndex, gapIndex hoặc afterText để xác định khoảng trống' };
 }
 
 // manage_transcript: fix / clear_edits / retry_transcription / translation_*.
@@ -145,7 +145,7 @@ async function manageTranscript(args: Args, ctx: AgentContext, track: TrackId, a
     }
   }
 
-  if (!hasOperationalTranscript(it)) return { error: `Item ${it.id} chưa có transcript hiện tại; hãy gọi transcribe_track trước` };
+  if (!hasOperationalTranscript(it)) return { error: `Đoạn ${it.id} chưa có bản chép lời hiện tại; hãy gọi transcribe_track trước` };
 
   if (action === 'clear_edits') {
     const deletedWords = (it.deletedWordIdx ?? []).length;
@@ -165,7 +165,7 @@ async function manageTranscript(args: Args, ctx: AgentContext, track: TrackId, a
         playOrder: hadPlayOrder,
       },
       durationInFrames: after?.durationInFrames ?? null,
-      note: 'Restored raw transcript edits (deleted words, silence/gap caps, play order). ASR word text and speaker labels are unchanged.',
+      note: 'Đã khôi phục chỉnh sửa bản chép lời thô (từ đã xóa, giới hạn khoảng lặng/khoảng trống, thứ tự phát). Nội dung từ và nhãn người nói của ASR không thay đổi.',
     };
   }
 
@@ -179,11 +179,11 @@ async function manageTranscript(args: Args, ctx: AgentContext, track: TrackId, a
         itemId: it.id,
         playOrder: null,
         durationInFrames: after?.durationInFrames ?? null,
-        note: 'Chronological word order restored.',
+        note: 'Đã khôi phục thứ tự từ theo thời gian.',
       };
     }
     if (!Array.isArray(args.playOrder)) {
-      return { error: 'set_play_order needs playOrder:[wordIndex,…] or clearPlayOrder:true' };
+      return { error: 'set_play_order cần playOrder:[wordIndex,…] hoặc clearPlayOrder:true' };
     }
     const n = it.transcript.length;
     const cleaned = args.playOrder
@@ -205,15 +205,15 @@ async function manageTranscript(args: Args, ctx: AgentContext, track: TrackId, a
     // fix supports ASR word correction or speaker rename/merge, routed by fields.
     if (typeof args.from === 'string' || typeof args.to === 'string') {
       const from = args.from, to = args.to;
-      if (typeof from !== 'string' || !from.trim()) return { error: 'speaker fix needs from (the existing speaker label)' };
-      if (typeof to !== 'string' || !to.trim()) return { error: 'speaker fix needs to (the new speaker name; an existing label merges the two)' };
+      if (typeof from !== 'string' || !from.trim()) return { error: 'speaker fix cần from (nhãn người nói hiện có)' };
+      if (typeof to !== 'string' || !to.trim()) return { error: 'speaker fix cần to (tên người nói mới; nhãn đã có sẽ gộp hai nhãn)' };
       const wordsChanged = it.transcript.filter((w) => w.speaker === from).length;
-      if (wordsChanged === 0) return { error: `no word labeled speaker "${from}" in item ${it.id}` };
+      if (wordsChanged === 0) return { error: `không có từ nào mang nhãn người nói "${from}" trong đoạn ${it.id}` };
       ctx.commands.renameSpeaker(it.id, from, to); // Only .speaker changes.
       return { ok: true, action, kind: 'speaker', itemId: it.id, from, to, wordsChanged };
     }
     const text = args.text;
-    if (typeof text !== 'string' || !text.trim()) return { error: 'word fix needs text (the corrected word); or pass from/to for a speaker fix' };
+    if (typeof text !== 'string' || !text.trim()) return { error: 'word fix cần text (từ đã sửa); hoặc truyền from/to để sửa người nói' };
     let wordIndex: number;
     if (typeof args.wordIndex === 'number') wordIndex = args.wordIndex;
     else if (typeof args.find === 'string' && args.find.trim()) {
@@ -221,7 +221,7 @@ async function manageTranscript(args: Args, ctx: AgentContext, track: TrackId, a
       wordIndex = it.transcript.findIndex((w) => w.text === findStr);
       if (wordIndex < 0) { const target = normalize(findStr); wordIndex = it.transcript.findIndex((w) => normalize(w.text) === target); }
       if (wordIndex < 0) return { error: `không tìm thấy word: ${findStr}` };
-    } else return { error: 'provide wordIndex or find to locate the word' };
+    } else return { error: 'hãy cung cấp wordIndex hoặc find để xác định từ' };
     const word = it.transcript[wordIndex];
     if (!word) return { error: `wordIndex ${wordIndex} out of range (0..${it.transcript.length - 1})` };
     ctx.commands.fixTranscriptWord(it.id, wordIndex, text); // Only .text changes.
@@ -234,7 +234,7 @@ async function manageTranscript(args: Args, ctx: AgentContext, track: TrackId, a
   }
   if (action === 'translation_read') {
     const lang = String(args.lang ?? args.targetLanguage ?? '').trim();
-    if (!lang) return { error: 'translation_read needs lang / targetLanguage (which variant to read)' };
+    if (!lang) return { error: 'translation_read cần lang / targetLanguage (biến thể cần đọc)' };
     const v = it.variants ? findVariantByLang(it.variants, lang, 'translation') : undefined;
     if (!v) return { error: `đoạn ${it.id} chưa có biến thể dịch "${lang}"; trước hết hãy tạo bằng translation_create / translation_ensure` };
     return { ok: true, action, itemId: it.id, lang: v.lang, variantId: v.id, words: v.words.length, text: v.words.map((w) => w.text).join(' ').slice(0, 400) };

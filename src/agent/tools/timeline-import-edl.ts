@@ -301,7 +301,7 @@ export function parseEdl(
   options: TimelineImportOptions = {},
 ): ParseResult {
   const scanned = scan(content);
-  if (!scanned.events.length) return { ok: false, error: 'EDL has no CMX 3600 edit events' };
+  if (!scanned.events.length) return { ok: false, error: 'EDL không có sự kiện dựng CMX 3600' };
   const clock = clockFor(scanned, fallback.fps, options);
   if (typeof clock === 'string') return { ok: false, error: clock };
   const origin = recordOrigin(scanned, clock, options);
@@ -327,7 +327,7 @@ export function parseEdl(
   }
   if (unresolved.size) return { ok: false, error: 'Các tham chiếu media trong EDL chưa được phân giải', unresolved: [...unresolved.values()] };
   const reconciled = reconcileClips(clips, report);
-  if (!reconciled.length) return { ok: false, error: 'EDL has no importable events', skipped: report.skipped };
+  if (!reconciled.length) return { ok: false, error: 'EDL không có sự kiện nào có thể nhập', skipped: report.skipped };
   return {
     ok: true,
     timeline: {

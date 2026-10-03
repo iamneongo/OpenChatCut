@@ -401,7 +401,7 @@ export async function execShaderTool(name: string, args: Args, ctx: AgentContext
       assetId: tdef.id,
       name: tdef.label,
       properties: tdef.props.map((p) => ({ key: p.key, default: p.default, min: p.min, max: p.max })),
-      next: `Apply with edit_item adds:[{type:"transition",assetId:"${tdef.id}",incomingItemId:"<the later clip at the cut>"}].`,
+      next: `Áp dụng bằng edit_item adds:[{type:"transition",assetId:"${tdef.id}",incomingItemId:"<clip phía sau tại điểm cắt>"}].`,
     };
   }
 
@@ -419,6 +419,6 @@ export async function execShaderTool(name: string, args: Args, ctx: AgentContext
     effectId: def.id,
     name: def.name,
     properties: props.map((p) => ({ key: p.key, default: p.default, min: p.min, max: p.max })),
-    next: `Apply with manage_effects action=add assetId=${def.id} targetItemId=<clip>.`,
+    next: `Áp dụng bằng manage_effects action=add assetId=${def.id} targetItemId=<clip>.`,
   };
 }

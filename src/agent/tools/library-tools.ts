@@ -38,7 +38,7 @@ export async function execLibraryTool(name: string, args: Args, ctx: AgentContex
     const hit = all.find((x) => x.id === id || x.id.endsWith(id) || x.id.includes(id));
     if (!hit) {
       return {
-        error: `unknown library id ${id}`,
+        error: `mã thư viện không xác định: ${id}`,
         hint: 'Trước hết hãy gọi browse_library với category hoặc query.',
         categories: LIBRARY_CATEGORIES,
       };
@@ -64,7 +64,7 @@ export async function execLibraryTool(name: string, args: Args, ctx: AgentContex
       return {
         category: cat,
         ...overview,
-        note: 'Apply with isolate_voice (not edit_item). strength 0..100; action=clear detaches denoisedSrc.',
+        note: 'Áp dụng bằng isolate_voice (không dùng edit_item). strength từ 0..100; action=clear sẽ tháo denoisedSrc.',
       };
     }
     return { category: cat, ...libraryOverview(scoped) };

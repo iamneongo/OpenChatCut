@@ -98,7 +98,7 @@ export function applyGeneric(plan: OpResult, commands: GenericCommands): OpResul
         ok: false,
         code: committed.reason,
         itemId: id,
-        error: `relink_media did not change item ${id}`,
+        error: `relink_media không thay đổi đoạn ${id}`,
       };
     }
     return {

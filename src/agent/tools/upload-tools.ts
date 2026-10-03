@@ -54,6 +54,6 @@ function execRequestDownload(args: Args, ctx: AgentContext): unknown {
     variant: 'source',
     path: asset.src,
     downloadUrl,
-    note: 'Open downloadUrl in the browser or use as <a download>. Local-dev has no signed expiry.',
+    note: 'Mở downloadUrl trong trình duyệt hoặc dùng làm thuộc tính <a download>. Môi trường phát triển cục bộ không có thời hạn chữ ký.',
   };
 }

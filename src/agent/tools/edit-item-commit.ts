@@ -22,9 +22,9 @@ export function commitPlan(ctx: AgentContext, plan: OpResult, ripple = false): O
   if (name === 'addSolid') return commitSolidPlan(ctx, plan, ripple);
   if (name === 'genericUpdate' || name === 'genericDelete' || name === 'slip'
     || name === 'replaceMedia' || name === 'relinkMedia') {
-    return applyGeneric(plan, ctx.commands) ?? { error: `unknown plan ${name}` };
+    return applyGeneric(plan, ctx.commands) ?? { error: `kế hoạch không xác định: ${name}` };
   }
-  return { error: `unknown plan ${name}` };
+  return { error: `kế hoạch không xác định: ${name}` };
 }
 
 function commitPoolAssetReplacement(ctx: AgentContext, plan: OpResult): OpResult {
@@ -143,7 +143,7 @@ function commitAudioPlan(ctx: AgentContext, plan: OpResult, ripple: boolean): Op
 
 function commitMotionGraphicPlan(ctx: AgentContext, plan: OpResult, ripple: boolean): OpResult {
   const template = ctx.templates.find((item) => item.id === plan.templateId);
-  if (!template) return { error: `template vanished: ${plan.templateId}` };
+  if (!template) return { error: `mẫu không còn tồn tại: ${plan.templateId}` };
   ctx.commands.addMotionGraphic(template, {
     track: plan.track as string | undefined,
     startFrame: plan.startFrame as number | undefined,

@@ -28,10 +28,10 @@ function parseAssignments(raw: unknown, slots: Record<string, unknown>): Assignm
   for (const entry of raw) {
     const slot = typeof (entry as Args)?.slot === 'string' ? String((entry as Args).slot) : '';
     const itemId = typeof (entry as Args)?.itemId === 'string' ? String((entry as Args).itemId) : '';
-    if (!slot || !itemId) return { error: 'each assignment needs { slot, itemId }' };
+    if (!slot || !itemId) return { error: 'mỗi phân công cần có { slot, itemId }' };
     if (!(slot in slots)) return { error: `slot không được nhận diện "${slot}" — các slot hợp lệ: ${Object.keys(slots).join(', ')}` };
     if (seenSlots.has(slot)) return { error: `slot "${slot}" đã được gán hai lần` };
-    if (seenItems.has(itemId)) return { error: `item "${itemId}" assigned to two slots` };
+    if (seenItems.has(itemId)) return { error: `đoạn "${itemId}" đã được gán vào hai ô` };
     seenSlots.add(slot);
     seenItems.add(itemId);
     out.push({ slot, itemId });
@@ -43,7 +43,7 @@ export function execLayoutTool(name: string, args: Args, ctx: AgentContext): unk
   if (name !== 'apply_layout') return { error: `tool không được nhận diện: ${name}` };
   const layout = String(args.layout ?? '') as LayoutId;
   if (!LAYOUT_IDS.includes(layout)) {
-    return { error: `unknown layout "${args.layout}" — valid layouts: ${LAYOUT_IDS.join(', ')}` };
+    return { error: `bố cục không xác định "${args.layout}" — bố cục hợp lệ: ${LAYOUT_IDS.join(', ')}` };
   }
   const slots = layoutSlots(layout, {
     corner: args.insetCorner as PipCorner | undefined,

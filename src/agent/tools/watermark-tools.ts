@@ -34,10 +34,10 @@ function toPatch(args: Args): Partial<Watermark> {
 
 /** Execute the watermark tool. Returns a JSON-serializable result, never throws. */
 export function execWatermarkTool(name: string, args: Args, ctx: AgentContext): unknown {
-  if (name !== 'update_watermark') return { error: `watermark tool not implemented: ${name}` };
+  if (name !== 'update_watermark') return { error: `công cụ watermark chưa được triển khai: ${name}` };
   const patch = toPatch(args);
   if (Object.keys(patch).length === 0) {
-    return { error: 'provide at least one of enabled, text, position, or opacity' };
+    return { error: 'hãy cung cấp ít nhất một trong các trường enabled, text, position hoặc opacity' };
   }
   ctx.commands.updateWatermark(patch);
   const watermark = ctx.getState().watermark;
