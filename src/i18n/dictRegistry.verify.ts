@@ -101,6 +101,11 @@ function onlyIn(has: Record<string, string>, lacks: Record<string, string>): str
   const missingVietnameseKeys = Object.keys(EN).filter((key) => !(key in VI));
   assert.deepEqual(missingVietnameseKeys, [],
     'Vietnamese UI dictionary must cover every English UI key');
+  const untranslatedCjkValues = Object.entries(VI)
+    .filter(([, value]) => /[一-龥]/u.test(value))
+    .map(([key, value]) => `${key}=${value}`);
+  assert.deepEqual(untranslatedCjkValues, [],
+    'Vietnamese UI values must not fall back to Chinese text');
   assert.equal(t('导出'), VI['导出'], 'vi reads the Vietnamese UI dictionary');
   assert.equal(t('导出'), 'Xuất', 'the Vietnamese UI fixture is actually translated');
   assert.equal(tData('竖屏·重点词弹出'), 'Dọc · từ khóa bật lên',
