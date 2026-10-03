@@ -132,7 +132,7 @@ function useAgentContext(options: AgentContextOptions): AgentContext {
     audio: AUDIO_ASSETS,
     getProjectId: () => projectId,
     openProject: async (nextProjectId: string) => {
-      if (!(await flushBeforeLeaveRef.current())) return { ok: false, error: '当前工程保存失败，已阻止切换工程' };
+      if (!(await flushBeforeLeaveRef.current())) return { ok: false, error: 'Không thể lưu dự án hiện tại; đã chặn việc chuyển dự án.' };
       if (nextProjectId === projectId) return { ok: true };
       window.location.hash = `#/editor/${nextProjectId}`;
       return { ok: true };
