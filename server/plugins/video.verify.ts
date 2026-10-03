@@ -303,9 +303,9 @@ assert.deepEqual(subjectBody.subject_reference, [{ type: 'character', image: ['d
 const subjectDuration = validateVideoRequest({
   model: 'hailuo', prompt: 'wave', firstFramePath: '/media/uploads/subject.jpg', durationSeconds: 6,
 });
-assert.throws(() => validateMinimaxVideoMode(subjectDuration, 'S2V-01'), /does not accept durationSeconds or resolution/);
-assert.throws(() => validateMinimaxVideoMode(t2v, 'MiniMax-Hailuo-2.3-Fast'), /image-to-video only/);
-assert.throws(() => validateMinimaxVideoMode(fl, 'MiniMax-Hailuo-2.3'), /requires MiniMax-Hailuo-02/);
+assert.throws(() => validateMinimaxVideoMode(subjectDuration, 'S2V-01'), /không nhận durationSeconds hoặc resolution/);
+assert.throws(() => validateMinimaxVideoMode(t2v, 'MiniMax-Hailuo-2.3-Fast'), /chỉ hỗ trợ image-to-video/);
+assert.throws(() => validateMinimaxVideoMode(fl, 'MiniMax-Hailuo-2.3'), /yêu cầu model MiniMax-Hailuo-02/);
 const flBody = hailuoRequestBody(fl, 'MiniMax-Hailuo-02', 'data:image/jpeg;base64,a', 'data:image/jpeg;base64,b');
 assert.equal(flBody.resolution, '1080P');
 assert.equal(flBody.last_frame_image, 'data:image/jpeg;base64,b');
@@ -322,8 +322,8 @@ assert.equal(nextGenBody.resolution, '768P');
 assert.equal(validateMinimaxVideoMode(fl, nextGen), 'unknown');
 assert.equal(hailuoRequestBody({ ...fl, resolution: '512p' }, nextGen, 'data:image/jpeg;base64,a', 'data:image/jpeg;base64,b').resolution, '512P');
 assert.equal(validateMinimaxVideoMode(fl, 'MiniMax-Hailuo-02'), 'hailuo02');
-assert.throws(() => validateMinimaxVideoMode(fl, 'MiniMax-Hailuo-2.3'), /requires MiniMax-Hailuo-02/);
-assert.throws(() => validateMinimaxVideoMode(t2v, 'S2V-01'), /requires firstFrame/);
+assert.throws(() => validateMinimaxVideoMode(fl, 'MiniMax-Hailuo-2.3'), /yêu cầu model MiniMax-Hailuo-02/);
+assert.throws(() => validateMinimaxVideoMode(t2v, 'S2V-01'), /yêu cầu firstFrame/);
 
 const grok = validateVideoRequest({ model: 'grok-imagine-video', prompt: 'a cat on a windowsill', durationSeconds: 10, ratio: '9:16', resolution: '720p' });
 assert.equal(grok.model, 'grok-imagine-video');

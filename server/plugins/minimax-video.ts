@@ -29,20 +29,20 @@ function minimaxVideoFamily(modelName: string): MinimaxVideoFamily {
 export function validateMinimaxVideoMode(input: ValidVideoRequest, modelName: string): MinimaxVideoFamily {
   const family = minimaxVideoFamily(modelName);
   if (family === 'subject') {
-    if (!input.firstFramePath) throw new Error('MiniMax S2V subject-reference requires firstFrame (subject/face image)');
-    if (input.lastFramePath) throw new Error('MiniMax S2V subject-reference does not support lastFrame');
-    if (input.durationSpecified || input.resolution) throw new Error('MiniMax S2V does not accept durationSeconds or resolution');
-    if (input.fastPretreatment !== undefined) throw new Error('MiniMax S2V does not accept fastPretreatment');
+    if (!input.firstFramePath) throw new Error('Tham chiếu chủ thể MiniMax S2V yêu cầu firstFrame (ảnh chủ thể/khuôn mặt)');
+    if (input.lastFramePath) throw new Error('Tham chiếu chủ thể MiniMax S2V không hỗ trợ lastFrame');
+    if (input.durationSpecified || input.resolution) throw new Error('MiniMax S2V không nhận durationSeconds hoặc resolution');
+    if (input.fastPretreatment !== undefined) throw new Error('MiniMax S2V không nhận fastPretreatment');
   }
-  if (family === 'hailuo23-fast' && !input.firstFramePath) throw new Error('MiniMax-Hailuo-2.3-Fast is image-to-video only and requires firstFrame');
-  if (input.lastFramePath && family !== 'hailuo02' && family !== 'unknown') throw new Error('MiniMax first-and-last-frame mode requires MiniMax-Hailuo-02');
-  if (input.lastFramePath && input.fastPretreatment !== undefined) throw new Error('MiniMax first-and-last-frame mode does not accept fastPretreatment');
-  if (input.resolution === '512p' && family !== 'hailuo02' && family !== 'unknown') throw new Error('hailuo 512p requires the MiniMax-Hailuo-02 model');
+  if (family === 'hailuo23-fast' && !input.firstFramePath) throw new Error('MiniMax-Hailuo-2.3-Fast chỉ hỗ trợ image-to-video và yêu cầu firstFrame');
+  if (input.lastFramePath && family !== 'hailuo02' && family !== 'unknown') throw new Error('Chế độ first-and-last-frame của MiniMax yêu cầu model MiniMax-Hailuo-02');
+  if (input.lastFramePath && input.fastPretreatment !== undefined) throw new Error('Chế độ first-and-last-frame của MiniMax không nhận fastPretreatment');
+  if (input.resolution === '512p' && family !== 'hailuo02' && family !== 'unknown') throw new Error('hailuo 512p yêu cầu model MiniMax-Hailuo-02');
   const legacy = family === 'legacy-t2v' || family === 'legacy-i2v';
-  if (legacy && (input.durationSeconds !== 6 || (input.resolution && input.resolution !== '720p'))) throw new Error('legacy MiniMax video models support 6s at 720p only');
-  if (legacy && input.fastPretreatment !== undefined) throw new Error('legacy MiniMax video models do not accept fastPretreatment');
-  if (family === 'legacy-t2v' && input.firstFramePath) throw new Error(`${modelName} is text-to-video only`);
-  if (family === 'legacy-i2v' && !input.firstFramePath) throw new Error(`${modelName} is image-to-video only and requires firstFrame`);
+  if (legacy && (input.durationSeconds !== 6 || (input.resolution && input.resolution !== '720p'))) throw new Error('Model video MiniMax cũ chỉ hỗ trợ 6 giây ở 720p');
+  if (legacy && input.fastPretreatment !== undefined) throw new Error('Model video MiniMax cũ không nhận fastPretreatment');
+  if (family === 'legacy-t2v' && input.firstFramePath) throw new Error(`${modelName} chỉ hỗ trợ text-to-video`);
+  if (family === 'legacy-i2v' && !input.firstFramePath) throw new Error(`${modelName} chỉ hỗ trợ image-to-video và yêu cầu firstFrame`);
   return family;
 }
 
@@ -52,12 +52,12 @@ export function hailuoRequestBody(
   const family = validateMinimaxVideoMode(input, modelName);
   const body: Record<string, unknown> = { model: modelName, prompt: input.prompt, prompt_optimizer: input.promptOptimizer !== false };
   if (family === 'subject') {
-    if (!firstFrameImage) throw new Error('MiniMax S2V firstFrame could not be resolved');
+    if (!firstFrameImage) throw new Error('Không thể phân giải firstFrame của MiniMax S2V');
     body.subject_reference = [{ type: 'character', image: [firstFrameImage] }];
     return body;
   }
-  if (input.firstFramePath && !firstFrameImage) throw new Error('MiniMax firstFrame could not be resolved');
-  if (input.lastFramePath && !lastFrameImage) throw new Error('MiniMax lastFrame could not be resolved');
+  if (input.firstFramePath && !firstFrameImage) throw new Error('Không thể phân giải firstFrame của MiniMax');
+  if (input.lastFramePath && !lastFrameImage) throw new Error('Không thể phân giải lastFrame của MiniMax');
   body.duration = input.durationSeconds;
   body.resolution = family.startsWith('legacy-') ? '720P' : hailuoApiResolution(input.resolution);
   if (firstFrameImage) body.first_frame_image = firstFrameImage;
