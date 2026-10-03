@@ -308,7 +308,7 @@ export class ExternalBridgeRuntime {
     if (active) {
       throw new ExternalEditSessionOutcomeError(
         'rejected',
-        'An edit session is already active. Call list_edit_sessions to inspect it before recovery or discard.',
+        'Đã có một phiên chỉnh sửa đang hoạt động. Hãy gọi list_edit_sessions để xem phiên trước khi khôi phục hoặc loại bỏ.',
       );
     }
     const session = createExternalEditSession(this.getContext().getDoc(), clientName, approvalMode);

@@ -114,7 +114,7 @@ export class CodexFollowupPause extends Error {
   readonly prefaceFlushed: boolean;
 
   constructor(text: string, state: StreamState, prefaceFlushed = false) {
-    super('Codex turn paused for user follow-up.');
+    super('Lượt Codex đã tạm dừng để chờ người dùng phản hồi.');
     this.name = 'CodexFollowupPause';
     this.text = text;
     this.state = state;

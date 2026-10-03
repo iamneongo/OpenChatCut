@@ -19,7 +19,7 @@ async function settleProjectSwitch(run: AbandonedProjectRun): Promise<void> {
       projectId: run.projectId,
       runId: run.runId,
       capability: run.capability,
-      summary: 'Server run interrupted because the project changed.',
+      summary: 'Lượt chạy máy chủ bị gián đoạn vì dự án đã thay đổi.',
     });
     await run.onRunAbandon?.(run.runId);
     clearStoredServerRun(run.projectId, run.runId);

@@ -47,11 +47,11 @@ export async function prepareServerRunRecovery(
 ): Promise<ServerRunRecoveryPreparation> {
   const capability = stored.capability;
   if (!capability) {
-    throw permanentServerRunRecoveryError('Stored server run capability is unavailable.');
+    throw permanentServerRunRecoveryError('Quyền truy cập lượt chạy máy chủ đã lưu không khả dụng.');
   }
   const activation = restoreServerRunToolActivation(stored.askOnly === true, stored.activeToolNames);
   if (!activation) {
-    throw permanentServerRunRecoveryError('Stored server run has an invalid active tool set.');
+    throw permanentServerRunRecoveryError('Lượt chạy máy chủ đã lưu có bộ tool đang hoạt động không hợp lệ.');
   }
   const metadata = await loadServerRunMetadata(projectId, stored.runId, capability);
   if (!active()) return { kind: 'inactive' };
@@ -61,7 +61,7 @@ export async function prepareServerRunRecovery(
   const run = sidecar.runs.find((candidate) => candidate.runId === stored.runId);
   if (!run) {
     throw permanentServerRunRecoveryError(
-      'Server run recorder state is unavailable for the current session generation.',
+      'Trạng thái ghi lượt chạy máy chủ không khả dụng cho thế hệ phiên hiện tại.',
     );
   }
   if (['completed', 'failed', 'aborted', 'interrupted'].includes(run.status)) {

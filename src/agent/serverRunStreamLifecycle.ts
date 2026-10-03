@@ -79,7 +79,7 @@ async function settleStaleRecovery(
       projectId,
       runId,
       capability: state.refs.capability.current,
-      summary: detail || 'Server run recovery became unavailable.',
+      summary: detail || 'Không thể khôi phục lượt chạy máy chủ.',
     });
     await currentOptions(state).onRunAbandon?.(runId);
     dropStreamDeltas(projectId);
@@ -357,7 +357,7 @@ function useSubscribe(
     const capability = current.refs.capability.current;
     if (!capability) {
       handlers.abandonStaleRecovery(runId, permanentServerRunRecoveryError(
-        'Stored server run capability is unavailable.',
+        'Quyền truy cập lượt chạy máy chủ đã lưu không khả dụng.',
       ));
       return;
     }

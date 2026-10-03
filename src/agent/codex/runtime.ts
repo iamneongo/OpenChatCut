@@ -86,7 +86,7 @@ function throwIfToolAborted(signal: AbortSignal | undefined, state: ToolBoundary
   const outcome: AgentToolOutcome = state.started
     ? { kind: 'outcome_unknown', operationId: state.operationId ?? state.toolCallId }
     : { kind: 'aborted_before_side_effect' };
-  throw new ToolBoundaryError('Tool execution was stopped.', outcome);
+  throw new ToolBoundaryError('Việc thực thi tool đã bị dừng.', outcome);
 }
 
 export function buildCodexSystemPrompt(ctx: AgentContext): string {

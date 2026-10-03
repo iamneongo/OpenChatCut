@@ -14,8 +14,8 @@ function omitProjectedImages(value: unknown): unknown {
     ...rest,
     imagesOmitted: true,
     note: typeof rest.note === 'string'
-      ? `${rest.note} Image payload omitted because it exceeded the transport limit.`
-      : 'Image payload omitted because it exceeded the transport limit.',
+      ? `${rest.note} Đã lược bỏ dữ liệu ảnh vì vượt quá giới hạn truyền tải.`
+      : 'Đã lược bỏ dữ liệu ảnh vì vượt quá giới hạn truyền tải.',
   };
 }
 
@@ -38,6 +38,6 @@ export function projectServerRunToolResult(value: unknown): unknown {
   if (artifact) return artifactPlaceholder(artifact);
   return {
     omitted: true,
-    note: 'Tool result exceeded the browser-to-server transport limit. Request a narrower result.',
+    note: 'Kết quả tool vượt quá giới hạn truyền tải từ trình duyệt đến máy chủ. Hãy yêu cầu kết quả thu hẹp hơn.',
   };
 }
