@@ -26,23 +26,23 @@ assert.equal(mm.referencePaths.length, 1);
 
 assert.throws(
   () => validateImageRequest({ model: 'image-01', prompt: 'x'.repeat(1501) }),
-  /at most 1500 characters/,
+  /dài tối đa 1500 ký tự/,
 );
 assert.throws(
   () => validateImageRequest({ model: 'image-01', prompt: 'x', count: 10 }),
-  /at most 9 images/,
+  /hỗ trợ tối đa 9 ảnh/,
 );
 assert.throws(
   () => validateImageRequest({ model: 'image-01', prompt: 'x', width: 1025, height: 1024 }),
-  /divisible by 8/,
+  /chia hết cho 8/,
 );
 assert.throws(
   () => validateImageRequest({ model: 'gpt-image-2', prompt: 'x', promptOptimizer: true }),
-  /promptOptimizer is supported by image-01/,
+  /promptOptimizer chỉ được image-01/,
 );
 assert.throws(
   () => validateImageRequest({ model: 'nano-banana', prompt: 'x', referencePaths: Array.from({ length: 15 }, (_, i) => `/media/uploads/${i}.jpg`) }),
-  /too many reference images/,
+  /quá nhiều ảnh tham chiếu/,
 );
 
 const gpt = validateImageRequest({
@@ -60,11 +60,11 @@ assert.equal(gpt.inputFidelity, 'high');
 assert.equal(gpt.outputCompression, 82);
 assert.throws(
   () => validateImageRequest({ model: 'gpt-image-2', prompt: 'x', outputCompression: 80 }),
-  /requires outputFormat jpeg or webp/,
+  /outputCompression yêu cầu outputFormat là jpeg hoặc webp/,
 );
 assert.throws(
   () => validateImageRequest({ model: 'nano-banana', prompt: 'x', quality: 'high' }),
-  /GPT Image options are not supported/,
+  /Các tùy chọn GPT Image không được/,
 );
 
 const waveSpeed = validateImageRequest({ model: 'wavespeed', prompt: 'a mountain at sunset', aspectRatio: '1:1' });
@@ -72,11 +72,11 @@ assert.equal(waveSpeed.model, 'wavespeed');
 assert.equal(waveSpeed.aspectRatio, '1:1');
 assert.throws(
   () => validateImageRequest({ model: 'wavespeed', prompt: 'x', quality: 'high' }),
-  /GPT Image options are not supported/,
+  /Các tùy chọn GPT Image không được/,
 );
 assert.throws(
   () => validateImageRequest({ model: 'wavespeed', prompt: 'x', referencePaths: ['/media/uploads/a.jpg'] }),
-  /too many reference images/,
+  /quá nhiều ảnh tham chiếu/,
 );
 
 const byteplus = validateImageRequest({ model: 'byteplus', prompt: 'a neon city street', aspectRatio: '9:16' });
@@ -84,7 +84,7 @@ assert.equal(byteplus.model, 'byteplus');
 assert.equal(byteplus.aspectRatio, '9:16');
 assert.throws(
   () => validateImageRequest({ model: 'byteplus', prompt: 'x', referencePaths: ['/media/uploads/a.jpg'] }),
-  /too many reference images/,
+  /quá nhiều ảnh tham chiếu/,
 );
 
 
@@ -94,23 +94,23 @@ assert.equal(grok.aspectRatio, '9:16');
 assert.equal(grok.count, 4);
 assert.throws(
   () => validateImageRequest({ model: 'grok-imagine', prompt: 'x', imageSize: '4K' }),
-  /imageSize must be 1K or 2K/,
+  /imageSize của grok-imagine phải là 1K hoặc 2K/,
 );
 assert.throws(
   () => validateImageRequest({ model: 'grok-imagine', prompt: 'x', aspectRatio: '21:9' }),
-  /does not support aspect ratio/,
+  /không hỗ trợ aspect ratio/,
 );
 assert.throws(
   () => validateImageRequest({ model: 'grok-imagine', prompt: 'x', count: 5 }),
-  /at most 4 images/,
+  /hỗ trợ tối đa 4 ảnh/,
 );
 assert.throws(
   () => validateImageRequest({ model: 'grok-imagine', prompt: 'x', referencePaths: ['/media/uploads/a.jpg'] }),
-  /too many reference images/,
+  /quá nhiều ảnh tham chiếu/,
 );
 assert.throws(
   () => validateImageRequest({ model: 'grok-imagine', prompt: 'x', width: 1024, height: 1024 }),
-  /custom width\/height are not supported/,
+  /không hỗ trợ width\/height tùy chỉnh/,
 );
 
 const originalFetch = globalThis.fetch;

@@ -105,55 +105,55 @@ export interface ValidImageRequest {
 function customDimensions(input: ImageRequest, model: ValidImageRequest['model']) {
   const width = input.width;
   const height = input.height;
-  if ((width == null) !== (height == null)) throw new Error('width and height must be provided together');
+  if ((width == null) !== (height == null)) throw new Error('width và height phải được cung cấp cùng nhau');
   if (width == null || height == null) return {};
-  if (input.aspectRatio != null) throw new Error('custom width/height cannot be combined with aspectRatio');
-  if (model === 'nano-banana') throw new Error('custom width/height are not supported by nano-banana');
-  if (model === 'grok-imagine') throw new Error('custom width/height are not supported by grok-imagine');
-  if (!Number.isInteger(width) || !Number.isInteger(height)) throw new Error('width and height must be integers');
+  if (input.aspectRatio != null) throw new Error('width/height tùy chỉnh không thể dùng cùng aspectRatio');
+  if (model === 'nano-banana') throw new Error('nano-banana không hỗ trợ width/height tùy chỉnh');
+  if (model === 'grok-imagine') throw new Error('grok-imagine không hỗ trợ width/height tùy chỉnh');
+  if (!Number.isInteger(width) || !Number.isInteger(height)) throw new Error('width và height phải là số nguyên');
   const [minimum, maximum, divisor] = model === 'image-01' ? [512, 2048, 8] : [512, 3840, 16];
   if (width < minimum || width > maximum || height < minimum || height > maximum) {
-    throw new Error(`${model} width and height must be between ${minimum} and ${maximum}`);
+    throw new Error(`width và height của ${model} phải nằm trong khoảng ${minimum} đến ${maximum}`);
   }
-  if (width % divisor || height % divisor) throw new Error(`${model} width and height must be divisible by ${divisor}`);
+  if (width % divisor || height % divisor) throw new Error(`width và height của ${model} phải chia hết cho ${divisor}`);
   const aspect = width / height;
-  if (model === 'gpt-image-2' && (aspect < 1 / 3 || aspect > 3)) throw new Error('gpt-image-2 custom aspect ratio must be between 1:3 and 3:1');
+  if (model === 'gpt-image-2' && (aspect < 1 / 3 || aspect > 3)) throw new Error('aspect ratio tùy chỉnh của gpt-image-2 phải nằm trong khoảng 1:3 đến 3:1');
   return { width, height };
 }
 
 function validateGptOptions(input: ImageRequest, hasReferences: boolean) {
-  if (input.background != null && !BACKGROUNDS.has(input.background)) throw new Error('background must be transparent, opaque, or auto');
-  if (input.moderation != null && !MODERATIONS.has(input.moderation)) throw new Error('moderation must be low or auto');
-  if (input.inputFidelity != null && !INPUT_FIDELITIES.has(input.inputFidelity)) throw new Error('inputFidelity must be low or high');
-  if (input.inputFidelity != null && !hasReferences) throw new Error('inputFidelity requires reference images');
-  if (input.maskPath != null && !hasReferences) throw new Error('maskPath requires reference images');
-  if (input.outputFormat != null && !OUTPUT_FORMATS.has(input.outputFormat)) throw new Error('outputFormat must be png, jpeg, or webp');
+  if (input.background != null && !BACKGROUNDS.has(input.background)) throw new Error('background phải là transparent, opaque hoặc auto');
+  if (input.moderation != null && !MODERATIONS.has(input.moderation)) throw new Error('moderation phải là low hoặc auto');
+  if (input.inputFidelity != null && !INPUT_FIDELITIES.has(input.inputFidelity)) throw new Error('inputFidelity phải là low hoặc high');
+  if (input.inputFidelity != null && !hasReferences) throw new Error('inputFidelity yêu cầu ảnh tham chiếu');
+  if (input.maskPath != null && !hasReferences) throw new Error('maskPath yêu cầu ảnh tham chiếu');
+  if (input.outputFormat != null && !OUTPUT_FORMATS.has(input.outputFormat)) throw new Error('outputFormat phải là png, jpeg hoặc webp');
   if (input.outputCompression != null && (!Number.isInteger(input.outputCompression) || input.outputCompression < 0 || input.outputCompression > 100)) {
-    throw new Error('outputCompression must be an integer between 0 and 100');
+    throw new Error('outputCompression phải là số nguyên từ 0 đến 100');
   }
   if (input.outputCompression != null && (input.outputFormat ?? 'png') === 'png') {
-    throw new Error('outputCompression requires outputFormat jpeg or webp');
+    throw new Error('outputCompression yêu cầu outputFormat là jpeg hoặc webp');
   }
 }
 
 function rejectForeignImageOptions(input: ImageRequest, model: ValidImageRequest['model']) {
   if (model !== 'gpt-image-2') {
     const gptOnly = [input.maskPath, input.background, input.moderation, input.inputFidelity, input.outputFormat, input.outputCompression, input.quality];
-    if (gptOnly.some((value) => value != null)) throw new Error(`GPT Image options are not supported by ${model}`);
+    if (gptOnly.some((value) => value != null)) throw new Error(`Các tùy chọn GPT Image không được ${model} hỗ trợ`);
   }
   if (model !== 'image-01' && input.promptOptimizer != null) {
-    throw new Error('promptOptimizer is supported by image-01 (MiniMax) only');
+    throw new Error('promptOptimizer chỉ được image-01 (MiniMax) hỗ trợ');
   }
-  if (model !== 'image-01' && input.seed != null) throw new Error('seed is supported by image-01 (MiniMax) only');
+  if (model !== 'image-01' && input.seed != null) throw new Error('seed chỉ được image-01 (MiniMax) hỗ trợ');
 }
 
 /** Pure request validation — exported for unit checks. */
 export function validateImageRequest(input: ImageRequest): ValidImageRequest {
   const model = String(input.model ?? 'gpt-image-2');
   if (model === 'fal') {
-    if (!input.falModel?.trim()) throw new Error('Choose a Fal image model in Settings or specify falModel');
+    if (!input.falModel?.trim()) throw new Error('Hãy chọn model ảnh Fal trong Cài đặt hoặc chỉ định falModel');
     for (const key of ['width', 'height', 'quality', 'maskPath', 'background', 'moderation', 'inputFidelity', 'outputFormat', 'outputCompression', 'seed', 'promptOptimizer'] as const) {
-      if (input[key] !== undefined) throw new Error(`${key} is not supported by the Fal image integration`);
+      if (input[key] !== undefined) throw new Error(`${key} không được tích hợp ảnh Fal hỗ trợ`);
     }
     const falInput: FalCatalogInput = {
       falModel: input.falModel, prompt: String(input.prompt ?? '').trim(), count: input.count ?? 1,
@@ -166,45 +166,45 @@ export function validateImageRequest(input: ImageRequest): ValidImageRequest {
       imageSize: input.imageSize ?? '1K', quality: 'high', outputFormat: 'png' };
   }
   if (model !== 'gpt-image-2' && model !== 'nano-banana' && model !== 'image-01' && model !== 'wavespeed' && model !== 'byteplus' && model !== 'grok-imagine') {
-    throw new Error(`unsupported model ${model}`);
+    throw new Error(`model không được hỗ trợ: ${model}`);
   }
   const prompt = String(input.prompt ?? '').trim();
-  if (!prompt) throw new Error('prompt is required');
+  if (!prompt) throw new Error('cần có prompt');
   const dimensions = customDimensions(input, model);
   const aspectRatio = dimensions.width ? undefined : String(input.aspectRatio ?? '16:9');
   const imageSize = String(input.imageSize ?? '1K');
   const quality = String(input.quality ?? 'high');
   const count = input.count ?? 1;
-  if (!Number.isInteger(count) || count < 1 || count > 10) throw new Error('count must be an integer between 1 and 10');
-  if (aspectRatio && !ASPECTS.has(aspectRatio)) throw new Error(`unsupported aspect ratio ${aspectRatio}`);
-  if (!SIZES.has(imageSize)) throw new Error(`unsupported image size ${imageSize}`);
-  if (!QUALITIES.has(quality)) throw new Error(`unsupported quality ${quality}`);
+  if (!Number.isInteger(count) || count < 1 || count > 10) throw new Error('count phải là số nguyên từ 1 đến 10');
+  if (aspectRatio && !ASPECTS.has(aspectRatio)) throw new Error(`aspect ratio không được hỗ trợ: ${aspectRatio}`);
+  if (!SIZES.has(imageSize)) throw new Error(`kích thước ảnh không được hỗ trợ: ${imageSize}`);
+  if (!QUALITIES.has(quality)) throw new Error(`quality không được hỗ trợ: ${quality}`);
   const referencePaths = input.referencePaths ?? [];
   const referenceLimit = model === 'nano-banana' ? 14 : model === 'gpt-image-2' ? 16 : model === 'image-01' ? 1 : 0;
   // wavespeed and byteplus (Seedream) are text-to-image only in this integration; no reference-image support yet.
   if (referencePaths.length > referenceLimit) {
-    throw new Error(`too many reference images for ${model}`);
+    throw new Error(`quá nhiều ảnh tham chiếu cho ${model}`);
   }
   rejectForeignImageOptions(input, model);
   if (model === 'image-01') {
-    if (prompt.length > 1500) throw new Error('image-01 prompt must be at most 1500 characters');
-    if (count > 9) throw new Error('image-01 supports at most 9 images per call');
-    if (aspectRatio === '4:5' || aspectRatio === '5:4') throw new Error(`image-01 does not support aspect ratio ${aspectRatio}`);
+    if (prompt.length > 1500) throw new Error('prompt image-01 dài tối đa 1500 ký tự');
+    if (count > 9) throw new Error('image-01 hỗ trợ tối đa 9 ảnh mỗi lần gọi');
+    if (aspectRatio === '4:5' || aspectRatio === '5:4') throw new Error(`image-01 không hỗ trợ aspect ratio ${aspectRatio}`);
     if (input.promptOptimizer !== undefined && typeof input.promptOptimizer !== 'boolean') {
-      throw new Error('promptOptimizer must be a boolean');
+      throw new Error('promptOptimizer phải là boolean');
     }
-    if (input.seed != null && !Number.isSafeInteger(input.seed)) throw new Error('seed must be a safe integer');
+    if (input.seed != null && !Number.isSafeInteger(input.seed)) throw new Error('seed phải là số nguyên an toàn');
   } else if (model === 'gpt-image-2') {
-    if (prompt.length > 32_000) throw new Error('gpt-image-2 prompt must be at most 32000 characters');
-    if (imageSize === '512px') throw new Error('gpt-image-2 imageSize must be 1K, 2K, or 4K');
+    if (prompt.length > 32_000) throw new Error('prompt gpt-image-2 dài tối đa 32000 ký tự');
+    if (imageSize === '512px') throw new Error('imageSize của gpt-image-2 phải là 1K, 2K hoặc 4K');
     validateGptOptions(input, referencePaths.length > 0);
   } else if (model === 'grok-imagine') {
-    if (count > 4) throw new Error('grok-imagine supports at most 4 images per call');
-    if (imageSize === '512px' || imageSize === '4K') throw new Error('grok-imagine imageSize must be 1K or 2K');
+    if (count > 4) throw new Error('grok-imagine hỗ trợ tối đa 4 ảnh mỗi lần gọi');
+    if (imageSize === '512px' || imageSize === '4K') throw new Error('imageSize của grok-imagine phải là 1K hoặc 2K');
     if (aspectRatio && !['1:1', '16:9', '9:16', '4:3', '3:4', '3:2', '2:3'].includes(aspectRatio)) {
-      throw new Error(`grok-imagine does not support aspect ratio ${aspectRatio}`);
+      throw new Error(`grok-imagine không hỗ trợ aspect ratio ${aspectRatio}`);
     }
-    if (prompt.length > 8000) throw new Error('grok-imagine prompt must be at most 8000 characters');
+    if (prompt.length > 8000) throw new Error('prompt grok-imagine dài tối đa 8000 ký tự');
   }
   return {
     model,
@@ -399,8 +399,8 @@ export function imageGenerationPlugin(options: ImagePluginOptions): Plugin {
           if (model === 'fal') {
             images = await generateFalCatalogImage(input.falInput!);
           } else if (model === 'nano-banana') {
-            if (!options.geminiApiKey) throw new Error('Nano Banana is not configured. Set GEMINI_API_KEY in .env.local.');
-            if (!aspectRatio) throw new Error('Nano Banana requires aspectRatio');
+            if (!options.geminiApiKey) throw new Error('Nano Banana chưa được cấu hình. Hãy đặt GEMINI_API_KEY trong .env.local.');
+            if (!aspectRatio) throw new Error('Nano Banana yêu cầu aspectRatio');
             images = await callGeminiProvider(options.geminiBaseUrl, options.geminiApiKey, options.geminiModel, {
               prompt, count, aspectRatio, imageSize, referencePaths,
             });
@@ -413,12 +413,12 @@ export function imageGenerationPlugin(options: ImagePluginOptions): Plugin {
               seed, referencePaths, promptOptimizer,
             });
           } else if (model === 'wavespeed') {
-            if (!options.waveSpeedApiKey) throw new Error('WaveSpeed is not configured. Set WAVESPEED_API_KEY in .env.local.');
+            if (!options.waveSpeedApiKey) throw new Error('WaveSpeed chưa được cấu hình. Hãy đặt WAVESPEED_API_KEY trong .env.local.');
             images = await callWaveSpeedProvider(options.waveSpeedBaseUrl, options.waveSpeedApiKey, options.waveSpeedModel, {
               prompt, count, width, height,
             });
           } else if (model === 'byteplus') {
-            if (!options.byteplusApiKey) throw new Error('BytePlus is not configured. Set BYTEPLUS_API_KEY in .env.local.');
+            if (!options.byteplusApiKey) throw new Error('BytePlus chưa được cấu hình. Hãy đặt BYTEPLUS_API_KEY trong .env.local.');
             images = await callByteplusImageProvider(options.byteplusBaseUrl, options.byteplusApiKey, options.byteplusModel, {
               prompt, count, width, height,
             });
@@ -427,7 +427,7 @@ export function imageGenerationPlugin(options: ImagePluginOptions): Plugin {
               prompt, count, aspectRatio, imageSize,
             });
           } else {
-            if (!options.apiKey) throw new Error('Image generation is not configured. Set IMAGE_API_KEY or OPENAI_API_KEY in .env.local.');
+            if (!options.apiKey) throw new Error('Tạo hình ảnh chưa được cấu hình. Hãy đặt IMAGE_API_KEY hoặc OPENAI_API_KEY trong .env.local.');
             images = await callProvider(options.baseUrl, options.apiKey, {
               model, prompt, quality, count, size: `${width}x${height}`, referencePaths, maskPath,
               background, moderation, inputFidelity, outputFormat, outputCompression,
