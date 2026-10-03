@@ -2,7 +2,7 @@
 // single SQLite database. User-initiated only; the JSON directory stays
 // read-only forever afterwards. Visual vocabulary follows MediaCleanupDialog.
 import { useCallback, useEffect, useState } from 'react';
-import { useT } from '../../i18n/locale';
+import { getLocale, useT } from '../../i18n/locale';
 import { theme, themeAlpha } from '../../theme';
 import { Icon } from '../icons';
 import { cleanupLegacyJson, loadMigrationStatus, runStorageMigrationRequest, STORAGE_MIGRATED_EVENT, type MigrationStatus } from './storageMigration';
@@ -146,7 +146,7 @@ export function StorageMigrationDialog({ onClose }: { onClose: () => void }) {
               {status.receipt && (
                 <div style={stateRow}>
                   <span style={stateLabel}>{t('迁移时间')}</span>
-                  <span>{new Date(status.receipt.importedAt).toLocaleString()}</span>
+                  <span>{new Date(status.receipt.importedAt).toLocaleString(getLocale() === 'vi' ? 'vi-VN' : getLocale() === 'zh' ? 'zh-CN' : getLocale() === 'it' ? 'it-IT' : getLocale() === 'ru' ? 'ru-RU' : 'en-US')}</span>
                 </div>
               )}
               {status.sqliteKeyCount > 0 && (

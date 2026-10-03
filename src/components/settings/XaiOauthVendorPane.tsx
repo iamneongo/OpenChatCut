@@ -3,7 +3,7 @@
 // shows the account, and refreshes or clears the imported session.
 import { useEffect, useState } from 'react';
 import { theme } from '../../theme';
-import { useT } from '../../i18n/locale';
+import { getLocale, useT } from '../../i18n/locale';
 import { VendorIcon } from './vendorIcons';
 import { FieldRow, ON, TestConnectionRow, type FieldCtx } from './settingsVendorPane';
 import { modelValue, type SettingsField, type SettingsVendorPage } from './settingsSchema';
@@ -95,8 +95,10 @@ export function XaiOauthVendorPane({ page, hint, ctx }: {
     }
   };
   const loggedIn = status?.found === true;
+  const locale = getLocale();
+  const browserLocale = locale === 'vi' ? 'vi-VN' : locale === 'zh' ? 'zh-CN' : locale === 'it' ? 'it-IT' : locale === 'ru' ? 'ru-RU' : 'en-US';
   const expiryText = loggedIn && status.expiresAt > 0
-    ? `${t('会话有效期至')} ${new Date(status.expiresAt).toLocaleString()}`
+    ? `${t('会话有效期至')} ${new Date(status.expiresAt).toLocaleString(browserLocale)}`
     : '';
   const modelId = (ctx.values.LLM_XAI_OAUTH_MODEL
     ?? modelValue(ctx.status, 'LLM_XAI_OAUTH_MODEL')) || 'grok-4.6';

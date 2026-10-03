@@ -8,7 +8,7 @@ import {
   type ReactNode,
 } from 'react';
 import { createPortal } from 'react-dom';
-import { useT } from '../../i18n/locale';
+import { getLocale, useT } from '../../i18n/locale';
 import {
   loadAgentRuntimeSidecar,
   subscribeAgentRuntime,
@@ -112,8 +112,10 @@ function percentText(value: unknown): string | undefined {
 
 
 function validTime(value: unknown): string {
+  const locale = getLocale();
+  const browserLocale = locale === 'vi' ? 'vi-VN' : locale === 'zh' ? 'zh-CN' : locale === 'it' ? 'it-IT' : locale === 'ru' ? 'ru-RU' : 'en-US';
   return typeof value === 'number' && Number.isFinite(value) && value > 0
-    ? new Date(value).toLocaleString()
+    ? new Date(value).toLocaleString(browserLocale)
     : '—';
 }
 
