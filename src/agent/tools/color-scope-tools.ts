@@ -140,9 +140,9 @@ export function compareColorScopes(target: ColorScopeStats, reference: ColorScop
 async function measureAsset(ctx: AgentContext, rawId: unknown, rawSeconds: unknown): Promise<ScopeResult> {
   const q = typeof rawId === 'string' ? rawId.trim() : '';
   const asset = ctx.getDoc().assets.find((item) => item.id === q || item.id.startsWith(q));
-  if (!asset) throw new Error(`không tìm thấy asset ${q} trong media pool`);
+  if (!asset) throw new Error(`không tìm thấy tư liệu ${q} trong kho media`);
   if (!asset.src.startsWith('/media/uploads/')) {
-    throw new Error(`asset ${asset.id} không phải media file đã tải lên — hãy kiểm tra timeline thay thế`);
+    throw new Error(`tư liệu ${asset.id} không phải tệp media đã tải lên — hãy kiểm tra đoạn trên dòng thời gian thay thế`);
   }
   const sourceMs = typeof rawSeconds === 'number'
     ? rawSeconds * 1000

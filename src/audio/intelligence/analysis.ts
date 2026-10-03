@@ -111,7 +111,7 @@ function composeMusicAnalysis(
 
 /** Decode once at the rhythm model's native sample rate, then reuse caller-owned PCM across both inference clients. */
 export async function analyzeMusicAsset(asset: MediaAsset, options: AnalyzeMusicOptions = {}): Promise<MusicAnalysis> {
-  if (asset.kind !== 'audio' && asset.kind !== 'video') throw new Error('phân tích nhạc chỉ hỗ trợ asset audio và video');
+  if (asset.kind !== 'audio' && asset.kind !== 'video') throw new Error('phân tích nhạc chỉ hỗ trợ tư liệu âm thanh và video');
   if (!asset.src) throw new Error('phân tích nhạc yêu cầu nguồn media đã sẵn sàng');
   throwIfAborted(options.signal);
   report(options, 'decode', 0);

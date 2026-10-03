@@ -52,7 +52,7 @@ export async function isolateVoiceOnSrc(
     sourceRevision?: string;
   };
   if (!res.ok || !data.path || !data.sourceRevision) {
-    throw new Error(data.error ?? `isolate-voice thất bại: HTTP ${res.status}`);
+    throw new Error(data.error ?? `tách giọng thất bại: HTTP ${res.status}`);
   }
   return {
     path: data.path,

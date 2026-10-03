@@ -110,28 +110,28 @@ function resolveAssetForItem(item: TimelineItem, assets: readonly MediaAsset[]):
     const bySource = assets.filter((asset) => asset.src === item.src);
     if (bySource.length === 1 && bySource[0]) return bySource[0];
   }
-  throw new Error(`Clip ${item.id} không liên kết với duy nhất một asset trong kho media; hãy liên kết lại trước khi phân tích nhạc`);
+  throw new Error(`Clip ${item.id} không liên kết với duy nhất một tư liệu trong kho media; hãy liên kết lại trước khi phân tích nhạc`);
 }
 
 export function resolveMusicTarget(args: Args, ctx: AgentContext): ResolvedMusicTarget {
   const assetQuery = typeof args.assetId === 'string' ? args.assetId.trim() : '';
   const itemQuery = typeof args.itemId === 'string' ? args.itemId.trim() : '';
-  if (assetQuery && itemQuery) throw new Error('Chỉ truyền assetId hoặc itemId, không truyền cả hai');
+  if (assetQuery && itemQuery) throw new Error('Chỉ truyền mã tư liệu hoặc mã đoạn, không truyền cả hai');
   if (itemQuery) {
     const item = resolvePrefix(ctx.getState().items, itemQuery, 'timeline item');
     if (item.kind !== 'audio' && item.kind !== 'video') {
-      throw new Error(`Clip ${item.id} là ${item.kind}; phân tích nhạc cần clip audio/video`);
+      throw new Error(`Clip ${item.id} là ${item.kind}; phân tích nhạc cần đoạn âm thanh/video`);
     }
     return { item, asset: resolveAssetForItem(item, ctx.getDoc().assets) };
   }
   if (assetQuery) {
     const asset = resolvePrefix(ctx.getDoc().assets, assetQuery, 'media-pool asset');
     if (asset.kind !== 'audio' && asset.kind !== 'video') {
-      throw new Error(`Asset ${asset.id} là ${asset.kind}; phân tích nhạc cần media audio/video`);
+      throw new Error(`Tư liệu ${asset.id} là ${asset.kind}; phân tích nhạc cần tư liệu âm thanh/video`);
     }
     return { asset };
   }
-  throw new Error('Hãy truyền assetId (kho media) hoặc itemId (clip trên timeline)');
+  throw new Error('Hãy truyền mã tư liệu (kho media) hoặc mã đoạn (dòng thời gian)');
 }
 
 export const MISSING_MODEL_PACKS_ACTION = 'missing-model-packs' as const;
@@ -445,7 +445,7 @@ export function buildMusicImagePlacementPlan(
 ): BuiltImagePlan {
   const range = planRange(musicItem, options);
   const images = selectedImageAssets(assets, options);
-  if (!images.length) throw new Error('không có asset image để đặt ảnh');
+  if (!images.length) throw new Error('không có tư liệu hình ảnh để đặt ảnh');
   const timing = chooseTiming(analysis, musicItem, state, options, range);
   const mapped = mapSourcePoints(timingPoints(analysis, timing), musicItem, state.fps)
     .filter((frame) => frame > range.fromFrame && frame < range.toFrame);
