@@ -4,26 +4,26 @@ export const SHADER_TOOL_SCHEMAS: AgentToolSchema[] = [
   {
     name: 'submit_shader',
     description:
-      'Generate a custom WebGL fragment shader from a natural-language prompt. type=effect: a per-clip effect (single input u_input) → returns effectId; apply with edit_item adds:[{type:"effect",targetItemId,assetId:<effectId>}]. type=transition: a clip-to-clip transition (two inputs u_outgoing/u_incoming + u_progress) → returns a transitionId (custom:tr-*); apply with edit_item adds:[{type:"transition",assetId:<transitionId>,incomingItemId:<later clip at the cut>}]. Either way the GLSL is statically validated + compile-checked, then registered; this call only submits/registers — applying is a separate call the agent makes after the user explicitly asks. referenceAssetIds lets the generator learn from project assets: image assets are looked at as visual inspiration; ONE effect/transition asset (kind matching type) contributes its shader code as a style reference. Use for one-off custom looks/transitions not in browse_library.',
+      'Sinh fragment shader WebGL tùy chỉnh từ prompt ngôn ngữ tự nhiên. type=effect: hiệu ứng theo clip (một input u_input) → trả về effectId; áp dụng bằng edit_item adds:[{type:"effect",targetItemId,assetId:<effectId>}]. type=transition: transition giữa hai clip (hai input u_outgoing/u_incoming + u_progress) → trả về transitionId (custom:tr-*); áp dụng bằng edit_item adds:[{type:"transition",assetId:<transitionId>,incomingItemId:<clip phía sau tại điểm cắt>}]. Trong cả hai trường hợp GLSL được kiểm tra tĩnh + compile-check rồi đăng ký; lần gọi này chỉ submit/đăng ký — áp dụng là lần gọi riêng mà agent thực hiện sau khi người dùng yêu cầu rõ. referenceAssetIds cho phép generator học từ asset dự án: asset image được xem như cảm hứng hình ảnh; MỘT asset effect/transition (kind khớp với type) cung cấp shader code làm tham chiếu phong cách. Dùng cho look/transition tùy chỉnh một lần chưa có trong browse_library.',
     input_schema: {
       type: 'object',
       properties: {
-        type: { type: 'string', enum: ['effect', 'transition'], description: 'Whether the shader is a per-clip effect (color, blur, mask, LUT-style grade, distortion) or a between-clip transition (crossfade, wipe, slide, 3D cube).' },
-        prompt: { type: 'string', minLength: 1, description: 'Natural-language description of the shader. Restate the user\'s intent in one concrete sentence — e.g. "Chromatic aberration with RGB split", "Cinematic teal-orange color grade", "Smooth crossfade with soft edge".' },
-        name: { type: 'string', description: 'Asset name shown in the library. Defaults to a name derived from the prompt.' },
+        type: { type: 'string', enum: ['effect', 'transition'], description: 'Shader là hiệu ứng theo clip (màu, blur, mask, grade kiểu LUT, distortion) hay transition giữa clip (crossfade, wipe, slide, cube 3D).' },
+        prompt: { type: 'string', minLength: 1, description: 'Mô tả shader bằng ngôn ngữ tự nhiên. Diễn đạt lại ý người dùng trong một câu cụ thể — ví dụ "Chromatic aberration with RGB split", "Cinematic teal-orange color grade", "Smooth crossfade with soft edge".' },
+        name: { type: 'string', description: 'Tên asset hiển thị trong thư viện. Mặc định được tạo từ prompt.' },
         referenceAssetIds: {
           type: 'array',
           items: { type: 'string' },
-          description: 'Project asset ids the generator should learn from. Image asset id → model LOOKS AT it as visual inspiration (e.g. a still to match for a LUT, a screenshot to mimic for a glitch effect). Effect or transition asset id → its shader code is reused as a style reference. At most one effect/transition reference per submit, and its kind must match `type`. Pass full ids or short id prefixes.',
+          description: 'Id asset dự án để generator học theo. Id asset image → model XEM asset như cảm hứng hình ảnh (ví dụ ảnh tĩnh để khớp LUT, screenshot để bắt chước hiệu ứng glitch). Id asset effect hoặc transition → shader code được dùng lại làm tham chiếu phong cách. Mỗi lần submit tối đa một tham chiếu effect/transition và kind phải khớp `type`. Truyền id đầy đủ hoặc tiền tố id ngắn.',
         },
         properties: {
           type: 'array',
-          description: 'Optional adjustable numeric uniforms exposed as sliders; each becomes a u_<key> float uniform in the shader. Omit for a fixed effect.',
+          description: 'Uniform số có thể điều chỉnh, hiển thị thành slider, tùy chọn; mỗi uniform trở thành float uniform u_<key> trong shader. Bỏ qua nếu muốn hiệu ứng cố định.',
           items: {
             type: 'object',
             properties: {
-              key: { type: 'string', description: 'GLSL identifier; becomes u_<key>.' },
-              label: { type: 'string', description: 'zh UI label.' },
+              key: { type: 'string', description: 'Identifier GLSL; trở thành u_<key>.' },
+              label: { type: 'string', description: 'Nhãn UI tiếng Việt.' },
               default: { type: 'number' },
               min: { type: 'number' },
               max: { type: 'number' },

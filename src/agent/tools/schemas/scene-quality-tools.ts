@@ -4,9 +4,9 @@ export const SCENE_QUALITY_TOOL_SCHEMAS: AgentToolSchema[] = [
   {
     name: 'review_scene_plan',
     description: [
-      'Advisory review of a multi-scene plan for repetition, decorative visuals, static-card overuse, and generic language.',
-      'Returns a normalized 0–5 risk score, revision advice, and affected scene numbers.',
-      'The report is optional advice and never blocks or authorizes submit_image/submit_video.',
+      'Rà soát mang tính tư vấn một kế hoạch nhiều cảnh để phát hiện lặp lại, hình ảnh trang trí, lạm dụng card tĩnh và ngôn ngữ chung chung.',
+      'Trả về điểm rủi ro chuẩn hóa 0–5, lời khuyên sửa và số thứ tự các cảnh bị ảnh hưởng.',
+      'Báo cáo chỉ là tư vấn tùy chọn, không bao giờ chặn hoặc cấp phép submit_image/submit_video.',
     ].join(' '),
     input_schema: {
       type: 'object',
@@ -14,14 +14,14 @@ export const SCENE_QUALITY_TOOL_SCHEMAS: AgentToolSchema[] = [
         scenes: {
           type: 'array',
           minItems: 1,
-          description: 'Ordered scenes to review. type comparison trims whitespace and ignores case; blank responsibility fields count as missing.',
+          description: 'Các cảnh theo thứ tự cần rà soát. So sánh type sẽ bỏ khoảng trắng và không phân biệt hoa thường; field trách nhiệm trống được tính là thiếu.',
           items: {
             type: 'object',
             properties: {
-              type: { type: 'string', description: 'Scene form, e.g. video, image, text_card, chart.' },
-              description: { type: 'string', description: 'Concrete visual description.' },
-              shotIntent: { type: 'string', description: 'Why this shot exists.' },
-              informationRole: { type: 'string', description: 'What this scene communicates.' },
+              type: { type: 'string', description: 'Dạng cảnh, ví dụ video, image, text_card, chart.' },
+              description: { type: 'string', description: 'Mô tả hình ảnh cụ thể.' },
+              shotIntent: { type: 'string', description: 'Lý do shot này tồn tại.' },
+              informationRole: { type: 'string', description: 'Cảnh này truyền đạt điều gì.' },
             },
             required: ['type'],
             additionalProperties: false,

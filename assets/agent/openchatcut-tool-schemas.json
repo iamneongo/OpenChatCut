@@ -1124,29 +1124,29 @@
     },
     {
       "name": "detect_scenes",
-      "description": "Detect visual scene changes in one source video using local FFmpeg acceleration. Pass itemId to inspect a timeline clip (trim and speed are mapped correctly), or assetId for a media-pool-only report. apply=markers creates item-scoped timeline markers; apply=split cuts the clip at every accepted scene boundary as one undoable edit. Default apply=report. Use threshold 0.2 for sensitive detection, 0.3 balanced, 0.45 conservative.",
+      "description": "Phát hiện thay đổi cảnh hình ảnh trong một video nguồn bằng tăng tốc FFmpeg cục bộ. Truyền itemId để kiểm tra clip timeline (trim và speed được ánh xạ chính xác), hoặc assetId để chỉ tạo báo cáo media pool. apply=markers tạo marker timeline theo item; apply=split cắt clip tại mọi ranh giới cảnh được chấp nhận trong một chỉnh sửa có thể undo. Mặc định apply=report. Dùng threshold 0.2 để phát hiện nhạy, 0.3 cân bằng, 0.45 thận trọng.",
       "input_schema": {
         "type": "object",
         "properties": {
           "itemId": {
             "type": "string",
-            "description": "Timeline video/gif item id (prefix accepted). Required for markers/split."
+            "description": "Id item video/gif trên timeline (chấp nhận tiền tố). Bắt buộc cho markers/split."
           },
           "assetId": {
             "type": "string",
-            "description": "Media-pool video/gif asset id (prefix accepted). Report only unless itemId is also supplied."
+            "description": "Id asset video/gif trong media pool (chấp nhận tiền tố). Chỉ báo cáo trừ khi đồng thời truyền itemId."
           },
           "threshold": {
             "type": "number",
-            "description": "Scene sensitivity threshold 0.05–0.95; lower finds more changes. Default 0.3."
+            "description": "Ngưỡng độ nhạy cảnh 0.05–0.95; thấp hơn sẽ tìm nhiều thay đổi hơn. Mặc định 0.3."
           },
           "minSceneSeconds": {
             "type": "number",
-            "description": "Minimum distance between cuts. Default 0.75s."
+            "description": "Khoảng cách tối thiểu giữa các điểm cắt. Mặc định 0.75s."
           },
           "maxScenes": {
             "type": "number",
-            "description": "Maximum returned/applied boundaries. Default 200, max 500."
+            "description": "Số ranh giới tối đa trả về/áp dụng. Mặc định 200, tối đa 500."
           },
           "apply": {
             "type": "string",
@@ -1155,7 +1155,7 @@
               "markers",
               "split"
             ],
-            "description": "report (default), markers, or split."
+            "description": "report (mặc định), markers hoặc split."
           }
         }
       }
@@ -2823,7 +2823,7 @@
     },
     {
       "name": "submit_shader",
-      "description": "Generate a custom WebGL fragment shader from a natural-language prompt. type=effect: a per-clip effect (single input u_input) → returns effectId; apply with edit_item adds:[{type:\"effect\",targetItemId,assetId:<effectId>}]. type=transition: a clip-to-clip transition (two inputs u_outgoing/u_incoming + u_progress) → returns a transitionId (custom:tr-*); apply with edit_item adds:[{type:\"transition\",assetId:<transitionId>,incomingItemId:<later clip at the cut>}]. Either way the GLSL is statically validated + compile-checked, then registered; this call only submits/registers — applying is a separate call the agent makes after the user explicitly asks. referenceAssetIds lets the generator learn from project assets: image assets are looked at as visual inspiration; ONE effect/transition asset (kind matching type) contributes its shader code as a style reference. Use for one-off custom looks/transitions not in browse_library.",
+      "description": "Sinh fragment shader WebGL tùy chỉnh từ prompt ngôn ngữ tự nhiên. type=effect: hiệu ứng theo clip (một input u_input) → trả về effectId; áp dụng bằng edit_item adds:[{type:\"effect\",targetItemId,assetId:<effectId>}]. type=transition: transition giữa hai clip (hai input u_outgoing/u_incoming + u_progress) → trả về transitionId (custom:tr-*); áp dụng bằng edit_item adds:[{type:\"transition\",assetId:<transitionId>,incomingItemId:<clip phía sau tại điểm cắt>}]. Trong cả hai trường hợp GLSL được kiểm tra tĩnh + compile-check rồi đăng ký; lần gọi này chỉ submit/đăng ký — áp dụng là lần gọi riêng mà agent thực hiện sau khi người dùng yêu cầu rõ. referenceAssetIds cho phép generator học từ asset dự án: asset image được xem như cảm hứng hình ảnh; MỘT asset effect/transition (kind khớp với type) cung cấp shader code làm tham chiếu phong cách. Dùng cho look/transition tùy chỉnh một lần chưa có trong browse_library.",
       "input_schema": {
         "type": "object",
         "properties": {
@@ -2833,37 +2833,37 @@
               "effect",
               "transition"
             ],
-            "description": "Whether the shader is a per-clip effect (color, blur, mask, LUT-style grade, distortion) or a between-clip transition (crossfade, wipe, slide, 3D cube)."
+            "description": "Shader là hiệu ứng theo clip (màu, blur, mask, grade kiểu LUT, distortion) hay transition giữa clip (crossfade, wipe, slide, cube 3D)."
           },
           "prompt": {
             "type": "string",
             "minLength": 1,
-            "description": "Natural-language description of the shader. Restate the user's intent in one concrete sentence — e.g. \"Chromatic aberration with RGB split\", \"Cinematic teal-orange color grade\", \"Smooth crossfade with soft edge\"."
+            "description": "Mô tả shader bằng ngôn ngữ tự nhiên. Diễn đạt lại ý người dùng trong một câu cụ thể — ví dụ \"Chromatic aberration with RGB split\", \"Cinematic teal-orange color grade\", \"Smooth crossfade with soft edge\"."
           },
           "name": {
             "type": "string",
-            "description": "Asset name shown in the library. Defaults to a name derived from the prompt."
+            "description": "Tên asset hiển thị trong thư viện. Mặc định được tạo từ prompt."
           },
           "referenceAssetIds": {
             "type": "array",
             "items": {
               "type": "string"
             },
-            "description": "Project asset ids the generator should learn from. Image asset id → model LOOKS AT it as visual inspiration (e.g. a still to match for a LUT, a screenshot to mimic for a glitch effect). Effect or transition asset id → its shader code is reused as a style reference. At most one effect/transition reference per submit, and its kind must match `type`. Pass full ids or short id prefixes."
+            "description": "Id asset dự án để generator học theo. Id asset image → model XEM asset như cảm hứng hình ảnh (ví dụ ảnh tĩnh để khớp LUT, screenshot để bắt chước hiệu ứng glitch). Id asset effect hoặc transition → shader code được dùng lại làm tham chiếu phong cách. Mỗi lần submit tối đa một tham chiếu effect/transition và kind phải khớp `type`. Truyền id đầy đủ hoặc tiền tố id ngắn."
           },
           "properties": {
             "type": "array",
-            "description": "Optional adjustable numeric uniforms exposed as sliders; each becomes a u_<key> float uniform in the shader. Omit for a fixed effect.",
+            "description": "Uniform số có thể điều chỉnh, hiển thị thành slider, tùy chọn; mỗi uniform trở thành float uniform u_<key> trong shader. Bỏ qua nếu muốn hiệu ứng cố định.",
             "items": {
               "type": "object",
               "properties": {
                 "key": {
                   "type": "string",
-                  "description": "GLSL identifier; becomes u_<key>."
+                  "description": "Identifier GLSL; trở thành u_<key>."
                 },
                 "label": {
                   "type": "string",
-                  "description": "zh UI label."
+                  "description": "Nhãn UI tiếng Việt."
                 },
                 "default": {
                   "type": "number"
@@ -5395,32 +5395,32 @@
     },
     {
       "name": "review_scene_plan",
-      "description": "Advisory review of a multi-scene plan for repetition, decorative visuals, static-card overuse, and generic language. Returns a normalized 0–5 risk score, revision advice, and affected scene numbers. The report is optional advice and never blocks or authorizes submit_image/submit_video.",
+      "description": "Rà soát mang tính tư vấn một kế hoạch nhiều cảnh để phát hiện lặp lại, hình ảnh trang trí, lạm dụng card tĩnh và ngôn ngữ chung chung. Trả về điểm rủi ro chuẩn hóa 0–5, lời khuyên sửa và số thứ tự các cảnh bị ảnh hưởng. Báo cáo chỉ là tư vấn tùy chọn, không bao giờ chặn hoặc cấp phép submit_image/submit_video.",
       "input_schema": {
         "type": "object",
         "properties": {
           "scenes": {
             "type": "array",
             "minItems": 1,
-            "description": "Ordered scenes to review. type comparison trims whitespace and ignores case; blank responsibility fields count as missing.",
+            "description": "Các cảnh theo thứ tự cần rà soát. So sánh type sẽ bỏ khoảng trắng và không phân biệt hoa thường; field trách nhiệm trống được tính là thiếu.",
             "items": {
               "type": "object",
               "properties": {
                 "type": {
                   "type": "string",
-                  "description": "Scene form, e.g. video, image, text_card, chart."
+                  "description": "Dạng cảnh, ví dụ video, image, text_card, chart."
                 },
                 "description": {
                   "type": "string",
-                  "description": "Concrete visual description."
+                  "description": "Mô tả hình ảnh cụ thể."
                 },
                 "shotIntent": {
                   "type": "string",
-                  "description": "Why this shot exists."
+                  "description": "Lý do shot này tồn tại."
                 },
                 "informationRole": {
                   "type": "string",
-                  "description": "What this scene communicates."
+                  "description": "Cảnh này truyền đạt điều gì."
                 }
               },
               "required": [

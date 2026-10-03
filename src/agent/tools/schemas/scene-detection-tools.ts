@@ -3,20 +3,20 @@ import type { AgentToolSchema } from '../../tool-schema';
 export const SCENE_DETECTION_TOOL_SCHEMAS: AgentToolSchema[] = [{
   name: 'detect_scenes',
   description: [
-    'Detect visual scene changes in one source video using local FFmpeg acceleration.',
-    'Pass itemId to inspect a timeline clip (trim and speed are mapped correctly), or assetId for a media-pool-only report.',
-    'apply=markers creates item-scoped timeline markers; apply=split cuts the clip at every accepted scene boundary as one undoable edit.',
-    'Default apply=report. Use threshold 0.2 for sensitive detection, 0.3 balanced, 0.45 conservative.',
+    'Phát hiện thay đổi cảnh hình ảnh trong một video nguồn bằng tăng tốc FFmpeg cục bộ.',
+    'Truyền itemId để kiểm tra clip timeline (trim và speed được ánh xạ chính xác), hoặc assetId để chỉ tạo báo cáo media pool.',
+    'apply=markers tạo marker timeline theo item; apply=split cắt clip tại mọi ranh giới cảnh được chấp nhận trong một chỉnh sửa có thể undo.',
+    'Mặc định apply=report. Dùng threshold 0.2 để phát hiện nhạy, 0.3 cân bằng, 0.45 thận trọng.',
   ].join(' '),
   input_schema: {
     type: 'object',
     properties: {
-      itemId: { type: 'string', description: 'Timeline video/gif item id (prefix accepted). Required for markers/split.' },
-      assetId: { type: 'string', description: 'Media-pool video/gif asset id (prefix accepted). Report only unless itemId is also supplied.' },
-      threshold: { type: 'number', description: 'Scene sensitivity threshold 0.05–0.95; lower finds more changes. Default 0.3.' },
-      minSceneSeconds: { type: 'number', description: 'Minimum distance between cuts. Default 0.75s.' },
-      maxScenes: { type: 'number', description: 'Maximum returned/applied boundaries. Default 200, max 500.' },
-      apply: { type: 'string', enum: ['report', 'markers', 'split'], description: 'report (default), markers, or split.' },
+      itemId: { type: 'string', description: 'Id item video/gif trên timeline (chấp nhận tiền tố). Bắt buộc cho markers/split.' },
+      assetId: { type: 'string', description: 'Id asset video/gif trong media pool (chấp nhận tiền tố). Chỉ báo cáo trừ khi đồng thời truyền itemId.' },
+      threshold: { type: 'number', description: 'Ngưỡng độ nhạy cảnh 0.05–0.95; thấp hơn sẽ tìm nhiều thay đổi hơn. Mặc định 0.3.' },
+      minSceneSeconds: { type: 'number', description: 'Khoảng cách tối thiểu giữa các điểm cắt. Mặc định 0.75s.' },
+      maxScenes: { type: 'number', description: 'Số ranh giới tối đa trả về/áp dụng. Mặc định 200, tối đa 500.' },
+      apply: { type: 'string', enum: ['report', 'markers', 'split'], description: 'report (mặc định), markers hoặc split.' },
     },
   },
 }];
