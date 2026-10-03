@@ -17,8 +17,8 @@ import { TopBarIconButton } from './TopBarIconButton';
 const McpGuideDialog = lazy(() => loadMcpGuideDialog().then((m) => ({ default: m.McpGuideDialog })));
 
 // Language switching: The text pill displays the current language; clicking
-// cycles through the supported locales. First run defaults to the
-// system language (or English) — see i18n/locale.ts.
+// cycles through the supported locales. First run follows a supported system
+// language and otherwise defaults to Vietnamese — see i18n/locale.ts.
 export function LocaleToggle() {
   const t = useT();
   const locale = getLocale();
