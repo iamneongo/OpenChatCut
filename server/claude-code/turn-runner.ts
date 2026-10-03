@@ -6,6 +6,7 @@ import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import type { ClaudeCodeTurnRequest, ClaudeCodeTurnStreamEvent } from '../../shared/claude-code-agent.ts';
 import { claudeCodeCommand } from './command.ts';
+import { localized } from '../ui-locale.ts';
 
 /**
  * Unlike Codex's app-server (a long-lived JSON-RPC process with a
@@ -95,7 +96,7 @@ const RUNTIME_RULES = [
 ].join(' ');
 
 export class ClaudeCodeProcessError extends Error {
-  constructor(message = 'Claude Code CLI is unavailable.') {
+  constructor(message = localized({ zh: 'Claude Code CLI 不可用。', en: 'Claude Code CLI is unavailable.', vi: 'Claude Code CLI không khả dụng.' })) {
     super(message);
     this.name = 'ClaudeCodeProcessError';
   }
@@ -202,7 +203,7 @@ export function translateClaudeCodeLine(
     if (line.is_error === true || line.subtype !== 'success') {
       const message = typeof line.result === 'string' && line.result
         ? line.result
-        : 'Claude Code turn failed.';
+        : localized({ zh: 'Claude Code 本轮对话失败。', en: 'Claude Code turn failed.', vi: 'Lượt Claude Code thất bại.' });
       events.push({ type: 'error', message });
     }
     events.push({ type: 'done' });
@@ -340,7 +341,11 @@ export async function runClaudeCodeTurn(
         if (signal.aborted) {
           // Aborted before completion — no terminal event needed, the caller already knows.
         } else {
-          const message = stderrTail.trim() || `Claude Code CLI exited with code ${exitCode ?? 'unknown'}.`;
+          const message = stderrTail.trim() || localized({
+            zh: `Claude Code CLI 已退出，退出码为 ${exitCode ?? 'unknown'}。`,
+            en: `Claude Code CLI exited with code ${exitCode ?? 'unknown'}.`,
+            vi: `Claude Code CLI đã thoát với mã ${exitCode ?? 'unknown'}.`,
+          });
           emit({ type: 'error', message });
           emit({ type: 'done' });
         }

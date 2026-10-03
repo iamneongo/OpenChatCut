@@ -3,6 +3,7 @@ import { join } from 'node:path';
 import { CopilotClient, RuntimeConnection, type ModelInfo } from '@github/copilot-sdk';
 import type { CopilotAccountSummary, CopilotAgentModel } from '../../shared/copilot-agent.ts';
 import { resolveCopilotCli } from './installation.ts';
+import { localized } from '../ui-locale.ts';
 
 /**
  * Isolated Copilot home, mirroring `CODEX_HOME = ~/.openchatcut/codex`. Keeps
@@ -33,7 +34,7 @@ const CHILD_ENV_NAMES = [
 ] as const;
 
 export class CopilotProcessError extends Error {
-  constructor(message = 'Copilot CLI is unavailable.') {
+  constructor(message = localized({ zh: 'Copilot CLI 不可用。', en: 'Copilot CLI is unavailable.', vi: 'Copilot CLI không khả dụng.' })) {
     super(message);
     this.name = 'CopilotProcessError';
   }
@@ -57,7 +58,7 @@ async function runtimeRequest<T>(request: Promise<T>, operation: string): Promis
       request,
       new Promise<never>((_, reject) => {
         timer = setTimeout(() => reject(new CopilotProcessError(
-          `Copilot ${operation} timed out.`,
+          localized({ zh: `Copilot ${operation} 超时。`, en: `Copilot ${operation} timed out.`, vi: `Copilot ${operation} đã hết thời gian chờ.` }),
         )), RUNTIME_REQUEST_TIMEOUT_MS);
       }),
     ]);
@@ -69,8 +70,11 @@ async function runtimeRequest<T>(request: Promise<T>, operation: string): Promis
 async function startCopilotClient(): Promise<CopilotClient> {
   const path = await resolveCopilotCli();
   if (!path) throw new CopilotProcessError(
-    'Copilot CLI not found. Install it (`brew install copilot` or `npm i -g @github/copilot`) '
-    + 'or set OPENCHATCUT_COPILOT_PATH.',
+    localized({
+      zh: '未找到 Copilot CLI。请安装（`brew install copilot` 或 `npm i -g @github/copilot`），或设置 OPENCHATCUT_COPILOT_PATH。',
+      en: 'Copilot CLI not found. Install it (`brew install copilot` or `npm i -g @github/copilot`) or set OPENCHATCUT_COPILOT_PATH.',
+      vi: 'Không tìm thấy Copilot CLI. Hãy cài đặt (`brew install copilot` hoặc `npm i -g @github/copilot`) hoặc đặt OPENCHATCUT_COPILOT_PATH.',
+    }),
   );
   const client = new CopilotClient({
     mode: 'empty',
@@ -84,7 +88,7 @@ async function startCopilotClient(): Promise<CopilotClient> {
   } catch (error) {
     await client.forceStop().catch(() => undefined);
     throw new CopilotProcessError(
-      error instanceof Error ? error.message : 'Copilot CLI failed to start.',
+      error instanceof Error ? error.message : localized({ zh: 'Copilot CLI 启动失败。', en: 'Copilot CLI failed to start.', vi: 'Khởi động Copilot CLI thất bại.' }),
     );
   }
 }

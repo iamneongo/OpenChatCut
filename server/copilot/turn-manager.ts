@@ -6,6 +6,7 @@ import type {
   CopilotTurnStreamEvent,
 } from '../../shared/copilot-agent.ts';
 import { copilotClient, CopilotProcessError } from './client.ts';
+import { localized } from '../ui-locale.ts';
 
 /**
  * Idle cap, not a wall-clock cap. A long agentic turn (scouting footage, placing
@@ -85,12 +86,12 @@ function errorSummary(data: Record<string, any>): string {
     : '';
   const type = typeof data.errorType === 'string' ? data.errorType : '';
   if (type === 'quota' || type === 'rate_limit') {
-    return `Copilot is rate limited or out of quota. ${detail}`.trim();
+    return localized({ zh: `Copilot 受到速率限制或已超出配额。${detail}`, en: `Copilot is rate limited or out of quota. ${detail}`, vi: `Copilot bị giới hạn tốc độ hoặc đã hết hạn mức. ${detail}` }).trim();
   }
   if (type === 'authentication' || type === 'authorization') {
-    return `Copilot authentication failed. Sign in with \`copilot /login\`. ${detail}`.trim();
+    return localized({ zh: `Copilot 身份验证失败。请使用 \`copilot /login\` 登录。${detail}`, en: `Copilot authentication failed. Sign in with \`copilot /login\`. ${detail}`, vi: `Xác thực Copilot thất bại. Hãy đăng nhập bằng \`copilot /login\`. ${detail}` }).trim();
   }
-  return detail || 'Copilot turn failed.';
+  return detail || localized({ zh: 'Copilot 本轮对话失败。', en: 'Copilot turn failed.', vi: 'Lượt Copilot thất bại.' });
 }
 
 function validImagePayload(value: unknown): value is Array<{ base64: string }> {
@@ -140,7 +141,7 @@ function hostTools(request: CopilotTurnRequest, state: () => TurnSession | undef
     skipPermission: true,
     handler: async (args: unknown) => {
       const active = state();
-      if (!active) throw new Error('Copilot turn is no longer active.');
+      if (!active) throw new Error(localized({ zh: 'Copilot 本轮对话已不再活动。', en: 'Copilot turn is no longer active.', vi: 'Lượt Copilot không còn hoạt động.' }));
       const callId = randomUUID();
       const settled = new Promise<{ success: boolean; result: unknown }>((resolve) => {
         active.pendingTools.set(callId, { name: spec.name, args, startedAt: Date.now(), resolve });
@@ -162,7 +163,7 @@ function hostTools(request: CopilotTurnRequest, state: () => TurnSession | undef
         const detail = object(outcome.result)?.error;
         const message = typeof detail === 'string' && detail
           ? detail
-          : `Tool ${spec.name} failed.`;
+          : localized({ zh: `工具 ${spec.name} 执行失败。`, en: `Tool ${spec.name} failed.`, vi: `Tool ${spec.name} thất bại.` });
         return {
           resultType: 'failure' as const,
           error: message,
@@ -203,7 +204,7 @@ function copilotReasoningEffort(value: string | null | undefined): SessionConfig
   if (value === 'low' || value === 'medium' || value === 'high' || value === 'xhigh' || value === 'max') {
     return value;
   }
-  throw new CopilotProcessError(`Unsupported Copilot reasoning effort: ${value}`);
+  throw new CopilotProcessError(localized({ zh: `不支持的 Copilot 推理强度：${value}`, en: `Unsupported Copilot reasoning effort: ${value}`, vi: `Mức suy luận Copilot không được hỗ trợ: ${value}` }));
 }
 
 export function copilotSessionConfig(
@@ -220,7 +221,7 @@ export function copilotSessionConfig(
     availableTools: new ToolSet().addCustom('*'),
     onPermissionRequest: () => ({
       kind: 'reject',
-      feedback: 'OpenChatCut only permits its own editing tools.',
+      feedback: localized({ zh: 'OpenChatCut 仅允许使用自己的编辑工具。', en: 'OpenChatCut only permits its own editing tools.', vi: 'OpenChatCut chỉ cho phép các tool chỉnh sửa của chính ứng dụng.' }),
     }),
     enableSessionStore: false,
   };
@@ -272,7 +273,7 @@ function idleWatchdog(lifecycle: TurnLifecycle): { arm: () => void; stop: () => 
       const waiting = [...lifecycle.active.pendingTools.values()]
         .some((call) => now - call.startedAt < TOOL_PENDING_GRACE_MS);
       if (waiting) arm();
-      else lifecycle.finish(`Copilot turn stalled: no activity for ${IDLE_TIMEOUT_MS / 1000}s.`);
+      else lifecycle.finish(localized({ zh: `Copilot 本轮对话已卡住：${IDLE_TIMEOUT_MS / 1000} 秒没有活动。`, en: `Copilot turn stalled: no activity for ${IDLE_TIMEOUT_MS / 1000}s.`, vi: `Lượt Copilot bị treo: không có hoạt động trong ${IDLE_TIMEOUT_MS / 1000} giây.` }));
     }, IDLE_TIMEOUT_MS);
   };
   return { arm, stop: () => clearTimeout(timer) };
@@ -283,14 +284,14 @@ async function sendSessionPrompt(
   prompt: string,
   signal: AbortSignal,
 ): Promise<void> {
-  const onAbort = (): void => lifecycle.finish('Copilot turn was cancelled.');
+  const onAbort = (): void => lifecycle.finish(localized({ zh: 'Copilot 本轮对话已取消。', en: 'Copilot turn was cancelled.', vi: 'Lượt Copilot đã bị hủy.' }));
   signal.addEventListener('abort', onAbort, { once: true });
   try {
     if (signal.aborted) onAbort();
     else await lifecycle.active.session.send({ prompt });
     await lifecycle.promise;
   } catch (error) {
-    lifecycle.finish(error instanceof Error ? error.message : 'Copilot turn failed.');
+    lifecycle.finish(error instanceof Error ? error.message : localized({ zh: 'Copilot 本轮对话失败。', en: 'Copilot turn failed.', vi: 'Lượt Copilot thất bại.' }));
   } finally {
     signal.removeEventListener('abort', onAbort);
   }
@@ -300,7 +301,7 @@ async function disconnectTurn(active: TurnSession): Promise<void> {
   sessions.delete(active.requestId);
   for (const [callId, pending] of active.pendingTools) {
     active.pendingTools.delete(callId);
-    pending.resolve({ success: false, result: { error: 'Copilot turn ended.' } });
+    pending.resolve({ success: false, result: { error: localized({ zh: 'Copilot 本轮对话已结束。', en: 'Copilot turn ended.', vi: 'Lượt Copilot đã kết thúc.' }) } });
   }
   await active.session.disconnect().catch(() => undefined);
 }
@@ -313,7 +314,7 @@ export async function runCopilotTurn(
   options: RunCopilotTurnOptions = {},
 ): Promise<void> {
   if (sessions.has(request.requestId)) {
-    throw new CopilotProcessError(`Copilot turn ${request.requestId} is already running.`);
+    throw new CopilotProcessError(localized({ zh: `Copilot 本轮对话 ${request.requestId} 已在运行。`, en: `Copilot turn ${request.requestId} is already running.`, vi: `Lượt Copilot ${request.requestId} đang chạy.` }));
   }
   const client = await copilotClient();
   let active: TurnSession | undefined;

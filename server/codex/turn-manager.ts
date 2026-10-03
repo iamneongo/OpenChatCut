@@ -83,9 +83,9 @@ function contextUsageEvent(
 }
 
 function sessionError(error: unknown): string {
-  if (error instanceof CodexTimeoutError) return 'Codex took too long to start the turn. Try again.';
-  if (error instanceof CodexRpcError) return 'Codex could not start this turn. Sign in or choose another model.';
-  return 'Codex app-server stopped before the turn completed.';
+  if (error instanceof CodexTimeoutError) return localized({ zh: 'Codex 启动本轮对话用时过长，请重试。', en: 'Codex took too long to start the turn. Try again.', vi: 'Codex khởi động lượt này quá lâu. Hãy thử lại.' });
+  if (error instanceof CodexRpcError) return localized({ zh: 'Codex 无法启动本轮对话，请登录或选择其他模型。', en: 'Codex could not start this turn. Sign in or choose another model.', vi: 'Codex không thể khởi động lượt này. Hãy đăng nhập hoặc chọn model khác.' });
+  return localized({ zh: 'Codex app-server 在本轮对话完成前已停止。', en: 'Codex app-server stopped before the turn completed.', vi: 'Codex app-server đã dừng trước khi lượt này hoàn tất.' });
 }
 
 /**
@@ -116,7 +116,7 @@ function browserFailureSummary(result: unknown): string {
   const shaped = object(result);
   const candidate = shaped?.error ?? shaped?.message ?? shaped?.note;
   if (typeof candidate === 'string') return candidate.replace(/\s+/g, ' ').slice(0, ERROR_SUMMARY_LIMIT);
-  return 'OpenChatCut tool execution failed.';
+  return localized({ zh: 'OpenChatCut 工具执行失败。', en: 'OpenChatCut tool execution failed.', vi: 'Thực thi công cụ OpenChatCut thất bại.' });
 }
 
 function validImagePayload(value: unknown): value is Array<{ base64: string }> {
@@ -245,11 +245,11 @@ export class CodexTurnManager {
     emit: StreamSink,
     signal: AbortSignal,
   ): Promise<void> {
-    if (this.sessions.has(request.requestId)) throw new Error('requestId is already active');
+    if (this.sessions.has(request.requestId)) throw new Error(localized({ zh: 'requestId 已处于活动状态。', en: 'requestId is already active', vi: 'requestId đang hoạt động.' }));
     const session = createSession(request, client, emit);
     this.sessions.set(request.requestId, session);
     const subscriptions = this.subscribe(session);
-    const onAbort = () => session.finish({ type: 'error', message: 'Codex turn cancelled.' });
+    const onAbort = () => session.finish({ type: 'error', message: localized({ zh: 'Codex 本轮对话已取消。', en: 'Codex turn cancelled.', vi: 'Lượt Codex đã bị hủy.' }) });
     signal.addEventListener('abort', onAbort, { once: true });
     try {
       await this.startTurn(session, request, signal);
@@ -288,7 +288,7 @@ export class CodexTurnManager {
       session.client.onServerRequest((request) => this.serverRequest(session, request)),
       session.client.onExit(() => {
         session.clientAlive = false;
-        session.finish({ type: 'error', message: 'Codex app-server stopped before the turn completed.' });
+        session.finish({ type: 'error', message: localized({ zh: 'Codex app-server 在本轮对话完成前已停止。', en: 'Codex app-server stopped before the turn completed.', vi: 'Codex app-server đã dừng trước khi lượt này hoàn tất.' }) });
       }),
     ];
   }
@@ -345,8 +345,8 @@ export class CodexTurnManager {
 
   private completeTurn(session: TurnSession, turn: Record<string, unknown> | null): void {
     if (turn?.status === 'completed') session.finish({ type: 'done' });
-    else if (turn?.status === 'interrupted') session.finish({ type: 'error', message: 'Codex turn was interrupted.' });
-    else session.finish({ type: 'error', message: 'Codex turn failed. Try again.' });
+    else if (turn?.status === 'interrupted') session.finish({ type: 'error', message: localized({ zh: 'Codex 本轮对话被中断。', en: 'Codex turn was interrupted.', vi: 'Lượt Codex đã bị gián đoạn.' }) });
+    else session.finish({ type: 'error', message: localized({ zh: 'Codex 本轮对话失败，请重试。', en: 'Codex turn failed. Try again.', vi: 'Lượt Codex thất bại. Hãy thử lại.' }) });
   }
 
   private serverRequest(session: TurnSession, request: CodexServerRequest): boolean {
@@ -359,7 +359,11 @@ export class CodexTurnManager {
     const callId = identifier(request.params.callId);
     const name = identifier(request.params.tool);
     if (!callId || !name || !session.toolNames.has(name) || session.pendingTools.has(callId)) {
-      const message = 'This OpenChatCut tool call is unavailable. It was not part of this request (stale tool list, duplicate call, or malformed id). Tell the user to open the project and retry; if it persists, start a new run.'
+      const message = localized({
+        zh: '此 OpenChatCut 工具调用不可用。它不属于本次请求（工具列表已过期、重复调用或 id 格式错误）。请让用户打开项目后重试；如果问题仍然存在，请开始新的运行。',
+        en: 'This OpenChatCut tool call is unavailable. It was not part of this request (stale tool list, duplicate call, or malformed id). Tell the user to open the project and retry; if it persists, start a new run.',
+        vi: 'Lệnh gọi công cụ OpenChatCut này không khả dụng. Nó không thuộc yêu cầu hiện tại (danh sách tool đã cũ, gọi trùng hoặc id không hợp lệ). Hãy mở dự án rồi thử lại; nếu vẫn còn, hãy bắt đầu lượt chạy mới.',
+      });
       session.rejectedToolCalls += 1;
       session.emit({
         type: 'tool-end',
@@ -405,7 +409,7 @@ export class CodexTurnManager {
   private abortPendingTools(session: TurnSession): void {
     for (const pending of session.pendingTools.values()) {
       pending.request.respond({
-        contentItems: [{ type: 'inputText', text: 'OpenChatCut cancelled this tool call.' }],
+        contentItems: [{ type: 'inputText', text: localized({ zh: 'OpenChatCut 已取消此工具调用。', en: 'OpenChatCut cancelled this tool call.', vi: 'OpenChatCut đã hủy lệnh gọi công cụ này.' }) }],
         success: false,
       });
     }
