@@ -169,7 +169,7 @@ function groupVectorsByAsset(records: readonly SemanticVectorRecord[]): Map<stri
 function addPackedLength(total: number, amount: number): number {
   if (!Number.isSafeInteger(amount) || amount < 0) throw new Error('Invalid semantic vector length');
   const next = total + amount;
-  if (!Number.isSafeInteger(next) || next > MAX_PACKED_OFFSET) throw new Error('Semantic vector snapshot is too large');
+  if (!Number.isSafeInteger(next) || next > MAX_PACKED_OFFSET) throw new Error('snapshot vector ngữ nghĩa quá lớn');
   return next;
 }
 

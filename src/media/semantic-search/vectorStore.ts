@@ -111,7 +111,7 @@ export async function hybridSearchRemote(
       }),
       cache: 'no-store',
     });
-    if (!response.ok) throw new Error(`hybrid search failed: ${response.status}`);
+    if (!response.ok) throw new Error(`tìm kiếm hybrid thất bại: ${response.status}`);
     const body = await response.json() as {
       hits: Array<{
         kind: string;

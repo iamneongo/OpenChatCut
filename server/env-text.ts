@@ -16,7 +16,7 @@ function envLine(name: string, value: string): string {
   if (name === MODEL_CAPABILITY_OVERRIDES_KEY) {
     return `${name}=${ENCODED_VALUE_PREFIX}${encodeURIComponent(value)}`;
   }
-  throw new Error(`invalid value for ${name}: cannot persist losslessly in dotenv`);
+  throw new Error(`giá trị của ${name} không hợp lệ: không thể lưu chính xác trong dotenv`);
 }
 
 /** Merge `patch` into a .env file's text: update lines whose key matches and append

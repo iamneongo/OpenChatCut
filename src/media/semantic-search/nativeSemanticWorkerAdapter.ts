@@ -105,7 +105,7 @@ export async function warmUpDesktopNativeSemantic(): Promise<boolean> {
     if (!isDesktopSemanticResponse(response)
       || response.requestId !== requestId
       || response.result.type !== 'loaded') {
-      throw new Error('Desktop semantic API returned an invalid preload response');
+      throw new Error('API ngữ nghĩa desktop trả về phản hồi preload không hợp lệ');
     }
     markNativeSemanticReady();
     return true;
@@ -328,7 +328,7 @@ class NativeSemanticWorkerAdapter {
   }
 
   private postToBrowser(pending: PendingAdapterRequest): void {
-    if (!this.browserWorker) throw new Error('Semantic browser fallback is unavailable');
+    if (!this.browserWorker) throw new Error('fallback ngữ nghĩa trên trình duyệt không khả dụng');
     this.browserWorker.postMessage(pending.request, pending.transfer);
   }
 

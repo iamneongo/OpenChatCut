@@ -91,7 +91,7 @@ export class LocalAsrClient {
       // progress messages carry no id-specific result; ignored here.
     };
     this.worker.onerror = (event) => {
-      for (const pending of this.pending.values()) pending.reject(new Error(event.message || 'Local ASR worker crashed'));
+      for (const pending of this.pending.values()) pending.reject(new Error(event.message || 'worker ASR cục bộ đã bị lỗi'));
       this.pending.clear();
       this.worker?.terminate();
       this.worker = null;
@@ -106,7 +106,7 @@ export class LocalAsrClient {
       const timer = timeoutMs
         ? setTimeout(() => {
           this.pending.delete(id);
-          reject(new Error(`Local ASR ${request.type} timed out after ${Math.round(timeoutMs / 1000)}s`));
+          reject(new Error(`Local ASR ${request.type} hết thời gian chờ sau ${Math.round(timeoutMs / 1000)} giây`));
         }, timeoutMs)
         : null;
       const settle = (fn: () => void): void => {
@@ -193,7 +193,7 @@ export class LocalAsrClient {
     this.worker = null;
     this.config = null;
     for (const pending of this.pending.values()) {
-      pending.reject(new Error('Local ASR worker disposed'));
+      pending.reject(new Error('worker ASR cục bộ đã được giải phóng'));
     }
     this.pending.clear();
   }

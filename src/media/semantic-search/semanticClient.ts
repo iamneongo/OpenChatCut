@@ -182,15 +182,15 @@ function requireDuplicates(result: WorkerResult): DuplicateMatch[] {
 }
 
 function validateWorkerResponse(value: unknown): WorkerResponse {
-  if (!value || typeof value !== 'object') throw new Error('Semantic worker returned an invalid response');
+  if (!value || typeof value !== 'object') throw new Error('worker ngữ nghĩa trả về phản hồi không hợp lệ');
   const response = value as Record<string, unknown>;
-  if (!Number.isSafeInteger(response.id)) throw new Error('Semantic worker returned an invalid request id');
+  if (!Number.isSafeInteger(response.id)) throw new Error('worker ngữ nghĩa trả về request id không hợp lệ');
   if (response.type === 'error' && typeof response.message === 'string') return response as WorkerResponse;
   if (response.type === 'progress'
     && (response.progress === undefined || typeof response.progress === 'number')
     && (response.file === undefined || typeof response.file === 'string')) return response as WorkerResponse;
   if (response.type === 'result' && isWorkerResult(response.result)) return response as WorkerResponse;
-  throw new Error('Semantic worker returned an invalid response payload');
+  throw new Error('worker ngữ nghĩa trả về payload phản hồi không hợp lệ');
 }
 
 function isWorkerResult(value: unknown): value is WorkerResult {

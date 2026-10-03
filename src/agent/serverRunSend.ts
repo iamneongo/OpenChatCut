@@ -88,7 +88,7 @@ export function prepareServerRunTransport(
 
 function throwIfAborted(signal: AbortSignal): void {
   if (!signal.aborted) return;
-  throw signal.reason instanceof Error ? signal.reason : new Error('Server run request aborted.');
+  throw signal.reason instanceof Error ? signal.reason : new Error('Yêu cầu lượt chạy server đã bị hủy.');
 }
 
 interface ActiveServerRun extends PreparedServerRun {

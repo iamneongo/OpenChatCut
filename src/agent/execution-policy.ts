@@ -136,13 +136,13 @@ function schemaValidator(schema: AgentToolSchema): ValidateFunction {
     return compiled;
   } catch (error) {
     const detail = error instanceof Error ? error.message : String(error);
-    throw new Error(`Malformed JSON schema for tool ${schema.name}: ${detail}`);
+    throw new Error(`Schema JSON của tool ${schema.name} không hợp lệ: ${detail}`);
   }
 }
 export function assertValidAgentToolSchemas(catalog: readonly AgentToolSchema[]): void {
   const names = new Set<string>();
   for (const schema of catalog) {
-    if (names.has(schema.name)) throw new Error(`Duplicate Agent tool schema: ${schema.name}`);
+    if (names.has(schema.name)) throw new Error(`Schema tool Agent bị trùng: ${schema.name}`);
     names.add(schema.name);
     schemaValidator(schema);
   }

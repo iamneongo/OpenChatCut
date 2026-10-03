@@ -98,14 +98,14 @@ async function embedImage(request: Extract<WorkerRequest, { type: 'embed-image' 
 }
 
 function readEmbedding(output: unknown, key: 'text_embeds' | 'image_embeds'): ArrayLike<number> {
-  if (!output || typeof output !== 'object') throw new Error('Semantic model returned an invalid response');
+  if (!output || typeof output !== 'object') throw new Error('model ngữ nghĩa trả về phản hồi không hợp lệ');
   const embedding = (output as Record<string, unknown>)[key];
   if (!embedding || typeof embedding !== 'object') throw new Error('Semantic model returned no embedding');
   const data = (embedding as Record<string, unknown>).data;
   const numericView = ArrayBuffer.isView(data) && !(data instanceof DataView) && 'length' in data;
-  if (!Array.isArray(data) && !numericView) throw new Error('Semantic model returned invalid embedding data');
+  if (!Array.isArray(data) && !numericView) throw new Error('model ngữ nghĩa trả về dữ liệu embedding không hợp lệ');
   const values = data as ArrayLike<number>;
-  if (values.length === 0) throw new Error('Semantic model returned an empty embedding');
+  if (values.length === 0) throw new Error('model ngữ nghĩa trả về embedding rỗng');
   return values;
 }
 

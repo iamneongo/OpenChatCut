@@ -119,7 +119,7 @@ function registerStylesheet(font: LocalCjkFont): Promise<void> {
     link.addEventListener('load', () => resolve(), { once: true });
     link.addEventListener('error', () => {
       link.remove();
-      reject(new Error(`font stylesheet failed: ${font.family}`));
+      reject(new Error(`stylesheet font thất bại: ${font.family}`));
     }, { once: true });
     document.head.append(link);
   });
@@ -138,7 +138,7 @@ async function loadFaces(font: LocalCjkFont): Promise<void> {
   document.fonts.forEach((face) => {
     if (face.family === font.family) faces.push(face);
   });
-  if (faces.length === 0) throw new Error(`font stylesheet registered no faces: ${font.family}`);
+  if (faces.length === 0) throw new Error(`stylesheet font không đăng ký face nào: ${font.family}`);
   await Promise.all(faces.map((face) => face.load()));
 }
 
@@ -170,7 +170,7 @@ export function ensureLocalFont(family: string): Promise<void> {
   const promise = hasDom()
     ? loadFaces(font).catch((err: unknown) => {
         loadPromises.delete(font.family);
-        throw err instanceof Error ? err : new Error(`font load failed: ${font.family}`);
+        throw err instanceof Error ? err : new Error(`tải font thất bại: ${font.family}`);
       })
     : Promise.resolve();
   loadPromises.set(font.family, promise);

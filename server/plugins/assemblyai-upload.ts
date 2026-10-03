@@ -147,7 +147,7 @@ export async function handleAssemblyAiUpload(
       return;
     }
     if (typeof parsed.upload_url !== 'string' || !parsed.upload_url) {
-      sendJson(res, 502, { error: 'AssemblyAI upload returned no upload URL' });
+      sendJson(res, 502, { error: 'tải lên AssemblyAI không trả về upload URL' });
       return;
     }
     sendJson(res, 200, { uploadUrl: parsed.upload_url, bytes: info.size });

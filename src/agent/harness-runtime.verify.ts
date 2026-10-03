@@ -97,7 +97,7 @@ function verifyPoliciesAndSchemas(): void {
   assert.equal(validateAgentToolInvocation(uriSchema, { url: 'not a uri' }, [uriSchema]).ok, false);
   assert.throws(() => assertValidAgentToolSchemas([{
     name: 'broken', description: 'broken', input_schema: { type: 'not-a-json-type' },
-  } as unknown as AgentToolSchema]), /Malformed JSON schema/);
+  } as unknown as AgentToolSchema]), /Malformed JSON schema|Schema JSON của tool .* không hợp lệ/);
 }
 
 // The load_skill schema declares files.minItems=1, file:string and offset:integer, so a
