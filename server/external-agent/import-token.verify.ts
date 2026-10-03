@@ -71,7 +71,7 @@ const capped = new ImportTokenRegistry({
 });
 capped.mint(scope);
 capped.mint(scope);
-assert.throws(() => capped.mint(scope), /capacity reached/);
+assert.throws(() => capped.mint(scope), /đã đạt giới hạn import token/);
 now += 10;
 const afterPrune = capped.mint(scope);
 assert.equal(capped.size, 1, 'mint must prune expired entries before enforcing the cap');
@@ -79,19 +79,19 @@ assert.equal(capped.consume(afterPrune.token, use).status, 'accepted');
 
 assert.throws(
   () => parseImportTokenScope({ ...scope, extra: true }),
-  /invalid import token request/,
+  /request import token không hợp lệ/,
 );
 assert.throws(
   () => parseImportTokenScope({ ...scope, method: 'PUT' }),
-  /invalid import token request/,
+  /request import token không hợp lệ/,
 );
 assert.throws(
   () => registry.mint({ ...scope, filename: '../clip.mov' }),
-  /invalid import filename/,
+  /tên tệp nhập không hợp lệ/,
 );
 assert.throws(
   () => registry.mint({ ...scope, assetType: 'image' }),
-  /invalid import asset type or content type/,
+  /loại asset hoặc content type nhập không hợp lệ/,
   'asset type and MIME must be an allowlisted pair',
 );
 const displayedUrl = importUploadUrl(scope, 'visible-only-in-issued-url');

@@ -92,7 +92,7 @@ async function callControlTool(
     if (boundProjectId(session)) {
       throw new ExternalEditorCallError(
         'rejected',
-        'A project-bound MCP session cannot create or switch to another project. Start a new MCP session.',
+        'Phiên MCP đã gắn với project không thể tạo hoặc chuyển sang project khác. Hãy bắt đầu phiên MCP mới.',
       );
     }
     const project = await createExternalProject(args);
@@ -100,7 +100,7 @@ async function callControlTool(
   }
   if (name === 'target_project') {
     const projectId = requestedProjectId(args.projectId);
-    if (!projectId) throw new ExternalEditorCallError('rejected', 'projectId is required');
+    if (!projectId) throw new ExternalEditorCallError('rejected', 'projectId là bắt buộc');
     const url = editorUrl(args, projectId, baseUrl);
     const binding = await targetMcpProject(session, projectId, url);
     await sendMcpToolListChangedIfChanged(session, mcpTools(session));
@@ -139,11 +139,11 @@ async function callTool(
       await validateOfflineBinding(session);
       return callControlTool(session, name, args, baseUrl);
     }
-    if (!session.id) throw new ExternalEditorCallError('failed', 'MCP session initialization is incomplete.');
+    if (!session.id) throw new ExternalEditorCallError('failed', 'khởi tạo phiên MCP chưa hoàn tất.');
     const requested = requestedProjectId(args.editorProjectId);
     const projectId = session.offline.binding().projectId;
     if (requested && requested !== projectId) {
-      throw new ExternalEditorCallError('rejected', `This MCP session is bound to project ${projectId}.`);
+      throw new ExternalEditorCallError('rejected', `Phiên MCP này đã gắn với project ${projectId}.`);
     }
     delete args.editorProjectId;
     return session.offline.execute(name, args);
@@ -157,7 +157,7 @@ async function callTool(
   );
   const control = await callControlTool(session, name, args, baseUrl);
   if (control !== undefined) return control;
-  if (!session.id) throw new ExternalEditorCallError('failed', 'MCP session initialization is incomplete.');
+  if (!session.id) throw new ExternalEditorCallError('failed', 'khởi tạo phiên MCP chưa hoàn tất.');
   const binding = bindBrowserForCall(session, args.editorProjectId, allowRevisionDrift);
   delete args.editorProjectId;
   if ((name === 'track_progress' || name === 'track_export') && args.action === 'wait') {
@@ -170,7 +170,7 @@ function ensureMcpToolExposed(session: McpSession, name: string): void {
   if (mcpTools(session).some((tool) => tool.name === name)) return;
   throw new ExternalEditorCallError(
     'rejected',
-    `Tool "${name}" is not exposed in this MCP session. Call ToolSearch or load_skill first.`,
+    `Tool "${name}" chưa được công khai trong phiên MCP này. Trước tiên hãy gọi ToolSearch hoặc load_skill.`,
   );
 }
 
@@ -265,7 +265,7 @@ function forgetSession(
 function evictSession(
   id: string,
   outcome: 'cancelled' | 'stale' | 'failed' = 'cancelled',
-  message = 'MCP transport session was evicted before the editor call completed.',
+  message = 'Phiên truyền MCP bị loại bỏ trước khi lời gọi editor hoàn tất.',
 ): void {
   const session = sessions.get(id);
   if (!session) return;
@@ -278,13 +278,13 @@ function evictSession(
 export function pruneMcpSessions(now = Date.now()): void {
   for (const [id, session] of sessions) {
     if (now - session.lastUsed > MCP_SESSION_IDLE_LIMIT_MS) {
-      evictSession(id, 'cancelled', 'MCP transport session expired while the editor call was pending.');
+      evictSession(id, 'cancelled', 'Phiên truyền MCP hết hạn khi lời gọi editor đang chờ.');
     }
   }
   if (sessions.size <= MCP_SESSION_COUNT_LIMIT) return;
   const oldest = [...sessions.entries()].sort((left, right) => left[1].lastUsed - right[1].lastUsed);
   for (const [id] of oldest.slice(0, sessions.size - MCP_SESSION_COUNT_LIMIT)) {
-    evictSession(id, 'cancelled', 'MCP transport session was evicted by the session count limit.');
+    evictSession(id, 'cancelled', 'Phiên truyền MCP bị loại bỏ vì đạt giới hạn số phiên.');
   }
 }
 
@@ -318,20 +318,20 @@ async function readMcpPostBody(req: IncomingMessage): Promise<unknown> {
   const contentType = typeof req.headers['content-type'] === 'string'
     ? req.headers['content-type'].split(';', 1)[0]!.trim().toLowerCase()
     : '';
-  if (contentType !== 'application/json') throw new Error('MCP POST requires application/json');
+  if (contentType !== 'application/json') throw new Error('MCP POST yêu cầu application/json');
   const chunks: Buffer[] = [];
   let bytes = 0;
   for await (const chunk of req) {
     const buffer = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk);
     bytes += buffer.length;
-    if (bytes > MCP_POST_BODY_LIMIT_BYTES) throw new Error('MCP request body exceeds 2 MiB');
+    if (bytes > MCP_POST_BODY_LIMIT_BYTES) throw new Error('thân request MCP vượt quá 2 MiB');
     chunks.push(buffer);
   }
-  if (bytes === 0) throw new Error('MCP request body is empty');
+  if (bytes === 0) throw new Error('thân request MCP đang trống');
   try {
     return JSON.parse(Buffer.concat(chunks).toString('utf8')) as unknown;
   } catch {
-    throw new Error('MCP request body is invalid JSON');
+    throw new Error('thân request MCP chứa JSON không hợp lệ');
   }
 }
 
@@ -371,7 +371,7 @@ async function startMcpSession(
     forgetSession(
       session,
       'cancelled',
-      'MCP transport session closed before the editor call completed.',
+      'Phiên truyền MCP đã đóng trước khi lời gọi editor hoàn tất.',
     );
   };
   await server.connect(transport);
@@ -420,8 +420,8 @@ export async function handleMcpRequest(
     try {
       parsedBody = await readMcpPostBody(req);
     } catch (error) {
-      const message = error instanceof Error ? error.message : 'invalid MCP request body';
-      sendSessionError(res, /exceeds/.test(message) ? 413 : 400, message);
+      const message = error instanceof Error ? error.message : 'thân request MCP không hợp lệ';
+      sendSessionError(res, /vượt quá|exceeds/.test(message) ? 413 : 400, message);
       return;
     }
   }
@@ -431,11 +431,11 @@ export async function handleMcpRequest(
     pruneMcpSessions(now);
     const session = sessions.get(sessionId);
     if (!session) {
-      sendSessionError(res, 404, 'MCP session not found or expired');
+      sendSessionError(res, 404, 'không tìm thấy hoặc phiên MCP đã hết hạn');
       return;
     }
     if (req.method === 'DELETE') {
-      forgetSession(session, 'cancelled', 'MCP transport session closed before the editor call completed.');
+      forgetSession(session, 'cancelled', 'Phiên truyền MCP đã đóng trước khi lời gọi editor hoàn tất.');
       await delayImmediate();
       await session.transport.handleRequest(req, res);
       return;
@@ -445,7 +445,7 @@ export async function handleMcpRequest(
     return;
   }
   if (req.method !== 'POST') {
-    sendSessionError(res, 400, 'MCP session id is required');
+    sendSessionError(res, 400, 'MCP session id là bắt buộc');
     return;
   }
   await startMcpSession(req, res, baseUrl, parsedBody);

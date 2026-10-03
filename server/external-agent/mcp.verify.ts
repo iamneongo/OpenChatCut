@@ -270,7 +270,7 @@ try {
   registerEditor(projectA, editorA, revisionA, editorTools);
   await assert.rejects(
     boundA.client.callTool({ name: 'openchatcut_status', arguments: {} }),
-    (error: unknown) => error instanceof Error && /session not found or expired/i.test(error.message),
+    (error: unknown) => error instanceof Error && /không tìm thấy hoặc phiên MCP đã hết hạn/i.test(error.message),
     'a stale transport is closed and its session is evicted',
   );
   assert.equal(

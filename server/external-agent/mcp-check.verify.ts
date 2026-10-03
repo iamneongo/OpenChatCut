@@ -59,7 +59,7 @@ const largeResultBody = JSON.stringify({
 assert(Buffer.byteLength(largeResultBody) > 2 * 1024 * 1024);
 await assert.rejects(
   () => readBridgeJson(Readable.from([largeResultBody]) as IncomingMessage),
-  /request body too large/,
+  /thân request quá lớn/,
   'non-result bridge requests retain the 2 MiB control budget',
 );
 const resultRequest = Object.assign(Readable.from([largeResultBody]), {
@@ -93,7 +93,7 @@ assert.equal(settledImages, 8,
 const oversizedResultBody = JSON.stringify({ padding: 'a'.repeat(17 * 1024 * 1024) });
 await assert.rejects(
   () => readBridgeJson(Readable.from([oversizedResultBody]) as IncomingMessage, { resultBody: true }),
-  /request body too large/,
+  /thân request quá lớn/,
   'result requests remain bounded above 16 MiB',
 );
 
