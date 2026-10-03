@@ -31,6 +31,7 @@ export const TemplateCard = memo(function TemplateCard({
   onDragChange,
 }: TemplateCardProps) {
   const t = useT();
+  const displayName = tData(template.name);
   const portrait = (template.height ?? 0) > (template.width ?? 1);
   return (
     <div
@@ -58,7 +59,7 @@ export const TemplateCard = memo(function TemplateCard({
     >
       <div
         className="cc-template-add"
-        title={t('拖到时间线，或使用添加按钮：{name}', { name: template.name })}
+        title={t('拖到时间线，或使用添加按钮：{name}', { name: displayName })}
       >
         <div className="cc-template-thumb">
           {template.thumb ? (
@@ -76,7 +77,7 @@ export const TemplateCard = memo(function TemplateCard({
               <img
                 className={`cc-template-thumb-image${portrait ? ' portrait' : ''}`}
                 src={template.thumb}
-                alt={tData(template.name)}
+                alt={displayName}
                 loading="lazy"
                 draggable={false}
               />
@@ -86,7 +87,7 @@ export const TemplateCard = memo(function TemplateCard({
           )}
         </div>
         <div className="cc-template-meta">
-          <span className="cc-template-name">{tData(template.name)}</span>
+          <span className="cc-template-name">{displayName}</span>
           <span className="cc-template-ratio">{ratioLabel(template.width, template.height)}</span>
         </div>
       </div>
@@ -108,8 +109,8 @@ export const TemplateCard = memo(function TemplateCard({
           event.stopPropagation();
           onAdd(template);
         }}
-        title={t('添加到时间线：{name}', { name: template.name })}
-        aria-label={t('添加到时间线：{name}', { name: template.name })}
+        title={t('添加到时间线：{name}', { name: displayName })}
+        aria-label={t('添加到时间线：{name}', { name: displayName })}
       >
         <Icon name="plus" size={14} />
       </button>
