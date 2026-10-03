@@ -16,6 +16,7 @@
 // work inside the application bundle no longer happens before the first tick.
 import { app, dialog } from 'electron';
 import { RUNTIME_ASSET_ADVICE } from './runtime-preflight.ts';
+import { localized } from '../server/ui-locale.ts';
 
 // Remotion renders export frames inside this process (main + headless tabs).
 // Raise the V8 heap ceiling so large/4K exports don't die with "out of memory"
@@ -32,8 +33,8 @@ try {
   console.error('[desktop] failed to load the application bundle:', detail);
   if (process.env.CC_SMOKE !== '1') {
     try {
-      dialog.showErrorBox('OpenChatCut 启动失败 / failed to start', [
-        '无法加载程序主体 / could not load the application bundle:',
+      dialog.showErrorBox(localized({ zh: 'OpenChatCut 启动失败', en: 'OpenChatCut failed to start', vi: 'OpenChatCut khởi động thất bại' }), [
+        localized({ zh: '无法加载程序主体', en: 'Could not load the application bundle', vi: 'Không thể tải phần lõi của ứng dụng' }) + ':',
         '',
         error instanceof Error ? error.message : String(error),
         '',

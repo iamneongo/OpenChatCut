@@ -30,6 +30,7 @@ import {
   type ProbeResult,
 } from './key-probe-result.ts';
 import { PROBE_TIMEOUT_MS, runDataDirProbe, runProxyProbe } from './key-probe-local.ts';
+import { localized } from './ui-locale.ts';
 export { classifyStatus, networkMessage, parseModelCatalog, type ProbeResult } from './key-probe-result.ts';
 export { runDataDirProbe, runProxyProbe } from './key-probe-local.ts';
 // Proxy-aware fetch: attaches the configured outbound proxy (keystore
@@ -45,16 +46,16 @@ export function probeUrlError(url: RequestInfo | URL): string | null {
   try {
     parsed = new URL(String(url));
   } catch {
-    return '探测地址不是合法 URL';
+    return localized({ zh: '探测地址不是合法 URL', en: 'The probe address is not a valid URL', vi: 'Địa chỉ kiểm tra không phải URL hợp lệ' });
   }
   if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
-    return `探测地址协议不支持:${parsed.protocol}`;
+    return localized({ zh: `探测地址协议不支持:${parsed.protocol}`, en: `The probe address protocol is not supported: ${parsed.protocol}`, vi: `Giao thức của địa chỉ kiểm tra không được hỗ trợ: ${parsed.protocol}` });
   }
-  if (parsed.username || parsed.password) return '探测地址不允许携带内嵌凭据';
+  if (parsed.username || parsed.password) return localized({ zh: '探测地址不允许携带内嵌凭据', en: 'The probe address must not contain embedded credentials', vi: 'Địa chỉ kiểm tra không được chứa thông tin xác thực nhúng' });
   const host = parsed.hostname.replace(/^\[|\]$/g, '').toLowerCase();
   if (/^169\.254\.\d{1,3}\.\d{1,3}$/.test(host) || host.startsWith('fe80:')
     || host === 'metadata.google.internal') {
-    return '探测地址指向云元数据/链路本地网段,已拒绝';
+    return localized({ zh: '探测地址指向云元数据/链路本地网段,已拒绝', en: 'The probe address targets cloud metadata or a link-local network and was rejected', vi: 'Địa chỉ kiểm tra trỏ tới metadata đám mây hoặc mạng link-local nên đã bị từ chối' });
   }
   return null;
 }
@@ -451,10 +452,10 @@ export async function runProbe(page: string, overrides: Record<string, unknown>)
   // writability check reads the panel's raw value directly.
   if (page === 'storage/projects') return runDataDirProbe(overrides);
   const probe = PROBES[page];
-  if (!probe) return { ok: false, message: '该厂商暂不支持连接测试' };
+  if (!probe) return { ok: false, message: localized({ zh: '该厂商暂不支持连接测试', en: 'This provider does not support connection testing', vi: 'Nhà cung cấp này chưa hỗ trợ kiểm tra kết nối' }) };
   const get = makeGetter(overrides);
   const ready = probe.needs.some((group) => group.every((n) => get(n).length > 0));
-  if (!ready) return { ok: false, message: '尚未填写 API Key · 填好后再点测试' };
+  if (!ready) return { ok: false, message: localized({ zh: '尚未填写 API Key · 填好后再点测试', en: 'No API key has been entered · fill it in before testing', vi: 'Chưa nhập API key · hãy nhập key trước khi kiểm tra' }) };
   const started = Date.now();
   try {
     const response = await probe.run(get);
@@ -465,9 +466,9 @@ export async function runProbe(page: string, overrides: Record<string, unknown>)
       if (vendorError) return { ok: false, status: response.status, latencyMs, message: vendorError };
       const models = probe.models?.(bodyText);
       const modelText = models
-        ? models.length > 0 ? ` · 已读取 ${models.length} 个模型` : ' · 接口未返回模型列表'
+        ? models.length > 0 ? localized({ zh: ` · 已读取 ${models.length} 个模型`, en: ` · loaded ${models.length} models`, vi: ` · đã tải ${models.length} model` }) : localized({ zh: ' · 接口未返回模型列表', en: ' · the API returned no model list', vi: ' · API không trả về danh sách model' })
         : '';
-      const okText = probe.okText?.(bodyText) ?? '连接成功 · 鉴权通过';
+      const okText = probe.okText?.(bodyText) ?? localized({ zh: '连接成功 · 鉴权通过', en: 'Connection successful · authentication passed', vi: 'Kết nối thành công · xác thực thành công' });
       return {
         ok: true,
         status: response.status,

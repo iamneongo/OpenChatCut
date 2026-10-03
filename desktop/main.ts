@@ -72,6 +72,7 @@ import {
 import { runDesktopSmokeProbe } from './smoke-probe.ts';
 import { exitSmoke, installSmokeWatchdog } from './smoke-lifecycle.ts';
 import { runtimeProfile } from '../server/runtime-profile.ts';
+import { localized } from '../server/ui-locale.ts';
 import {
   applyWindowsGpuCrashFallback,
   installWindowsGpuCrashRecovery,
@@ -149,7 +150,7 @@ function registerDesktopHandlers(trustedOrigin: string): void {
       ? requestedPath
       : app.getPath('videos');
     const options: OpenDialogOptions = {
-      title: '选择素材保存目录',
+      title: localized({ zh: '选择素材保存目录', en: 'Choose media storage directory', vi: 'Chọn thư mục lưu tài nguyên' }),
       defaultPath: requested,
       properties: ['openDirectory', 'createDirectory'],
     };
@@ -166,7 +167,7 @@ function registerDesktopHandlers(trustedOrigin: string): void {
   ipcMain.handle('openchatcut:select-export-directory', trustedDesktopHandler(trustedOrigin, async (event) => {
     const parent = BrowserWindow.fromWebContents(event.sender);
     const options: OpenDialogOptions = {
-      title: '选择导出目录',
+      title: localized({ zh: '选择导出目录', en: 'Choose export directory', vi: 'Chọn thư mục xuất' }),
       defaultPath: app.getPath('videos'),
       properties: ['openDirectory', 'createDirectory'],
     };
@@ -175,7 +176,7 @@ function registerDesktopHandlers(trustedOrigin: string): void {
       : await dialog.showOpenDialog(options);
     if (result.canceled || !result.filePaths[0]) return null;
     const directory = await validatedDirectory(result.filePaths[0]);
-    if (!directory) throw new Error('所选导出目录不可用');
+    if (!directory) throw new Error(localized({ zh: '所选导出目录不可用', en: 'The selected export directory is unavailable', vi: 'Thư mục xuất đã chọn không khả dụng' }));
     const grant = createExportDirectoryGrant(directory);
     activeExportDirectory = { directory, grant };
     await persistExportDirectory(exportStatePath, directory, grant.grantId);
@@ -190,7 +191,7 @@ function registerDesktopHandlers(trustedOrigin: string): void {
     }
     const parent = BrowserWindow.fromWebContents(event.sender);
     const options: SaveDialogOptions = {
-      title: '选择导出文件',
+      title: localized({ zh: '选择导出文件', en: 'Choose export file', vi: 'Chọn tệp xuất' }),
       defaultPath: join(app.getPath('videos'), suggestedFilename),
     };
     const result = parent
@@ -198,9 +199,9 @@ function registerDesktopHandlers(trustedOrigin: string): void {
       : await dialog.showSaveDialog(options);
     if (result.canceled || !result.filePath) return null;
     const filename = basename(result.filePath);
-    if (!validDesktopExportFilename(filename)) throw new Error('导出文件名无效');
+    if (!validDesktopExportFilename(filename)) throw new Error(localized({ zh: '导出文件名无效', en: 'The export filename is invalid', vi: 'Tên tệp xuất không hợp lệ' }));
     const directory = await validatedDirectory(dirname(result.filePath));
-    if (!directory) throw new Error('所选导出目录不可用');
+    if (!directory) throw new Error(localized({ zh: '所选导出目录不可用', en: 'The selected export directory is unavailable', vi: 'Thư mục xuất đã chọn không khả dụng' }));
     const grant = createExportDirectoryGrant(directory);
     activeExportDirectory = { directory, grant };
     await persistExportDirectory(exportStatePath, directory, grant.grantId);
@@ -241,7 +242,7 @@ function registerDesktopHandlers(trustedOrigin: string): void {
       minWidth: 300,
       minHeight: 220,
       backgroundColor: '#16161a',
-      title: '文字稿',
+      title: localized({ zh: '文字稿', en: 'Transcript', vi: 'Bản chép lời' }),
       show: false,
       webPreferences: {
         preload: PRELOAD_PATH,
@@ -378,7 +379,7 @@ async function boot(): Promise<void> {
       chooseRoot: async (requestedPath) => {
         const parent = BrowserWindow.fromWebContents(event.sender);
         const options: OpenDialogOptions = {
-          title: '选择允许 Agent 访问的素材文件夹',
+          title: localized({ zh: '选择允许 Agent 访问的素材文件夹', en: 'Choose a media folder for Agent access', vi: 'Chọn thư mục tài nguyên cho Agent truy cập' }),
           defaultPath: agentImportPickerDefaultPath(requestedPath),
           properties: ['openDirectory'],
         };
@@ -474,7 +475,7 @@ if (hasSingleInstanceLock) {
       // A packaged double-click has no console: without this the process just
       // disappears and the user has nothing to report (issue #140).
       try {
-        dialog.showErrorBox('OpenChatCut 启动失败 / failed to start', detail);
+        dialog.showErrorBox(localized({ zh: 'OpenChatCut 启动失败', en: 'OpenChatCut failed to start', vi: 'OpenChatCut khởi động thất bại' }), detail);
       } catch {
         // A dialog is best effort; the exit below still has to happen.
       }

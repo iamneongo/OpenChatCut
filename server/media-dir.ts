@@ -381,26 +381,26 @@ export async function checkMediaDir(
   profile: RuntimeProfile = runtimeProfile(),
 ): Promise<DirProbeBody> {
   if (isIsolatedDevProfile(profile)) {
-    return { ok: false, error: '隔离开发配置固定使用独立素材目录，不能修改 MEDIA_DIR' };
+    return { ok: false, error: localized({ zh: '隔离开发配置固定使用独立素材目录，不能修改 MEDIA_DIR', en: 'The isolated development profile uses a fixed media directory; MEDIA_DIR cannot be changed', vi: 'Cấu hình phát triển cô lập dùng thư mục tài nguyên cố định; không thể thay đổi MEDIA_DIR' }) };
   }
   if (!raw.trim()) return { ok: true, note: localized({ zh: `未设置 · 使用默认目录 ${profile.mediaDir}`, en: `Not set · using default directory ${profile.mediaDir}`, vi: `Chưa đặt · đang dùng thư mục mặc định ${profile.mediaDir}` }) };
   const dir = expandMediaDir(raw);
-  if (!dir) return { ok: false, error: '必须是绝对路径（可用 ~/ 开头）' };
+  if (!dir) return { ok: false, error: localized({ zh: '必须是绝对路径（可用 ~/ 开头）', en: 'The path must be absolute (it may start with ~/).', vi: 'Đường dẫn phải là đường dẫn tuyệt đối (có thể bắt đầu bằng ~/).' }) };
   try {
     await mkdir(dir, { recursive: true });
     const probe = join(dir, `.cc-dir-probe-${process.pid}`);
     await writeFile(probe, 'ok');
     await unlink(probe);
-    return { ok: true, note: `目录可写 · ${dir}` };
+    return { ok: true, note: localized({ zh: `目录可写 · ${dir}`, en: `Directory is writable · ${dir}`, vi: `Thư mục có thể ghi · ${dir}` }) };
   } catch (err) {
-    return { ok: false, error: `目录不可写 · ${err instanceof Error ? err.message : String(err)}` };
+    return { ok: false, error: localized({ zh: `目录不可写 · ${err instanceof Error ? err.message : String(err)}`, en: `Directory is not writable · ${err instanceof Error ? err.message : String(err)}`, vi: `Thư mục không thể ghi · ${err instanceof Error ? err.message : String(err)}` }) };
   }
 }
 
 export function mediaDirPostCheck(bodyText: string): string | null {
   try {
     const body = JSON.parse(bodyText) as DirProbeBody;
-    return body.ok ? null : (body.error ?? '目录检查失败');
+  return body.ok ? null : (body.error ?? localized({ zh: '目录检查失败', en: 'Directory check failed', vi: 'Kiểm tra thư mục thất bại' }));
   } catch {
     return null;
   }

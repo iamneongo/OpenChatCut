@@ -19,6 +19,7 @@ import {
   isPathInside,
   type DirectoryCandidateRequest,
 } from './directory-watch-import.ts';
+import { localized } from './ui-locale.ts';
 
 export const AGENT_IMPORT_ROOTS_KEY = 'AGENT_IMPORT_ROOTS';
 
@@ -31,7 +32,7 @@ function parseAuthorizedRoots(raw: string): string[] {
 
 export function appendAgentImportRoot(raw: string, root: string): string {
   const clean = root.trim();
-  if (!clean || /[\r\n,]/.test(clean)) throw new Error('所选目录名称不能包含逗号或换行符');
+  if (!clean || /[\r\n,]/.test(clean)) throw new Error(localized({ zh: '所选目录名称不能包含逗号或换行符', en: 'The selected directory name cannot contain commas or line breaks', vi: 'Tên thư mục đã chọn không được chứa dấu phẩy hoặc ký tự xuống dòng' }));
   return [...new Set([...parseAuthorizedRoots(raw), clean])].join(',');
 }
 
@@ -55,7 +56,7 @@ function outsideRootsError(path: string, roots: readonly string[]): AgentPathImp
   return {
     path,
     code: 'PATH_OUTSIDE_IMPORT_ROOTS',
-    error: `该路径不在已添加的本地素材目录中。已添加的目录：${roots.join(', ')}`,
+    error: localized({ zh: `该路径不在已添加的本地素材目录中。已添加的目录：${roots.join(', ')}`, en: `This path is outside the added local media directories. Added directories: ${roots.join(', ')}`, vi: `Đường dẫn này nằm ngoài các thư mục tài nguyên cục bộ đã thêm. Các thư mục đã thêm: ${roots.join(', ')}` }),
   };
 }
 
