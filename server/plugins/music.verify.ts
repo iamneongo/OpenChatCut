@@ -145,14 +145,14 @@ assert.deepEqual(
   { id: 'pred-1', status: 'processing' },
 );
 assert.throws(() => parseAtlasPrediction({ code: 401, message: 'unauthorized' }), /unauthorized/);
-assert.throws(() => validateMusicRequest({ provider: 'atlas', mode: 'cover', prompt: 'cover me' }), /mode must be t2m/);
+assert.throws(() => validateMusicRequest({ provider: 'atlas', mode: 'cover', prompt: 'cover me' }), /mode atlas phải là t2m/);
 assert.throws(
   () => validateMusicRequest({ provider: 'atlas', prompt: 'song', lyricsOptimizer: true }),
-  /not supported by atlas/,
+  /không hỗ trợ tùy chọn cover/,
 );
 assert.throws(
   () => validateMusicRequest({ provider: 'atlas', prompt: 'song', lyrics: 'words', isInstrumental: true }),
-  /cannot be combined with lyrics/,
+  /không thể kết hợp với lyrics/,
 );
 
 const originalFetch = globalThis.fetch;
@@ -192,38 +192,38 @@ try {
   globalThis.fetch = originalFetch;
 }
 
-assert.throws(() => validateMusicRequest({ provider: 'mureka', mode: 'song', prompt: 'x' }), /requires lyrics/);
+assert.throws(() => validateMusicRequest({ provider: 'mureka', mode: 'song', prompt: 'x' }), /yêu cầu lyrics/);
 assert.throws(
   () => validateMusicRequest({ provider: 'mureka', mode: 'soundtrack', sourceAssetPath: '/media/uploads/a.mp3', sourceAssetKind: 'audio' }),
-  /image or video/,
+  /yêu cầu sourceAssetId là ảnh hoặc video/,
 );
 assert.throws(
   () => validateMusicRequest({ provider: 'mureka', mode: 'track', songId: 's', trackType: 'Drums', prompt: 'drums', vocalGender: 'male' }),
-  /Vocals trackType only/,
+  /chỉ được hỗ trợ cho trackType Vocals/,
 );
 assert.throws(
   () => validateMusicRequest({ provider: 'minimax', prompt: 'x', isInstrumental: false }),
-  /require lyrics/,
+  /yêu cầu lyrics/,
 );
 assert.throws(
   () => validateMusicRequest({ provider: 'minimax', prompt: 'x', lyrics: 'hi', isInstrumental: true }),
-  /cannot be combined with lyrics/,
+  /không thể kết hợp với lyrics/,
 );
 assert.throws(
   () => validateMusicRequest({ provider: 'minimax', prompt: 'x', sampleRate: 48_000 }),
-  /sampleRate must be/,
+  /sampleRate phải là/,
 );
 assert.throws(
   () => validateMusicRequest({ provider: 'minimax', prompt: 'x', stream: true }),
-  /Mureka generation controls/,
+  /các tùy chọn tạo Mureka/,
 );
 assert.throws(
   () => validateMusicRequest({ provider: 'mureka', prompt: 'x', bitrate: 128_000 }),
-  /MiniMax-only controls/,
+  /tùy chọn chỉ dành cho MiniMax/,
 );
 assert.throws(
   () => validateMusicRequest({ provider: 'minimax', prompt: 'x'.repeat(2001) }),
-  /at most 2000/,
+  /dài tối đa 2000/,
 );
 
 // music-cover
@@ -245,7 +245,7 @@ assert.throws(
     prompt: 'short',
     referenceAudioPath: '/media/uploads/source.mp3',
   }),
-  /10–300 characters/,
+  /dài 10–300 ký tự/,
 );
 assert.throws(
   () => validateMusicRequest({
@@ -253,7 +253,7 @@ assert.throws(
     prompt: 'Jazz piano cover style',
     referenceAudioPath: '/media/uploads/source.mp3',
   }),
-  /MiniMax-only controls/,
+  /tùy chọn chỉ dành cho MiniMax/,
 );
 assert.throws(
   () => validateMusicRequest({
@@ -262,7 +262,7 @@ assert.throws(
     referenceAudioPath: '/media/uploads/source.mp3',
     isInstrumental: true,
   }),
-  /not used for music-cover/,
+  /không dùng lyricsOptimizer\/isInstrumental/,
 );
 
 const coverFeature = validateMusicRequest({
