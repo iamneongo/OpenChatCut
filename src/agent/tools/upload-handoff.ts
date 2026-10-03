@@ -48,7 +48,7 @@ function parseMintResponse(
     || url.searchParams.get('name') !== expected.filename
     || url.searchParams.get('projectId') !== expected.projectId
     || !(url.searchParams.get('handoff') ?? '')) {
-    throw new Error('upload handoff mint returned an invalid response');
+    throw new Error('tạo bàn giao upload trả về phản hồi không hợp lệ');
   }
   return { ...(candidate as MintedUploadHandoff), uploadUrl: new URL(candidate.uploadUrl, trustedEditorOrigin()).href };
 }

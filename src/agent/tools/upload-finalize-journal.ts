@@ -217,7 +217,7 @@ export function assertValidFinalizeJournal(journal: UploadFinalizeJournal): void
   if (!validJournalIdentity(journal.identity)
     || !validJournalMutation(journal)
     || !validJournalResult(journal)) {
-    throw new Error('Stored upload finalize journal contains invalid effective metadata.');
+    throw new Error('Nhật ký finalize upload đã lưu chứa metadata hiệu lực không hợp lệ.');
   }
 }
 
@@ -235,7 +235,7 @@ export async function applyJournalMutation(
   if (journal.status === 'mutation_applied') {
     const existing = findUploadAsset(ctx, journal.mutation.asset.id);
     if (journal.mutation.type !== 'add' || existing) {
-      throw new Error('Upload finalize recovery found divergent project state; receipt remains reserved.');
+    throw new Error('Khôi phục finalize upload phát hiện trạng thái dự án không khớp; receipt vẫn được giữ chỗ.');
     }
   }
   if (!matches) {
