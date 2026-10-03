@@ -28,6 +28,8 @@ export default {
   '已加入本地分析队列。': 'Added to the local analysis queue.',
   '分析失败：{message}': 'Analysis failed: {message}',
   '尚未安装所需模型包。请在本地 AI 设置中分别下载节拍与音乐语义模型；这里不会自动下载。': 'The required model packs are not installed. Download the rhythm and music semantics models separately in Local AI settings; this control never downloads them automatically.',
+  '音乐分析仅支持音频和视频素材': 'Music analysis supports audio and video assets only',
+  '音乐分析需要可用的素材源': 'Music analysis requires a ready media source',
   '已显示缓存结果；重新分析需要先安装模型包。': 'Showing the cached result. Install the model packs before analyzing again.',
   '正在检查本地模型…': 'Checking local models…',
   '在本机分析节拍、结构和音乐语义。音频不会上传。': 'Analyze rhythm, structure, and music meaning on this device. Audio is never uploaded.',

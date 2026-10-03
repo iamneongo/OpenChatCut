@@ -9,6 +9,7 @@ const overrides: Record<string, string> = {
   '模型包操作失败：{err}': 'Operazione sul pacchetto modello non riuscita: {err}',
   '存储迁移失败：{error}': 'Migrazione dello spazio di archiviazione non riuscita: {error}',
   '任务失败：{error}': 'Attività non riuscita: {error}',
+  '失败:{error}': 'Errore: {error}',
   '检查中…': 'Controllo...',
   '设置 · API 密钥': 'Impostazioni · chiavi API',
   '关闭': 'Chiudi',

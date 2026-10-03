@@ -1277,6 +1277,8 @@ export const VI: Record<string, string> = {
   '已加入本地分析队列。': 'Đã thêm vào hàng đợi phân tích cục bộ.',
   '分析失败：{message}': 'Phân tích thất bại: {message}',
   '尚未安装所需模型包。请在本地 AI 设置中分别下载节拍与音乐语义模型；这里不会自动下载。': 'Chưa cài gói mô hình cần thiết. Hãy tải riêng mô hình nhịp và ngữ nghĩa âm nhạc trong cài đặt AI cục bộ; tùy chọn này không tự tải xuống.',
+  '音乐分析仅支持音频和视频素材': 'Phân tích nhạc chỉ hỗ trợ tư liệu âm thanh và video',
+  '音乐分析需要可用的素材源': 'Phân tích nhạc cần nguồn tư liệu khả dụng',
   '已显示缓存结果；重新分析需要先安装模型包。': 'Đang hiển thị kết quả đã lưu trong bộ nhớ đệm; cần cài gói mô hình trước khi phân tích lại.',
   '正在检查本地模型…': 'Đang kiểm tra mô hình cục bộ…',
   '在本机分析节拍、结构和音乐语义。音频不会上传。': 'Phân tích nhịp, cấu trúc và ngữ nghĩa âm nhạc trên máy. Âm thanh không được tải lên.',

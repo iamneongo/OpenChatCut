@@ -1,4 +1,5 @@
 import type { MediaAsset } from '../../editor/types';
+import { t } from '../../i18n/locale';
 import { sourceRevisionOf } from '../../editor/mediaSourceRevision';
 import { areModelPacksInstalled } from '../../../shared/model-packs';
 import type { MusicAnalysisProgress } from './analysis';
@@ -168,7 +169,7 @@ async function prepareJob(
     }
     if (activeKeys.get(asset.id) !== key) return null;
     if (!await areModelPacksInstalled(REQUIRED_MODEL_PACKS)) {
-      publish(asset.id, key, { state: 'error', message: 'Install rhythm-lite and music-semantics-lite before music analysis' });
+      publish(asset.id, key, { state: 'error', message: t('尚未安装所需模型包。请在本地 AI 设置中分别下载节拍与音乐语义模型；这里不会自动下载。') });
       return null;
     }
     return await enqueueHeavy(asset, key, options);
@@ -193,11 +194,11 @@ export function enqueueMusicAnalysis(
     return Promise.resolve(null);
   }
   if (asset.kind !== 'audio' && asset.kind !== 'video') {
-    publish(asset.id, key, { state: 'error', message: 'Music analysis supports audio and video assets only' });
+    publish(asset.id, key, { state: 'error', message: t('音乐分析仅支持音频和视频素材') });
     return Promise.resolve(null);
   }
   if (!asset.src || asset.src.startsWith('blob:') || asset.src.startsWith('data:')) {
-    publish(asset.id, key, { state: 'error', message: 'Music analysis requires a ready media source' });
+    publish(asset.id, key, { state: 'error', message: t('音乐分析需要可用的素材源') });
     return Promise.resolve(null);
   }
   const existing = flights.get(key);
