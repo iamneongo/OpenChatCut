@@ -67,7 +67,7 @@ export function StorageMigrationDialog({ onClose }: { onClose: () => void }) {
     try {
       setStatus(await loadMigrationStatus());
     } catch (reason) {
-      setError(reason instanceof Error ? reason.message : String(reason));
+      setError(t('存储迁移失败：{error}', { error: reason instanceof Error ? reason.message : String(reason) }));
     }
   }, []);
 
@@ -94,7 +94,7 @@ export function StorageMigrationDialog({ onClose }: { onClose: () => void }) {
       // Emit completion only after the authoritative SQLite receipt is visible.
       window.dispatchEvent(new Event(STORAGE_MIGRATED_EVENT));
     } catch (reason) {
-      setError(reason instanceof Error ? reason.message : String(reason));
+      setError(t('存储迁移失败：{error}', { error: reason instanceof Error ? reason.message : String(reason) }));
     } finally {
       setBusy(false);
     }
@@ -112,7 +112,7 @@ export function StorageMigrationDialog({ onClose }: { onClose: () => void }) {
       setCleanupConfirmed(false);
       setStatus(await loadMigrationStatus());
     } catch (reason) {
-      setError(reason instanceof Error ? reason.message : String(reason));
+      setError(t('存储迁移失败：{error}', { error: reason instanceof Error ? reason.message : String(reason) }));
     } finally {
       setCleanupBusy(false);
     }

@@ -7,6 +7,7 @@ const overrides: Record<string, string> = {
   '检查更新': 'Controlla aggiornamenti',
   '转写失败：{detail}': 'Trascrizione non riuscita: {detail}',
   '模型包操作失败：{err}': 'Operazione sul pacchetto modello non riuscita: {err}',
+  '存储迁移失败：{error}': 'Migrazione dello spazio di archiviazione non riuscita: {error}',
   '检查中…': 'Controllo...',
   '设置 · API 密钥': 'Impostazioni · chiavi API',
   '关闭': 'Chiudi',

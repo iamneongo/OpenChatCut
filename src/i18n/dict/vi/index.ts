@@ -1103,6 +1103,7 @@ export const VI: Record<string, string> = {
   'Upstream release check failed ({status})': 'Kiểm tra bản phát hành thất bại ({status})',
   '转写失败：{detail}': 'Chép lời thất bại: {detail}',
   '模型包操作失败：{err}': 'Thao tác với gói mô hình thất bại: {err}',
+  '存储迁移失败：{error}': 'Di chuyển dữ liệu lưu trữ thất bại: {error}',
   '下载中 {percent}%': 'Đang tải {percent}%',
   '正在重启…': 'Đang khởi động lại…',
   '为避免覆盖已保存的内容，已停止打开该工程。数据仍保留在本机存储中，可稍后重试。': 'Đã dừng mở dự án để tránh ghi đè nội dung đã lưu. Dữ liệu vẫn được giữ trên máy và có thể thử lại sau.',
