@@ -25,7 +25,7 @@ export function throwIfExternalCallCancelled(signal?: AbortSignal): void {
 export function externalSessionId(args: Record<string, unknown>): string {
   const value = args.editSessionId;
   if (typeof value !== 'string' || !value.trim()) {
-    throw new ExternalEditSessionOutcomeError('rejected', 'editSessionId is required');
+    throw new ExternalEditSessionOutcomeError('rejected', 'Cần có editSessionId.');
   }
   return value.trim();
 }
@@ -78,7 +78,7 @@ export async function validateExternalBridgeBinding(input: {
       || input.binding.editorInstanceId !== input.editorInstanceId) {
     throw new ExternalEditSessionOutcomeError(
       'stale',
-      'The editor call belongs to a different project or editor instance.',
+      'Lời gọi editor thuộc về một dự án hoặc phiên editor khác.',
     );
   }
   if (input.binding.baseRevision === revisionOf(input.currentDoc)) return;
@@ -86,7 +86,7 @@ export async function validateExternalBridgeBinding(input: {
   if (active) await input.markStale(active);
   throw new ExternalEditSessionOutcomeError(
     'stale',
-    `Project ${input.projectId} changed; re-initialize the MCP session.`,
+    `Dự án ${input.projectId} đã thay đổi; hãy khởi tạo lại phiên MCP.`,
   );
 }
 

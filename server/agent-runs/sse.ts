@@ -30,7 +30,7 @@ function parseCursor(value: string | null, label: string): number | null {
   }
   const cursor = Number(value);
   if (!Number.isSafeInteger(cursor)) {
-    throw new CursorProtocolError(400, `${label} is outside the safe integer range`);
+    throw new CursorProtocolError(400, `${label} nằm ngoài phạm vi số nguyên an toàn`);
   }
   return cursor;
 }
@@ -39,15 +39,15 @@ export function resolveCursor(req: IncomingMessage, url: URL, run: ServerRun): n
   const after = parseCursor(url.searchParams.get('after'), 'after');
   const headerCursor = parseCursor(requestHeader(req, 'last-event-id'), 'Last-Event-ID');
   if (after !== null && headerCursor !== null && after !== headerCursor) {
-    throw new CursorProtocolError(409, 'after and Last-Event-ID disagree');
+    throw new CursorProtocolError(409, 'after và Last-Event-ID không khớp');
   }
   const cursor = headerCursor ?? after ?? 0;
   const window = replayWindow(run);
   if (cursor < window.firstEventId - 1) {
-    throw new CursorProtocolError(410, 'event cursor is no longer replayable', window);
+    throw new CursorProtocolError(410, 'cursor sự kiện không còn khả năng phát lại', window);
   }
   if (cursor > window.lastEventId) {
-    throw new CursorProtocolError(409, 'event cursor is ahead of the run', window);
+    throw new CursorProtocolError(409, 'cursor sự kiện đang vượt quá lượt chạy', window);
   }
   return cursor;
 }

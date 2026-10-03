@@ -25,7 +25,7 @@ export async function executeExternalSessionRecovery(
   if (binding.projectId !== dependencies.projectId) {
     throw new ExternalEditSessionOutcomeError(
       'stale',
-      'The editor call belongs to a different project.',
+      'Lời gọi editor thuộc về một dự án khác.',
     );
   }
   if (name === 'list_edit_sessions') {
@@ -41,7 +41,7 @@ export async function executeExternalSessionRecovery(
     await dependencies.markStale(session);
     throw new ExternalEditSessionOutcomeError(
       'stale',
-      `Edit session ${session.id} cannot be resumed because the project revision changed.`,
+      `Không thể tiếp tục phiên chỉnh sửa ${session.id} vì phiên bản dự án đã thay đổi.`,
     );
   }
   return dependencies.info(session);

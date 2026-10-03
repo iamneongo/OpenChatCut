@@ -239,7 +239,7 @@ function sequence(events: readonly CodexTurnStreamEvent[]): ServerCodexTurnDeps 
     'cached analyze_music replay does not request browser execution');
   assert.equal(outcome.continued, false,
     'cached replay ends the outer server turn loop');
-  assert.match(activation.repeatGuardNote ?? '', /skipped duplicate browser execution/);
+  assert.match(activation.repeatGuardNote ?? '', /bỏ qua lần chạy trình duyệt trùng lặp/);
 }
 
 // ── Unknown tools remain rejected by the canonical host boundary ─────────────

@@ -118,7 +118,7 @@ function requireDraftTool(
   if (!isExternalDraftTool(toolName) || isExternalRealTool(toolName, args)) {
     throw new ExternalEditSessionOutcomeError(
       'rejected',
-      `Tool ${toolName} is not available in isolated edit sessions.`,
+      `Tool ${toolName} không khả dụng trong các phiên chỉnh sửa biệt lập.`,
     );
   }
   if (session.status !== 'drafting') {
@@ -332,7 +332,7 @@ export class ExternalSessionRunLedger {
     if (isExternalEditSessionStale(input.session, input.context.getDoc())) {
       const error = new ExternalEditSessionOutcomeError(
         'stale',
-        `Edit session ${input.session.id} is stale; begin a new session.`,
+        `Phiên chỉnh sửa ${input.session.id} đã cũ; hãy bắt đầu một phiên mới.`,
       );
       await this.captureToolOutcome(invocation, { kind: 'stale', summary: error.message });
       await input.markStale();

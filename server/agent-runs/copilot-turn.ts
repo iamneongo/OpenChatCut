@@ -160,7 +160,7 @@ async function bridgeCopilotTool(
   try {
     const schema = schemas.find((candidate) => candidate.name === event.name);
     if (!schema) {
-      result = { error: `Unknown tool: ${event.name}` };
+      result = { error: `Tool không xác định: ${event.name}` };
       input.activation.toolFailures.record(event.name, { success, result });
     } else {
       result = await executeBrowserTool(input.run, schema,

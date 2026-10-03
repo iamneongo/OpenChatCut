@@ -107,7 +107,7 @@ function resolveSelectionReference(ctx: AgentContext, ref: SelectionReference): 
         ...sourceMediaSpan(item, state.fps),
       };
     } else {
-      entry.warning = 'referenced item no longer exists on the timeline; metadata is the pick-time snapshot';
+      entry.warning = 'Mục được tham chiếu không còn trên timeline; metadata là ảnh chụp tại thời điểm chọn';
     }
   } else if (ref.kind === 'transcript-selection') {
     const item = state.items.find((it) => it.id === ref.metadata.itemId);
@@ -124,7 +124,7 @@ function resolveSelectionReference(ctx: AgentContext, ref: SelectionReference): 
   const pickedTimelineId = (ref.metadata as { timelineId?: string }).timelineId;
   const activeTimelineId = timelineIdOf(state);
   if (pickedTimelineId && activeTimelineId && pickedTimelineId !== activeTimelineId && !entry.warning) {
-    entry.warning = `reference was created on timeline ${pickedTimelineId}, but ${activeTimelineId} is active at submit time; using the original reference metadata`;
+    entry.warning = `Tham chiếu được tạo trên timeline ${pickedTimelineId}, nhưng ${activeTimelineId} đang hoạt động lúc gửi; dùng metadata của tham chiếu ban đầu`;
   }
   entry.metadata = metadata;
   return entry;

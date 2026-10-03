@@ -178,7 +178,7 @@ export async function executeServerCodexTurn(
       try {
         const schema = schemas.find((candidate) => candidate.name === event.name);
         if (!schema) {
-          const failure = { error: `Unknown tool: ${event.name}` };
+          const failure = { error: `Tool không xác định: ${event.name}` };
           input.activation.toolFailures.record(event.name, { success: false, result: failure });
           toolHistory.push(codexToolHistoryEntry(
             { name: event.name, args: event.args },

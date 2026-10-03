@@ -64,7 +64,7 @@ export async function executeBrowserTool(
     if (cacheablePureTool(schema.name)
       && cached?.name === schema.name
       && cached.argsDigest === argsDigest) {
-      activation.repeatGuardNote = `Reused the adjacent successful ${schema.name} result; skipped duplicate browser execution.`;
+      activation.repeatGuardNote = `Đã dùng lại kết quả thành công liền trước của ${schema.name}; bỏ qua lần chạy trình duyệt trùng lặp.`;
       const shaped = activation.current.withToolResult(schema.name, cached.result);
       activation.current = shaped.activation;
       recordTool(activation, schema, args);
