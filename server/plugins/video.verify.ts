@@ -49,13 +49,13 @@ assert.equal(fl.lastFramePath, '/media/uploads/b.jpg');
 // 1080p + 10s rejected (official matrix)
 assert.throws(
   () => validateVideoRequest({ model: 'hailuo', prompt: 'x', durationSeconds: 10, resolution: '1080p' }),
-  /1080p only supports durationSeconds 6/,
+  /1080p chỉ hỗ trợ durationSeconds 6/,
 );
 
 // last without first
 assert.throws(
   () => validateVideoRequest({ model: 'hailuo', prompt: 'x', lastFramePath: '/media/uploads/b.jpg' }),
-  /lastFrame requires firstFrame/,
+  /lastFrame yêu cầu firstFrame/,
 );
 
 // multi-ref still rejected
@@ -66,13 +66,13 @@ assert.throws(
     firstFramePath: '/media/uploads/a.jpg',
     refImagePaths: ['/media/uploads/c.jpg'],
   }),
-  /does not support refImages/,
+  /không hỗ trợ refImages/,
 );
 
 // kling multi-shot still blocked on hailuo path
 assert.throws(
   () => validateVideoRequest({ model: 'hailuo', prompt: 'x', shotType: 'customize' }),
-  /kling only/,
+  /chỉ được kling hỗ trợ/,
 );
 
 // seedance smoke + 1080p allowed
@@ -180,7 +180,7 @@ assert.throws(
 );
 assert.throws(
   () => validateVideoRequest({ model: 'kling', prompt: 'x', seed: 1 }),
-  /supported by seedance2\/byteplus only/,
+  /chỉ được seedance2\/byteplus hỗ trợ/,
 );
 const hailuoDraft = validateVideoRequest({
   model: 'hailuo', prompt: 'draft', durationSeconds: 10, resolution: '512p', firstFramePath: '/media/uploads/a.jpg',
@@ -188,7 +188,7 @@ const hailuoDraft = validateVideoRequest({
 assert.equal(hailuoDraft.resolution, '512p');
 assert.throws(
   () => validateVideoRequest({ model: 'hailuo', prompt: 'draft', durationSeconds: 10, resolution: '512p' }),
-  /512p is supported for image-to-video only/,
+  /512p chỉ hỗ trợ image-to-video/,
 );
 assert.throws(
   () => validateVideoRequest({ model: 'hailuo', prompt: 'draft', ratio: '16:9' }),
@@ -196,11 +196,11 @@ assert.throws(
 );
 assert.throws(
   () => validateVideoRequest({ model: 'hailuo', prompt: 'x', durationSeconds: 6, resolution: '480p' }),
-  /hailuo resolution must be 512p, 720p, or 1080p/,
+  /resolution hailuo phải là 512p, 720p hoặc 1080p/,
 );
 assert.throws(
   () => validateVideoRequest({ model: 'hailuo', prompt: 'x', durationSeconds: 6, resolution: '4k' }),
-  /hailuo resolution must be 512p, 720p, or 1080p/,
+  /resolution hailuo phải là 512p, 720p hoặc 1080p/,
 );
 
 // hailuo optimizer flags
@@ -226,7 +226,7 @@ assert.throws(
     promptOptimizer: false,
     fastPretreatment: true,
   }),
-  /fastPretreatment requires promptOptimizer/,
+  /fastPretreatment yêu cầu promptOptimizer/,
 );
 assert.throws(
   () => validateVideoRequest({ model: 'seedance2', prompt: 'x', durationSeconds: 5, promptOptimizer: true }),
@@ -286,7 +286,7 @@ assert.throws(
 );
 assert.throws(
   () => validateVideoRequest({ model: 'seedance2', prompt: 'x', durationSeconds: 5, refVideoMode: 'feature' }),
-  /refVideoMode is supported by kling only/,
+  /refVideoMode chỉ được kling hỗ trợ/,
 );
 
 assert.equal(klingPrompt('@Image1 and @Video1 then @图片2'), '<<<image_1>>> and <<<video_1>>> then <<<image_2>>>');
@@ -344,7 +344,7 @@ assert.throws(
 );
 assert.throws(
   () => validateVideoRequest({ model: 'grok-imagine-video', prompt: 'x', generateAudio: false }),
-  /supported by seedance2\/byteplus only/,
+  /chỉ được seedance2\/byteplus hỗ trợ/,
 );
 
 const ofox = validateVideoRequest({ model: 'ofox', prompt: 'a paper airplane gliding through a sunlit room', durationSeconds: 4, ratio: '9:16', resolution: '720p' });
@@ -359,7 +359,7 @@ assert.throws(
 );
 assert.throws(
   () => validateVideoRequest({ model: 'ofox', prompt: 'x', resolution: '4k' }),
-  /resolution must be 480p, 720p, or 1080p/,
+  /resolution must be 480p, 720p hoặc 1080p/,
 );
 const ofoxI2v = validateVideoRequest({ model: 'ofox', prompt: 'x', firstFramePath: '/media/uploads/a.jpg', lastFramePath: '/media/uploads/b.jpg', generateAudio: false, seed: 7 });
 assert.equal(ofoxI2v.firstFramePath, '/media/uploads/a.jpg');
@@ -370,7 +370,7 @@ const ofoxRefs = validateVideoRequest({ model: 'ofox', prompt: 'x', refImagePath
 assert.equal(ofoxRefs.refImagePaths.length, 9);
 assert.throws(
   () => validateVideoRequest({ model: 'ofox', prompt: 'x', lastFramePath: '/media/uploads/b.jpg' }),
-  /lastFrame requires firstFrame/,
+  /lastFrame yêu cầu firstFrame/,
 );
 assert.throws(
   () => validateVideoRequest({ model: 'ofox', prompt: 'x', firstFramePath: '/media/uploads/a.jpg', refImagePaths: ['/media/uploads/r.jpg'] }),
@@ -386,7 +386,7 @@ assert.throws(
 );
 assert.throws(
   () => validateVideoRequest({ model: 'ofox', prompt: 'x', watermark: true }),
-  /supported by seedance2\/byteplus only/,
+  /chỉ được seedance2\/byteplus hỗ trợ/,
 );
 assert.throws(
   () => validateVideoRequest({ model: 'ofox', prompt: 'x', promptOptimizer: true }),
