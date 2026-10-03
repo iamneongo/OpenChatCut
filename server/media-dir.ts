@@ -346,7 +346,7 @@ export async function syncUploadDirectories(
       throw err;
     }
   }
-  if (copied > 0) log(`[media-dir] 已迁移 ${copied} 个素材:${source} → ${target}`);
+  if (copied > 0) log(`[media-dir] ${localized({ zh: `已迁移 ${copied} 个素材`, en: `Migrated ${copied} media assets`, vi: `Đã chuyển ${copied} tài nguyên` })}:${source} → ${target}`);
   return copied;
 }
 
@@ -359,7 +359,7 @@ export async function syncLegacyUploads(
   try {
     await syncUploadDirectories(profile.mediaDir, uploadDir(profile), log);
   } catch (err) {
-    log(`[media-dir] 老素材同步失败:${err instanceof Error ? err.message : String(err)}`);
+    log(`[media-dir] ${localized({ zh: '老素材同步失败', en: 'Legacy media sync failed', vi: 'Đồng bộ tài nguyên cũ thất bại' })}:${err instanceof Error ? err.message : String(err)}`);
   }
 }
 
