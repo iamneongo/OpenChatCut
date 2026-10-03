@@ -5,7 +5,7 @@
 <h1 align="center">OpenChatCut</h1>
 
 <p align="center">
-  <strong>简体中文</strong> · <a href="README.md">English</a>
+  <a href="README_VI.md">Tiếng Việt</a> · <strong>简体中文</strong> · <a href="README.md">English</a>
 </p>
 
 <p align="center">
