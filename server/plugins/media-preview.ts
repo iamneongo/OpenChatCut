@@ -152,7 +152,7 @@ async function resolveReq(req: IncomingMessage, res: ServerResponse) {
   const name = uploadNameFromSrc(url.searchParams.get('src') ?? '');
   if (!name) { sendJson(res, 400, { error: 'src must be /media/uploads/<name>' }); return null; }
   const file = resolveUploadFile(name);
-  if (!file || !existsSync(file)) { sendJson(res, 404, { error: 'media not found' }); return null; }
+  if (!file || !existsSync(file)) { sendJson(res, 404, { error: 'không tìm thấy media' }); return null; }
   const source = await stat(file);
   return { name, file, source: { size: source.size, mtimeMs: source.mtimeMs } };
 }

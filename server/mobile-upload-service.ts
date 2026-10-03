@@ -80,7 +80,7 @@ function sendJson(res: ServerResponse, status: number, body: unknown): void {
 }
 
 function sendNotFound(res: ServerResponse): void {
-  sendJson(res, 404, { error: 'session not found or expired' });
+  sendJson(res, 404, { error: 'phiên không tồn tại hoặc đã hết hạn' });
 }
 
 function contentLength(req: IncomingMessage): number | null {

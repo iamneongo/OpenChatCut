@@ -227,7 +227,7 @@ export function extractFramesPlugin(): Plugin {
           }
           const inputPath = resolveUploadFile(name);
           if (!inputPath || !existsSync(inputPath)) {
-            sendJson(res, 404, { error: `media not found: ${name}` });
+            sendJson(res, 404, { error: `không tìm thấy media: ${name}` });
             return;
           }
 

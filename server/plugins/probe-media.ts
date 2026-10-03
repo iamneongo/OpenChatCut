@@ -42,11 +42,11 @@ export function resolveProbeSource(source: string): ProbeSource {
     const name = trimmed.slice(UPLOAD_PREFIX.length);
     if (!isSafeUploadName(name)) return { error: `illegal local path ${trimmed}` };
     const path = resolveUploadFile(name);
-    return path ? { kind: 'local', path } : { error: `local media not found: ${name}` };
+    return path ? { kind: 'local', path } : { error: `không tìm thấy media cục bộ: ${name}` };
   }
   if (trimmed.startsWith('/')) {
     const path = resolveProductAsset(trimmed);
-    return path ? { kind: 'local', path } : { error: `local path not found: ${trimmed}` };
+    return path ? { kind: 'local', path } : { error: `không tìm thấy đường dẫn cục bộ: ${trimmed}` };
   }
   return { error: `unsupported source ${trimmed}: expected a /media/… path or a public http(s) URL` };
 }

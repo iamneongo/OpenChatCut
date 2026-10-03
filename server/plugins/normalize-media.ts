@@ -226,7 +226,7 @@ async function handleNormalizeRequest(
   }
   const inputPath = resolveUploadFile(name);
   if (!inputPath) {
-    sendJson(res, 404, { error: `media not found: ${name}` });
+    sendJson(res, 404, { error: `không tìm thấy media: ${name}` });
     return;
   }
   const extension = extname(name).toLowerCase();

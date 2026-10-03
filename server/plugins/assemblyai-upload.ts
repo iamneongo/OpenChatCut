@@ -96,7 +96,7 @@ export async function handleAssemblyAiUpload(
     }
     const file = (dependencies.resolveFile ?? resolveUploadFile)(name);
     if (!file) {
-      sendJson(res, 404, { error: `media not found: ${name}` });
+      sendJson(res, 404, { error: `không tìm thấy media: ${name}` });
       return;
     }
     const apiKey = (dependencies.getApiKey ?? (() => getKey('ASSEMBLYAI_API_KEY')))();
@@ -106,7 +106,7 @@ export async function handleAssemblyAiUpload(
     }
     const info = await stat(file);
     if (!info.isFile() || info.size <= 0) {
-      sendJson(res, 404, { error: `media not found: ${name}` });
+      sendJson(res, 404, { error: `không tìm thấy media: ${name}` });
       return;
     }
     if (controller.signal.aborted) return;

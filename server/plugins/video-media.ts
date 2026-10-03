@@ -30,7 +30,7 @@ function localMedia(path: string): { file: string; name: string } {
   const name = clean.slice('/media/uploads/'.length);
   if (!isSafeUploadName(name)) throw new Error('invalid project media path');
   const file = resolveUploadFile(name);
-  if (!file) throw new Error(`project media not found: ${name}`);
+  if (!file) throw new Error(`không tìm thấy media project: ${name}`);
   return { file, name };
 }
 

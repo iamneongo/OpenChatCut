@@ -47,15 +47,15 @@ export async function handleMobileUploadControl(
       return;
     }
     const match = /^\/sessions\/([0-9a-f-]+)$/.exec(url.pathname);
-    if (!match) { sendJson(res, 404, { error: 'not found' }); return; }
+    if (!match) { sendJson(res, 404, { error: 'không tìm thấy' }); return; }
     if (req.method === 'GET') {
       const snapshot = service.getSession(match[1]!);
-      sendJson(res, snapshot ? 200 : 404, snapshot ?? { error: 'session not found or expired' });
+      sendJson(res, snapshot ? 200 : 404, snapshot ?? { error: 'phiên không tồn tại hoặc đã hết hạn' });
       return;
     }
     if (req.method === 'DELETE') {
       const snapshot = await service.closeSession(match[1]!);
-      sendJson(res, snapshot ? 200 : 404, snapshot ?? { error: 'session not found or expired' });
+      sendJson(res, snapshot ? 200 : 404, snapshot ?? { error: 'phiên không tồn tại hoặc đã hết hạn' });
       return;
     }
     sendJson(res, 405, { error: 'method not allowed' });

@@ -309,7 +309,7 @@ export function uploadMultipartPlugin(): Plugin {
           void runGc();
           const meta = await loadLiveMeta(uploadId, limits);
           if (!meta) {
-            sendError(res, 404, 'upload session not found or expired');
+            sendError(res, 404, 'phiên upload không tồn tại hoặc đã hết hạn');
             return;
           }
           if (!Number.isInteger(part) || part < 1 || part > meta.partCount) {
@@ -359,7 +359,7 @@ export function uploadMultipartPlugin(): Plugin {
           void runGc();
           const meta = await loadLiveMeta(uploadId, limits);
           if (!meta) {
-            sendError(res, 404, 'upload session not found or expired');
+            sendError(res, 404, 'phiên upload không tồn tại hoặc đã hết hạn');
             return;
           }
           const received = await receivedParts(uploadId);
@@ -396,7 +396,7 @@ export function uploadMultipartPlugin(): Plugin {
           void runGc();
           const meta = await loadLiveMeta(uploadId, limits);
           if (!meta) {
-            sendError(res, 404, 'upload session not found or expired');
+            sendError(res, 404, 'phiên upload không tồn tại hoặc đã hết hạn');
             return;
           }
           const missing: number[] = [];

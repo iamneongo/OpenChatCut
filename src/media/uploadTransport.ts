@@ -278,7 +278,7 @@ async function uploadFileMultipartAttempt(
 }
 
 export function isExpiredMultipartSessionError(error: unknown): boolean {
-  return error instanceof Error && /upload session not found or expired/i.test(error.message);
+  return error instanceof Error && /(?:upload session not found or expired|phiên upload không tồn tại hoặc đã hết hạn)/i.test(error.message);
 }
 
 export async function retryExpiredMultipartSession<T>(attempt: () => Promise<T>): Promise<T> {

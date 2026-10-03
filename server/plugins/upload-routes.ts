@@ -47,7 +47,7 @@ async function serveR2Media(
   try {
     const resolved = await dependencies.resolveUpload(name);
     if (!resolved) {
-      sendError(res, 404, `media not found: ${name}`);
+      sendError(res, 404, `không tìm thấy media: ${name}`);
       return;
     }
     if (!resolved.cached) logger.info(`[R2 回源] ${name} (${resolved.bytes} bytes)`);
@@ -73,7 +73,7 @@ function handleMediaRead(
   if (req.method !== 'GET' && req.method !== 'HEAD') { next(); return; }
   const name = mediaName(req);
   if (!name) {
-    if (isIsolatedDevProfile()) sendError(res, 404, 'media not found');
+    if (isIsolatedDevProfile()) sendError(res, 404, 'không tìm thấy media');
     else next();
     return;
   }
@@ -134,7 +134,7 @@ async function handleHydrate(
     if (!resolved) {
       sendError(res, 404, r2Config()
         ? `R2 object not found: ${name}`
-        : `media not found locally and R2 is off: ${name}`);
+        : `không tìm thấy media cục bộ và R2 đang tắt: ${name}`);
       return;
     }
     if (!resolved.cached) logger.info(`[upload/hydrate] ${name} (${resolved.bytes} bytes)`);
