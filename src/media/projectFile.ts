@@ -36,7 +36,7 @@ export function assertProjectDocumentSize(byteLength: number): void {
 }
 
 export function assertProjectDocumentPageCount(pageCount: number): void {
-  if (pageCount > PROJECT_PDF_MAX_PAGES) throw new Error('PDF 页数不能超过 100 页');
+  if (pageCount > PROJECT_PDF_MAX_PAGES) throw new Error('PDF không được có quá 100 trang');
 }
 
 export function validatedProjectDocumentText(text: string): string {

@@ -355,7 +355,7 @@ async function cancelDownload(id: string): Promise<void> {
   const task = tasks.get(pack.id);
   const controller = controllers.get(pack.id);
   if (task?.status !== 'downloading' || !controller) return;
-  controller.abort(new Error('Model download cancelled'));
+  controller.abort(new Error('Đã hủy tải model'));
   await downloadFlights.get(pack.id);
   const current = tasks.get(pack.id);
   if (current?.status !== 'installed' && current === task) tasks.delete(pack.id);
@@ -465,7 +465,7 @@ export function modelPacksPlugin(): Plugin {
 }
 
 export function __resetModelPackState(): void {
-  for (const controller of controllers.values()) controller.abort(new Error('Model pack state reset'));
+  for (const controller of controllers.values()) controller.abort(new Error('Đã đặt lại trạng thái gói model'));
   controllers.clear();
   downloadFlights.clear();
   tasks.clear();

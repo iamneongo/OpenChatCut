@@ -238,7 +238,7 @@ function validateOfox(input: ValidVideoRequest): ValidVideoRequest {
 
 export function validateVideoRequest(input: VideoRequest): ValidVideoRequest {
   if (input.model === 'fal') {
-    if (!input.falModel?.trim()) throw new Error('Hãy chọn model video Fal trong Settings hoặc chỉ định falModel');
+    if (!input.falModel?.trim()) throw new Error('Hãy chọn model video Fal trong Cài đặt hoặc chỉ định falModel');
     for (const key of ['mode', 'refVideoMode', 'promptOptimizer', 'fastPretreatment', 'seed', 'cameraFixed', 'watermark', 'returnLastFrame', 'executionExpiresAfter', 'priority', 'multiPrompts', 'shotType'] as const) {
       if (input[key] !== undefined) throw new Error(`${key} không được tích hợp video Fal hỗ trợ`);
     }

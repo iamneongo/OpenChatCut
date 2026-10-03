@@ -113,7 +113,7 @@ export async function runMulticamSync(args: {
     return {
       status: 'failed', changed: false, referenceItemId: '',
       syncedItemIds: [], skippedItemIds: ids,
-      offsets: [], message: 'Select 2 or more video/audio clips first.',
+      offsets: [], message: 'Trước hết hãy chọn từ 2 clip video/âm thanh trở lên.',
     };
   }
   const eligible = items.filter(canMulticamItem);
@@ -121,7 +121,7 @@ export async function runMulticamSync(args: {
     return {
       status: 'failed', changed: false, referenceItemId: '',
       syncedItemIds: [], skippedItemIds: items.map((x) => x.id),
-      offsets: [], message: 'Multicam sync only works on video or audio clips with media.',
+      offsets: [], message: 'Đồng bộ multicam chỉ hoạt động với clip video hoặc âm thanh có media.',
     };
   }
 
