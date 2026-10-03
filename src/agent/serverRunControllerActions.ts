@@ -50,7 +50,7 @@ export function useServerRunControllerActions(
     const admissionPending = readStoredServerRun(projectId)?.admissionPending === true;
     const transport = current.refs.abort.current;
     if (transport && !transport.signal.aborted) {
-      transport.abort(new Error('Server run stopped by the user.'));
+      transport.abort(new Error('Người dùng đã dừng lượt chạy server.'));
     }
     current.refs.runExecutor.current?.stop();
     if (!runId || !capability) return;

@@ -23,7 +23,7 @@ import { createGenerationJob, getGenerationJobSnapshot } from './generation-jobs
 import { ffmpegThreadArgs } from '../media-process.ts';
 
 assert.doesNotThrow(() => assertNonEmptyExportBytes(1));
-assert.throws(() => assertNonEmptyExportBytes(0), /empty file/);
+assert.throws(() => assertNonEmptyExportBytes(0), /empty file|tệp rỗng/);
 
 assert.equal(resolveMaxActiveExports(undefined), 1);
 assert.equal(resolveMaxActiveExports('invalid'), 1);
@@ -143,7 +143,7 @@ const staleOutput = join(tmpdir(), `openchatcut-retime-check-${randomUUID()}.mp4
 await writeFile(staleOutput, 'stale partial output');
 await assert.rejects(
   retimeFps('/definitely/missing/openchatcut-input.mp4', staleOutput, 30, 'vp8', 4_000_000),
-  /ffmpeg fps retime failed/,
+  /ffmpeg fps retime failed|điều chỉnh lại fps bằng ffmpeg thất bại/,
 );
 assert.equal(existsSync(staleOutput), false, 'failed FPS conversion must remove partial output');
 

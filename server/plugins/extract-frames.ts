@@ -74,7 +74,7 @@ function run(cmd: string, args: string[], timeoutMs: number): Promise<void> {
     child.on('close', (code) => {
       clearTimeout(timer);
       if (code === 0) resolve();
-      else reject(new Error(`${cmd} exit ${code}: ${stderr.slice(-400)}`));
+      else reject(new Error(`${cmd} thoát với mã ${code}: ${stderr.slice(-400)}`));
     });
   });
 }

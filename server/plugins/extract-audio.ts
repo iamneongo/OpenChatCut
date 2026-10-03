@@ -116,7 +116,7 @@ function runFfmpeg(args: string[], timeoutMs: number): Promise<void> {
     child.on('close', (code) => {
       clearTimeout(timer);
       if (code === 0) resolve();
-      else reject(new Error(`ffmpeg exit ${code}: ${stderr.slice(-500)}`));
+      else reject(new Error(`ffmpeg thoát với mã ${code}: ${stderr.slice(-500)}`));
     });
   });
 }

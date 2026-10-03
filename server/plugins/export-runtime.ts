@@ -251,7 +251,7 @@ function runFfmpeg(args: string[], signal?: AbortSignal): Promise<void> {
     child.once('error', (error) => finish(error));
     child.once('close', (code) => finish(timeoutError ?? (code === 0
       ? undefined
-      : new Error(`ffmpeg fps retime failed (${code}): ${stderr.slice(-600)}`))));
+      : new Error(`điều chỉnh lại fps bằng ffmpeg thất bại (${code}): ${stderr.slice(-600)}`))));
   });
 }
 

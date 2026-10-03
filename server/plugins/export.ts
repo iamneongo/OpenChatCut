@@ -33,7 +33,7 @@ async function retainUnresolvedExportRecovery(renderId: string): Promise<boolean
 export function exportPlugin(): Plugin {
   registerGenerationCleanupPolicy('server-export', async (result) => {
     const name = exportJobResultName(result.path, result.assetId);
-    if (!name) throw new Error(`refusing to clean invalid server export result ${result.path}`);
+    if (!name) throw new Error(`từ chối dọn kết quả export máy chủ không hợp lệ ${result.path}`);
     const file = resolveUploadFile(name);
     if (file) await unlinkWithRetry(file);
   });

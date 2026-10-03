@@ -96,7 +96,7 @@ function runProcess(command: string, args: string[], timeoutMs = PROCESS_TIMEOUT
     child.on('close', (code) => {
       clearTimeout(timer);
       if (code === 0) resolve({ stdout, stderr });
-      else reject(new Error(`${command} exit ${code}: ${stderr.slice(-1200)}`));
+      else reject(new Error(`${command} thoát với mã ${code}: ${stderr.slice(-1200)}`));
     });
   });
 }

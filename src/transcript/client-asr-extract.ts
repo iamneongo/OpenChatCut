@@ -153,7 +153,7 @@ async function extractViaCapture(file: File): Promise<string | null> {
 
   try {
     await new Promise<void>((resolve, reject) => {
-      const t = setTimeout(() => reject(new Error('meta timeout')), 12_000);
+      const t = setTimeout(() => reject(new Error('thăm dò meta hết thời gian chờ')), 12_000);
       video.onloadedmetadata = () => { clearTimeout(t); resolve(); };
       video.onerror = () => { clearTimeout(t); reject(new Error('tải media thất bại')); };
     });

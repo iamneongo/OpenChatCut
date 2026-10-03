@@ -93,7 +93,7 @@ export async function translateLines(lines: string[], lang: string): Promise<str
     // fall back to line-splitting if the model didn't return clean JSON
     arr = clean.split('\n').map((l) => l.replace(/^\s*\d+[.)]\s*/, '').trim()).filter(Boolean);
   }
-  if (!Array.isArray(arr)) throw new Error('translation did not return a list');
+  if (!Array.isArray(arr)) throw new Error('bản dịch không trả về danh sách');
   // pad/truncate to keep 1:1 alignment with the source phrases
   return phrases.map((_, i) => String(arr[i] ?? ''));
 }
