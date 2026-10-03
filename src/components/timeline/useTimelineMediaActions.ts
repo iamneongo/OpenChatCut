@@ -65,7 +65,7 @@ export function useTimelineMediaActions({
       setClipJob({ msg });
       window.setTimeout(() => setClipJob((current) => current?.msg === msg && !current.error ? null : current), 5_000);
     } catch (error) {
-      setClipJob({ msg: error instanceof Error ? error.message : t('重新链接文件失败'), error: true });
+      setClipJob({ msg: error instanceof Error ? t('失败:{error}', { error: error.message }) : t('重新链接文件失败'), error: true });
     }
   };
 
@@ -94,7 +94,7 @@ export function useTimelineMediaActions({
       await exportClipMov(state, item);
       setClipJob(null);
     } catch (error) {
-      setClipJob({ msg: error instanceof Error ? error.message : t('导出失败'), error: true });
+      setClipJob({ msg: error instanceof Error ? t('失败:{error}', { error: error.message }) : t('导出失败'), error: true });
     }
   };
 
@@ -105,7 +105,7 @@ export function useTimelineMediaActions({
       commands.replaceItemMedia(item.id, src);
       setClipJob(null);
     } catch (error) {
-      setClipJob({ msg: error instanceof Error ? error.message : t('转换失败'), error: true });
+      setClipJob({ msg: error instanceof Error ? t('失败:{error}', { error: error.message }) : t('转换失败'), error: true });
     }
   };
 
