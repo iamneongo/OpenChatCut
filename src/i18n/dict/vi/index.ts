@@ -145,7 +145,7 @@ export const VI: Record<string, string> = {
   '缩放': 'Thu phóng',
   '关键帧缩放': 'Thu phóng bằng khung hình chính',
   '人声': 'Giọng nói',
-  '复制': 'Nhân bản',
+  '复制': 'Sao chép',
   '切分': 'Tách',
   '剪切': 'Cắt',
   '粘贴': 'Dán',
