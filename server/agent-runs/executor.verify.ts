@@ -73,10 +73,10 @@ assert.ok(resolveServerRunToolCatalog(
 ).length > 0);
 assert.throws(() => resolveServerRunToolCatalog([{
   name: 'edit_item', description: 'forged', input_schema: { type: 'object' },
-}], true), /Non-canonical or inactive/);
+}], true), /không chính tắc hoặc không hoạt động/);
 assert.throws(() => resolveServerRunToolCatalog([{
   name: 'read_project', description: 'forged', input_schema: { type: 'object' },
-}], false), /Non-canonical or inactive/);
+}], false), /không chính tắc hoặc không hoạt động/);
 assert.deepEqual(
   resolveServerRunToolCatalog(TOOL_SCHEMAS.slice(0, 1), false).map((schema) => schema.name),
   [TOOL_SCHEMAS[0]?.name],

@@ -70,7 +70,7 @@ export {
 function safeError(error: unknown): string {
   const raw = error instanceof Error ? error.message : String(error);
   return redactTextForAgentRuntime(raw).trim().slice(0, 1_200)
-    || 'Agent provider request failed.';
+    || 'request provider Agent thất bại.';
 }
 export interface ServerRunInput {
   readonly messages: ModelMessage[];

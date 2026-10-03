@@ -26,7 +26,7 @@ export class CursorProtocolError extends Error {
 function parseCursor(value: string | null, label: string): number | null {
   if (value === null) return null;
   if (!/^\d+$/.test(value)) {
-    throw new CursorProtocolError(400, `${label} must be a non-negative integer`);
+    throw new CursorProtocolError(400, `${label} phải là số nguyên không âm`);
   }
   const cursor = Number(value);
   if (!Number.isSafeInteger(cursor)) {

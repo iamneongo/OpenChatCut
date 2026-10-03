@@ -75,7 +75,7 @@ function readBody(req: IncomingMessage, limit: number): Promise<Buffer> {
     chunks.push(buffer);
   };
   const onEnd = () => { cleanup(); resolve(Buffer.concat(chunks)); };
-  const onError = () => fail(new HttpError(400, 'invalid request body'));
+  const onError = () => fail(new HttpError(400, 'body request không hợp lệ'));
   const onAborted = () => fail(new HttpError(400, 'request body aborted'));
   req.on('data', onData);
   req.once('end', onEnd);
@@ -90,10 +90,10 @@ async function readJson(req: IncomingMessage, limit = JSON_BODY_LIMIT): Promise<
   try {
     value = JSON.parse(buffer.toString('utf8') || '{}');
   } catch {
-    throw new HttpError(400, 'body must be valid JSON');
+    throw new HttpError(400, 'body phải là JSON hợp lệ');
   }
   const shaped = object(value);
-  if (!shaped) throw new HttpError(400, 'body must be a JSON object');
+  if (!shaped) throw new HttpError(400, 'body phải là object JSON');
   return shaped;
 }
 
@@ -177,7 +177,7 @@ async function copilotModels(): Promise<CopilotAgentModelsResponse> {
       models: [],
       error: error instanceof HttpError || error instanceof CopilotProcessError
         ? error.message
-        : 'Unable to discover Copilot models. Try again.',
+        : 'Không thể tìm model Copilot. Hãy thử lại.',
     };
   }
 }
@@ -209,9 +209,9 @@ export function parseCopilotTurnRequest(body: Record<string, unknown>): CopilotT
     throw new HttpError(400, 'tools are invalid');
   }
   const names = body.tools.map((tool) => tool.name);
-  if (new Set(names).size !== names.length) throw new HttpError(400, 'tool names must be unique');
+  if (new Set(names).size !== names.length) throw new HttpError(400, 'tên tool phải là duy nhất');
   if (body.askOnly !== undefined && typeof body.askOnly !== 'boolean') {
-    throw new HttpError(400, 'askOnly must be a boolean');
+    throw new HttpError(400, 'askOnly phải là boolean');
   }
   const requestedModel = body.model === undefined ? '' : shortString(body.model, 'model', 256).trim();
   const savedModel = getKey('COPILOT_MODEL').trim().slice(0, 256);
@@ -303,7 +303,7 @@ async function handleCopilotRequest(req: IncomingMessage, res: ServerResponse): 
   }
   const known = ['/status', '/models', '/turn', '/tool-result'];
   if (known.includes(path)) throw new HttpError(405, 'method not allowed');
-  throw new HttpError(404, 'not found');
+  throw new HttpError(404, 'không tìm thấy');
 }
 
 function handleFailure(res: ServerResponse, error: unknown): void {
@@ -313,7 +313,7 @@ function handleFailure(res: ServerResponse, error: unknown): void {
   }
   if (error instanceof HttpError) sendJson(res, error.status, { error: error.message });
   else if (error instanceof CopilotProcessError) sendJson(res, 503, { error: error.message });
-  else sendJson(res, 500, { error: 'Copilot request failed.' });
+  else sendJson(res, 500, { error: 'request Copilot thất bại.' });
 }
 
 export function copilotAgentPlugin(): Plugin {

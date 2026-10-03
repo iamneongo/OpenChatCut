@@ -412,7 +412,7 @@ try {
 // assert the exact status/error contract the client hint logic depends on.
 {
   const source = await readFile(new URL('./routes.ts', import.meta.url), 'utf8');
-  assert.match(source, /sendJson\(res, 403, \{ error: 'invalid run capability' \}\)/, 'draft without a valid capability is rejected 403');
+  assert.match(source, /sendJson\(res, 403, \{ error: 'quyền truy cập lượt chạy không hợp lệ' \}\)/, 'draft without a valid capability is rejected 403');
   assert.match(source, /sendJson\(res, 404, \{ error: 'không tìm thấy lượt chạy' \}\)/, 'draft for an unknown run is rejected 404');
   assert.match(source, /sendJson\(res, 409, \{ error: 'draft artifact was rejected \(invalid, duplicate, or over the limit\)' \}\)/, 'malformed draft artifacts are rejected 409');
 

@@ -84,7 +84,7 @@ function readBody(req: IncomingMessage, limit: number): Promise<Buffer> {
     chunks.push(buffer);
   };
   const onEnd = () => { cleanup(); resolve(Buffer.concat(chunks)); };
-  const onError = () => fail(new HttpError(400, 'invalid request body'));
+  const onError = () => fail(new HttpError(400, 'body request không hợp lệ'));
   const onAborted = () => fail(new HttpError(400, 'request body aborted'));
   req.on('data', onData);
   req.once('end', onEnd);
@@ -99,10 +99,10 @@ async function readJson(req: IncomingMessage, limit = JSON_BODY_LIMIT): Promise<
   try {
     value = JSON.parse(buffer.toString('utf8') || '{}');
   } catch {
-    throw new HttpError(400, 'body must be valid JSON');
+    throw new HttpError(400, 'body phải là JSON hợp lệ');
   }
   const shaped = object(value);
-  if (!shaped) throw new HttpError(400, 'body must be a JSON object');
+  if (!shaped) throw new HttpError(400, 'body phải là object JSON');
   return shaped;
 }
 
@@ -243,14 +243,14 @@ async function codexModels(): Promise<CodexAgentModelsResponse> {
       ? 'Codex model discovery timed out. Try again after Codex finishes starting.'
       : error instanceof HttpError
         ? error.message
-        : 'Unable to discover Codex models. Try again.';
+        : 'Không thể tìm model Codex. Hãy thử lại.';
     return { models: [], error: message };
   }
 }
 
 function loginMode(value: unknown): CodexLoginMode {
   if (value === 'chatgpt' || value === 'chatgptDeviceCode') return value;
-  throw new HttpError(400, 'mode must be chatgpt or chatgptDeviceCode');
+  throw new HttpError(400, 'mode phải là chatgpt hoặc chatgptDeviceCode');
 }
 
 function officialLoginUrl(value: unknown): string | null {
@@ -270,17 +270,17 @@ function loginResponse(value: unknown, mode: CodexLoginMode): CodexLoginStartRes
   const loginId = typeof response?.loginId === 'string' && response.loginId.length <= 256
     ? response.loginId
     : null;
-  if (!loginId || response?.type !== mode) throw new HttpError(503, 'Codex returned an invalid sign-in response.');
+  if (!loginId || response?.type !== mode) throw new HttpError(503, 'Codex trả về phản hồi đăng nhập không hợp lệ.');
   if (mode === 'chatgpt') {
     const authUrl = officialLoginUrl(response.authUrl);
-    if (!authUrl) throw new HttpError(503, 'Codex returned an invalid sign-in URL.');
+    if (!authUrl) throw new HttpError(503, 'Codex trả về URL đăng nhập không hợp lệ.');
     return { type: 'chatgpt', loginId, authUrl };
   }
   const verificationUrl = officialLoginUrl(response.verificationUrl);
   const userCode = typeof response.userCode === 'string' && /^[A-Za-z0-9-]{4,128}$/.test(response.userCode)
     ? response.userCode
     : null;
-  if (!verificationUrl || !userCode) throw new HttpError(503, 'Codex returned invalid device sign-in metadata.');
+  if (!verificationUrl || !userCode) throw new HttpError(503, 'Codex trả về metadata đăng nhập thiết bị không hợp lệ.');
   return { type: 'chatgptDeviceCode', loginId, verificationUrl, userCode };
 }
 
@@ -320,9 +320,9 @@ export function parseCodexTurnRequest(body: Record<string, unknown>): CodexTurnR
     throw new HttpError(400, 'tools are invalid');
   }
   const names = body.tools.map((tool) => tool.name);
-  if (new Set(names).size !== names.length) throw new HttpError(400, 'tool names must be unique');
+  if (new Set(names).size !== names.length) throw new HttpError(400, 'tên tool phải là duy nhất');
   if (body.askOnly !== undefined && typeof body.askOnly !== 'boolean') {
-    throw new HttpError(400, 'askOnly must be a boolean');
+    throw new HttpError(400, 'askOnly phải là boolean');
   }
   const requestedModel = body.model === undefined ? '' : shortString(body.model, 'model', 256).trim();
   const savedModel = getKey('CODEX_MODEL').trim().slice(0, 256);
@@ -428,7 +428,7 @@ async function handleCodexRequest(req: IncomingMessage, res: ServerResponse): Pr
   }
   const known = ['/status', '/models', '/login/start', '/login/cancel', '/logout', '/turn', '/tool-result'];
   if (known.includes(path)) throw new HttpError(405, 'method not allowed');
-  throw new HttpError(404, 'not found');
+  throw new HttpError(404, 'không tìm thấy');
 }
 
 function handleFailure(res: ServerResponse, error: unknown): void {
@@ -439,7 +439,7 @@ function handleFailure(res: ServerResponse, error: unknown): void {
   if (error instanceof HttpError) sendJson(res, error.status, { error: error.message });
   else if (error instanceof CodexProcessError || error instanceof CodexRpcError || error instanceof CodexTimeoutError) {
     sendJson(res, 503, { error: 'Codex app-server is unavailable. Try again.' });
-  } else sendJson(res, 500, { error: 'Codex request failed.' });
+  } else sendJson(res, 500, { error: 'request Codex thất bại.' });
 }
 
 export function codexAgentPlugin(): Plugin {

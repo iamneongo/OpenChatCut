@@ -28,7 +28,7 @@ assert.throws(
   () => resolveServerRunToolCatalog([
     { ...first, description: `${first.description ?? ''} forged` },
   ], false),
-  /Non-canonical or inactive/,
+  /không chính tắc hoặc không hoạt động/,
 );
 assert.throws(
   () => resolveServerRunToolCatalog([first, first], false),
@@ -36,7 +36,7 @@ assert.throws(
 );
 assert.throws(
   () => resolveServerRunToolCatalog([{ name: 'unknown_tool', input_schema: {} }], false),
-  /Non-canonical or inactive/,
+  /không chính tắc hoặc không hoạt động/,
 );
 const editOnly = TOOL_SCHEMAS.find((schema) => (
   !ASK_MODE_TOOL_SCHEMAS.some((candidate) => candidate.name === schema.name)
@@ -44,7 +44,7 @@ const editOnly = TOOL_SCHEMAS.find((schema) => (
 assert(editOnly, 'the edit catalog includes tools absent from Ask mode');
 assert.throws(
   () => resolveServerRunToolCatalog([editOnly], true),
-  /Non-canonical or inactive/,
+  /không chính tắc hoặc không hoạt động/,
   'Ask mode cannot smuggle an editing schema into the server catalog',
 );
 

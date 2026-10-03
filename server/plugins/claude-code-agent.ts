@@ -83,7 +83,7 @@ function readBody(req: IncomingMessage, limit: number): Promise<Buffer> {
     chunks.push(buffer);
   };
   const onEnd = () => { cleanup(); resolve(Buffer.concat(chunks)); };
-  const onError = () => fail(new HttpError(400, 'invalid request body'));
+  const onError = () => fail(new HttpError(400, 'body request không hợp lệ'));
   const onAborted = () => fail(new HttpError(400, 'request body aborted'));
   req.on('data', onData);
   req.once('end', onEnd);
@@ -98,10 +98,10 @@ async function readJson(req: IncomingMessage, limit = JSON_BODY_LIMIT): Promise<
   try {
     value = JSON.parse(buffer.toString('utf8') || '{}');
   } catch {
-    throw new HttpError(400, 'body must be valid JSON');
+    throw new HttpError(400, 'body phải là JSON hợp lệ');
   }
   const shaped = object(value);
-  if (!shaped) throw new HttpError(400, 'body must be a JSON object');
+  if (!shaped) throw new HttpError(400, 'body phải là object JSON');
   return shaped;
 }
 
@@ -200,7 +200,7 @@ function ndjsonWriter(res: ServerResponse): (event: ClaudeCodeTurnStreamEvent) =
 
 function selfMcpUrl(req: IncomingMessage): string {
   const host = req.headers.host;
-  if (!host || /[/\\@?#,\s]/.test(host)) throw new HttpError(400, 'invalid host header');
+  if (!host || /[/\\@?#,\s]/.test(host)) throw new HttpError(400, 'host header không hợp lệ');
   const protocol = req.socket instanceof TLSSocket ? 'https' : 'http';
   return `${protocol}://${host}/api/external-mcp/mcp`;
 }
@@ -264,7 +264,7 @@ async function handleClaudeCodeRequest(req: IncomingMessage, res: ServerResponse
   if (path === '/turn' && req.method === 'POST') return streamTurn(req, res, await readJson(req));
   const known = ['/status', '/models', '/turn'];
   if (known.includes(path)) throw new HttpError(405, 'method not allowed');
-  throw new HttpError(404, 'not found');
+  throw new HttpError(404, 'không tìm thấy');
 }
 
 function handleFailure(res: ServerResponse, error: unknown): void {
@@ -273,7 +273,7 @@ function handleFailure(res: ServerResponse, error: unknown): void {
     return;
   }
   if (error instanceof HttpError) sendJson(res, error.status, { error: error.message });
-  else sendJson(res, 500, { error: 'Claude Code request failed.' });
+  else sendJson(res, 500, { error: 'request Claude Code thất bại.' });
 }
 
 export function claudeCodeAgentPlugin(): Plugin {

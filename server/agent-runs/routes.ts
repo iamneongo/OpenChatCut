@@ -120,7 +120,7 @@ async function boundRun(
       requestHeader(req, SERVER_RUN_CAPABILITY_HEADER),
     )
   ) {
-    sendJson(res, 403, { error: 'invalid run capability' });
+    sendJson(res, 403, { error: 'quyền truy cập lượt chạy không hợp lệ' });
     return null;
   }
   if (current && current.projectId !== projectId) {
@@ -136,7 +136,7 @@ async function boundRun(
     run.capabilityVerifier,
     requestHeader(req, SERVER_RUN_CAPABILITY_HEADER),
   )) {
-    sendJson(res, 403, { error: 'invalid run capability' });
+    sendJson(res, 403, { error: 'quyền truy cập lượt chạy không hợp lệ' });
     return null;
   }
   return run;
@@ -295,7 +295,7 @@ async function handleSettle(req: IncomingMessage, res: ServerResponse, runId: st
     completed: true, failed: true, aborted: true, interrupted: true, waiting_approval: true,
   };
   if (!SETTLE_STATUSES[status]) {
-    sendJson(res, 400, { error: 'invalid settle status' });
+    sendJson(res, 400, { error: 'trạng thái settle không hợp lệ' });
     return;
   }
   const proposalId = typeof body.proposalId === 'string' ? body.proposalId.trim() : undefined;
@@ -306,7 +306,7 @@ async function handleSettle(req: IncomingMessage, res: ServerResponse, runId: st
     created: true, applied: true, rejected: true, stale: true, reproposed: true,
   };
   if (proposalRuntimeStatus !== undefined && !PROPOSAL_RUNTIME_STATUSES[proposalRuntimeStatus]) {
-    sendJson(res, 400, { error: 'invalid proposal runtime status' });
+    sendJson(res, 400, { error: 'trạng thái runtime của proposal không hợp lệ' });
     return;
   }
   const summary = typeof body.summary === 'string' ? body.summary : undefined;
@@ -482,7 +482,7 @@ export function agentRunsPlugin(options: AgentRunsPluginOptions = {}): Plugin {
           ? projectStoreReadAuthorized(req) || projectStoreHttpAuthorized(req)
           : projectStoreHttpAuthorized(req);
         if (!authorized) {
-          sendJson(res, 403, { error: 'invalid agent run session' });
+          sendJson(res, 403, { error: 'session lượt chạy Agent không hợp lệ' });
           return;
         }
         try {
