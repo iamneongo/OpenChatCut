@@ -979,7 +979,7 @@ export const VI: Record<string, string> = {
   '此浏览器不支持录音': 'Trình duyệt này không hỗ trợ ghi âm',
   '麦克风权限被拒绝': 'Quyền micro bị từ chối',
   '无法访问麦克风': 'Không thể truy cập micro',
-  'UI 与动效反馈': 'Phản hồi UI và chuyển động',
+  'UI 与动效反馈': 'Phản hồi giao diện và chuyển động',
   '转场与强调': 'Chuyển cảnh và điểm nhấn',
   '设备与质感': 'Thiết bị và chất liệu',
   '反应与情绪': 'Phản ứng và cảm xúc',
@@ -2667,5 +2667,5 @@ export const VI: Record<string, string> = {
   '清脆 UI 点击，适合按钮、选中、确认操作反馈。': 'Tiếng nhấp giao diện trong, phù hợp phản hồi nút, chọn mục và xác nhận thao tác.',
   '成功完成提示音，适合任务完成、发布成功、正向反馈。': 'Âm báo hoàn tất thành công, phù hợp hoàn thành tác vụ, đăng thành công hoặc phản hồi tích cực.',
   '当前环境不支持素材预览上传': 'Môi trường hiện tại không hỗ trợ tải lên tài nguyên để xem trước.',
-  'style 忽略字段': 'Đã bỏ qua trường style',
+  'style 忽略字段': 'Đã bỏ qua trường kiểu hiển thị',
 };
