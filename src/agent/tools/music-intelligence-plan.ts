@@ -427,7 +427,7 @@ function selectedImageAssets(
 function imageTrack(state: TimelineState, requested?: string): string {
   if (requested !== undefined) {
     const track = resolveTrackId(state, requested, 'video');
-    if (!track) throw new Error(`video track "${requested}" not found; call edit_track action=list`);
+    if (!track) throw new Error(`Không tìm thấy track video "${requested}"; hãy gọi edit_track với action=list`);
     return track;
   }
   const track = resolveTrackId(state, 'V1', 'video') ?? defaultTrackId(state, 'video');

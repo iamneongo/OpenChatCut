@@ -47,7 +47,7 @@ export async function verifyUploadFinalizeRecovery(fixture: UploadVerifierFixtur
     durationInSeconds: 2,
     width: 320,
   }, reconciliationContext) as { error?: string };
-  assert.match(invalidRenewal.error ?? '', /claim expired or was superseded/);
+  assert.match(invalidRenewal.error ?? '', /receipt upload đã hết hạn hoặc bị thay thế/);
   assert.equal(reconciliationMutations, 0, 'a renewal without claimExpiresAt cannot precede mutation');
   assert.equal(reconciliationReceipt.claimId, undefined, 'invalid renewal must abort its claim');
 

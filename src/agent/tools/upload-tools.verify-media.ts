@@ -36,7 +36,7 @@ export async function verifyUploadMediaFailures(fixture: UploadVerifierFixture):
     durationInSeconds: 2,
     hasAudioTrack: true,
   }, context) as { error?: string };
-  assert.match(normalizationFailure.error ?? '', /Video compatibility processing failed/);
+  assert.match(normalizationFailure.error ?? '', /Xử lý tương thích video thất bại/);
   assert.equal(videoReceipt.claimId, undefined, 'normalization failure must abort the receipt claim');
   assert.equal(videoReceipt.committed, undefined);
   assert.equal(

@@ -285,7 +285,7 @@ function exportTarget(args: GenerateArgs, ctx: AgentContext): ExportTarget {
     ? args.timelineId.trim()
     : project.activeTimelineId;
   const state = project.timelines.find((timeline) => timeline.id === query || timeline.id.startsWith(query));
-  if (!state) throw new Error(`timeline not found: ${args.timelineId ?? query}`);
+  if (!state) throw new Error(`Không tìm thấy dòng thời gian: ${args.timelineId ?? query}`);
   return { project, state, timelineId: state.id };
 }
 

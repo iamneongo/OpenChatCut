@@ -193,7 +193,7 @@ async function normalizeVideoSrc(src: string): Promise<{
     };
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
-    throw new Error(`Video compatibility processing failed: ${message}`);
+    throw new Error(`Xử lý tương thích video thất bại: ${message}`);
   }
 }
 
@@ -311,7 +311,7 @@ async function prepareClaimedFinalize(
   input: FinalizeInput,
 ): Promise<UploadFinalizeJournal> {
   if (args.assetType !== input.type) {
-    throw new Error(`assetType does not match the trusted upload receipt (${input.type})`);
+    throw new Error(`assetType không khớp với receipt upload đáng tin cậy (${input.type})`);
   }
   const kind = mapUploadKind(input.type);
   if (!kind) throw new Error(`unsupported type ${input.type}`);

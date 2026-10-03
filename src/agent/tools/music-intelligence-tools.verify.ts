@@ -231,7 +231,7 @@ function state(items: TimelineItem[], tracks: TimelineState['tracks'] = {}): Tim
       images,
       { timing: 'beat', density: 'dense', track: 'V99' },
     ),
-    /video track "V99" not found/,
+    /Không tìm thấy track video "V99"/,
     'an invalid explicit target track must not silently fall back to V1',
   );
 }

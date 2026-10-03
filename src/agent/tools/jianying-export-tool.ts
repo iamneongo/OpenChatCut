@@ -51,7 +51,7 @@ export function jianyingExportOutcome(
   status: number,
 ): Record<string, unknown> {
   if (status >= 400 || !data?.ok) {
-    throw new Error(data?.error ?? `jianying export failed (${status})`);
+    throw new Error(data?.error ?? `Xuất bản nháp JianYing thất bại (${status})`);
   }
   return {
     ok: true,
