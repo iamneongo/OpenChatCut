@@ -17,21 +17,21 @@ export async function execMgCodeTool(
   args: Args,
   ctx: AgentContext,
 ): Promise<unknown> {
-  if (name !== 'create_motion_graphic_from_code') return { error: `unknown tool ${name}` };
+  if (name !== 'create_motion_graphic_from_code') return { error: `Công cụ không xác định: ${name}` };
 
   const code = String(args.code ?? '').trim();
   const nameStr = String(args.name ?? '').trim();
   const width = Number(args.width);
   const height = Number(args.height);
-  if (!code) return { error: 'code is required' };
-  if (!nameStr) return { error: 'name is required' };
-  if (!(width > 0) || !(height > 0)) return { error: 'width and height must be positive numbers' };
+  if (!code) return { error: 'Cần có code' };
+  if (!nameStr) return { error: 'Cần có name' };
+  if (!(width > 0) || !(height > 0)) return { error: 'width và height phải là số dương' };
 
   try {
     await prepareTemplate(code);
   } catch (e) {
     return {
-      error: `code rejected by sandbox: ${e instanceof Error ? e.message : String(e)}`,
+      error: `Sandbox từ chối code: ${e instanceof Error ? e.message : String(e)}`,
       code,
     };
   }
@@ -80,6 +80,6 @@ export async function execMgCodeTool(
     width: asset.width,
     height: asset.height,
     durationInFrames: asset.durationInFrames,
-    note: 'MG asset registered in media pool. Place with edit_item adds or UI.',
+    note: 'Asset MG đã được đăng ký trong kho media. Đặt bằng adds của edit_item hoặc giao diện.',
   };
 }

@@ -42,15 +42,15 @@ export async function execCaptionsTool(name: string, args: Args, ctx: AgentConte
           hasCaptions: !!entry.captions,
         })),
       };
-      if (requested && !target) return { error: `no caption track ${requested}` };
-      if (!c || !c.enabled) return { enabled: false, note: 'captions are off; call edit_captions to turn them on first' };
+      if (requested && !target) return { error: `Không tìm thấy track phụ đề ${requested}` };
+      if (!c || !c.enabled) return { enabled: false, note: 'Phụ đề đang tắt; hãy gọi edit_captions để bật trước' };
       const words = resolveCaptionWords(c, s.items, s.fps);
       if (!words.length) return {
         enabled: true,
         template: c.template,
         pacing: c.pacing,
         motionPreset: c.motionPreset ?? 'none',
-        note: 'source track has no transcript words',
+        note: 'Track nguồn không có từ chép lời',
       };
       const indices = resolveCaptionWordIndices(c, s.items, s.fps);
       const wordRefs = resolveCaptionWordRefs(c, s.items, s.fps);

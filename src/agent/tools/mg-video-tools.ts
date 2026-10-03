@@ -43,8 +43,8 @@ function findClip(ctx: AgentContext, args: Args): TimelineItem | null {
 
 async function convert(args: Args, ctx: AgentContext): Promise<unknown> {
   const item = findClip(ctx, args);
-  if (!item) return { error: 'no clip found; pass itemId (preferred) or assetId' };
-  if (item.kind === 'audio') return { error: 'audio clips have no video to bake; convert applies to motion-graphic/video/image clips' };
+  if (!item) return { error: 'Không tìm thấy clip; hãy truyền itemId (ưu tiên) hoặc assetId' };
+  if (item.kind === 'audio') return { error: 'Clip âm thanh không có video để kết xuất; convert áp dụng cho clip motion-graphic/video/image' };
 
   const state = ctx.getState();
   const wantAlpha = ALPHA_CAPABLE.has(item.kind) && args.opaque !== true;
@@ -61,13 +61,13 @@ async function convert(args: Args, ctx: AgentContext): Promise<unknown> {
         transparent = true;
       } catch (alphaError) {
         src = await bakeClipToVideo(state, item);
-        fallbackNote = `Transparent VP9-alpha bake unavailable (${alphaError instanceof Error ? alphaError.message : String(alphaError)}); baked OPAQUE h264 instead. Use export_motion_graphic_prores for a transparent .mov.`;
+        fallbackNote = `Không thể kết xuất VP9-alpha trong suốt (${alphaError instanceof Error ? alphaError.message : String(alphaError)}); đã kết xuất h264 KHÔNG trong suốt. Dùng export_motion_graphic_prores để tạo .mov trong suốt.`;
       }
     } else {
       src = await bakeClipToVideo(state, item);
     }
   } catch (e) {
-    return { error: `render failed: ${e instanceof Error ? e.message : String(e)}` };
+    return { error: `Kết xuất thất bại: ${e instanceof Error ? e.message : String(e)}` };
   }
 
   const asset: MediaAsset = {
@@ -89,8 +89,8 @@ async function convert(args: Args, ctx: AgentContext): Promise<unknown> {
     transparent,
     codec: transparent ? 'vp9-alpha-webm' : 'h264',
     note: transparent
-      ? 'Baked as TRANSPARENT VP9 alpha WebM (composites over other clips).'
-      : (fallbackNote ?? 'Baked as OPAQUE h264. For a transparent MG over other clips, pass an MG/text/svg clip (auto VP9-alpha) or use export_motion_graphic_prores (.mov).'),
+      ? 'Đã kết xuất WebM VP9 alpha TRONG SUỐT (có thể ghép lên clip khác).'
+      : (fallbackNote ?? 'Đã kết xuất h264 KHÔNG trong suốt. Để tạo MG trong suốt, hãy truyền clip MG/text/svg (tự động dùng VP9-alpha) hoặc dùng export_motion_graphic_prores (.mov).'),
   };
 }
 
@@ -114,9 +114,9 @@ function resolveMgSource(ctx: AgentContext, q: string): { id: string; name: stri
 // outputUrl only as a fallback when no renderId is available.
 async function register(args: Args, ctx: AgentContext): Promise<unknown> {
   const mgQuery = typeof args.mgAssetId === 'string' ? args.mgAssetId.trim() : '';
-  if (!mgQuery) return { error: 'mgAssetId is required (the source motion-graphic asset id)' };
+  if (!mgQuery) return { error: 'Cần có mgAssetId (id asset motion-graphic nguồn)' };
   const mg = resolveMgSource(ctx, mgQuery);
-  if (!mg) return { error: `no motion-graphic asset/template/clip matching "${mgQuery}"` };
+  if (!mg) return { error: `Không có asset/template/clip motion-graphic khớp với "${mgQuery}"` };
 
   // renderId (preferred) → resolve the finished render's output from the local job records.
   let outputUrl = '';
@@ -125,13 +125,13 @@ async function register(args: Args, ctx: AgentContext): Promise<unknown> {
     const job = await fetchRenderJob(renderId);
     if (!('ok' in job)) return { error: job.error };
     if (!job.downloadUrl) {
-      return { error: `render ${renderId} is not complete yet (status: ${job.status}); wait with track_export action=wait first, or pass outputUrl as a fallback` };
+      return { error: `Render ${renderId} chưa hoàn tất (trạng thái: ${job.status}); trước hết hãy chờ bằng track_export action=wait hoặc truyền outputUrl thay thế` };
     }
     outputUrl = job.downloadUrl;
   } else {
     outputUrl = typeof args.outputUrl === 'string' ? args.outputUrl.trim() : '';
-    if (!outputUrl) return { error: 'pass renderId (preferred, once track_export reports the render complete) or outputUrl as a fallback' };
-    if (!/^(https?:\/\/|\/)/.test(outputUrl)) return { error: 'outputUrl must be a same-origin path (/media/…) or http(s) URL' };
+    if (!outputUrl) return { error: 'Hãy truyền renderId (ưu tiên, sau khi track_export báo render hoàn tất) hoặc outputUrl thay thế' };
+    if (!/^(https?:\/\/|\/)/.test(outputUrl)) return { error: 'outputUrl phải là đường dẫn cùng origin (/media/…) hoặc URL http(s)' };
   }
 
   // deterministic: re-running dedupes to the same video asset (matched by output src).

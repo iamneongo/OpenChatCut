@@ -20,15 +20,15 @@ interface SearchMediaArgs {
 
 export async function execSearchMedia(args: SearchMediaArgs, ctx: AgentContext): Promise<unknown> {
   const query = String(args.query ?? '').trim();
-  if (!query) return { error: 'search_media requires query' };
+  if (!query) return { error: 'search_media cần query' };
   if (query.length > MAX_SEMANTIC_QUERY_LENGTH) {
-    return { error: `search_media query exceeds ${MAX_SEMANTIC_QUERY_LENGTH} characters` };
+    return { error: `query của search_media vượt quá ${MAX_SEMANTIC_QUERY_LENGTH} ký tự` };
   }
   const requested = Array.isArray(args.modalities)
     ? new Set(args.modalities.map(String))
     : new Set(['visual', 'spoken']);
   const invalid = [...requested].filter((value) => value !== 'visual' && value !== 'spoken');
-  if (invalid.length) return { error: `unsupported modalities: ${invalid.join(', ')}` };
+  if (invalid.length) return { error: `modalities không được hỗ trợ: ${invalid.join(', ')}` };
   const limit = Number.isFinite(Number(args.limit))
     ? Math.max(1, Math.min(50, Math.round(Number(args.limit))))
     : 12;
@@ -64,7 +64,7 @@ export async function execSearchMedia(args: SearchMediaArgs, ctx: AgentContext):
     ...result,
     ...(visualWarning ? { visualWarning } : {}),
     ...(requested.has('visual') && visual.length === 0 && !visualWarning
-      ? { visualNote: 'No fresh ChineseCLIP index is available; index visual media first.' }
+      ? { visualNote: 'Chưa có chỉ mục ChineseCLIP mới; hãy lập chỉ mục media hình ảnh trước.' }
       : {}),
   };
 }
