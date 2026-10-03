@@ -2399,7 +2399,7 @@ export const VI: Record<string, string> = {
   '文字特效': 'Hiệu ứng chữ',
   '标题卡片': 'Thẻ tiêu đề',
   '社交媒体': 'Mạng xã hội',
-  '竖屏自媒体': 'Video dọc sáng tạo nội dung',
+  '竖屏自媒体': 'Video dọc / video ngắn',
   '口播场景': 'Cảnh lời nói',
   '未分类': 'Chưa phân loại',
   '还没有收藏的模板。将鼠标移到卡片上点 ★ 收藏。': 'Chưa có mẫu yêu thích. Di chuột lên thẻ và nhấp ★ để lưu.',
