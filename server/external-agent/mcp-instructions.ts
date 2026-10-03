@@ -1,19 +1,20 @@
 import type { McpToolExposureMode } from './mcp-tool-exposure.ts';
+import { localized } from '../ui-locale.ts';
 
 export function mcpServerInstructions(
   skillBaseline: string,
   exposureMode: McpToolExposureMode,
 ): string {
   return [
-    `OpenChatCut external skill baseline: ${skillBaseline}. Update with npx skills update openchatcut when the installed skill is older.`,
-    'Bind this MCP transport with target_project before editing. A connected browser is preferred; an existing stored project can use the offline fallback when no browser owns it.',
-    'The target response and openchatcut_status report bindingMode. Offline bindings expose only server-direct data tools and require approvalMode="auto".',
+    localized({ zh: `OpenChatCut 外部技能基线：${skillBaseline}。如果已安装的技能较旧，请运行 npx skills update openchatcut 更新。`, en: `OpenChatCut external skill baseline: ${skillBaseline}. Update with npx skills update openchatcut when the installed skill is older.`, vi: `Nền tảng kỹ năng bên ngoài của OpenChatCut: ${skillBaseline}. Nếu kỹ năng đã cài đặt cũ hơn, hãy chạy npx skills update openchatcut để cập nhật.` }),
+    localized({ zh: '编辑前先用 target_project 绑定此 MCP 传输。优先使用已连接的浏览器；如果没有浏览器拥有该项目，可对已有项目使用离线回退。', en: 'Bind this MCP transport with target_project before editing. A connected browser is preferred; an existing stored project can use the offline fallback when no browser owns it.', vi: 'Trước khi chỉnh sửa, hãy dùng target_project để liên kết phiên truyền MCP này. Ưu tiên trình duyệt đang kết nối; nếu không có trình duyệt nào sở hữu dự án, có thể dùng chế độ dự phòng ngoại tuyến cho dự án đã lưu.' }),
+    localized({ zh: 'target_project 的响应和 openchatcut_status 会报告 bindingMode。离线绑定只开放直接访问服务器的数据工具，并要求 approvalMode="auto"。', en: 'The target response and openchatcut_status report bindingMode. Offline bindings expose only server-direct data tools and require approvalMode="auto".', vi: 'Phản hồi của target_project và openchatcut_status cho biết bindingMode. Liên kết ngoại tuyến chỉ mở các công cụ dữ liệu truy cập trực tiếp máy chủ và yêu cầu approvalMode="auto".' }),
     exposureMode === 'progressive'
-      ? 'This client negotiated progressive tool exposure. Call ToolSearch for list_edit_sessions and recover_edit_session before browser session recovery; tools/list_changed is sent when the visible set grows.'
-      : 'This client uses the compatibility tool surface. All currently available tools are listed.',
-    'Call begin_edit_session first, pass editSessionId to every editor tool, then call review_edit_session. Do not claim success until status is applied.',
-    'Manual approval and visual/canvas inspection, generation, upload, network, preset, render, and export tools require opening the returned editorUrl.',
-    'Offline review atomically commits the complete draft. A browser takeover or stored-project change makes the session stale with no partial edit.',
-    'If the original MCP owner disconnects, call list_edit_sessions and recover_edit_session. Terminal stale, cancelled, or failed sessions cannot be reused; start a new edit session.',
+      ? localized({ zh: '此客户端协商使用渐进式工具暴露。浏览器会话恢复前，先调用 ToolSearch 查找 list_edit_sessions 和 recover_edit_session；可见工具集扩大时会发送 tools/list_changed。', en: 'This client negotiated progressive tool exposure. Call ToolSearch for list_edit_sessions and recover_edit_session before browser session recovery; tools/list_changed is sent when the visible set grows.', vi: 'Ứng dụng khách này đã thương lượng chế độ hiển thị công cụ theo từng bước. Trước khi khôi phục phiên trình duyệt, hãy gọi ToolSearch để tìm list_edit_sessions và recover_edit_session; tools/list_changed sẽ được gửi khi danh sách công cụ hiển thị được mở rộng.' })
+      : localized({ zh: '此客户端使用兼容工具界面。当前可用的所有工具都会列出。', en: 'This client uses the compatibility tool surface. All currently available tools are listed.', vi: 'Ứng dụng khách này dùng giao diện công cụ tương thích. Tất cả công cụ hiện có đều được liệt kê.' }),
+    localized({ zh: '先调用 begin_edit_session，把 editSessionId 传给每个编辑工具，然后调用 review_edit_session。状态变为 applied 前不要声称成功。', en: 'Call begin_edit_session first, pass editSessionId to every editor tool, then call review_edit_session. Do not claim success until status is applied.', vi: 'Trước tiên hãy gọi begin_edit_session, truyền editSessionId cho mọi công cụ chỉnh sửa, rồi gọi review_edit_session. Không được khẳng định thành công trước khi trạng thái là applied.' }),
+    localized({ zh: '手动确认、视觉/画布检查、生成、上传、网络、预设、渲染和导出工具都要求打开返回的 editorUrl。', en: 'Manual approval and visual/canvas inspection, generation, upload, network, preset, render, and export tools require opening the returned editorUrl.', vi: 'Các công cụ yêu cầu phê duyệt thủ công, kiểm tra hình ảnh/khung vẽ, tạo nội dung, tải lên, mạng, preset, render và xuất tệp đều yêu cầu mở editorUrl được trả về.' }),
+    localized({ zh: '离线审阅会原子化提交完整草稿。浏览器接管或已存项目发生变化会使会话过期，且不会产生部分编辑。', en: 'Offline review atomically commits the complete draft. A browser takeover or stored-project change makes the session stale with no partial edit.', vi: 'Việc duyệt ngoại tuyến sẽ ghi nhận toàn bộ bản nháp theo cách nguyên tử. Nếu trình duyệt tiếp quản hoặc dự án đã lưu thay đổi, phiên sẽ hết hiệu lực và không có chỉnh sửa dang dở nào được ghi lại.' }),
+    localized({ zh: '如果原始 MCP 所有者断开连接，请调用 list_edit_sessions 和 recover_edit_session。已过期、取消或失败的终端会话不能复用；请开始新的编辑会话。', en: 'If the original MCP owner disconnects, call list_edit_sessions and recover_edit_session. Terminal stale, cancelled, or failed sessions cannot be reused; start a new edit session.', vi: 'Nếu chủ sở hữu MCP ban đầu ngắt kết nối, hãy gọi list_edit_sessions và recover_edit_session. Không thể dùng lại phiên đã hết hạn, bị hủy hoặc thất bại; hãy bắt đầu phiên chỉnh sửa mới.' }),
   ].join(' ');
 }
