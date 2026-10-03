@@ -251,7 +251,7 @@ export async function loadMusicAnalysisForAsset(asset: MediaAsset): Promise<Musi
 }
 
 export async function saveMusicAnalysis(analysis: MusicAnalysis): Promise<void> {
-  if (!isMusicAnalysis(analysis)) throw new Error('Refusing to cache invalid music analysis');
+  if (!isMusicAnalysis(analysis)) throw new Error('từ chối lưu cache phân tích nhạc không hợp lệ');
   const key = cacheKey(analysis.assetId, analysis.sourceRevision);
   const stored: StoredAnalysis = { key, analyzerFingerprint: MUSIC_ANALYZER_FINGERPRINT, analysis };
   memory.set(key, stored);
@@ -289,7 +289,7 @@ function referenceDigest(analysis: MusicAnalysis): string {
 }
 
 export function musicAnalysisRef(analysis: MusicAnalysis): string {
-  if (!isMusicAnalysis(analysis)) throw new Error('Cannot reference invalid music analysis');
+  if (!isMusicAnalysis(analysis)) throw new Error('không thể tham chiếu phân tích nhạc không hợp lệ');
   const identity = [
     encodeURIComponent(analysis.assetId),
     encodeURIComponent(analysis.sourceRevision),

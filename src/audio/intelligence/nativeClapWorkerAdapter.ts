@@ -61,7 +61,7 @@ export async function warmUpDesktopNativeClap(): Promise<boolean> {
     if (!isDesktopClapResponse(response)
       || response.requestId !== requestId
       || response.result.type !== 'loaded') {
-      throw new Error('native CLAP returned an invalid preload response');
+      throw new Error('CLAP native trả về phản hồi preload không hợp lệ');
     }
     return true;
   } catch {
@@ -182,22 +182,22 @@ function workerRequestId(value: unknown): number {
 }
 
 function parseWorkerRequest(value: unknown): ClapWorkerRequest {
-  if (typeof value !== 'object' || value === null) throw new Error('Invalid CLAP worker request');
+  if (typeof value !== 'object' || value === null) throw new Error('request worker CLAP không hợp lệ');
   const request = value as Partial<ClapWorkerRequest>;
   if (!Number.isSafeInteger(request.id) || (request.id as number) < 0) {
-    throw new Error('Invalid CLAP worker request id');
+    throw new Error('request id worker CLAP không hợp lệ');
   }
   if (request.type === 'load' && (request.backend === 'webgpu' || request.backend === 'wasm')) {
     return request as ClapWorkerRequest;
   }
   if (request.type === 'embed' && request.samples instanceof Float32Array
     && request.sampleRate === CLAP_SAMPLE_RATE) return request as ClapWorkerRequest;
-  throw new Error('Invalid CLAP worker request payload');
+  throw new Error('payload request worker CLAP không hợp lệ');
 }
 
 function workerResult(request: ClapWorkerRequest, requestId: string, value: unknown): ClapWorkerResult {
   if (!isDesktopClapResponse(value) || value.requestId !== requestId) {
-    throw new Error('native CLAP returned an invalid response');
+      throw new Error('CLAP native trả về phản hồi không hợp lệ');
   }
   if (request.type === 'load' && value.result.type === 'loaded') return { type: 'loaded' };
   if (request.type === 'embed' && value.result.type === 'embedding') {
@@ -205,9 +205,9 @@ function workerResult(request: ClapWorkerRequest, requestId: string, value: unkn
     for (const entry of value.result.vector) squaredLength += entry * entry;
     const length = Math.sqrt(squaredLength);
     if (!Number.isFinite(length) || Math.abs(length - 1) > 1e-3) {
-      throw new Error(`native CLAP returned a non-unit embedding (length ${length})`);
+      throw new Error(`CLAP native trả về embedding chưa chuẩn hóa đơn vị (độ dài ${length})`);
     }
     return { type: 'embedding', vector: [...value.result.vector] };
   }
-  throw new Error('native CLAP returned an unexpected response');
+  throw new Error('CLAP native trả về phản hồi không mong đợi');
 }

@@ -93,7 +93,7 @@ async function main(): Promise<void> {
   // ── invalid analysis is refused on save ──
   await assert.rejects(
     saveMusicAnalysis({ schemaVersion: 1 } as unknown as MusicAnalysis),
-    /Refusing to cache invalid music analysis/,
+    /từ chối lưu cache phân tích nhạc không hợp lệ/,
   );
 
   console.log('✓ music-analysis store verify: server set/entry round-trip + key shape + invalid guard passed');

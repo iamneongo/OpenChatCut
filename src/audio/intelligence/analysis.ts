@@ -41,12 +41,12 @@ function report(options: AnalyzeMusicOptions, phase: MusicAnalysisProgress['phas
 
 function normalizeEmbedding(values: readonly number[]): number[] {
   if (values.length !== 512 || values.some((value) => !Number.isFinite(value))) {
-    throw new Error('CLAP returned an invalid 512-dimensional embedding');
+    throw new Error('CLAP trả về embedding 512 chiều không hợp lệ');
   }
   let squaredNorm = 0;
   for (const value of values) squaredNorm += value * value;
   const norm = Math.sqrt(squaredNorm);
-  if (!Number.isFinite(norm) || norm <= 1e-12) throw new Error('CLAP returned a zero embedding');
+  if (!Number.isFinite(norm) || norm <= 1e-12) throw new Error('CLAP trả về embedding bằng 0');
   return values.map((value) => value / norm);
 }
 
@@ -111,13 +111,13 @@ function composeMusicAnalysis(
 
 /** Decode once at the rhythm model's native sample rate, then reuse caller-owned PCM across both inference clients. */
 export async function analyzeMusicAsset(asset: MediaAsset, options: AnalyzeMusicOptions = {}): Promise<MusicAnalysis> {
-  if (asset.kind !== 'audio' && asset.kind !== 'video') throw new Error('Music analysis supports audio and video assets only');
-  if (!asset.src) throw new Error('Music analysis requires a ready media source');
+  if (asset.kind !== 'audio' && asset.kind !== 'video') throw new Error('phân tích nhạc chỉ hỗ trợ asset audio và video');
+  if (!asset.src) throw new Error('phân tích nhạc yêu cầu nguồn media đã sẵn sàng');
   throwIfAborted(options.signal);
   report(options, 'decode', 0);
   let samples: Float32Array | null = await decodeAudioSource(asset.src, DECODE_SAMPLE_RATE, options.signal);
   const durationMs = Math.round((samples.length / DECODE_SAMPLE_RATE) * 1000);
-  if (!samples.length || !durationMs) throw new Error('Decoded media contains no audio samples');
+  if (!samples.length || !durationMs) throw new Error('media đã giải mã không có mẫu âm thanh');
   report(options, 'decode', 1);
 
   try {

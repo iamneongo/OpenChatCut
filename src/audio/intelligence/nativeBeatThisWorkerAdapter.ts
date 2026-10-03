@@ -111,7 +111,7 @@ class NativeBeatThisWorkerAdapter {
         }
       });
       const capabilities = await bridge.getCapabilities();
-      if (!validCapabilities(capabilities)) throw new Error('native rhythm capability is unavailable');
+      if (!validCapabilities(capabilities)) throw new Error('khả năng native rhythm không khả dụng');
       if (this.terminated) return;
       const response = await bridge.rhythm({
         requestId,
@@ -140,7 +140,7 @@ class NativeBeatThisWorkerAdapter {
   ): void {
     if (this.terminated) return;
     if (response.requestId !== requestId || response.result.type !== 'analysis') {
-      throw new Error('native rhythm returned an invalid analysis');
+      throw new Error('native rhythm trả về phân tích không hợp lệ');
     }
     this.emit({
       id: request.id,
@@ -195,7 +195,7 @@ export async function warmUpDesktopNativeRhythm(): Promise<void> {
       action: 'load',
     });
     if (response.requestId !== requestId || response.result.type !== 'loaded') {
-      throw new Error('native rhythm returned an invalid preload response');
+      throw new Error('native rhythm trả về phản hồi preload không hợp lệ');
     }
   } catch {
     nativeDisabledForSession = true;
