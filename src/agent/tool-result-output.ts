@@ -35,7 +35,7 @@ export function toolResultModelOutput(
   if (shaped?.denied === true) {
     return {
       type: 'execution-denied',
-      reason: note ?? 'User denied tool execution.',
+      reason: note ?? 'Người dùng đã từ chối chạy tool.',
     };
   }
   const images = Array.isArray(shaped?.__images)

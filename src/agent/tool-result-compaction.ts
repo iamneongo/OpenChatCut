@@ -44,7 +44,7 @@ function withTruncationNotice(value: unknown, originalChars: number): unknown {
   const notice = {
     truncatedForModel: true,
     originalChars,
-    detailHint: 'Use tool filters, frame range, item/asset id, or pagination to reread only the needed detail.',
+    detailHint: 'Dùng bộ lọc tool, phạm vi frame, ID đoạn/tư liệu hoặc phân trang để đọc lại đúng phần chi tiết cần thiết.',
   };
   if (Array.isArray(value)) return { items: value, ...notice };
   if (value && typeof value === 'object') return { ...value, ...notice };

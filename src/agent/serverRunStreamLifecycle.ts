@@ -154,7 +154,7 @@ function commitStreamDelta(
   if (!runId) return patchStoredServerRun(projectId, { cursor: sequence, ...fields });
   queueStreamDeltaPatch(projectId, runId, sequence, fields, (failedRunId) => {
     state.refs.abandonRecovery.current(failedRunId, permanentServerRunRecoveryError(
-      'Browser durable storage could not persist server run progress.',
+      'Bộ nhớ bền vững của trình duyệt không thể lưu tiến độ chạy server.',
     ));
   });
   return true;
@@ -222,7 +222,7 @@ function bindEventSource(
     },
     persistenceError: (id) => {
       lifecycle.abandonStaleRecovery(id, permanentServerRunRecoveryError(
-        'Browser durable storage could not persist server run progress.',
+        'Bộ nhớ bền vững của trình duyệt không thể lưu tiến độ chạy server.',
       ));
     },
     opened: () => { state.eventSession.markOpened(source); },

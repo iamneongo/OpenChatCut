@@ -192,7 +192,7 @@ export class ServerRunToolExecutor {
   ): Promise<boolean> {
     const outcome = {
       argsDigest,
-      error: 'Browser reloaded after this tool began; the operation was not replayed automatically.',
+      error: 'Trình duyệt đã tải lại sau khi tool bắt đầu; thao tác không được tự động chạy lại.',
     };
     if (!await this.postResult(session, toolCallId, outcome)) {
       this.scheduleResultRetry(session, toolCallId, outcome);
@@ -407,8 +407,8 @@ export class ServerRunToolExecutor {
     if (!request.admit()) return false;
     if (!durableAttempt || claim.outcome === 'duplicate') {
       const error = durableAttempt
-        ? 'The tool claim was recovered without a durable result; the operation was not replayed.'
-        : 'Browser durable storage is unavailable; the tool was not executed.';
+        ? 'Đã khôi phục yêu cầu nhận tool nhưng không có kết quả bền vững; thao tác không được chạy lại.'
+        : 'Bộ nhớ bền vững của trình duyệt không khả dụng; tool chưa được thực thi.';
       const outcome = { name: request.name, argsDigest: request.argsDigest, error };
       this.recovered.set(toolCallId, outcome);
       if (!await this.postResult(session, toolCallId, outcome)) {

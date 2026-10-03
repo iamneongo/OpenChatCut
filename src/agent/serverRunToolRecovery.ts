@@ -55,7 +55,7 @@ function recoveredOutcome(
     argsDigest: attempt.argsDigest,
     error: recovered
       ? 'Tham số tool khôi phục không khớp với yêu cầu máy chủ.'
-      : 'Browser reloaded after this tool began; the operation was not replayed automatically.',
+      : 'Trình duyệt đã tải lại sau khi tool bắt đầu; thao tác không được tự động chạy lại.',
   };
 }
 

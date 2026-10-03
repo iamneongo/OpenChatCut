@@ -116,8 +116,8 @@ export function externalDraftSchemas(tools: readonly AgentToolSchema[]): Externa
     const readOnly = isExternalReadTool(tool.name);
     const multiplexesPersistentActions = tool.name === 'manage_design_style';
     const scopeDescription = multiplexesPersistentActions
-      ? 'Read and ProjectDoc actions use the edit-session draft; owned-library writes act on live local data and require one-shot OpenChatCut confirmation. Pass editSessionId.'
-      : `${readOnly ? 'Reads' : 'Edits'} the edit-session draft; pass editSessionId.`;
+      ? 'Các thao tác đọc và ProjectDoc dùng bản nháp của phiên chỉnh sửa; ghi vào thư viện do agent sở hữu tác động lên dữ liệu cục bộ hiện tại và cần xác nhận một lần trong OpenChatCut. Truyền editSessionId.'
+      : `${readOnly ? 'Đọc' : 'Chỉnh sửa'} bản nháp của phiên chỉnh sửa; truyền editSessionId.`;
     return {
       ...withSession(
         tool,

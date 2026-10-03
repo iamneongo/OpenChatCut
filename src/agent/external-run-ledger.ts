@@ -319,7 +319,7 @@ export class ExternalSessionRunLedger {
         toolName: binding.tool,
         argsDigest: binding.argsDigest,
         operationId: binding.operationId,
-        outcome: { kind: 'denied', summary: 'User denied external tool execution.' },
+        outcome: { kind: 'denied', summary: 'Người dùng đã từ chối chạy tool bên ngoài.' },
       });
     }
   }

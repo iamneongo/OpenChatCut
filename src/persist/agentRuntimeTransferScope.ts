@@ -156,7 +156,7 @@ export function rescopeAgentRuntimeSnapshot(
       ...(row.status === 'pending' ? {
         status: 'cancelled' as const,
         decidedAt: importedAt,
-        summary: row.summary ?? 'Cancelled by project transfer import.',
+        summary: row.summary ?? 'Đã hủy do nhập chuyển dự án.',
       } : {}),
     })),
     checkpoints: snapshot.sidecar.checkpoints.map((row) => ({ ...row, projectId })),

@@ -87,7 +87,7 @@ export function appendRejectedProposal(messages: readonly LLMMessage[]): LLMMess
   return [...messages, {
     role: 'user',
     content: [
-      'User clicked Deny and rejected this generation task. They may want adjustments; do not retry automatically.',
+      'Người dùng đã nhấp Từ chối và từ chối tác vụ tạo này. Có thể họ muốn điều chỉnh; không tự động thử lại.',
       '(Người dùng đã từ chối đề xuất trên, không áp dụng thay đổi nào. Không tự động thử lại việc tạo.)',
     ].join('\n'),
   }];

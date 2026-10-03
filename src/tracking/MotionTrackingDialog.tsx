@@ -122,7 +122,7 @@ export function MotionTrackingDialog({ state, commands, item, onClose }: MotionT
     if (!analysis.result || !target || locked) return;
     const actions = buildTrackingKeyframeActions({ state, source: item, target, result: analysis.result, mode });
     if (!actions.length) return analysis.setError(t('有效跟踪点与目标片段没有足够的重叠范围'));
-    commands.batch(actions, 'Apply experimental motion tracking');
+    commands.batch(actions, 'Áp dụng theo dõi chuyển động thử nghiệm');
     setApplied(true);
   };
   const changeRegion = (next: TrackingRegion) => { setRegion(next); analysis.reset(); setApplied(false); };
