@@ -868,7 +868,7 @@
     },
     {
       "name": "edit_track",
-      "description": "Manage tracks. Actions: list | create | update | delete | tighten | reorder_items. Tracks have stable ids plus C1/C2/V1/A1 aliases that may renumber after insertion. create accepts json with trackType video/audio/caption, optional count/order/name/role/audioRouting. Each caption track owns independent caption data. update changes order/hidden/muted/locked/name/role/audioRouting — locked freezes the lane. delete removes empty tracks only. tighten closes gaps between media clips. reorder_items packs clips on one track in the given item id order (json.itemIds or json.orderedIds array), starting at the earliest startFrame of that set.",
+      "description": "Quản lý track. Các action: list | create | update | delete | tighten | reorder_items. Track có id ổn định cùng alias C1/C2/V1/A1, các alias này có thể đánh số lại sau khi chèn. create nhận json với trackType video/audio/caption, cùng count/order/name/role/audioRouting tùy chọn. Mỗi track caption sở hữu dữ liệu caption riêng. update thay đổi order/hidden/muted/locked/name/role/audioRouting — locked sẽ khóa lane. delete chỉ xóa track rỗng. tighten đóng các khoảng trống giữa các clip media. reorder_items xếp các clip trên một track theo thứ tự item id được truyền (mảng json.itemIds hoặc json.orderedIds), bắt đầu từ startFrame sớm nhất trong nhóm đó.",
       "input_schema": {
         "type": "object",
         "properties": {
@@ -885,18 +885,18 @@
           },
           "json": {
             "type": "string",
-            "description": "JSON for create/update, or for reorder_items: {\"itemIds\":[\"id1\",\"id2\",…]} (aliases orderedIds)."
+            "description": "JSON cho create/update, hoặc cho reorder_items: {\"itemIds\":[\"id1\",\"id2\",…]} (alias orderedIds)."
           },
           "trackId": {
             "type": "string",
-            "description": "Current Cn/Vn/An alias or stable track id (update/delete/tighten/reorder_items)."
+            "description": "Alias Cn/Vn/An hiện tại hoặc id track ổn định (update/delete/tighten/reorder_items)."
           },
           "trackIds": {
             "type": "array",
             "items": {
               "type": "string"
             },
-            "description": "delete: remove several empty tracks atomically."
+            "description": "delete: xóa nguyên tử nhiều track rỗng."
           }
         },
         "required": [
@@ -4742,7 +4742,7 @@
     },
     {
       "name": "apply_layout",
-      "description": "Arrange visual clips into a named multi-video layout (split screen / picture-in-picture / grid) in ONE undoable step. You pick a layout and assign a clip to each slot; the tool computes scale/position/crop so each clip FILLS its slot edge-to-edge WITHOUT stretching (mode=cover crops the layer; anchorX/anchorY 0..1 choose which side to keep, default center). mode=fit letterboxes instead of cropping. layout=full resets one clip back to full frame (clears layout crop/scale). Layouts and slots: full(full) · 2up-horizontal(left,right) · 2up-vertical(top,bottom) · 3up-horizontal(left,center,right) · grid-4(top-left,top-right,bottom-left,bottom-right) · pip(main,inset; insetCorner/insetSize/insetMargin tune the small window). Fewer assignments than slots is fine (other slots stay empty). Stacking follows track order (upper timeline row renders on top), so put the pip inset clip on a HIGHER row than main — the result notes when it is not. Clips must overlap in time to be seen together. Works on the canvas layer: with timeline fit=contain, a source whose aspect differs from the canvas keeps its own letterbox inside the slot. After applying, verify with view_timeline_frames.",
+      "description": "Sắp xếp các clip hình ảnh vào layout nhiều video có tên (chia màn hình / picture-in-picture / lưới) trong MỘT bước có thể undo. Chọn layout và gán clip cho từng slot; tool tự tính scale/position/crop để mỗi clip LẤP ĐẦY slot từ mép này đến mép kia mà KHÔNG kéo giãn (mode=cover cắt layer; anchorX/anchorY 0..1 chọn phía cần giữ, mặc định ở giữa). mode=fit dùng letterbox thay vì cắt. layout=full đưa một clip về toàn khung (xóa crop/scale của layout). Layout và slot: full(full) · 2up-horizontal(left,right) · 2up-vertical(top,bottom) · 3up-horizontal(left,center,right) · grid-4(top-left,top-right,bottom-left,bottom-right) · pip(main,inset; insetCorner/insetSize/insetMargin điều chỉnh cửa sổ nhỏ). Gán ít slot hơn tổng số slot vẫn được (các slot khác để trống). Thứ tự xếp lớp theo thứ tự track (hàng timeline phía trên render ở trên), vì vậy hãy đặt clip inset của pip ở hàng CAO HƠN main — kết quả sẽ báo nếu không đúng. Các clip phải chồng thời gian để nhìn thấy cùng lúc. Tool hoạt động trên layer canvas: với timeline fit=contain, source có tỷ lệ khác canvas vẫn giữ letterbox riêng bên trong slot. Sau khi áp dụng, kiểm tra bằng view_timeline_frames.",
       "input_schema": {
         "type": "object",
         "properties": {
@@ -4756,7 +4756,7 @@
               "grid-4",
               "pip"
             ],
-            "description": "Named layout to apply."
+            "description": "Layout có tên cần áp dụng."
           },
           "assignments": {
             "type": "array",
@@ -4766,11 +4766,11 @@
               "properties": {
                 "slot": {
                   "type": "string",
-                  "description": "Slot name of the chosen layout (e.g. \"left\", \"inset\")."
+                  "description": "Tên slot của layout đã chọn (ví dụ \"left\", \"inset\")."
                 },
                 "itemId": {
                   "type": "string",
-                  "description": "Visual timeline item id (video/image/gif/svg) to place in the slot."
+                  "description": "Id item hình ảnh trên timeline (video/image/gif/svg) cần đặt vào slot."
                 }
               },
               "required": [
@@ -4778,7 +4778,7 @@
                 "itemId"
               ]
             },
-            "description": "One entry per slot to fill. Slots and items must be unique within the call."
+            "description": "Một entry cho mỗi slot cần điền. Slot và item phải là duy nhất trong một lần gọi."
           },
           "mode": {
             "type": "string",
@@ -4786,19 +4786,19 @@
               "cover",
               "fit"
             ],
-            "description": "cover (default) crops to fill the slot; fit letterboxes."
+            "description": "cover (mặc định) cắt để lấp đầy slot; fit dùng letterbox."
           },
           "anchorX": {
             "type": "number",
             "minimum": 0,
             "maximum": 1,
-            "description": "cover only: horizontal keep-side, 0=left 0.5=center(default) 1=right."
+            "description": "Chỉ cover: phía ngang cần giữ, 0=trái 0.5=giữa (mặc định) 1=phải."
           },
           "anchorY": {
             "type": "number",
             "minimum": 0,
             "maximum": 1,
-            "description": "cover only: vertical keep-side, 0=top 0.5=center(default) 1=bottom."
+            "description": "Chỉ cover: phía dọc cần giữ, 0=trên 0.5=giữa (mặc định) 1=dưới."
           },
           "insetCorner": {
             "type": "string",
@@ -4808,19 +4808,19 @@
               "bottom-left",
               "bottom-right"
             ],
-            "description": "pip only: small-window corner (default bottom-right)."
+            "description": "Chỉ pip: góc cửa sổ nhỏ (mặc định dưới phải)."
           },
           "insetSize": {
             "type": "number",
             "minimum": 0.1,
             "maximum": 0.6,
-            "description": "pip only: small-window size as canvas fraction (default 0.3)."
+            "description": "Chỉ pip: kích thước cửa sổ nhỏ theo phần của canvas (mặc định 0.3)."
           },
           "insetMargin": {
             "type": "number",
             "minimum": 0,
             "maximum": 0.2,
-            "description": "pip only: gap to the canvas edge (default 0.04)."
+            "description": "Chỉ pip: khoảng cách tới mép canvas (mặc định 0.04)."
           }
         },
         "required": [
