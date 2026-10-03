@@ -1599,7 +1599,7 @@ export const VI: Record<string, string> = {
   '目标草稿库': 'Thư viện bản nháp đích',
   'CapCut 草稿库': 'Thư viện bản nháp CapCut',
   '剪映草稿库': 'Thư viện bản nháp Jianying',
-  '剪映 6.0 起草稿文件已加密，本工具生成明文草稿，建议使用剪映 5.9.0 或更早版本打开；CapCut 国际版不受此限制。': 'Từ Jianying 6.0, tệp bản nháp đã được mã hóa; công cụ này tạo bản nháp dạng rõ, nên mở bằng Jianying 5.9.0 hoặc cũ hơn; CapCut quốc tế không bị giới hạn này.',
+  '剪映 6.0 起草稿文件已加密，本工具生成明文草稿，建议使用剪映 5.9.0 或更早版本打开；CapCut 国际版不受此限制。': 'Từ Jianying 6.0, tệp bản nháp đã được mã hóa; công cụ này tạo bản nháp không mã hóa, nên mở bằng Jianying 5.9.0 hoặc cũ hơn; CapCut quốc tế không bị giới hạn này.',
   '草稿已生成': 'Đã tạo bản nháp',
   '{videos} 个视频 · {audios} 个音轨 · {captions} 条字幕': '{videos} video · {audios} rãnh âm thanh · {captions} phụ đề',
   '导出到剪映': 'Xuất sang CapCut',
