@@ -48,17 +48,17 @@ async function readBody(req: IncomingMessage): Promise<Record<string, unknown>> 
   for await (const chunk of req) {
     const buffer = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk);
     total += buffer.length;
-    if (total > MAX_BODY_BYTES) throw new Error('request body too large');
+    if (total > MAX_BODY_BYTES) throw new Error('thân request quá lớn');
     chunks.push(buffer);
   }
   let parsed: unknown;
   try {
     parsed = JSON.parse(Buffer.concat(chunks).toString('utf8') || '{}');
   } catch {
-    throw new Error('invalid JSON body');
+    throw new Error('thân request chứa JSON không hợp lệ');
   }
   if (parsed === null || typeof parsed !== 'object' || Array.isArray(parsed)) {
-    throw new Error('body must be a JSON object');
+    throw new Error('thân request phải là một đối tượng JSON');
   }
   return parsed as Record<string, unknown>;
 }
@@ -87,7 +87,7 @@ async function handleGet(
   }
   if (!req.url?.startsWith('/entry?')) return false;
   const key = entryKey(req);
-  if (!key) throw new Error('invalid entry key');
+  if (!key) throw new Error('khóa entry không hợp lệ');
   sendProjectStoreJson(res, 200, await operations.getEntry(key));
   return true;
 }
@@ -99,7 +99,7 @@ async function handleAgentRuntimeWrite(
 ): Promise<void> {
   const body = await readBody(req);
   if (!isProjectStoreRequest(body) || body.operation !== 'agent-runtime-write') {
-    throw new Error('invalid agent runtime write request');
+    throw new Error('request ghi runtime Agent không hợp lệ');
   }
   sendProjectStoreJson(res, 200, await operations.writeAgentRuntime(body));
 }
@@ -111,7 +111,7 @@ async function handleProjectDocumentWrite(
 ): Promise<void> {
   const body = await readBody(req);
   if (!isProjectStoreRequest(body) || body.operation !== 'project-document-write') {
-    throw new Error('invalid project document write request');
+    throw new Error('request ghi tài liệu project không hợp lệ');
   }
   sendProjectStoreJson(res, 200, await operations.writeProjectDocument(body));
 }
@@ -123,7 +123,7 @@ async function handleAgentRunLease(
 ): Promise<void> {
   const body = await readBody(req);
   if (!isProjectStoreRequest(body) || body.operation !== 'agent-run-lease') {
-    throw new Error('invalid agent run lease request');
+    throw new Error('request lease lượt chạy Agent không hợp lệ');
   }
   sendProjectStoreJson(res, 200, await operations.updateAgentRunLease(body));
 }
@@ -134,7 +134,7 @@ async function handleExportRecoveryLease(
 ): Promise<void> {
   const body = await readBody(req);
   if (!isProjectStoreRequest(body) || body.operation !== 'export-recovery-lease') {
-    throw new Error('invalid export recovery lease request');
+    throw new Error('request lease khôi phục export không hợp lệ');
   }
   sendProjectStoreJson(res, 200, await operations.updateExportRecoveryLease(body));
 }
@@ -146,7 +146,7 @@ async function handleAgentSessionRotate(
 ): Promise<void> {
   const body = await readBody(req);
   if (!isProjectStoreRequest(body) || body.operation !== 'agent-session-rotate') {
-    throw new Error('invalid Agent session rotation request');
+    throw new Error('request xoay vòng phiên Agent không hợp lệ');
   }
   sendProjectStoreJson(res, 200, await operations.rotateAgentSession(body.projectId));
 }
@@ -157,7 +157,7 @@ async function handleMerge(
   operations: ProjectStoreHttpOperations,
 ): Promise<void> {
   const body = await readBody(req);
-  if (!isProjectStoreEntries(body.entries)) throw new Error('invalid project store entries');
+  if (!isProjectStoreEntries(body.entries)) throw new Error('các entry của kho project không hợp lệ');
   const merged = await operations.mergeEntries(body.entries);
   const projects = merged.entries.projects;
   sendProjectStoreJson(res, 200, { version: 1, entries: projects === undefined ? {} : { projects } });
@@ -170,7 +170,7 @@ async function handleProjectPurge(
 ): Promise<void> {
   const body = await readBody(req);
   if (!isProjectStoreRequest(body) || body.operation !== 'purge-project') {
-    throw new Error('invalid project purge request');
+    throw new Error('request xóa project không hợp lệ');
   }
   await operations.purgeProject(body.projectId);
   sendProjectStoreJson(res, 200, { ok: true });
@@ -204,9 +204,9 @@ async function handleEntryMutation(
 ): Promise<boolean> {
   if (req.method === 'PUT' && req.url === '/entry') {
     const body = await readBody(req);
-    if (!isProjectStoreKey(body.key) || !Object.hasOwn(body, 'value')) throw new Error('invalid entry');
+    if (!isProjectStoreKey(body.key) || !Object.hasOwn(body, 'value')) throw new Error('entry không hợp lệ');
     if (isProjectDocumentKey(body.key)) {
-      throw new Error('project document writes require authoritative ownership');
+      throw new Error('ghi tài liệu project yêu cầu quyền sở hữu chính tắc');
     }
     await operations.setEntry(body.key, body.value);
     sendProjectStoreJson(res, 200, { ok: true });
@@ -214,7 +214,7 @@ async function handleEntryMutation(
   }
   if (req.method !== 'DELETE' || !req.url?.startsWith('/entry?')) return false;
   const key = entryKey(req);
-  if (!key) throw new Error('invalid entry key');
+  if (!key) throw new Error('khóa entry không hợp lệ');
   await operations.deleteEntry(key);
   sendProjectStoreJson(res, 200, { ok: true });
   return true;
@@ -244,5 +244,5 @@ export async function routeProjectStoreRequest(
   if (await handleGet(req, res, operations)) return;
   if (await handlePost(req, res, operations)) return;
   if (await handleEntryMutation(req, res, operations)) return;
-  sendProjectStoreJson(res, 405, { error: 'method not allowed' });
+  sendProjectStoreJson(res, 405, { error: 'phương thức không được phép' });
 }
