@@ -124,7 +124,7 @@ overflowWrap:anywhere breaks long tokens - long errors/summaries are wrapped in 
   if (msg.role === 'error') {
     return (
       <div style={{ color: theme.danger, fontSize: 12.5, margin: '8px 0', overflowWrap: 'anywhere' }}>
-        ⚠ {msg.text}
+        ⚠ {t('失败:{error}', { error: msg.text })}
       </div>
     );
   }
