@@ -70,7 +70,7 @@ async function writeCompletedWithLease(
     renewing = true;
     void renewServerExportDelivery(renderId, claim)
       .then((active) => {
-        if (!active) controller.abort(new Error('导出恢复所有权已失效'));
+        if (!active) controller.abort(new Error('Quyền sở hữu khôi phục export đã hết hiệu lực'));
       })
       .catch((error: unknown) => controller.abort(error))
       .finally(() => { renewing = false; });
@@ -102,7 +102,7 @@ async function saveCompleted(
   } : current);
   const renewed = await renewServerExportDelivery(renderId, claim);
   if (!renewed || !await checkServerExportDelivery(renderId, renewed)) {
-    throw new ExportDestinationError('导出恢复所有权已失效，请重试');
+    throw new ExportDestinationError('Quyền sở hữu khôi phục export đã hết hiệu lực, hãy thử lại');
   }
   signal?.throwIfAborted();
   const ext = exportMediaExtension(format, codec);
@@ -113,7 +113,7 @@ async function saveCompleted(
   try {
     if (ambiguousDownload) await markServerExportDeliveryAmbiguous(renderId, renewed);
     if (!await checkServerExportDelivery(renderId, renewed)) {
-      throw new ExportDestinationError('导出恢复所有权已失效，请重试');
+      throw new ExportDestinationError('Quyền sở hữu khôi phục export đã hết hiệu lực, hãy thử lại');
     }
     await writeCompletedWithLease(
       context,
@@ -177,7 +177,7 @@ async function exportMedia(
       signal?.throwIfAborted();
     }
     claim = await claimServerExportDelivery(renderId);
-    if (!claim) throw new ExportDestinationError('此导出正在由另一个窗口恢复，请稍后重试');
+    if (!claim) throw new ExportDestinationError('Một cửa sổ khác đang khôi phục export này, hãy thử lại sau');
     targetCommitted = await saveCompleted(context, format, codec, completed, renderId, claim, signal);
     if (format === 'video') recordServerPerformance(context, completed, startedAt);
     return completed;
@@ -199,7 +199,7 @@ interface ResumePersistedServerExportsOptions {
   t: Translate;
 }
 
-const RESELECT_RECOVERY_DESTINATION = '导出目标授权已失效，请重新选择导出位置后重试';
+const RESELECT_RECOVERY_DESTINATION = 'Quyền của đích export đã hết hiệu lực, hãy chọn lại vị trí xuất rồi thử lại';
 
 function recoveredContext(
   record: PersistedServerExportJob,
@@ -279,7 +279,7 @@ async function runRecoveredServerExport(
         signal.throwIfAborted();
       }
       claim ??= await claimServerExportDelivery(record.renderId);
-      if (!claim) throw new ExportDestinationError('此导出正在由另一个窗口恢复，请稍后重试');
+      if (!claim) throw new ExportDestinationError('Một cửa sổ khác đang khôi phục export này, hãy thử lại sau');
       targetCommitted = await saveCompleted(
         context,
         record.format,
@@ -361,7 +361,7 @@ export async function rebindAndResumePersistedServerExport({
   targetPath,
 }: RebindPersistedServerExportOptions): Promise<string> {
   const claim = await claimServerExportDelivery(renderId);
-  if (!claim) throw new ExportDestinationError('此导出正在由另一个窗口恢复，请稍后重试');
+  if (!claim) throw new ExportDestinationError('Một cửa sổ khác đang khôi phục export này, hãy thử lại sau');
   let rebound: PersistedServerExportJob;
   try {
     rebound = await rebindServerExportJob(renderId, destination, targetPath, claim);

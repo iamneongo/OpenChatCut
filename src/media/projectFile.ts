@@ -32,7 +32,7 @@ export function projectFileAssetKind(file: Pick<File, 'name' | 'type'>): 'docume
 }
 
 export function assertProjectDocumentSize(byteLength: number): void {
-  if (byteLength > PROJECT_DOCUMENT_MAX_BYTES) throw new Error('文档大小不能超过 10 MB');
+  if (byteLength > PROJECT_DOCUMENT_MAX_BYTES) throw new Error('Tài liệu không được vượt quá 10 MB');
 }
 
 export function assertProjectDocumentPageCount(pageCount: number): void {
@@ -42,7 +42,7 @@ export function assertProjectDocumentPageCount(pageCount: number): void {
 export function validatedProjectDocumentText(text: string): string {
   const trimmed = text.trim();
   if (trimmed.length > PROJECT_DOCUMENT_MAX_TEXT_CHARS) {
-    throw new Error('文档文本不能超过 100,000 个字符');
+    throw new Error('Văn bản tài liệu không được vượt quá 100.000 ký tự');
   }
   return trimmed;
 }
@@ -84,7 +84,7 @@ export async function readProjectDocument(file: File): Promise<string> {
   if (kind === 'docx') return parseDocxText(await file.arrayBuffer());
   if (kind === 'pdf') return parsePdfText(await file.arrayBuffer());
   if (kind === 'text') return validatedProjectDocumentText(await file.text());
-  throw new Error('此文件不是可读取的文档');
+  throw new Error('Tệp này không phải là tài liệu có thể đọc được');
 }
 
 export function projectDocumentPromptBlock(name: string, text: string): string {
@@ -100,14 +100,14 @@ async function collectProjectDocumentBlocks<T>(
   const blocks: string[] = [];
   const errors: string[] = [];
   if (items.length > PROJECT_DOCUMENT_MAX_COUNT) {
-    errors.push(`一次最多读取 ${PROJECT_DOCUMENT_MAX_COUNT} 个文档`);
+    errors.push(`Mỗi lần chỉ có thể đọc tối đa ${PROJECT_DOCUMENT_MAX_COUNT} tài liệu`);
   }
   let promptChars = 0;
   for (const item of items.slice(0, PROJECT_DOCUMENT_MAX_COUNT)) {
     try {
       const block = await read(item);
       if (promptChars + block.length > PROJECT_DOCUMENT_MAX_TOTAL_PROMPT_CHARS) {
-        errors.push('文档文本总量不能超过 200,000 个字符');
+    errors.push('Tổng văn bản tài liệu không được vượt quá 200.000 ký tự');
         break;
       }
       promptChars += block.length;
@@ -128,7 +128,7 @@ export async function readProjectAssetDocument(
   asset: Pick<MediaAsset, 'name' | 'sourceFilename' | 'src'>,
 ): Promise<string> {
   const response = await fetch(asset.src);
-  if (!response.ok) throw new Error(`读取文档失败 (${response.status})`);
+  if (!response.ok) throw new Error(`Đọc tài liệu thất bại (${response.status})`);
   const blob = await response.blob();
   const name = asset.sourceFilename ?? asset.name;
   const file = new File([blob], name, { type: blob.type });
