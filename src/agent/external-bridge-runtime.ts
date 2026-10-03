@@ -227,7 +227,7 @@ export class ExternalBridgeRuntime {
     await this.approvalGate.resolve(guardId, allow, async (binding, decision) => {
       const run = this.runs.get(binding.sessionId);
       if (!run || run.runId !== binding.runId) {
-        throw new Error(`Agent run ${binding.runId} is not active.`);
+        throw new Error(`Lượt chạy Agent ${binding.runId} không hoạt động.`);
       }
       await run.approvalDecision(binding, decision);
     });
@@ -426,7 +426,7 @@ export class ExternalBridgeRuntime {
 
   private requireRun(sessionId: string): ExternalSessionRunLedger {
     const run = this.runs.get(sessionId);
-    if (!run) throw new Error(`Agent run for edit session ${sessionId} is unavailable.`);
+    if (!run) throw new Error(`Lượt chạy Agent của phiên chỉnh sửa ${sessionId} không khả dụng.`);
     return run;
   }
 

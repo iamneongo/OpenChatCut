@@ -38,7 +38,7 @@ export async function settleServerRun(
     if (response.ok) return;
     const payload = await response.json().catch(() => null) as { error?: string } | null;
     if (payload?.error === 'invalid settle status') {
-      throw new Error(`server run settle rejected: ${payload.error}`);
+      throw new Error(`Máy chủ từ chối hoàn tất lượt chạy: ${payload.error}`);
     }
   } catch (error) {
     if (error instanceof Error && error.message.startsWith('server run settle rejected')) throw error;

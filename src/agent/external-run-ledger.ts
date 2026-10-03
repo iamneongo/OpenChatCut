@@ -203,7 +203,7 @@ export class ExternalSessionRunLedger {
   ): Promise<unknown> {
     try {
       const body = JSON.stringify(result);
-      if (body === undefined) throw new Error('load_skill result is not JSON serializable');
+      if (body === undefined) throw new Error('Kết quả load_skill không thể tuần tự hóa thành JSON');
       await this.recorder.recordToolOutcome({
         ...invocation,
         outcome,
@@ -399,7 +399,7 @@ export class ExternalSessionRunLedger {
   }
   private requiredToolExecutor(): ExternalToolExecutor {
     if (!this.executeTool) {
-      throw new Error('This external run ledger is not connected to an editor tool executor.');
+      throw new Error('Sổ cái lượt chạy bên ngoài chưa kết nối với bộ thực thi tool của editor.');
     }
     return this.executeTool;
   }

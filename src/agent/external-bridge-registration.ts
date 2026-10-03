@@ -81,7 +81,7 @@ export async function registerEditorBridge(
   });
   if (!response.ok) throw new EditorBridgeRequestError('registration', response.status);
   const value: unknown = await response.json();
-  if (!value || typeof value !== 'object') throw new Error('invalid editor registration response');
+  if (!value || typeof value !== 'object') throw new Error('Phản hồi đăng ký editor không hợp lệ');
   const registration = value as Partial<{
     ok: boolean;
     ownershipEpoch: number;
@@ -91,7 +91,7 @@ export async function registerEditorBridge(
     || !Number.isSafeInteger(registration.ownershipEpoch) || registration.ownershipEpoch < 1
     || typeof registration.registrationCapability !== 'string'
     || !/^[A-Za-z0-9_-]{43}$/.test(registration.registrationCapability)) {
-    throw new Error('invalid editor registration response');
+    throw new Error('Phản hồi đăng ký editor không hợp lệ');
   }
   return {
     projectId,

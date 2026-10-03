@@ -67,7 +67,7 @@ async function hydrateDrafting(input: ExternalBridgeHydrationInput): Promise<voi
   const { pending } = input;
   if (!pending || pending.status !== 'drafting'
       || !pending.draftCheckpoint || !pending.agentRunId) {
-    throw new Error('Stored drafting checkpoint is incomplete.');
+    throw new Error('Checkpoint drafting đã lưu chưa đầy đủ.');
   }
   const session = restoreDraftingExternalEditSession(pending.draftCheckpoint, input.currentDoc);
   if (isExternalEditSessionStale(session, input.currentDoc)) {
@@ -84,7 +84,7 @@ async function hydrateDrafting(input: ExternalBridgeHydrationInput): Promise<voi
     pending.agentRunId,
     input.executeTool,
   );
-  if (!run) throw new Error('Drafting Agent run is unavailable or active in another editor.');
+  if (!run) throw new Error('Lượt chạy Agent drafting không khả dụng hoặc đang hoạt động trong editor khác.');
   await prepareHydratedRun(run);
   input.install({ session, run });
   input.publish({ proposal: null, stale: false });
@@ -118,7 +118,7 @@ export async function hydrateStoredExternalBridge(input: ExternalBridgeHydration
     ? await ExternalSessionRunLedger.resume(input.projectId, runId, input.executeTool)
     : null;
   if (runId && !run) {
-    throw new Error('External proposal is active in another editor or no longer resumable.');
+    throw new Error('Đề xuất bên ngoài đang hoạt động trong editor khác hoặc không thể tiếp tục.');
   }
   if (run) await prepareHydratedRun(run);
   input.install({ session, run });
