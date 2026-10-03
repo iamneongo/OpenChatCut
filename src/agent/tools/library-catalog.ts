@@ -134,15 +134,15 @@ export function buildLibraryItems(templates: Tpl[]): LibraryItem[] {
     id: AUDIO_FX_ISOLATE_DEFAULT,
     name: 'Voice Isolation',
     category: 'audio-fx',
-    description: 'Open-box speech denoise (ffmpeg spectral NR). Attaches denoisedSrc; master clip src unchanged.',
+    description: 'Khử ồn giọng nói mã nguồn mở (khử ồn phổ bằng ffmpeg). Gắn denoisedSrc; src của đoạn gốc không thay đổi.',
     group: 'voice',
-    usage: 'isolate_voice itemId=<clip> action=apply strength?=70 — not edit_item (per-clip denoise, not a library place). action=clear removes. Library UI: 资源库 → 音频效果.',
+    usage: 'isolate_voice itemId=<clip> action=apply strength?=70 — không dùng edit_item (khử ồn theo từng đoạn, không phải mục để đặt trong thư viện). action=clear để xóa. Giao diện thư viện: 资源库 → 音频效果.',
   });
   items.push({
     id: AUDIO_FX_ISOLATE_LIGHT,
     name: 'Voice Isolation (Light)',
     category: 'audio-fx',
-    description: 'Lighter denoise strength (strength≈35) for already-clean mics.',
+    description: 'Mức khử ồn nhẹ (strength≈35) cho micro vốn đã khá sạch.',
     group: 'voice',
     usage: 'isolate_voice itemId=<clip> action=apply strength=35',
   });
@@ -150,7 +150,7 @@ export function buildLibraryItems(templates: Tpl[]): LibraryItem[] {
     id: AUDIO_FX_ISOLATE_STRONG,
     name: 'Voice Isolation (Strong)',
     category: 'audio-fx',
-    description: 'Aggressive denoise (strength≈90) for noisy rooms / street talk.',
+    description: 'Khử ồn mạnh (strength≈90) cho phòng ồn hoặc lời thoại ngoài đường.',
     group: 'voice',
     usage: 'isolate_voice itemId=<clip> action=apply strength=90',
   });
@@ -173,9 +173,9 @@ export function buildLibraryItems(templates: Tpl[]): LibraryItem[] {
       id,
       name: TRANSITION_LABELS[type],
       category: 'transitions',
-      description: `Video transition: ${type}`,
+      description: `Chuyển cảnh video: ${type}`,
       group: 'transitions',
-      usage: `edit_item adds:[{type:"transition",assetId:"${id}",incomingItemId:"<clip>"}] — places straddle cut into this clip; optional durationInFrames`,
+      usage: `edit_item adds:[{type:"transition",assetId:"${id}",incomingItemId:"<clip>"}] — đặt chuyển cảnh bắc qua điểm cắt của đoạn này; có thể thêm durationInFrames`,
     });
   }
 
@@ -194,7 +194,7 @@ export function buildLibraryItems(templates: Tpl[]): LibraryItem[] {
       id: t.id,
       name: t.label,
       category: 'transitions',
-      description: 'Custom/plugin GLSL transition',
+      description: 'Chuyển cảnh GLSL tùy chỉnh/plugin',
       group: 'transitions',
       usage: `edit_item adds:[{type:"transition",assetId:"${t.id}",incomingItemId:"<clip>"}]`,
     });
@@ -204,7 +204,7 @@ export function buildLibraryItems(templates: Tpl[]): LibraryItem[] {
       id: z.id,
       name: z.label,
       category: 'zoom',
-      description: 'Plugin zoom curve (envelope)',
+      description: 'Đường cong zoom (envelope) từ plugin',
       usage: `edit_item adds:[{type:"effect",targetItemId:"<clip>",assetId:"${z.id}"}]`,
     });
   }

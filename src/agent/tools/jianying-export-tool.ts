@@ -12,8 +12,8 @@ export const jianyingExportToolSchema: AgentToolSchema = {
   input_schema: {
     type: 'object',
     properties: {
-      draftName: { type: 'string', description: 'Draft name shown in CapCut/JianYing. Defaults to a timestamped name.' },
-      draftsDir: { type: 'string', description: 'Optional draft store directory override (defaults to the CapCut store).' },
+      draftName: { type: 'string', description: 'Tên bản nháp hiển thị trong CapCut/JianYing. Mặc định là tên có dấu thời gian.' },
+      draftsDir: { type: 'string', description: 'Tùy chọn ghi đè thư mục lưu bản nháp (mặc định dùng kho CapCut).' },
     },
     additionalProperties: false,
   },

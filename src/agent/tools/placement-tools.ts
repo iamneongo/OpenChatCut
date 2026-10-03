@@ -20,17 +20,17 @@ export const PLACE_GRAPHICS_TOOL_SCHEMAS: AgentToolSchema[] = [
   {
     name: 'place_graphics_in_safe_zone',
     description: [
-      'Move overlay graphics (motion-graphic / text / solid clips) into the safe zone of the video underneath: ',
-      'visual geometry (person segmentation + face) picks the largest empty area in each clip\'s time window, ',
-      'and the clip\'s transform (x/y % of canvas, scale) is written to center it there. Face is never covered.',
-      'Uses the geometry cache; first call analyzes the underlying video (a few seconds).',
-      'Call when overlays cover the speaker, or after adding graphics to a talking-head video.',
-      'Pass itemId to place one clip, or omit to place every overlay graphic.',
+      'Đưa các lớp phủ đồ họa (đoạn motion-graphic / text / solid) vào vùng an toàn của video bên dưới: ',
+      'hình học trực quan (phân đoạn người + khuôn mặt) sẽ chọn vùng trống lớn nhất trong khoảng thời gian của từng đoạn, ',
+      'sau đó ghi transform của đoạn (x/y theo % canvas, scale) để đặt nó vào giữa vùng đó. Không bao giờ che khuôn mặt.',
+      'Dùng bộ nhớ đệm hình học; lần gọi đầu tiên sẽ phân tích video bên dưới (mất vài giây).',
+      'Gọi khi lớp phủ che người nói hoặc sau khi thêm đồ họa vào video dạng talking-head.',
+      'Truyền itemId để đặt một đoạn; bỏ qua itemId để đặt mọi lớp phủ đồ họa.',
     ].join(' '),
     input_schema: {
       type: 'object',
       properties: {
-        itemId: { type: 'string', description: 'Optional: place only this clip (full id or unique prefix).' },
+        itemId: { type: 'string', description: 'Tùy chọn: chỉ đặt đoạn này (ID đầy đủ hoặc tiền tố duy nhất).' },
       },
     },
   },

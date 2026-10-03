@@ -27,9 +27,9 @@ export const CAPTION_AVOIDANCE_TOOL_SCHEMAS: AgentToolSchema[] = [
   {
     name: 'apply_caption_avoidance',
     description: [
-      'Analyze the video layers visible beneath each rendered caption interval and move the effective caption placement away from the speaker.',
-      'Uses source-timed person/face geometry, preserving already-clear layouts and updating shared layouts, entries, or policy slots according to renderer precedence.',
-      'Call when the user complains captions cover the face. edit_captions also runs this automatically after enabling or adding sources.',
+      'Phân tích các lớp video hiển thị bên dưới từng khoảng thời gian phụ đề đã kết xuất và đưa phụ đề ra khỏi vị trí của người nói.',
+      'Dùng hình học người/khuôn mặt theo thời gian nguồn, giữ nguyên bố cục đã rõ ràng và cập nhật bố cục chung, mục nguồn hoặc slot chính sách theo thứ tự ưu tiên của bộ kết xuất.',
+      'Gọi khi người dùng phàn nàn phụ đề che mặt. edit_captions cũng tự động chạy công cụ này sau khi bật phụ đề hoặc thêm nguồn.',
     ].join(' '),
     input_schema: { type: 'object', properties: {} },
   },
