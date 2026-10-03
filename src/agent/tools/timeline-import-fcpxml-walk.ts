@@ -139,7 +139,7 @@ function readTiming(element: XmlElement, ctx: WalkContext, env: WalkEnv, offsetO
   const start = timeAttr(element, 'start');
   const duration = timeAttr(element, 'duration');
   if (offset === null || start === null || duration === null) {
-    skip(env, element, 'unreadable time attribute');
+    skip(env, element, 'thuộc tính thời gian không đọc được');
     return null;
   }
   const source = sourceOf(element, env);
@@ -151,7 +151,7 @@ function readTiming(element: XmlElement, ctx: WalkContext, env: WalkEnv, offsetO
   const resolvedDuration = duration ?? (remaining ? mul(conformScale(element, ctx.timelineFps), remaining) : undefined);
   const resolvedOffset = offset ?? offsetOverride ?? ZERO;
   if (!resolvedDuration || resolvedDuration.n <= 0n) {
-    skip(env, element, 'missing or non-positive duration', applyMap(ctx.map, resolvedOffset));
+    skip(env, element, 'thiếu duration hoặc duration không dương', applyMap(ctx.map, resolvedOffset));
     return null;
   }
   return { offset: resolvedOffset, start: resolvedStart, duration: resolvedDuration };
@@ -160,13 +160,13 @@ function readTiming(element: XmlElement, ctx: WalkContext, env: WalkEnv, offsetO
 function elementMaps(element: XmlElement, timing: Timing, ctx: WalkContext, env: WalkEnv, at: Rational): ElementMaps | null {
   const timeMap = readTimeMap(element);
   if (timeMap === 'invalid') {
-    skip(env, element, 'unreadable timeMap', at);
+    skip(env, element, 'timeMap không đọc được', at);
     return null;
   }
   const conform = conformScale(element, ctx.timelineFps);
   const local = localToParent(timing.offset, timing.start, timing.duration, conform, timeMap);
   if (!local) {
-    skip(env, element, 'reverse and freeze-frame retimes are not supported', at);
+    skip(env, element, 'không hỗ trợ retime đảo chiều và freeze-frame', at);
     return null;
   }
   const anchored = timeMap ? shift(timing.offset, timing.start) : shift(timing.offset, timing.start, conform);
@@ -183,7 +183,7 @@ function visitAnchored(element: XmlElement, local: Affine, ctx: WalkContext, env
 function visitSpine(element: XmlElement, ctx: WalkContext, env: WalkEnv, lane: number): void {
   const offset = timeAttr(element, 'offset');
   if (offset === null) {
-    skip(env, element, 'unreadable time attribute');
+    skip(env, element, 'thuộc tính thời gian không đọc được');
     return;
   }
   const spineCtx = { ...ctx, map: compose(ctx.map, shift(offset ?? ZERO, ZERO)), lane };
@@ -195,7 +195,7 @@ function visitAudition(element: XmlElement, ctx: WalkContext, env: WalkEnv, lane
   const pick = childElements(element).find((child) => STORY.has(child.tagName));
   const offset = timeAttr(element, 'offset');
   if (offset === null) {
-    skip(env, element, 'unreadable time attribute');
+    skip(env, element, 'thuộc tính thời gian không đọc được');
     return;
   }
   if (pick) visitStory(pick, { ...ctx, lane }, env, offset ?? ZERO);
@@ -220,17 +220,17 @@ function visitMedia(element: XmlElement, timing: Timing, visible: Window | null,
   const excluded = srcEnable === 'none' || (tag === 'video' && srcEnable === 'audio')
     || (tag === 'audio' && srcEnable === 'video');
   if (env.resources.effects.has(ref)) {
-    skip(env, element, tag === 'video' ? 'generators are not imported' : 'effect audio is not imported', at);
+    skip(env, element, tag === 'video' ? 'không nhập generator' : 'không nhập audio của effect', at);
   } else if (!env.resources.assets.has(ref)) {
-    skip(env, element, `references unknown resource "${ref}"`, at);
+    skip(env, element, `tham chiếu tới resource không xác định "${ref}"`, at);
   } else if (attr(element, 'enabled') === '0') {
-    skip(env, element, 'disabled clip', at);
+    skip(env, element, 'clip đã bị tắt', at);
   } else if (!excluded) {
     if (!visible) {
       env.counters.hidden += 1;
     } else {
       const notes = [
-        ...(maps.approximated ? ['speed ramp approximated by its average speed'] : []),
+        ...(maps.approximated ? ['speed ramp được xấp xỉ bằng tốc độ trung bình'] : []),
         ...(isSplitEdit(element, timing) ? [SPLIT_EDIT_NOTE] : []),
       ];
       env.leaves.push({
@@ -249,7 +249,7 @@ function visitMedia(element: XmlElement, timing: Timing, visible: Window | null,
 }
 
 function containerNotes(element: XmlElement, timing: Timing, maps: ElementMaps, env: WalkEnv, at: Rational): void {
-  if (maps.approximated) warn(env, element, at, 'speed ramp approximated by its average speed');
+  if (maps.approximated) warn(env, element, at, 'speed ramp được xấp xỉ bằng tốc độ trung bình');
   if (isSplitEdit(element, timing)) warn(env, element, at, SPLIT_EDIT_NOTE);
 }
 
@@ -257,7 +257,7 @@ function visitContainer(element: XmlElement, timing: Timing, visible: Window | n
   const maps = elementMaps(element, timing, ctx, env, at);
   if (!maps) return;
   if (attr(element, 'enabled') === '0') {
-    skip(env, element, 'disabled clip', at);
+    skip(env, element, 'clip đã bị tắt', at);
     visitAnchored(element, maps.anchored, ctx, env);
     return;
   }
@@ -279,11 +279,11 @@ function visitReference(element: XmlElement, timing: Timing, visible: Window | n
   if (!maps) return;
   const srcEnable = combineSrcEnable(ctx.srcEnable, attr(element, 'srcEnable'));
   if (!timeline) {
-    skip(env, element, `${multicam ? 'multicam' : 'compound clip'} media "${ref}" not found`, at);
+    skip(env, element, `không tìm thấy media của ${multicam ? 'multicam' : 'compound clip'} "${ref}"`, at);
   } else if (ctx.expanding.includes(ref) || ctx.expanding.length >= MAX_NESTING) {
-    skip(env, element, 'recursive or too deeply nested compound clip', at);
+    skip(env, element, 'compound clip đệ quy hoặc lồng quá sâu', at);
   } else if (attr(element, 'enabled') === '0') {
-    skip(env, element, 'disabled clip', at);
+    skip(env, element, 'clip đã bị tắt', at);
   } else {
     containerNotes(element, timing, maps, env, at);
     const inner: WalkContext = {
@@ -310,11 +310,11 @@ function visitAngles(clip: XmlElement, multicam: XmlElement, inner: WalkContext,
     .map((angle) => [attr(angle, 'angleID'), angle]));
   const sources = childElements(clip)
     .filter((source) => source.tagName === 'mc-source' && attr(source, 'srcEnable') !== 'none');
-  if (!sources.length) skip(env, clip, 'multicam clip has no active angle', at);
+  if (!sources.length) skip(env, clip, 'clip multicam không có góc đang hoạt động', at);
   for (const source of sources) {
     const angle = angles.get(attr(source, 'angleID'));
     if (!angle) {
-      skip(env, clip, `multicam angle "${attr(source, 'angleID')}" not found`, at);
+      skip(env, clip, `không tìm thấy góc multicam "${attr(source, 'angleID')}"`, at);
       continue;
     }
     // An angle is a storyline in the multicam's timeline, like a spine.
@@ -328,7 +328,7 @@ function visitStory(element: XmlElement, ctx: WalkContext, env: WalkEnv, offsetO
   const tag = element.tagName;
   if (!STORY.has(tag)) {
     // Markers, keywords, filters, adjustments and metadata carry no media.
-    if (hasAttr(element, 'offset') && hasAttr(element, 'duration')) skip(env, element, `<${tag}> is not supported`);
+    if (hasAttr(element, 'offset') && hasAttr(element, 'duration')) skip(env, element, `<${tag}> không được hỗ trợ`);
     return;
   }
   const lane = ctx.lane + laneOf(element);
@@ -341,15 +341,15 @@ function visitStory(element: XmlElement, ctx: WalkContext, env: WalkEnv, offsetO
   const scoped = { ...ctx, lane };
   switch (tag) {
     case 'transition':
-      skip(env, element, 'transitions are not imported; the clips meet with a cut', at);
+      skip(env, element, 'không nhập transition; các clip sẽ gặp nhau bằng một cut', at);
       return;
     case 'gap':
       // Gaps cannot be anchored in FCPXML; OpenChatCut exports use them as motion-graphic placeholders.
-      if (laneOf(element) !== 0) skip(env, element, 'placeholder gap has no media', at);
+      if (laneOf(element) !== 0) skip(env, element, 'gap placeholder không có media', at);
       return visitAnchored(element, shift(timing.offset, timing.start), scoped, env);
     case 'title':
     case 'caption':
-      skip(env, element, `${tag}s are not imported`, at);
+      skip(env, element, `không nhập ${tag}`, at);
       return visitAnchored(element, shift(timing.offset, timing.start), scoped, env);
     case 'clip':
     case 'sync-clip':

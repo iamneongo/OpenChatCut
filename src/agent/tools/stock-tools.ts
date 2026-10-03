@@ -165,7 +165,7 @@ async function registerMediaUrl(
   ctx: AgentContext,
 ): Promise<BatchRow> {
   if (!isHttpUrl(url)) {
-    return { success: false, error: 'must be a public http(s) URL (local paths not accepted)', url };
+    return { success: false, error: 'phải là URL http(s) công khai (không chấp nhận đường dẫn cục bộ)', url };
   }
 
   const kind = mapTypeToKind(opts.type, url);
@@ -173,7 +173,7 @@ async function registerMediaUrl(
     return {
       success: false,
       error: opts.type === 'effect' || opts.type === 'transition'
-        ? `type=${opts.type} is not an OpenChatCut media-pool asset`
+        ? `type=${opts.type} không phải asset media-pool của OpenChatCut`
         : 'Không thể nhận diện loại media từ URL; hãy truyền type: video|image|audio|gif|svg|motion-graphic',
       url,
     };
@@ -262,7 +262,7 @@ async function registerMediaUrl(
 
 async function execDownloadMedia(args: Args, ctx: AgentContext): Promise<unknown> {
   const urls = normalizeUrlList(args.url);
-  if (!urls.length) return { error: 'url is required (string or array)' };
+  if (!urls.length) return { error: 'url là bắt buộc (chuỗi hoặc mảng)' };
 
   const batchName = urls.length === 1 && typeof args.name === 'string' ? args.name : undefined;
   const type = typeof args.type === 'string' ? args.type : undefined;
@@ -272,7 +272,7 @@ async function execDownloadMedia(args: Args, ctx: AgentContext): Promise<unknown
 
 async function execPushAsset(args: Args, ctx: AgentContext): Promise<unknown> {
   const urls = normalizeUrlList(args.filePath);
-  if (!urls.length) return { error: 'filePath is required (public http(s) URL or array)' };
+  if (!urls.length) return { error: 'filePath là bắt buộc (URL http(s) công khai hoặc mảng)' };
 
   const batchName = urls.length === 1 && typeof args.name === 'string' ? args.name : undefined;
   const type = typeof args.type === 'string' ? args.type : undefined;
@@ -308,8 +308,8 @@ async function execImportUrlAsset(args: Args, ctx: AgentContext): Promise<unknow
   }, ctx) as { failed: number; succeeded: number; results: BatchRow[] };
 
   const first = pushed.results?.[0];
-  if (!first) return { error: 'import failed' };
-  if (first.success !== true) return { error: first.error ?? 'import failed' };
+  if (!first) return { error: 'nhập thất bại' };
+  if (first.success !== true) return { error: first.error ?? 'nhập thất bại' };
 
   const asset = (ctx.getState().assets ?? []).find((a) => a.id === first.assetId);
   return {
@@ -317,7 +317,7 @@ async function execImportUrlAsset(args: Args, ctx: AgentContext): Promise<unknow
     asset: asset
       ? { id: asset.id, name: asset.name, kind: asset.kind, durationInFrames: asset.durationInFrames }
       : { id: first.assetId, name: first.name, kind: first.type, durationInFrames: undefined },
-    note: 'import_url_asset is a legacy alias of push_asset; prefer download_media or push_asset.',
+    note: 'import_url_asset là alias cũ của push_asset; nên dùng download_media hoặc push_asset.',
   };
 }
 
@@ -330,7 +330,7 @@ interface StockSearchResponse {
 
 async function execSearchStockMedia(args: Args): Promise<unknown> {
   const query = String(args.query ?? '').trim();
-  if (!query) return { error: 'query is required', results: [] };
+  if (!query) return { error: 'query là bắt buộc', results: [] };
   const kind = args.kind === 'any' || args.kind === 'image' || args.kind === 'audio' || args.kind === 'music'
     ? args.kind
     : 'video';
@@ -362,7 +362,7 @@ async function execSearchStockMedia(args: Args): Promise<unknown> {
       searchedPlatforms: body.searchedPlatforms ?? [],
     };
   } catch (error) {
-    return { error: error instanceof Error ? error.message : 'stock search request failed', results: [] };
+    return { error: error instanceof Error ? error.message : 'yêu cầu tìm kiếm kho media thất bại', results: [] };
   }
 }
 
@@ -371,5 +371,5 @@ export async function execStockTool(name: string, args: Args, ctx: AgentContext)
   if (name === 'push_asset') return execPushAsset(args, ctx);
   if (name === 'import_url_asset') return execImportUrlAsset(args, ctx);
   if (name === 'search_stock_media') return execSearchStockMedia(args);
-  return { error: `unknown tool ${name}` };
+  return { error: `công cụ không xác định: ${name}` };
 }

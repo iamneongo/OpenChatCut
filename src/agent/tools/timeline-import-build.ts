@@ -95,7 +95,7 @@ export function buildImportedTimeline(
         element: clip.from.element,
         name: clip.from.name,
         at: clip.from.at,
-        reason: item ? `the editor moved it to frame ${item.startFrame}` : `the editor rejected ${describeSource(clip.from)}`,
+        reason: item ? `editor đã chuyển nó tới frame ${item.startFrame}` : `editor đã từ chối ${describeSource(clip.from)}`,
       });
     }
   }

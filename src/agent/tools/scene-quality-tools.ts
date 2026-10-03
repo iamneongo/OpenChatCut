@@ -10,18 +10,18 @@ export async function execSceneQualityTool(
   args: Args,
   _ctx: AgentContext,
 ): Promise<unknown> {
-  if (name !== 'review_scene_plan') return { error: `unknown tool ${name}` };
+  if (name !== 'review_scene_plan') return { error: `công cụ không xác định: ${name}` };
   if (!Array.isArray(args.scenes) || !args.scenes.length) {
-    return { error: 'review_scene_plan requires a non-empty scenes array' };
+    return { error: 'review_scene_plan cần một mảng scenes không rỗng' };
   }
   const scenes: SceneLike[] = [];
   for (const [index, raw] of args.scenes.entries()) {
     if (!raw || typeof raw !== 'object' || Array.isArray(raw)) {
-      return { error: `scenes[${index}] must be an object` };
+      return { error: `scenes[${index}] phải là object` };
     }
     const scene = raw as Record<string, unknown>;
     if (typeof scene.type !== 'string' || !scene.type.trim()) {
-      return { error: `scenes[${index}].type must be a non-empty string` };
+      return { error: `scenes[${index}].type phải là chuỗi không rỗng` };
     }
     scenes.push({
       type: scene.type,

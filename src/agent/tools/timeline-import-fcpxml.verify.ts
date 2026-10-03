@@ -188,9 +188,9 @@ const mediaRep = (file: string) => `<media-rep kind="original-media" src="file:/
     { asset: 'cam', track: 'Imported V3', start: 405, duration: 45, srcIn: 20 },
   ]);
   assert.deepEqual(reasons(result), [
-    'transition@01:00:09:15: transitions are not imported; the clips meet with a cut',
-    'title@01:00:27:00: titles are not imported',
-    'asset-clip@01:00:29:00: disabled clip',
+    'transition@01:00:09:15: không nhập transition; các clip sẽ gặp nhau bằng một cut',
+    'title@01:00:27:00: không nhập title',
+    'asset-clip@01:00:29:00: clip đã bị tắt',
   ]);
   assert.ok((result.warnings as string[]).some((warning) => /1 audio component\(s\) of video files were merged/.test(warning)));
 }
@@ -238,8 +238,8 @@ const mediaRep = (file: string) => `<media-rep kind="original-media" src="file:/
     { asset: 'broll', track: 'Imported V1', start: 0, duration: 120, srcIn: 150, rate: 0.5 },
     { asset: 'broll', track: 'Imported V1', start: 120, duration: 120, srcIn: 600, rate: 2 },
   ]);
-  assert.ok((result.warnings as string[]).some((warning) => /Ramp.*speed ramp approximated/.test(warning)));
-  assert.deepEqual(reasons(result), ['asset-clip@01:00:08:00: reverse and freeze-frame retimes are not supported']);
+  assert.ok((result.warnings as string[]).some((warning) => /Ramp.*speed ramp được xấp xỉ/.test(warning)));
+  assert.deepEqual(reasons(result), ['asset-clip@01:00:08:00: không hỗ trợ retime đảo chiều và freeze-frame']);
 }
 
 // ── Multicam: active angle per mc-source, split video/audio angles ──
@@ -377,7 +377,7 @@ const mediaRep = (file: string) => `<media-rep kind="original-media" src="file:/
   assert.equal(parsed.ok, false);
   if (!parsed.ok) {
     assert.equal(parsed.error, 'Sequence FCPXML không có clip nào có thể nhập');
-    assert.equal(parsed.skipped?.[0]?.reason, 'titles are not imported');
+    assert.equal(parsed.skipped?.[0]?.reason, 'không nhập title');
   }
 }
 
