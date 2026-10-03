@@ -272,7 +272,7 @@ export const VI: Record<string, string> = {
   '检查中…': 'Đang kiểm tra…',
   '设置 · API 密钥': 'Cài đặt · Khóa API',
   'API Key': 'Khóa API',
-  'API URL': 'URL API',
+  'API URL': 'Địa chỉ API',
   'Access Key': 'Khóa truy cập',
   'Access Key ID': 'ID khóa truy cập',
   'Secret Access Key': 'Khóa truy cập bí mật',
