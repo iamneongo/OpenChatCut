@@ -322,11 +322,11 @@ await rejectsBeforePublish(exportedRows, (rows) => rows.map((row, index) => {
   if (index !== 0) return row;
   const { proposal: _proposal, ...manifest } = row;
   return manifest;
-}), /proposal.*closure|closure.*proposal/i);
+}), /liên kết.*proposal|proposal.*liên kết/i);
 await rejectsBeforePublish(
   exportedRows,
   (rows) => [rows[0]!],
-  /runtime.*missing|missing.*runtime|truncated/i,
+  /runtime.*thiếu|thiếu.*runtime|cắt ngắn/i,
 );
 
 
@@ -335,7 +335,7 @@ await rejectsBeforePublish(exportedRows, (rows) => rows.map((row) => (
   row.type === 'agent-artifact-end' && row.artifactId === toolArtifactId
     ? { ...row, bodySha256: '0'.repeat(64) }
     : row
-)), /hash|does not match/i);
+)), /hash|không khớp/i);
 
 await rejectsBeforePublish(exportedRows, (rows) => {
   let skipping = false;
@@ -345,13 +345,13 @@ await rejectsBeforePublish(exportedRows, (rows) => {
     if (skipping && row.type === 'agent-artifact-end' && row.artifactId === toolArtifactId) skipping = false;
     return keep;
   });
-}, /closure|missing|incomplete/i);
+}, /liên kết|thiếu|chưa hoàn chỉnh/i);
 
 await rejectsBeforePublish(exportedRows, (rows) => rows.map((row) => (
   row.type === 'agent-artifact-start' && row.artifactId === toolArtifactId
     ? { ...row, originalBytes: 8 * 1024 * 1024 + 1 }
     : row
-)), /cap|invalid|exceed/i);
+)), /giới hạn|không hợp lệ|vượt/i);
 
 await rejectsBeforePublish(exportedRows, (rows) => {
   const start = rows.find((row) => row.type === 'agent-runtime-start');
@@ -364,12 +364,12 @@ await rejectsBeforePublish(exportedRows, (rows) => {
     if (row.type === 'agent-runtime-chunk') return [];
     return row.type === 'agent-runtime-end' ? [...excessive, row] : [row];
   });
-}, /chunk count exceeds cap/i);
+}, /số lượng chunk.*vượt giới hạn/i);
 
 await rejectsBeforePublish(exportedRows, (rows) => rows.map((row) => (
   row.type === 'agent-artifact-start' && row.artifactId === toolArtifactId
     ? { ...row, projectId: 'foreign_project' }
     : row
-)), /invalid|foreign|project/i);
+)), /không hợp lệ|project/i);
 
 console.log('agentRuntimeTransfer.verify: runtime linkage round-trip and fail-closed validation OK');

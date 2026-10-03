@@ -67,7 +67,7 @@ const terminal = (status: AgentRunStatus) =>
   !['running', 'waiting_approval', 'awaiting_user'].includes(status);
 
 function requireProjectId(projectId: string): void {
-  if (!PROJECT_ID.test(projectId)) throw new Error('Invalid agent runtime project id.');
+  if (!PROJECT_ID.test(projectId)) throw new Error('project id runtime Agent không hợp lệ.');
 }
 function enqueue<T>(projectId: string, work: () => Promise<T>): Promise<T> {
   const previous = queues.get(projectId) ?? Promise.resolve();
@@ -115,7 +115,7 @@ async function mutateOnce<T>(projectId: string, change: (current: AgentRuntimeSi
     setTimeout(resolve, 10 + attempt * 5);
     await promise;
   }
-  throw new Error('agent runtime sidecar write was rejected after retries');
+  throw new Error('ghi sidecar runtime Agent bị từ chối sau các lần thử lại');
 }
 export async function mutate<T>(projectId: string, change: (current: AgentRuntimeSidecar) => [AgentRuntimeSidecar, T]): Promise<T> {
   requireProjectId(projectId);
@@ -182,7 +182,7 @@ export function appendAgentRunEvent(projectId: string, runId: string, event: Omi
   const eventId = crypto.randomUUID();
   return mutate(projectId, (current) => {
     const run = current.runs.find((item) => item.runId === runId);
-    if (!run) throw new Error(`Agent run not found: ${runId}`);
+    if (!run) throw new Error(`không tìm thấy lượt chạy Agent: ${runId}`);
     const next: AgentRunEvent = { ...event, eventId, projectId, runId, sequence: (run.events.at(-1)?.sequence ?? 0) + 1, createdAt: Date.now() };
     const runs = current.runs.map((item) => item.runId === runId
       ? { ...item, updatedAt: next.createdAt, events: [...item.events, next] } : item);
@@ -196,9 +196,9 @@ export function upsertAgentApproval(record: AgentApprovalRecord): Promise<void> 
       const duplicate = current.approvals.some((item) => item.status === 'pending'
         && item.runId === record.runId && item.toolName === record.toolName
         && item.argsDigest === record.argsDigest && item.operationId === record.operationId);
-      if (duplicate) throw new Error('A matching Agent approval is already pending.');
+      if (duplicate) throw new Error('đã có approval Agent tương ứng đang chờ.');
       if (current.approvals.filter((item) => item.status === 'pending').length >= MAX_APPROVALS) {
-        throw new Error('Pending Agent approval limit reached.');
+        throw new Error('đã đạt giới hạn approval Agent đang chờ.');
       }
     }
     return [{ ...current,
@@ -310,22 +310,22 @@ export async function publishAgentRuntimeSnapshot(snapshot: AgentRuntimeSnapshot
     },
   };
   if (!await isValidAgentRuntimeSnapshot(imported)) {
-    throw new Error('Invalid Agent runtime import snapshot.');
+    throw new Error('snapshot nhập runtime Agent không hợp lệ.');
   }
   await enqueue(projectId, () => withProjectLock(projectId, async () => {
     const key = runtimeKey(projectId, sessionGeneration);
-    if (await kvGet(key) !== undefined) throw new Error('Agent runtime already exists for imported project.');
+    if (await kvGet(key) !== undefined) throw new Error('runtime Agent đã tồn tại trong project được nhập.');
     const written: string[] = [];
     try {
       for (const artifact of imported.artifacts) {
         const artifactKey = agentArtifactKey(projectId, artifact.artifactId, sessionGeneration);
-        if (await kvGet(artifactKey) !== undefined) throw new Error('Agent artifact already exists for imported project.');
+        if (await kvGet(artifactKey) !== undefined) throw new Error('artifact Agent đã tồn tại trong project được nhập.');
         await kvSet(artifactKey, artifact); written.push(artifactKey);
       }
       await kvSet(key, imported.sidecar);
       const verified = normalizeSidecar(projectId, await kvGet(key));
-      if (verified.revision !== imported.sidecar.revision || verified.artifacts.length !== imported.artifacts.length) throw new Error('Agent runtime import verification failed.');
-      for (const row of imported.artifacts) if (!await loadAgentArtifact(projectId, row.artifactId)) throw new Error('Agent artifact import verification failed.');
+      if (verified.revision !== imported.sidecar.revision || verified.artifacts.length !== imported.artifacts.length) throw new Error('xác minh nhập runtime Agent thất bại.');
+      for (const row of imported.artifacts) if (!await loadAgentArtifact(projectId, row.artifactId)) throw new Error('xác minh nhập artifact Agent thất bại.');
       notify(projectId);
     } catch (error) {
       await kvDel(key); await Promise.all(written.map((artifactKey) => kvDel(artifactKey))); throw error;

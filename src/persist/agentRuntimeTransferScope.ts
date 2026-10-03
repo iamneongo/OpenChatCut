@@ -58,7 +58,7 @@ export function validateProposalRuntimeTransfer(
     const dangling = snapshot?.sidecar.runs.some(
       (run) => !TERMINAL_RUN_STATUS[run.status] && run.proposalIds.length > 0,
     );
-    if (dangling) throw new Error('Pending proposal payload closure is incomplete.');
+    if (dangling) throw new Error('liên kết payload proposal đang chờ chưa hoàn chỉnh.');
     return;
   }
   if (proposal.phase === 'settled' || !proposal.proposal.agentRunId) return;
@@ -67,7 +67,7 @@ export function validateProposalRuntimeTransfer(
   );
   if (!run || !proposal.proposal.id || !run.proposalIds.includes(proposal.proposal.id)
     || TERMINAL_RUN_STATUS[run.status]) {
-    throw new Error('Pending proposal runtime closure is incomplete.');
+    throw new Error('liên kết runtime proposal đang chờ chưa hoàn chỉnh.');
   }
 }
 
@@ -139,7 +139,7 @@ export function rescopeAgentRuntimeSnapshot(
   projectId: string,
   proposal?: StoredProposalRecord,
 ): AgentRuntimeSnapshot {
-  if (!PROJECT_ID.test(projectId)) throw new Error('Invalid imported Agent runtime project id.');
+  if (!PROJECT_ID.test(projectId)) throw new Error('project id runtime Agent được nhập không hợp lệ.');
   validateProposalRuntimeTransfer(snapshot, proposal);
   const pendingRunId = proposal?.phase !== 'settled' ? proposal?.proposal.agentRunId : undefined;
   const pendingProposalId = proposal?.phase !== 'settled' ? proposal?.proposal.id : undefined;

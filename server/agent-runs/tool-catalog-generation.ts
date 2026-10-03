@@ -27,7 +27,7 @@ export async function serverToolCatalogForGeneration(
   const loadSkill = cloned.find((schema) => schema.name === 'load_skill');
   if (!loadSkill) return [...cloned];
   if (!loadSkill.description?.endsWith('Skill đóng gói: .')) {
-    throw new Error('load_skill schema description format changed.');
+    throw new Error('định dạng mô tả schema load_skill đã thay đổi.');
   }
   loadSkill.description = loadSkill.description.replace(
     'Skill đóng gói: .',

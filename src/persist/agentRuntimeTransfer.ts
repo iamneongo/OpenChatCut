@@ -36,14 +36,14 @@ export async function loadAgentRuntimeTransfer(
   const artifactRefs = chatArtifactReferences(chat);
   if (!sidecar.runs.length && !sidecar.approvals.length
       && !sidecar.checkpoints.length && !sidecar.artifacts.length) {
-    if (artifactRefs.size) throw new Error('Saved chat references missing Agent runtime data.');
+    if (artifactRefs.size) throw new Error('tham chiếu chat đã lưu nhưng thiếu dữ liệu runtime Agent.');
     validateProposalRuntimeTransfer(null, proposal);
     return null;
   }
   const artifacts: AgentArtifactRecord[] = [];
   for (const index of sidecar.artifacts) {
     const artifact = await loadAgentArtifact(projectId, index.artifactId);
-    if (!artifact) throw new Error(`Agent artifact is missing or corrupt: ${index.artifactId}`);
+    if (!artifact) throw new Error(`artifact Agent bị thiếu hoặc hỏng: ${index.artifactId}`);
     artifacts.push(artifact);
   }
   const snapshot = { sidecar, artifacts };
@@ -63,9 +63,9 @@ function base64(bytes: Uint8Array): string {
 
 function decodeBase64(value: unknown): Uint8Array {
   if (typeof value !== 'string' || value.length > Math.ceil(MAX_CHUNK_BYTES / 3) * 4 + 4
-    || !value || value.length % 4 !== 0 || !/^[A-Za-z0-9+/]*={0,2}$/.test(value)) throw new Error('Invalid Agent runtime chunk.');
+    || !value || value.length % 4 !== 0 || !/^[A-Za-z0-9+/]*={0,2}$/.test(value)) throw new Error('chunk runtime Agent không hợp lệ.');
   const binary = atob(value);
-  if (binary.length > MAX_CHUNK_BYTES) throw new Error('Agent runtime chunk exceeds cap.');
+  if (binary.length > MAX_CHUNK_BYTES) throw new Error('chunk runtime Agent vượt giới hạn.');
   return Uint8Array.from(binary, (character) => character.charCodeAt(0));
 }
 
@@ -121,13 +121,13 @@ export class AgentRuntimeImportReader {
     if (value.type === 'agent-artifact-start') return this.startArtifact(value);
     if (value.type === 'agent-artifact-chunk') return this.artifactChunk(value);
     if (value.type === 'agent-artifact-end') return this.endArtifact(value);
-    throw new Error('Unknown Agent runtime transfer record.');
+    throw new Error('bản ghi truyền runtime Agent không xác định.');
   }
 
   private startRuntime(row: Record<string, unknown>): true {
     if (!allowedKeys(row, ['type', 'bytes', 'sha256']) || this.started
       || !integer(row.bytes) || row.bytes > MAX_RUNTIME_BYTES
-      || typeof row.sha256 !== 'string' || !SHA256.test(row.sha256)) throw new Error('Invalid Agent runtime start record.');
+      || typeof row.sha256 !== 'string' || !SHA256.test(row.sha256)) throw new Error('bản ghi bắt đầu runtime Agent không hợp lệ.');
     this.started = true;
     this.runtime = {
       expected: row.bytes,
@@ -141,14 +141,14 @@ export class AgentRuntimeImportReader {
 
   private runtimeChunk(row: Record<string, unknown>): true {
     if (!allowedKeys(row, ['type', 'data']) || !this.runtime || this.sidecar) {
-      throw new Error('Agent runtime chunk order is invalid.');
+      throw new Error('thứ tự chunk runtime Agent không hợp lệ.');
     }
     const bytes = decodeBase64(row.data);
     if (this.runtime.parts.length >= this.runtime.maxParts) {
-      throw new Error('Agent runtime chunk count exceeds cap.');
+      throw new Error('số lượng chunk runtime Agent vượt giới hạn.');
     }
     this.runtime.bytes += bytes.byteLength;
-    if (this.runtime.bytes > this.runtime.expected) throw new Error('Agent runtime exceeds declared size.');
+    if (this.runtime.bytes > this.runtime.expected) throw new Error('runtime Agent vượt kích thước đã khai báo.');
     this.runtime.parts.push(bytes);
     return true;
   }
@@ -156,21 +156,21 @@ export class AgentRuntimeImportReader {
   private async endRuntime(row: Record<string, unknown>): Promise<true> {
     if (!allowedKeys(row, ['type', 'sha256']) || !this.runtime
       || this.runtime.bytes !== this.runtime.expected || row.sha256 !== this.runtime.sha256) {
-      throw new Error('Agent runtime end record does not match.');
+      throw new Error('bản ghi kết thúc runtime Agent không khớp.');
     }
     const text = decoder.decode(joinBytes(this.runtime.parts, this.runtime.bytes));
-    if (await sha256Text(text) !== this.runtime.sha256) throw new Error('Agent runtime hash mismatch.');
-    try { this.sidecar = JSON.parse(text) as AgentRuntimeSidecar; } catch { throw new Error('Agent runtime JSON is invalid.'); }
+    if (await sha256Text(text) !== this.runtime.sha256) throw new Error('hash runtime Agent không khớp.');
+    try { this.sidecar = JSON.parse(text) as AgentRuntimeSidecar; } catch { throw new Error('JSON runtime Agent không hợp lệ.'); }
     this.runtime = null;
     return true;
   }
 
   private startArtifact(row: Record<string, unknown>): true {
-    if (!this.sidecar || this.artifact) throw new Error('Agent artifact record order is invalid.');
+    if (!this.sidecar || this.artifact) throw new Error('thứ tự bản ghi artifact Agent không hợp lệ.');
     const { type: _type, ...metadata } = row;
     if (!validArtifact({ ...metadata, body: '' }, this.sidecar.projectId)
       || !integer(metadata.originalBytes) || metadata.originalBytes > MAX_ARTIFACT_BYTES) {
-      throw new Error('Invalid Agent artifact start record.');
+      throw new Error('bản ghi bắt đầu artifact Agent không hợp lệ.');
     }
     this.artifact = {
       metadata: metadata as unknown as Omit<AgentArtifactRecord, 'body'>,
@@ -183,14 +183,14 @@ export class AgentRuntimeImportReader {
 
   private artifactChunk(row: Record<string, unknown>): true {
     if (!allowedKeys(row, ['type', 'data']) || !this.artifact) {
-      throw new Error('Agent artifact chunk order is invalid.');
+      throw new Error('thứ tự chunk artifact Agent không hợp lệ.');
     }
     const bytes = decodeBase64(row.data);
     if (this.artifact.parts.length >= this.artifact.maxParts) {
-      throw new Error('Agent artifact chunk count exceeds cap.');
+      throw new Error('số lượng chunk artifact Agent vượt giới hạn.');
     }
     this.artifact.bytes += bytes.byteLength;
-    if (this.artifact.bytes > this.artifact.metadata.originalBytes) throw new Error('Agent artifact exceeds declared size.');
+    if (this.artifact.bytes > this.artifact.metadata.originalBytes) throw new Error('artifact Agent vượt kích thước đã khai báo.');
     this.artifact.parts.push(bytes);
     return true;
   }
@@ -200,14 +200,14 @@ export class AgentRuntimeImportReader {
       || row.artifactId !== this.artifact.metadata.artifactId
       || row.bodySha256 !== this.artifact.metadata.bodySha256
       || this.artifact.bytes !== this.artifact.metadata.originalBytes) {
-      throw new Error('Agent artifact end record does not match.');
+      throw new Error('bản ghi kết thúc artifact Agent không khớp.');
     }
     const body = decoder.decode(joinBytes(this.artifact.parts, this.artifact.bytes));
     const record = { ...this.artifact.metadata, body } as AgentArtifactRecord;
-    if (await sha256Text(body) !== record.bodySha256) throw new Error('Agent artifact hash mismatch.');
+    if (await sha256Text(body) !== record.bodySha256) throw new Error('hash artifact Agent không khớp.');
     this.artifactBytes += record.originalBytes;
     if (this.artifacts.length >= MAX_PROJECT_ARTIFACTS
-      || this.artifactBytes > MAX_PROJECT_ARTIFACT_BYTES) throw new Error('Agent artifact transfer exceeds caps.');
+      || this.artifactBytes > MAX_PROJECT_ARTIFACT_BYTES) throw new Error('dữ liệu truyền artifact Agent vượt giới hạn.');
     this.artifacts.push(record);
     this.artifact = null;
     return true;
@@ -215,10 +215,10 @@ export class AgentRuntimeImportReader {
 
   async finish(chat?: PersistedChat, required = false): Promise<AgentRuntimeSnapshot | null> {
     if (!this.started) {
-      if (required) throw new Error('Agent runtime transfer is missing.');
+      if (required) throw new Error('thiếu dữ liệu truyền runtime Agent.');
       return null;
     }
-    if (this.runtime || this.artifact || !this.sidecar) throw new Error('Agent runtime transfer is truncated.');
+    if (this.runtime || this.artifact || !this.sidecar) throw new Error('dữ liệu truyền runtime Agent bị cắt ngắn.');
     const snapshot = { sidecar: this.sidecar, artifacts: this.artifacts };
     await validateRuntime(snapshot);
     await validateChatClosure(snapshot, chat);

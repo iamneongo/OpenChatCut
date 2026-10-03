@@ -55,9 +55,9 @@ export function normalizeAgentRuntimeSidecar(
   const compatibility = classifyAgentRuntimeStoreValue(`agent-runtime:${projectId}`, value);
   if (compatibility.kind === 'absent') return emptySidecar(projectId);
   if (compatibility.kind === 'future') {
-    throw new Error(`Agent runtime version ${compatibility.version} is not supported.`);
+    throw new Error(`phiên bản runtime Agent ${compatibility.version} không được hỗ trợ.`);
   }
-  if (compatibility.kind === 'corrupt') throw new Error('Agent runtime sidecar is corrupt.');
+  if (compatibility.kind === 'corrupt') throw new Error('sidecar runtime Agent bị hỏng.');
   const supported = compatibility.value;
   const runs = supported.runs.filter((item) => isValidAgentRun(item, projectId));
   const approvals = supported.approvals.filter((item) => isValidAgentApproval(item, projectId));
@@ -65,7 +65,7 @@ export function normalizeAgentRuntimeSidecar(
   const artifacts = supported.artifacts.filter((item) => isValidAgentArtifactIndex(item, projectId));
   if (runs.length !== supported.runs.length || approvals.length !== supported.approvals.length
       || checkpoints.length !== supported.checkpoints.length || artifacts.length !== supported.artifacts.length) {
-    throw new Error('Agent runtime sidecar contains corrupt rows.');
+    throw new Error('sidecar runtime Agent chứa các dòng bị hỏng.');
   }
   return {
     version: 1,

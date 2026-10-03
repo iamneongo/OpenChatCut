@@ -28,7 +28,7 @@ function parseGeneration(value: unknown): AgentSessionGenerationRecord {
   }
   const record = parseAgentSessionGenerationRecord(value);
   if (record) return record;
-  throw new Error('Stored Agent session generation is invalid.');
+  throw new Error('generation phiên Agent đã lưu không hợp lệ.');
 }
 
 export function agentSessionGenerationMatches(
@@ -100,7 +100,7 @@ export async function rotateAgentSessionGeneration(projectId: string): Promise<s
       projectId,
     });
     if (!validRotationResponse(response)) {
-      throw new Error('Invalid Agent session rotation response.');
+      throw new Error('phản hồi xoay vòng phiên Agent không hợp lệ.');
     }
     record = parseGeneration(response.value);
     await kvAdoptAuthoritativeValue(agentSessionGenerationKey(projectId), record);

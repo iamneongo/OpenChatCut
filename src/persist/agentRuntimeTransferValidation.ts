@@ -200,12 +200,12 @@ function validateCounts(sidecar: AgentRuntimeSidecar, artifacts: readonly AgentA
     || sidecar.approvals.length - pending > MAX_APPROVALS
     || sidecar.checkpoints.length > MAX_CHECKPOINTS + MAX_RUNTIME_RUNS
     || exportedIndex.length > MAX_PROJECT_ARTIFACTS || exported.length > MAX_PROJECT_ARTIFACTS) {
-    throw new Error('Agent runtime transfer exceeds record caps.');
+    throw new Error('dữ liệu truyền runtime Agent vượt giới hạn số bản ghi.');
   }
   const runtimeBytes = encoder.encode(JSON.stringify(sidecar)).byteLength;
   const artifactBytes = exported.reduce((sum, artifact) => sum + artifact.originalBytes, 0);
   if (runtimeBytes > MAX_RUNTIME_BYTES || artifactBytes > MAX_PROJECT_ARTIFACT_BYTES) {
-    throw new Error('Agent runtime transfer exceeds byte caps.');
+    throw new Error('dữ liệu truyền runtime Agent vượt giới hạn byte.');
   }
 }
 
@@ -220,13 +220,13 @@ export async function validateRuntime(snapshot: AgentRuntimeSnapshot): Promise<v
     || (sidecar.sessionGeneration !== undefined && !safeId(sidecar.sessionGeneration))
     || !Array.isArray(sidecar.runs) || !Array.isArray(sidecar.approvals)
     || !Array.isArray(sidecar.checkpoints) || !Array.isArray(sidecar.artifacts)
-    || !Array.isArray(artifacts)) throw new Error('Invalid Agent runtime sidecar.');
+    || !Array.isArray(artifacts)) throw new Error('sidecar runtime Agent không hợp lệ.');
   validateCounts(sidecar, artifacts);
   if (!sidecar.runs.every((run) => validRun(run, sidecar.projectId))
     || !sidecar.approvals.every((row) => validApproval(row, sidecar.projectId))
     || !sidecar.checkpoints.every((row) => validCheckpoint(row, sidecar.projectId))
     || !sidecar.artifacts.every((row) => validArtifact({ ...row, version: 1, body: '' }, sidecar.projectId))
-    || !artifacts.every((row) => validArtifact(row, sidecar.projectId))) throw new Error('Invalid Agent runtime record shape.');
+    || !artifacts.every((row) => validArtifact(row, sidecar.projectId))) throw new Error('cấu trúc bản ghi runtime Agent không hợp lệ.');
 
   const runs = new Map(sidecar.runs.map((run) => [run.runId, run]));
   const approvals = new Map(sidecar.approvals.map((row) => [row.approvalId, row]));
@@ -236,14 +236,14 @@ export async function validateRuntime(snapshot: AgentRuntimeSnapshot): Promise<v
   const eventCount = sidecar.runs.reduce((sum, run) => sum + run.events.length, 0);
   if (runs.size !== sidecar.runs.length || approvals.size !== sidecar.approvals.length
     || checkpoints.size !== sidecar.checkpoints.length || artifactRecords.size !== artifacts.length
-    || eventIds.size !== eventCount) throw new Error('Duplicate Agent runtime ids.');
+    || eventIds.size !== eventCount) throw new Error('id runtime Agent bị trùng.');
   const indexes = new Map(sidecar.artifacts.map((row) => [row.artifactId, row]));
   if (indexes.size !== sidecar.artifacts.length || indexes.size !== artifactRecords.size) {
-    throw new Error('Agent artifact index closure is incomplete.');
+    throw new Error('liên kết chỉ mục artifact Agent chưa hoàn chỉnh.');
   }
   for (const run of sidecar.runs) validateRunClosure(run, approvals, checkpoints, artifactRecords);
   for (const approval of sidecar.approvals) {
-    if (!runs.has(approval.runId)) throw new Error('Agent approval references a missing run.');
+    if (!runs.has(approval.runId)) throw new Error('approval Agent tham chiếu đến lượt chạy bị thiếu.');
   }
   for (const checkpoint of sidecar.checkpoints) {
     await validateCheckpointClosure(checkpoint, runs, artifactRecords);
@@ -253,7 +253,7 @@ export async function validateRuntime(snapshot: AgentRuntimeSnapshot): Promise<v
       || !sameArtifactIndex(indexes.get(artifact.artifactId)!, artifact)
       || encoder.encode(artifact.body).byteLength !== artifact.originalBytes
       || artifact.body.length !== artifact.originalChars || await sha256Text(artifact.body) !== artifact.bodySha256) {
-      throw new Error('Agent artifact integrity validation failed.');
+      throw new Error('xác minh tính toàn vẹn artifact Agent thất bại.');
     }
   }
 }
@@ -264,16 +264,16 @@ function validateRunClosure(
   checkpoints: ReadonlyMap<string, AgentCheckpointRecord>,
   artifacts: ReadonlyMap<string, AgentArtifactRecord>,
 ): void {
-  for (const id of run.checkpointIds) if (checkpoints.get(id)?.runId !== run.runId) throw new Error('Agent run checkpoint closure is incomplete.');
-  for (const id of run.artifactIds) if (artifacts.get(id)?.runId !== run.runId) throw new Error('Agent run artifact closure is incomplete.');
-  if (run.context?.checkpointId && checkpoints.get(run.context.checkpointId)?.runId !== run.runId) throw new Error('Agent run context checkpoint is missing.');
+  for (const id of run.checkpointIds) if (checkpoints.get(id)?.runId !== run.runId) throw new Error('liên kết checkpoint lượt chạy Agent chưa hoàn chỉnh.');
+  for (const id of run.artifactIds) if (artifacts.get(id)?.runId !== run.runId) throw new Error('liên kết artifact lượt chạy Agent chưa hoàn chỉnh.');
+  if (run.context?.checkpointId && checkpoints.get(run.context.checkpointId)?.runId !== run.runId) throw new Error('thiếu checkpoint ngữ cảnh lượt chạy Agent.');
   for (const event of run.events) {
-    if (event.approvalId && approvals.get(event.approvalId)?.runId !== run.runId) throw new Error('Agent event approval is missing.');
-    if (event.checkpointId && checkpoints.get(event.checkpointId)?.runId !== run.runId) throw new Error('Agent event checkpoint is missing.');
+    if (event.approvalId && approvals.get(event.approvalId)?.runId !== run.runId) throw new Error('thiếu approval trong sự kiện Agent.');
+    if (event.checkpointId && checkpoints.get(event.checkpointId)?.runId !== run.runId) throw new Error('thiếu checkpoint trong sự kiện Agent.');
     const id = event.outcome?.artifactId;
-    if (id && artifacts.get(id)?.runId !== run.runId) throw new Error('Agent event artifact is missing.');
+    if (id && artifacts.get(id)?.runId !== run.runId) throw new Error('thiếu artifact trong sự kiện Agent.');
     if (id && event.resultDigest && artifacts.get(id)?.bodySha256 !== event.resultDigest) {
-      throw new Error('Agent event artifact digest does not match.');
+      throw new Error('digest artifact trong sự kiện Agent không khớp.');
     }
   }
 }
@@ -288,7 +288,7 @@ async function validateCheckpointClosure(
     || !source || source.runId !== checkpoint.runId || source.kind !== 'checkpoint-source'
     || source.bodySha256 !== checkpoint.sourceDigest || await sha256Text(source.body) !== checkpoint.sourceDigest
     || (checkpoint.summaryDigest && await sha256Text(checkpoint.summary) !== checkpoint.summaryDigest)) {
-    throw new Error('Agent checkpoint integrity validation failed.');
+    throw new Error('xác minh tính toàn vẹn checkpoint Agent thất bại.');
   }
 }
 
@@ -299,7 +299,7 @@ export function chatArtifactReferences(chat: PersistedChat | undefined): Set<str
     if (!isRecord(value)) return;
     if ('artifactId' in value) {
       if (typeof value.artifactId !== 'string' || !ARTIFACT_ID.test(value.artifactId)) {
-        throw new Error('Invalid Agent artifact id in chat.');
+        throw new Error('id artifact Agent trong chat không hợp lệ.');
       }
       artifacts.add(value.artifactId);
     }
@@ -320,6 +320,6 @@ export async function validateChatClosure(snapshot: AgentRuntimeSnapshot, chat: 
   }
   const available = new Set(snapshot.artifacts.map((row) => row.artifactId));
   for (const id of chatArtifactReferences(chat)) {
-    if (!available.has(id)) throw new Error('Saved chat artifact linkage is incomplete.');
+    if (!available.has(id)) throw new Error('liên kết artifact của chat đã lưu chưa hoàn chỉnh.');
   }
 }

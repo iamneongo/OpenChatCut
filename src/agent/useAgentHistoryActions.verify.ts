@@ -273,7 +273,7 @@ await kvSet(`agent-session-generation:${corruptProjectId}`, {
 assert.equal(await loadChat(corruptProjectId), null, 'corrupt generation fails closed for chat');
 await assert.rejects(
   () => loadAgentRuntimeSidecar(corruptProjectId),
-  /Stored Agent session generation is invalid/,
+  /generation phiên Agent đã lưu không hợp lệ/,
 );
 await kvDel(`agent-session-generation:${corruptProjectId}`);
 
