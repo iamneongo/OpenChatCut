@@ -21,7 +21,7 @@ export function probeVideoFixture(path: string): VideoFixtureProbe {
   assert.equal(result.status, 0, `failed to probe ${basename(path)}: ${result.stderr}`);
   const payload: unknown = JSON.parse(result.stdout || '{}');
   if (!payload || typeof payload !== 'object') {
-    throw new Error(`${basename(path)} returned an invalid ffprobe payload`);
+    throw new Error(`${basename(path)} trả về payload ffprobe không hợp lệ`);
   }
   const streams = 'streams' in payload && Array.isArray(payload.streams) ? payload.streams : [];
   const video = streams.find(

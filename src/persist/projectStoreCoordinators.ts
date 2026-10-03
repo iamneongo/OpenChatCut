@@ -171,7 +171,7 @@ export class SaveCoordinator {
   invalidate(projectId: string): void {
     const state = this.stateFor(projectId);
     state.epoch += 1;
-    state.blocked = new Error('project save queue was invalidated');
+    state.blocked = new Error('hàng đợi lưu project đã bị vô hiệu hóa');
   }
 
   reset(): void {

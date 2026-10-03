@@ -135,12 +135,12 @@ export function buildSkillsIndex(
   const toolsAvailable = options.toolsAvailable ?? true;
   const budgetChars = options.budgetChars ?? DEFAULT_SKILL_INDEX_BUDGET_CHARS;
   if (!Number.isSafeInteger(budgetChars) || budgetChars < 1) {
-    throw new RangeError('Skill index budget must be a positive safe integer.');
+    throw new RangeError('Ngân sách chỉ mục skill phải là số nguyên an toàn dương.');
   }
   const sorted = [...entries].sort(compareSlug);
   if (!toolsAvailable) {
     if (SKILLS_UNAVAILABLE_PROMPT.length > budgetChars) {
-      throw new RangeError('Skill index budget cannot fit the tools-unavailable notice.');
+    throw new RangeError('Ngân sách chỉ mục skill không đủ chỗ cho thông báo tool không khả dụng.');
     }
     return {
       prompt: SKILLS_UNAVAILABLE_PROMPT,
@@ -159,7 +159,7 @@ export function buildSkillsIndex(
       return { prompt, diagnostics: skillsDiagnostics(sorted, advertised, prompt, true, budgetChars) };
     }
   }
-  throw new RangeError('Skill index budget cannot fit the required exact-slug overflow index.');
+  throw new RangeError('Ngân sách chỉ mục skill không đủ chỗ cho chỉ mục tràn slug chính xác bắt buộc.');
 }
 
 const DEFAULT_AVAILABLE_INDEX = buildSkillsIndex(PLUGIN_SKILLS);

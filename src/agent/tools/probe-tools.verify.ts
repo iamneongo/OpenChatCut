@@ -83,7 +83,7 @@ try {
 
   globalThis.fetch = respond(400, { error: 'ffprobe exited 1: Invalid data found when processing input' });
   const failed = await execProbeTool('probe_media', { source: 'asset-clip' }, ctx) as Record<string, unknown>;
-  assert.match(String(failed.error), /ffprobe exited 1/);
+  assert.match(String(failed.error), /ffprobe exited 1|ffprobe thoát với mã 1/);
   assert.match(String(failed.hint), /finalize_uploaded_asset/);
   assert.doesNotMatch(JSON.stringify(failed), /e2b|sandbox/i, 'a probe failure no longer blames the sandbox');
 

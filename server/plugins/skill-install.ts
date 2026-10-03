@@ -62,12 +62,12 @@ async function readJson(req: IncomingMessage): Promise<InstallRequest> {
     const chunks: Buffer[] = [];
     req.on('data', (chunk: Buffer) => {
       size += chunk.length;
-      if (size > 64 * 1024) { rejectPromise(new Error('request too large')); req.destroy(); return; }
+      if (size > 64 * 1024) { rejectPromise(new Error('request quá lớn')); req.destroy(); return; }
       chunks.push(chunk);
     });
     req.on('end', () => {
       try { resolvePromise(JSON.parse(Buffer.concat(chunks).toString('utf8') || '{}') as InstallRequest); }
-      catch { rejectPromise(new Error('invalid JSON')); }
+      catch { rejectPromise(new Error('JSON không hợp lệ')); }
     });
     req.on('error', rejectPromise);
   });

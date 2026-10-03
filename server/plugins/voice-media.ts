@@ -85,7 +85,7 @@ export async function saveVoiceAudio(bytes: Buffer, codec: string, sampleRate: n
 export async function saveVoiceSubtitle(url: string): Promise<string> {
   const response = await fetchGeneratedResult(url, 'subtitle');
   const bytes = Buffer.from(await response.arrayBuffer());
-  if (!bytes.length || bytes.length > 5_000_000) throw new Error('MiniMax subtitle file is empty or too large');
+  if (!bytes.length || bytes.length > 5_000_000) throw new Error('tệp phụ đề MiniMax rỗng hoặc quá lớn');
   const dir = uploadDir();
   await mkdir(dir, { recursive: true });
   const filename = `${randomUUID()}.minimax-subtitles.json`;

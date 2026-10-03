@@ -71,9 +71,9 @@ function runFfprobe(path: string): Promise<string> {
   });
   child.on('close', (code) => {
     clearTimeout(timer);
-    if (timedOut) deferred.reject(new Error(`ffprobe timed out after ${PROBE_TIMEOUT_MS}ms`));
+    if (timedOut) deferred.reject(new Error(`ffprobe hết thời gian chờ sau ${PROBE_TIMEOUT_MS}ms`));
     else if (code === 0) deferred.resolve(stdout);
-    else deferred.reject(new Error(`ffprobe exited ${code ?? 'unknown'}: ${stderr.trim().slice(-400) || 'unreadable media'}`));
+    else deferred.reject(new Error(`ffprobe thoát với mã ${code ?? 'không rõ'}: ${stderr.trim().slice(-400) || 'media không thể đọc'}`));
   });
   return deferred.promise;
 }
@@ -91,7 +91,7 @@ async function downloadBounded(url: string, path: string): Promise<void> {
   const signal = AbortSignal.timeout(REMOTE_TIMEOUT_MS);
   const response = await safePublicFetch(url, { signal });
   if (!response.ok) throw new Error(`fetch ${url} thất bại (${response.status})`);
-  if (!response.body) throw new Error(`fetch ${url} returned no body`);
+  if (!response.body) throw new Error(`fetch ${url} không trả về body`);
   let total = 0;
   const cap = new Transform({
     transform(chunk: Buffer, _encoding, callback) {

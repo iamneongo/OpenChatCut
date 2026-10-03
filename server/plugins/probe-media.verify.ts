@@ -67,8 +67,8 @@ try {
   assert.equal(silent.height, 48);
   assert.equal(silent.fps, 10);
 
-  await assert.rejects(probeMediaFile(join(uploads, 'garbage.bin')), /ffprobe exited/);
-  await assert.rejects(probeMediaFile(join(uploads, 'nope.mp4')), /ffprobe exited/);
+  await assert.rejects(probeMediaFile(join(uploads, 'garbage.bin')), /ffprobe exited|ffprobe thoát với mã/);
+  await assert.rejects(probeMediaFile(join(uploads, 'nope.mp4')), /ffprobe exited|ffprobe thoát với mã/);
 
   // ── the route: what the browser tool actually calls ──
   let routeHandler: ((req: IncomingMessage, res: ServerResponse) => void) | null = null;
@@ -115,7 +115,7 @@ try {
 
     const unreadable = await post({ source: '/media/uploads/garbage.bin' });
     assert.equal(unreadable.status, 400);
-    assert.match(String(unreadable.json.error), /ffprobe exited/);
+    assert.match(String(unreadable.json.error), /ffprobe exited|ffprobe thoát với mã/);
 
     const missing = await post({ source: '/media/uploads/nope.mp4' });
     assert.equal(missing.status, 400);

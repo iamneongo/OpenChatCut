@@ -196,7 +196,7 @@ export const CREATIVE_SKILLS: SkillDefinition[] = CREATIVE_SKILL_METADATA.flatMa
   const file = getPluginSkill(metadata.slug);
   if (!file) {
     if (typeof import.meta.env !== 'undefined') {
-      throw new Error(`Creative skill metadata references missing SKILL.md: ${metadata.slug}`);
+      throw new Error(`Metadata skill sáng tạo tham chiếu SKILL.md bị thiếu: ${metadata.slug}`);
     }
     return [];
   }

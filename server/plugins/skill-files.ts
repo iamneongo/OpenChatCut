@@ -38,7 +38,7 @@ function readJsonBody(req: IncomingMessage): Promise<Record<string, unknown>> {
     req.on('data', (chunk: Buffer) => {
       size += chunk.length;
       if (size > MAX_BODY_BYTES) {
-        rejectPromise(new Error('skill body too large'));
+        rejectPromise(new Error('body skill quá lớn'));
         req.destroy();
         return;
       }
@@ -49,7 +49,7 @@ function readJsonBody(req: IncomingMessage): Promise<Record<string, unknown>> {
         const text = Buffer.concat(chunks).toString('utf8');
         resolvePromise(text ? JSON.parse(text) as Record<string, unknown> : {});
       } catch {
-        rejectPromise(new Error('invalid JSON body'));
+        rejectPromise(new Error('body JSON không hợp lệ'));
       }
     });
     req.on('error', rejectPromise);

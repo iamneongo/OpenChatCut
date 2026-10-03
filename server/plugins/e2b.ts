@@ -44,7 +44,7 @@ export async function resolveE2bFileBytes(file: E2bFile): Promise<string | Array
     }
     throw new Error(`không tìm thấy path cục bộ: ${url} (đã tìm trong uploads + ${PRODUCT_ASSETS_DIR})`);
   }
-  if (!/^https?:\/\//.test(url)) throw new Error(`unsupported url ${url}`);
+  if (!/^https?:\/\//.test(url)) throw new Error(`URL không được hỗ trợ ${url}`);
   const response = await safePublicFetch(url, { signal: AbortSignal.timeout(30_000) });
   if (!response.ok) throw new Error(`fetch ${url} thất bại (${response.status})`);
   const buf = await response.arrayBuffer();

@@ -83,7 +83,7 @@ function runSliceFfmpeg(args: string[]): Promise<void> {
     child.on('close', (code) => {
       clearTimeout(timer);
       if (code === 0) resolvePromise();
-      else reject(new Error(`failed to materialize generation timeline slice: ${stderr.trim() || `ffmpeg exited ${code}`}`));
+      else reject(new Error(`không thể tạo lát timeline cho việc tạo nội dung: ${stderr.trim() || `ffmpeg thoát với mã ${code}`}`));
     });
   });
 }

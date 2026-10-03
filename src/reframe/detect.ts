@@ -203,7 +203,7 @@ function buildVideoCapture(video: HTMLVideoElement, opts: DetectOptions): Captur
   canvas.width = SAMPLE_CANVAS_W;
   canvas.height = SAMPLE_CANVAS_H;
   const c2d = canvas.getContext('2d', { willReadFrequently: true });
-  if (!c2d) throw new Error('auto reframe: 2d canvas context unavailable');
+  if (!c2d) throw new Error('tự căn khung: ngữ cảnh canvas 2D không khả dụng');
   const faceDetector = makeFaceDetector();
 
   return async (frameLocal) => {

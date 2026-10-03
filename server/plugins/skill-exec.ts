@@ -69,14 +69,14 @@ function readJson(req: IncomingMessage): Promise<ExecRequest> {
     const chunks: Buffer[] = [];
     req.on('data', (chunk: Buffer) => {
       size += chunk.length;
-      if (size > 64 * 1024) { rejectPromise(new Error('request too large')); req.destroy(); return; }
+      if (size > 64 * 1024) { rejectPromise(new Error('request quá lớn')); req.destroy(); return; }
       chunks.push(chunk);
     });
     req.on('end', () => {
       try {
         const parsed = JSON.parse(Buffer.concat(chunks).toString('utf8') || '{}') as Partial<ExecRequest>;
         if (typeof parsed.command !== 'string' || !parsed.command.trim()) {
-          rejectPromise(new Error('command is required'));
+          rejectPromise(new Error('bắt buộc phải có command'));
           return;
         }
         resolvePromise({
@@ -86,7 +86,7 @@ function readJson(req: IncomingMessage): Promise<ExecRequest> {
             : [],
           timeout: typeof parsed.timeout === 'number' ? parsed.timeout : 60_000,
         });
-      } catch { rejectPromise(new Error('invalid JSON')); }
+      } catch { rejectPromise(new Error('JSON không hợp lệ')); }
     });
     req.on('error', rejectPromise);
   });

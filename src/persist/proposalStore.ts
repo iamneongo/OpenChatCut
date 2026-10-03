@@ -247,7 +247,7 @@ export function saveProposalRecord(
   record: StoredProposalRecord,
 ): Promise<void> {
   const parsed = parseStoredProposalRecord(record);
-  if (!parsed) return Promise.reject(new Error('Proposal record is invalid.'));
+  if (!parsed) return Promise.reject(new Error('Bản ghi proposal không hợp lệ.'));
   return serialize(projectId, async () => {
     if (await existingRecord(projectId)) throw new Error('đã tồn tại proposal bền vững.');
     await persistRecord(projectId, parsed);
@@ -262,7 +262,7 @@ export async function loadProposal(projectId: string): Promise<Proposal | null> 
 
 export function saveProposal(projectId: string, proposal: Proposal): Promise<void> {
   const parsed = parseProposal(proposal);
-  if (!parsed) return Promise.reject(new Error('Proposal payload is invalid.'));
+  if (!parsed) return Promise.reject(new Error('Payload proposal không hợp lệ.'));
   const prepared: StoredProposalRecord = { version: 1, phase: 'prepared', proposal: parsed };
   return serialize(projectId, async () => {
     const current = await existingRecord(projectId);
@@ -275,7 +275,7 @@ export function saveProposal(projectId: string, proposal: Proposal): Promise<voi
 
 export function restorePreparedProposal(projectId: string, proposal: Proposal): Promise<void> {
   const parsed = parseProposal(proposal);
-  if (!parsed) return Promise.reject(new Error('Proposal payload is invalid.'));
+  if (!parsed) return Promise.reject(new Error('Payload proposal không hợp lệ.'));
   return serialize(projectId, async () => {
     const current = await existingRecord(projectId);
     if (!current || current.phase !== 'applying' || current.proposal.id !== parsed.id) {

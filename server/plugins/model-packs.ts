@@ -89,7 +89,7 @@ function readJson(req: IncomingMessage): Promise<Record<string, unknown>> {
   req.on('data', (chunk: Buffer) => {
     bytes += chunk.length;
     if (bytes > MAX_JSON_BYTES) {
-      reject(new Error('Request body is too large'));
+      reject(new Error('body yêu cầu quá lớn'));
       req.destroy();
       return;
     }

@@ -43,7 +43,7 @@ function readJson(req: IncomingMessage): Promise<unknown> {
     req.on('data', (chunk: Buffer) => {
       size += chunk.length;
       if (size > MAX_JSON) {
-        reject(new Error('body too large'));
+        reject(new Error('body quá lớn'));
         req.destroy();
         return;
       }
@@ -103,7 +103,7 @@ function runCapture(command: string, args: string[], options: CaptureOptions): P
     };
     const timer = setTimeout(() => {
       child.kill('SIGKILL');
-      finish(new Error(`${command} timed out`));
+      finish(new Error(`${command} hết thời gian chờ`));
     }, options.timeoutMs);
     options.signal?.addEventListener('abort', onAbort, { once: true });
     child.stdout?.on('data', (chunk: Buffer) => { stdout += String(chunk); });
@@ -129,7 +129,7 @@ function runBuffer(command: string, args: string[], timeoutMs: number): Promise<
     let stderr = '';
     const timer = setTimeout(() => {
       child.kill('SIGKILL');
-      reject(new Error(`${command} timed out`));
+      reject(new Error(`${command} hết thời gian chờ`));
     }, timeoutMs);
     child.stdout?.on('data', (chunk: Buffer) => chunks.push(chunk));
     child.stderr?.on('data', (chunk: Buffer) => {
@@ -150,7 +150,7 @@ async function probeDurationMs(file: string, signal?: AbortSignal): Promise<numb
     '-v', 'error', '-show_entries', 'format=duration', '-of', 'default=nw=1:nk=1', file,
   ], { timeoutMs: 30_000, signal });
   const seconds = Number(output.trim());
-  if (!Number.isFinite(seconds) || seconds <= 0) throw new Error('ffprobe duration failed');
+  if (!Number.isFinite(seconds) || seconds <= 0) throw new Error('ffprobe không đọc được thời lượng');
   return Math.round(seconds * 1000);
 }
 

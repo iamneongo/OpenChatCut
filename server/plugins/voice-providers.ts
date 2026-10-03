@@ -177,7 +177,7 @@ export async function inworldVoice(options: VoiceOptions, input: ValidVoiceReque
   });
   if (!response.ok) throw new Error(await providerError(response));
   const result = await response.json() as { audioContent?: string };
-  if (!result.audioContent) throw new Error('Inworld returned no audio');
+  if (!result.audioContent) throw new Error('Inworld không trả về audio');
   return Buffer.from(result.audioContent, 'base64');
 }
 
@@ -208,7 +208,7 @@ export async function speechifyVoice(options: VoiceOptions, input: ValidVoiceReq
   });
   if (!response.ok) throw new Error(await providerError(response));
   const result = await response.json() as { audio_data?: string };
-  if (!result.audio_data) throw new Error('Speechify returned no audio');
+  if (!result.audio_data) throw new Error('Speechify không trả về audio');
   return Buffer.from(result.audio_data, 'base64');
 }
 
