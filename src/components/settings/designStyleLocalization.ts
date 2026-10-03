@@ -102,9 +102,9 @@ const PRESET_GUIDE_VI: Record<string, string> = {
   'Redline Tech': 'Phong cách công nghệ công nghiệp đường đỏ: bề mặt than đen, lưới chấm, bảng đỏ sắc và kiểu chữ cô đọng mạnh.',
   'Black & White Neon': 'Phong cách studio đen trắng tiết chế: nền gần đen, chữ trắng phát sáng, đường tròn và biểu đồ tuyến tính, điểm tím dùng rất ít.',
   'Violet Aura': 'Phong cách hào quang tím mộng mơ: nền tím đen, quầng chuyển tím-hồng, số lớn mờ và thẻ bo góc với chữ trắng tương phản.',
-  'Warm Paper': 'Phong cách biên tập trên giấy ấm: nền kem có vân, điểm nhấn cam san hô, hình sóng hữu cơ và typography serif thanh lịch.',
-  'Modern Editorial': 'Phong cách biên tập hiện đại: giấy xám ấm, lưới sổ tay, tiêu đề serif và chữ Roboto rõ ràng; cam hoặc vàng chỉ nhấn điểm quan trọng.',
-  'Orange Minimal': 'Phong cách tối giản cam: nền trung tính như giấy, khối hình phẳng, typography đậm, huy hiệu đánh số và biểu đồ sạch.',
+  'Warm Paper': 'Phong cách biên tập trên giấy ấm: nền kem có vân, điểm nhấn cam san hô, hình sóng hữu cơ và kiểu chữ có chân thanh lịch.',
+  'Modern Editorial': 'Phong cách biên tập hiện đại: giấy xám ấm, lưới sổ tay, tiêu đề có chân và chữ Roboto rõ ràng; cam hoặc vàng chỉ nhấn điểm quan trọng.',
+  'Orange Minimal': 'Phong cách tối giản cam: nền trung tính như giấy, khối hình phẳng, kiểu chữ đậm, huy hiệu đánh số và biểu đồ sạch.',
   'Crimson Night Glass': 'Phong cách kính đêm đỏ thẫm: phần tử dịu dàng hiện ra từ bóng tối, thẻ kính bo góc và ánh đỏ tiết chế trên nền gần đen.',
   'Jewel Deco': 'Phong cách trang trí đá quý: khung viền được vẽ trước, nội dung hiện theo nhóm, dùng san hô, vàng, xanh ngọc, đỏ rượu và hồng.',
 };
