@@ -665,7 +665,7 @@
     },
     {
       "name": "manage_transcript",
-      "description": "Correct source transcripts and manage translation variants; most actions leave word timing and clip duration unchanged. Eight actions:\n- fix: correct the source transcript. For a word, pass wordIndex or find with the incorrect source text plus text with the correction; only word.text changes. To rename or merge a speaker, pass from with an existing label such as \"A\" plus to with the new display name; passing another existing label merges them. Only word.speaker changes.\n- clear_edits: restore the clip to the raw transcript by clearing deleted words, silence caps, gap overrides, and play-order overrides (same as the Transcript panel 「还原全部」). Retimes the clip to the full transcript duration.\n- set_play_order: reorder spoken playback via playOrder word-index array (same as dragging speech blocks in the Transcript panel). Pass playOrder:null or clearPlayOrder:true to restore chronological order. Retimes the clip.\n- retry_transcription: force ASR to rerun for the clip and replace its transcript when transcription is stuck, failed, or needs refreshing. Accepts the same optional provider override as transcribe_track.\n- translation_create: translate the full transcript to lang and create or replace a word-level translation variant sharing the source timeline.\n- translation_ensure: idempotently reuse an existing variant for lang or create it otherwise. Prefer this for ordinary translation requests.\n- translation_list: list the source transcript and all translation variants with id/lang/word count.\n- translation_read: read words from a translation variant selected by lang or targetLanguage.\nTranslation variants contain translated text only. To display a language in captions, use edit_captions language_mode.",
+      "description": "Correct source transcripts and manage translation variants; most actions leave word timing and clip duration unchanged. Eight actions:\n- fix: correct the source transcript. For a word, pass wordIndex or find with the incorrect source text plus text with the correction; only word.text changes. To rename or merge a speaker, pass from with an existing label such as \"A\" plus to with the new display name; passing another existing label merges them. Only word.speaker changes.\n- clear_edits: restore the clip to the raw transcript by clearing deleted words, silence caps, gap overrides, and play-order overrides (giống nút “Khôi phục tất cả” trong panel Transcript). Retimes the clip to the full transcript duration.\n- set_play_order: reorder spoken playback via playOrder word-index array (same as dragging speech blocks in the Transcript panel). Pass playOrder:null or clearPlayOrder:true to restore chronological order. Retimes the clip.\n- retry_transcription: force ASR to rerun for the clip and replace its transcript when transcription is stuck, failed, or needs refreshing. Accepts the same optional provider override as transcribe_track.\n- translation_create: translate the full transcript to lang and create or replace a word-level translation variant sharing the source timeline.\n- translation_ensure: idempotently reuse an existing variant for lang or create it otherwise. Prefer this for ordinary translation requests.\n- translation_list: list the source transcript and all translation variants with id/lang/word count.\n- translation_read: read words from a translation variant selected by lang or targetLanguage.\nTranslation variants contain translated text only. To display a language in captions, use edit_captions language_mode.",
       "input_schema": {
         "type": "object",
         "properties": {
@@ -1022,7 +1022,7 @@
     },
     {
       "name": "view_timeline_frames",
-      "description": "Render still frames of one timeline composition (pending/draft edits included). frames and seconds are ABSOLUTE TIMELINE coordinates, not source-media positions. Use after visual edits (MG/text, transitions, zoom, filters, aspect, captions) to verify the composed result. Provide exact coordinates or count; with neither, samples evenly (default 4, max 8). Multi-frame results are one labeled contact sheet when possible.",
+      "description": "Kết xuất frame tĩnh của một composition timeline (bao gồm cả chỉnh sửa nháp/chưa công bố). frames và seconds là tọa độ TIMELINE TUYỆT ĐỐI, không phải vị trí trong media nguồn. Dùng sau các chỉnh sửa hình ảnh (MG/text, transition, zoom, filter, tỷ lệ khung hình, phụ đề) để kiểm tra kết quả composition. Truyền tọa độ chính xác hoặc count; nếu không có, tool lấy mẫu đều (mặc định 4, tối đa 8). Nhiều frame sẽ được gộp thành contact sheet có nhãn khi có thể.",
       "input_schema": {
         "type": "object",
         "properties": {
@@ -1032,7 +1032,7 @@
               "type": "number"
             },
             "maxItems": 8,
-            "description": "Absolute timeline frame numbers to render."
+            "description": "Số frame tuyệt đối trên timeline cần kết xuất."
           },
           "seconds": {
             "type": "array",
@@ -1040,46 +1040,46 @@
               "type": "number"
             },
             "maxItems": 8,
-            "description": "Absolute timeline seconds (converted by timeline fps)."
+            "description": "Số giây tuyệt đối trên timeline (được đổi theo fps timeline)."
           },
           "count": {
             "type": "number",
             "minimum": 1,
             "maximum": 8,
-            "description": "Even midpoints across the timeline/range (default 4, max 8)."
+            "description": "Các điểm giữa đều nhau trên timeline/vùng (mặc định 4, tối đa 8)."
           },
           "fromSeconds": {
             "type": "number",
-            "description": "Absolute timeline range start (use with toSeconds)."
+            "description": "Điểm đầu vùng timeline tuyệt đối (dùng cùng toSeconds)."
           },
           "toSeconds": {
             "type": "number",
-            "description": "Absolute timeline range end (use with fromSeconds)."
+            "description": "Điểm cuối vùng timeline tuyệt đối (dùng cùng fromSeconds)."
           },
           "timelineId": {
             "type": "string",
-            "description": "Timeline id/prefix; omit for the active timeline in this agent session."
+            "description": "ID/tiền tố timeline; bỏ qua để dùng timeline đang hoạt động trong phiên agent."
           }
         }
       }
     },
     {
       "name": "view_asset_frames",
-      "description": "Inspect SOURCE media and see a labeled contact sheet; these coordinates never refer to the composed timeline. Pass assetId for the full pool source, or itemId to constrain sampling to that placed clip’s visible source window (srcInFrame + playbackRate aware). sourceTimesMs, frames, seconds, and fromSeconds/toSeconds are all SOURCE-MEDIA coordinates. With itemId, samples are clamped to its visible source window. Use for source selection/quality inspection; use view_timeline_frames for composed timeline proof. Audio has no frames. Default broad scan = 6 source-window midpoints, max 8. Reuse the contact sheet instead of repeatedly sampling the same range. Finalized uploaded video prefers ffmpeg; blob/image/MG paths use browser or Remotion rendering.",
+      "description": "Kiểm tra media NGUỒN và xem contact sheet có nhãn; các tọa độ này không bao giờ trỏ tới timeline đã composition. Truyền assetId để lấy toàn bộ nguồn trong pool, hoặc itemId để giới hạn mẫu vào vùng nguồn hiển thị của clip đã đặt (có tính srcInFrame + playbackRate). sourceTimesMs, frames, seconds và fromSeconds/toSeconds đều là tọa độ MEDIA NGUỒN. Khi có itemId, mẫu bị kẹp vào vùng nguồn hiển thị của clip. Dùng để chọn/kiểm tra chất lượng nguồn; dùng view_timeline_frames để kiểm tra composition timeline. Audio không có frame. Quét rộng mặc định = 6 điểm giữa vùng nguồn, tối đa 8. Tái sử dụng contact sheet thay vì lấy mẫu lặp lại cùng vùng. Video upload đã hoàn tất ưu tiên ffmpeg; đường dẫn blob/image/MG dùng trình duyệt hoặc Remotion.",
       "input_schema": {
         "type": "object",
         "properties": {
           "assetId": {
             "type": "string",
-            "description": "Media-pool asset id (prefix ok)."
+            "description": "ID asset trong media pool (chấp nhận tiền tố)."
           },
           "itemId": {
             "type": "string",
-            "description": "Placed clip id/prefix. Uses its exact visible source window; alternative to assetId."
+            "description": "ID/tiền tố clip đã đặt. Dùng đúng vùng nguồn hiển thị; thay thế cho assetId."
           },
           "timelineId": {
             "type": "string",
-            "description": "Timeline containing itemId; omit for the active timeline."
+            "description": "Timeline chứa itemId; bỏ qua để dùng timeline đang hoạt động."
           },
           "sourceTimesMs": {
             "type": "array",
@@ -1087,7 +1087,7 @@
               "type": "number"
             },
             "maxItems": 8,
-            "description": "Millisecond offsets in source-media time. Accepts 1–8 values."
+            "description": "Offset mili giây theo thời gian media nguồn. Nhận 1–8 giá trị."
           },
           "frames": {
             "type": "array",
@@ -1095,7 +1095,7 @@
               "type": "number"
             },
             "maxItems": 8,
-            "description": "Source-media frame numbers (project/source timebase)."
+            "description": "Số frame media nguồn (theo timebase dự án/nguồn)."
           },
           "seconds": {
             "type": "array",
@@ -1103,21 +1103,21 @@
               "type": "number"
             },
             "maxItems": 8,
-            "description": "Source-media seconds."
+            "description": "Số giây media nguồn."
           },
           "count": {
             "type": "number",
             "minimum": 1,
             "maximum": 8,
-            "description": "Even source-window midpoints (default 6 for video, max 8)."
+            "description": "Các điểm giữa đều nhau của vùng nguồn (mặc định 6 cho video, tối đa 8)."
           },
           "fromSeconds": {
             "type": "number",
-            "description": "Source-media range start; intersected with the clip window when itemId is used."
+            "description": "Điểm đầu vùng media nguồn; giao với vùng clip khi dùng itemId."
           },
           "toSeconds": {
             "type": "number",
-            "description": "Source-media range end; intersected with the clip window when itemId is used."
+            "description": "Điểm cuối vùng media nguồn; giao với vùng clip khi dùng itemId."
           }
         }
       }
@@ -2710,7 +2710,7 @@
     },
     {
       "name": "edit_captions",
-      "description": "Manage the captions/subtitles overlay via a single `action`. Read text first only for display_text (use read_captions); every other action is one direct call.\n- enable / disable: toggle captions data (enable optionally takes a built-in `preset` name).\n- hide_overlay / show_overlay: global captionsHidden flag (toolbar 字幕显示) — hides on-screen caption overlay and text clips without wiping caption data; show_overlay re-enables.\n- template: no arg → list the 21 built-in presets; `templatePreset:\"netflix\"` → apply one (size/position preserved).\n- style: custom look via `json` — {font|fontFamily,sizePx|fontSizeRatio|fontSize,color,weight|fontWeight,fontStyle,textAlign|align,underline,strike,letterSpacing,lineHeight,strokeColor,strokeWidth,highlightColor,highlightBackground,shadow|shadowStrength,background|backgroundColor,backgroundOpacity,borderRadius,textTransform,displayMode,wordsPerPage,pacing}. Layered over the current template; unmapped fields are reported in `ignored`. sizePx is relative to CANVAS height — on 9:16 vertical (1080×1920) social captions want sizePx ≥ 86 (≈4.5% of height); leave size unset to keep the template default. pacing: 'phrase' (default, readable pages + karaoke highlight) — only use 'word' when the user explicitly wants single-word pop.\n- animation: deterministic burn-in motion shared by preview/export; set `motionPreset` to none, fade-up, pop, word-pop, or karaoke-pulse.\n- layout: place the whole block via `json` {preset:\"bottom-center|top-center|center|…3×3\", offsetXRatio, offsetYRatio, scale, rotation, opacity}; transforms may also be nested as `{transforms:{scale,rotation,opacity}}`.\n- display_text: per-word DISPLAY overrides via `json` {overrides:[{wordRef, text, hidden, forcePageBreak}], clearOverrides} — get the opaque wordRef from read_captions. wordIndex remains a legacy fallback; wordRef is stable across regrouping and source reorder. Set clear:true on an entry to clear that word by either selector. Doesn't touch the transcript.\n- source_set / source_add / source_remove / source_list: choose which transcribed track(s)/item(s) the captions read (json {mode:\"timeline\"} for all audible, or {sources:[{trackId|itemId}]}).\n  Multi-source entries accept a 0-based trackOrder. source_update can move an existing source with {sourceId|index, trackOrder}; source_list returns the normalized visual order.\n- language_mode / bilingual: switch caption language — json {mode:\"original|translation|bilingual\", languageCode} (create the translation first with manage_transcript translate).\n- track: legacy single-source trackId or internal 0-based trackOrder (prefer source_set for visible text sources).\n- layout_policy / positions / source_update: arrange, style, hide, and reorder individual source lanes. preset_* manages user-saved caption styles.",
+      "description": "Manage the captions/subtitles overlay via a single `action`. Read text first only for display_text (use read_captions); every other action is one direct call.\n- enable / disable: toggle captions data (enable optionally takes a built-in `preset` name).\n- hide_overlay / show_overlay: global captionsHidden flag (hiển thị phụ đề trên thanh công cụ) — ẩn lớp phụ đề trên màn hình và các clip text nhưng không xóa dữ liệu phụ đề; show_overlay bật lại.\n- template: no arg → list the 21 built-in presets; `templatePreset:\"netflix\"` → apply one (size/position preserved).\n- style: custom look via `json` — {font|fontFamily,sizePx|fontSizeRatio|fontSize,color,weight|fontWeight,fontStyle,textAlign|align,underline,strike,letterSpacing,lineHeight,strokeColor,strokeWidth,highlightColor,highlightBackground,shadow|shadowStrength,background|backgroundColor,backgroundOpacity,borderRadius,textTransform,displayMode,wordsPerPage,pacing}. Layered over the current template; unmapped fields are reported in `ignored`. sizePx is relative to CANVAS height — on 9:16 vertical (1080×1920) social captions want sizePx ≥ 86 (≈4.5% of height); leave size unset to keep the template default. pacing: 'phrase' (default, readable pages + karaoke highlight) — only use 'word' when the user explicitly wants single-word pop.\n- animation: deterministic burn-in motion shared by preview/export; set `motionPreset` to none, fade-up, pop, word-pop, or karaoke-pulse.\n- layout: place the whole block via `json` {preset:\"bottom-center|top-center|center|…3×3\", offsetXRatio, offsetYRatio, scale, rotation, opacity}; transforms may also be nested as `{transforms:{scale,rotation,opacity}}`.\n- display_text: per-word DISPLAY overrides via `json` {overrides:[{wordRef, text, hidden, forcePageBreak}], clearOverrides} — get the opaque wordRef from read_captions. wordIndex remains a legacy fallback; wordRef is stable across regrouping and source reorder. Set clear:true on an entry to clear that word by either selector. Doesn't touch the transcript.\n- source_set / source_add / source_remove / source_list: choose which transcribed track(s)/item(s) the captions read (json {mode:\"timeline\"} for all audible, or {sources:[{trackId|itemId}]}).\n  Multi-source entries accept a 0-based trackOrder. source_update can move an existing source with {sourceId|index, trackOrder}; source_list returns the normalized visual order.\n- language_mode / bilingual: switch caption language — json {mode:\"original|translation|bilingual\", languageCode} (create the translation first with manage_transcript translate).\n- track: legacy single-source trackId or internal 0-based trackOrder (prefer source_set for visible text sources).\n- layout_policy / positions / source_update: arrange, style, hide, and reorder individual source lanes. preset_* manages user-saved caption styles.",
       "input_schema": {
         "type": "object",
         "properties": {
@@ -2968,7 +2968,7 @@
     },
     {
       "name": "submit_render_job",
-      "description": "Render the active timeline ASYNCHRONOUSLY as MP4/WebM video or MP3/WAV audio. Returns immediately with a renderId; the job also appears in the editor top-right export queue with progress and cancellation. Poll track_export for status/progress and the download URL. Prefer this over the synchronous submit_export for long timelines. Optional frame boundaries use a half-open [startFrame, endFrameExclusive) range.",
+      "description": "Kết xuất timeline hiện tại BẤT ĐỒNG BỘ thành video MP4/WebM hoặc âm thanh MP3/WAV. Trả về ngay với renderId; tác vụ cũng xuất hiện trong hàng đợi xuất ở góc trên bên phải editor kèm tiến độ và nút hủy. Gọi track_export để xem trạng thái/tiến độ và URL tải xuống. Với timeline dài, nên dùng tool này thay cho submit_export đồng bộ. Biên frame tùy chọn dùng khoảng nửa mở [startFrame, endFrameExclusive).",
       "input_schema": {
         "type": "object",
         "properties": {
@@ -2978,7 +2978,7 @@
               "video",
               "audio"
             ],
-            "description": "Defaults to video."
+            "description": "Mặc định là video."
           },
           "codec": {
             "type": "string",
@@ -2988,7 +2988,7 @@
               "mp3",
               "wav"
             ],
-            "description": "Video: h264 (default) or vp8. Audio: mp3 (default) or wav."
+            "description": "Video: h264 (mặc định) hoặc vp8. Audio: mp3 (mặc định) hoặc wav."
           },
           "resolution": {
             "type": "string",
@@ -2997,21 +2997,21 @@
               "720p",
               "1080p"
             ],
-            "description": "Video only. Scale by the short side; omit to use the timeline size."
+            "description": "Chỉ dành cho video. Tỷ lệ theo cạnh ngắn; bỏ qua để dùng kích thước timeline."
           },
           "fps": {
             "type": "integer",
-            "description": "Video only. Target frame rate, one of 24/25/30/50/60; omit to use the timeline fps."
+            "description": "Chỉ dành cho video. Tốc độ khung hình đích: 24/25/30/50/60; bỏ qua để dùng fps của timeline."
           },
           "videoBitrate": {
             "type": "integer",
             "minimum": 1000000,
             "maximum": 80000000,
-            "description": "Video only. Exact output bitrate in bits per second; omit for the renderer default."
+            "description": "Chỉ dành cho video. Bitrate đầu ra chính xác theo bit/giây; bỏ qua để dùng mặc định renderer."
           },
           "name": {
             "type": "string",
-            "description": "Download filename."
+            "description": "Tên tệp tải xuống."
           },
           "startFrame": {
             "type": "integer",
@@ -3033,14 +3033,14 @@
           },
           "saveToMediaPool": {
             "type": "boolean",
-            "description": "When true, keep the completed file in My Media and record its source Sequence and source asset ranges. Defaults to false."
+            "description": "Nếu true, giữ tệp hoàn tất trong Tư liệu của tôi và lưu sequence nguồn cùng các vùng asset nguồn. Mặc định false."
           }
         }
       }
     },
     {
       "name": "track_export",
-      "description": "Inspect render/export jobs started by submit_render_job. action=status: return current status. action=wait: poll until terminal or timeoutSeconds elapses. Use one bounded wait; if waitExpired=true, report the background status and end the turn instead of calling wait again or starting another export. Pass renderIds when available. If omitted, latest defaults to true. Returns status, progress, and — when completed — a downloadUrl plus mediaPoolStatus when saveToMediaPool was requested.",
+      "description": "Kiểm tra tác vụ render/xuất do submit_render_job tạo. action=status: trả về trạng thái hiện tại. action=wait: chờ tới khi kết thúc hoặc hết timeoutSeconds. Chỉ chờ một lần có giới hạn; nếu waitExpired=true, báo trạng thái nền rồi kết thúc lượt thay vì gọi wait lại hoặc tạo lượt xuất khác. Truyền renderIds nếu có. Nếu bỏ qua, latest mặc định true. Trả về trạng thái, tiến độ và khi hoàn tất là downloadUrl cùng mediaPoolStatus nếu đã yêu cầu saveToMediaPool.",
       "input_schema": {
         "type": "object",
         "properties": {
@@ -3050,29 +3050,29 @@
               "status",
               "wait"
             ],
-            "description": "status or wait"
+            "description": "status hoặc wait"
           },
           "renderIds": {
             "type": "string",
-            "description": "Comma-separated render job IDs or prefixes returned by submit_render_job."
+            "description": "ID hoặc tiền tố ID tác vụ render, phân tách bằng dấu phẩy, do submit_render_job trả về."
           },
           "latest": {
             "type": "boolean",
-            "description": "When true, read the newest matching render job. Defaults to true when renderIds is omitted."
+            "description": "Nếu true, đọc tác vụ render mới nhất khớp điều kiện. Mặc định true khi bỏ qua renderIds."
           },
           "onlyActive": {
             "type": "boolean",
-            "description": "When latest=true, return only currently rendering jobs. Use false/omit to include recently completed or failed renders."
+            "description": "Khi latest=true, chỉ trả về tác vụ đang render. Dùng false/bỏ qua để gồm cả tác vụ vừa hoàn tất hoặc thất bại."
           },
           "timelineId": {
             "type": "string",
-            "description": "Optional timeline ID or prefix to narrow latest lookup."
+            "description": "ID hoặc tiền tố timeline tùy chọn để thu hẹp tìm kiếm mới nhất."
           },
           "timeoutSeconds": {
             "type": "number",
             "minimum": 0,
             "maximum": 3600,
-            "description": "For action=wait, maximum seconds before returning the current non-terminal status. Defaults to 20. Use 0 only when the caller owns a sufficiently long tool deadline."
+            "description": "Với action=wait, số giây tối đa trước khi trả về trạng thái chưa kết thúc hiện tại. Mặc định 20. Chỉ dùng 0 khi caller có deadline tool đủ dài."
           }
         },
         "required": [
@@ -3082,7 +3082,7 @@
     },
     {
       "name": "read_export_history",
-      "description": "List recent finished exports (most recent first): filename, format, codec, size, frame range, and time. Use to remind the user what they have already exported this session and earlier. Read-only; does not export anything.",
+      "description": "Liệt kê các bản xuất đã hoàn tất gần đây (mới nhất trước): tên tệp, format, codec, kích thước, vùng frame và thời gian. Dùng để nhắc người dùng những gì đã xuất trong lượt này hoặc trước đó. Chỉ đọc; không thực hiện xuất.",
       "input_schema": {
         "type": "object",
         "properties": {
@@ -3090,7 +3090,7 @@
             "type": "integer",
             "minimum": 1,
             "maximum": 100,
-            "description": "Max records to return; defaults to 20."
+            "description": "Số bản ghi tối đa; mặc định 20."
           }
         }
       }
@@ -3914,7 +3914,7 @@
         "properties": {
           "query": {
             "type": "string",
-            "description": "Content to find, e.g. 背景音乐音量 / 字幕样式 / 黄昏的海边"
+            "description": "Nội dung cần tìm, ví dụ âm lượng nhạc nền / kiểu phụ đề / bãi biển lúc hoàng hôn"
           },
           "projectId": {
             "type": "string",
@@ -4482,17 +4482,17 @@
     },
     {
       "name": "install_skill",
-      "description": "从 GitHub 安装一个 skill 仓库到本机技能目录（~/.openchatcut/skills/<slug>/），完整安装 SKILL.md 及其 references/scripts/assets/examples。安装后资源库「技能」面板会自动展示，可用 /skill:<slug> 或面板激活。repo 支持 GitHub URL 或 owner/repo（如 \"Jane-xiaoer/paper-collage-ad-codex\"）。slug 可选，默认取 SKILL.md 的 name 或仓库名。",
+      "description": "Cài một kho skill từ GitHub vào thư mục skill trên máy (~/.openchatcut/skills/<slug>/), bao gồm đầy đủ SKILL.md và references/scripts/assets/examples. Sau khi cài, skill sẽ tự xuất hiện trong panel “Skill” của thư viện; có thể kích hoạt bằng /skill:<slug> hoặc từ panel. repo nhận GitHub URL hoặc owner/repo (ví dụ \"Jane-xiaoer/paper-collage-ad-codex\"). slug là tùy chọn, mặc định lấy name trong SKILL.md hoặc tên repo.",
       "input_schema": {
         "type": "object",
         "properties": {
           "repo": {
             "type": "string",
-            "description": "GitHub 仓库：完整 URL（https://github.com/owner/repo）或 owner/repo"
+            "description": "Kho GitHub: URL đầy đủ (https://github.com/owner/repo) hoặc owner/repo"
           },
           "slug": {
             "type": "string",
-            "description": "可选：安装目录名（必须 kebab-case），默认取 SKILL.md frontmatter name 或仓库名"
+            "description": "Tùy chọn: tên thư mục cài đặt (phải ở dạng kebab-case), mặc định lấy name trong frontmatter của SKILL.md hoặc tên repo"
           }
         },
         "required": [
@@ -4502,21 +4502,21 @@
     },
     {
       "name": "run_skill_script",
-      "description": "在本机执行已安装技能目录内的脚本（白名单命令：bash/sh/node/npm/npx/python3/python/uv/uvx/ffmpeg/ffprobe/mkdir/cp/chmod），工作目录锁定在技能目录。用于运行技能自带的确定性脚本（如 render.mjs、check-deps.sh），云沙箱无法访问本机技能文件。超时默认 60s、上限 120s；输出最多 512KB。",
+      "description": "Chạy script trong thư mục skill đã cài trên máy (lệnh trong whitelist: bash/sh/node/npm/npx/python3/python/uv/uvx/ffmpeg/ffprobe/mkdir/cp/chmod); thư mục làm việc được khóa trong thư mục skill. Dùng để chạy các script xác định đi kèm skill (như render.mjs, check-deps.sh); sandbox đám mây không thể truy cập file skill trên máy. Timeout mặc định 60 giây, tối đa 120 giây; output tối đa 512 KB.",
       "input_schema": {
         "type": "object",
         "properties": {
           "skill": {
             "type": "string",
-            "description": "技能 slug（load_skill 返回的 skill 字段）"
+            "description": "Slug của skill (trường skill do load_skill trả về)"
           },
           "command": {
             "type": "string",
-            "description": "命令（首个词必须是白名单内可执行文件），如 bash scripts/check-deps.sh 或 node scripts/render.mjs"
+            "description": "Lệnh (từ đầu tiên phải là executable trong whitelist), ví dụ bash scripts/check-deps.sh hoặc node scripts/render.mjs"
           },
           "timeout": {
             "type": "number",
-            "description": "可选：超时毫秒，默认 60000，上限 120000"
+            "description": "Tùy chọn: timeout tính bằng mili giây, mặc định 60000, tối đa 120000"
           }
         },
         "required": [
@@ -4724,7 +4724,7 @@
           },
           "name": {
             "type": "string",
-            "description": "save: display name for the checkpoint (e.g. \"粗剪完成\")."
+            "description": "save: tên hiển thị cho checkpoint (ví dụ \"Hoàn tất dựng thô\")."
           },
           "versionId": {
             "type": "string",
@@ -5662,7 +5662,7 @@
     },
     {
       "name": "view_timeline_frames",
-      "description": "Render still frames of one timeline composition (pending/draft edits included). frames and seconds are ABSOLUTE TIMELINE coordinates, not source-media positions. Use after visual edits (MG/text, transitions, zoom, filters, aspect, captions) to verify the composed result. Provide exact coordinates or count; with neither, samples evenly (default 4, max 8). Multi-frame results are one labeled contact sheet when possible.",
+      "description": "Kết xuất frame tĩnh của một composition timeline (bao gồm cả chỉnh sửa nháp/chưa công bố). frames và seconds là tọa độ TIMELINE TUYỆT ĐỐI, không phải vị trí trong media nguồn. Dùng sau các chỉnh sửa hình ảnh (MG/text, transition, zoom, filter, tỷ lệ khung hình, phụ đề) để kiểm tra kết quả composition. Truyền tọa độ chính xác hoặc count; nếu không có, tool lấy mẫu đều (mặc định 4, tối đa 8). Nhiều frame sẽ được gộp thành contact sheet có nhãn khi có thể.",
       "input_schema": {
         "type": "object",
         "properties": {
@@ -5672,7 +5672,7 @@
               "type": "number"
             },
             "maxItems": 8,
-            "description": "Absolute timeline frame numbers to render."
+            "description": "Số frame tuyệt đối trên timeline cần kết xuất."
           },
           "seconds": {
             "type": "array",
@@ -5680,46 +5680,46 @@
               "type": "number"
             },
             "maxItems": 8,
-            "description": "Absolute timeline seconds (converted by timeline fps)."
+            "description": "Số giây tuyệt đối trên timeline (được đổi theo fps timeline)."
           },
           "count": {
             "type": "number",
             "minimum": 1,
             "maximum": 8,
-            "description": "Even midpoints across the timeline/range (default 4, max 8)."
+            "description": "Các điểm giữa đều nhau trên timeline/vùng (mặc định 4, tối đa 8)."
           },
           "fromSeconds": {
             "type": "number",
-            "description": "Absolute timeline range start (use with toSeconds)."
+            "description": "Điểm đầu vùng timeline tuyệt đối (dùng cùng toSeconds)."
           },
           "toSeconds": {
             "type": "number",
-            "description": "Absolute timeline range end (use with fromSeconds)."
+            "description": "Điểm cuối vùng timeline tuyệt đối (dùng cùng fromSeconds)."
           },
           "timelineId": {
             "type": "string",
-            "description": "Timeline id/prefix; omit for the active timeline in this agent session."
+            "description": "ID/tiền tố timeline; bỏ qua để dùng timeline đang hoạt động trong phiên agent."
           }
         }
       }
     },
     {
       "name": "view_asset_frames",
-      "description": "Inspect SOURCE media and see a labeled contact sheet; these coordinates never refer to the composed timeline. Pass assetId for the full pool source, or itemId to constrain sampling to that placed clip’s visible source window (srcInFrame + playbackRate aware). sourceTimesMs, frames, seconds, and fromSeconds/toSeconds are all SOURCE-MEDIA coordinates. With itemId, samples are clamped to its visible source window. Use for source selection/quality inspection; use view_timeline_frames for composed timeline proof. Audio has no frames. Default broad scan = 6 source-window midpoints, max 8. Reuse the contact sheet instead of repeatedly sampling the same range. Finalized uploaded video prefers ffmpeg; blob/image/MG paths use browser or Remotion rendering.",
+      "description": "Kiểm tra media NGUỒN và xem contact sheet có nhãn; các tọa độ này không bao giờ trỏ tới timeline đã composition. Truyền assetId để lấy toàn bộ nguồn trong pool, hoặc itemId để giới hạn mẫu vào vùng nguồn hiển thị của clip đã đặt (có tính srcInFrame + playbackRate). sourceTimesMs, frames, seconds và fromSeconds/toSeconds đều là tọa độ MEDIA NGUỒN. Khi có itemId, mẫu bị kẹp vào vùng nguồn hiển thị của clip. Dùng để chọn/kiểm tra chất lượng nguồn; dùng view_timeline_frames để kiểm tra composition timeline. Audio không có frame. Quét rộng mặc định = 6 điểm giữa vùng nguồn, tối đa 8. Tái sử dụng contact sheet thay vì lấy mẫu lặp lại cùng vùng. Video upload đã hoàn tất ưu tiên ffmpeg; đường dẫn blob/image/MG dùng trình duyệt hoặc Remotion.",
       "input_schema": {
         "type": "object",
         "properties": {
           "assetId": {
             "type": "string",
-            "description": "Media-pool asset id (prefix ok)."
+            "description": "ID asset trong media pool (chấp nhận tiền tố)."
           },
           "itemId": {
             "type": "string",
-            "description": "Placed clip id/prefix. Uses its exact visible source window; alternative to assetId."
+            "description": "ID/tiền tố clip đã đặt. Dùng đúng vùng nguồn hiển thị; thay thế cho assetId."
           },
           "timelineId": {
             "type": "string",
-            "description": "Timeline containing itemId; omit for the active timeline."
+            "description": "Timeline chứa itemId; bỏ qua để dùng timeline đang hoạt động."
           },
           "sourceTimesMs": {
             "type": "array",
@@ -5727,7 +5727,7 @@
               "type": "number"
             },
             "maxItems": 8,
-            "description": "Millisecond offsets in source-media time. Accepts 1–8 values."
+            "description": "Offset mili giây theo thời gian media nguồn. Nhận 1–8 giá trị."
           },
           "frames": {
             "type": "array",
@@ -5735,7 +5735,7 @@
               "type": "number"
             },
             "maxItems": 8,
-            "description": "Source-media frame numbers (project/source timebase)."
+            "description": "Số frame media nguồn (theo timebase dự án/nguồn)."
           },
           "seconds": {
             "type": "array",
@@ -5743,21 +5743,21 @@
               "type": "number"
             },
             "maxItems": 8,
-            "description": "Source-media seconds."
+            "description": "Số giây media nguồn."
           },
           "count": {
             "type": "number",
             "minimum": 1,
             "maximum": 8,
-            "description": "Even source-window midpoints (default 6 for video, max 8)."
+            "description": "Các điểm giữa đều nhau của vùng nguồn (mặc định 6 cho video, tối đa 8)."
           },
           "fromSeconds": {
             "type": "number",
-            "description": "Source-media range start; intersected with the clip window when itemId is used."
+            "description": "Điểm đầu vùng media nguồn; giao với vùng clip khi dùng itemId."
           },
           "toSeconds": {
             "type": "number",
-            "description": "Source-media range end; intersected with the clip window when itemId is used."
+            "description": "Điểm cuối vùng media nguồn; giao với vùng clip khi dùng itemId."
           }
         }
       }
