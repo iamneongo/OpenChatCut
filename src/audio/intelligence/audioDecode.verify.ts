@@ -10,7 +10,7 @@ const oversizedStream = new ReadableStream<Uint8Array>({
 });
 await assert.rejects(
   readLimitedResponseBytes(new Response(oversizedStream), 5),
-  /source exceeds/,
+  /nguồn vượt quá giới hạn/,
   'chunked responses stop as soon as their cumulative byte limit is crossed',
 );
 
@@ -35,7 +35,7 @@ const truncatedStream = new ReadableStream<Uint8Array>({
 });
 await assert.rejects(
   readLimitedResponseBytes(new Response(truncatedStream, { headers: { 'content-length': '4' } }), 8),
-  /content length changed/,
+  /độ dài nội dung nguồn đã thay đổi/,
   'declared response lengths cannot silently retain zero-filled bytes',
 );
 
@@ -102,7 +102,7 @@ try {
   })) as typeof fetch;
   await assert.rejects(
     decodeAudioSource('/too-large.wav', 22_050),
-    /source exceeds 512 MiB limit/,
+    /nguồn vượt quá giới hạn 512 MiB/,
   );
 
   globalThis.fetch = (async () => new Response(new Uint8Array([1]))) as typeof fetch;
@@ -113,8 +113,8 @@ try {
     [0.5, 0, 0, 0],
     'audio longer than one hour decodes without a duration cap',
   );
-  await assert.rejects(decodeAudioSource('', 22_050), /source URL is empty/);
-  await assert.rejects(decodeAudioSource('/test.wav', 1), /Invalid audio sample rate/);
+  await assert.rejects(decodeAudioSource('', 22_050), /URL nguồn âm thanh đang trống/);
+  await assert.rejects(decodeAudioSource('/test.wav', 1), /tần số lấy mẫu âm thanh không hợp lệ/);
 } finally {
   globalThis.fetch = originalFetch;
   if (originalAudioContext) Object.defineProperty(globalThis, 'AudioContext', originalAudioContext);

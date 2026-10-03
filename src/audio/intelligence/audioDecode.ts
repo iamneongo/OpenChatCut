@@ -10,12 +10,12 @@ type AudioContextConstructor = new (options?: AudioContextOptions) => AudioConte
 
 function assertSampleRate(sampleRate: number): void {
   if (!Number.isInteger(sampleRate) || sampleRate < MIN_SAMPLE_RATE || sampleRate > MAX_SAMPLE_RATE) {
-    throw new Error(`Invalid audio sample rate: ${sampleRate}`);
+    throw new Error(`tần số lấy mẫu âm thanh không hợp lệ: ${sampleRate}`);
   }
 }
 function abortError(signal: AbortSignal): Error {
   if (signal.reason instanceof Error) return signal.reason;
-  const error = new Error(signal.reason === undefined ? 'Audio analysis aborted' : String(signal.reason));
+  const error = new Error(signal.reason === undefined ? 'phân tích âm thanh đã bị hủy' : String(signal.reason));
   error.name = 'AbortError';
   return error;
 }
@@ -27,7 +27,7 @@ function throwIfAborted(signal?: AbortSignal): void {
 
 
 function sourceLimitError(maxBytes = MAX_SOURCE_BYTES): Error {
-  return new Error(`source exceeds ${Math.round(maxBytes / 1024 / 1024)} MiB limit`);
+  return new Error(`nguồn vượt quá giới hạn ${Math.round(maxBytes / 1024 / 1024)} MiB`);
 }
 
 export async function readLimitedResponseBytes(
@@ -56,7 +56,7 @@ export async function readLimitedResponseBytes(
       throw sourceLimitError(maxBytes);
     }
     if (output && total > output.byteLength) {
-      const error = new Error('source content length changed during download');
+      const error = new Error('độ dài nội dung nguồn đã thay đổi trong lúc tải xuống');
       await reader.cancel(error).catch(() => undefined);
       throw error;
     }
@@ -64,7 +64,7 @@ export async function readLimitedResponseBytes(
     else chunks.push(value);
   }
   if (output) {
-    if (total !== output.byteLength) throw new Error('source content length changed during download');
+    if (total !== output.byteLength) throw new Error('độ dài nội dung nguồn đã thay đổi trong lúc tải xuống');
     return output.buffer;
   }
   const combined = new Uint8Array(total);
@@ -81,14 +81,14 @@ async function assertSourceDuration(src: string, signal?: AbortSignal): Promise<
   const media = new Audio();
   media.preload = 'metadata';
   const { promise, resolve, reject } = Promise.withResolvers<void>();
-  const timer = setTimeout(() => reject(new Error('audio metadata timed out')), METADATA_TIMEOUT_MS);
+  const timer = setTimeout(() => reject(new Error('đã hết thời gian chờ metadata âm thanh')), METADATA_TIMEOUT_MS);
   const cleanup = () => {
     clearTimeout(timer);
     signal?.removeEventListener('abort', onAbort);
     media.removeAttribute('src');
     media.load();
   };
-  const onAbort = () => reject(signal ? abortError(signal) : new Error('Audio analysis aborted'));
+  const onAbort = () => reject(signal ? abortError(signal) : new Error('phân tích âm thanh đã bị hủy'));
   media.onloadedmetadata = () => {
     // No fixed analysis duration cap: long-form audio (podcasts, meetings,
     // lectures) is a legitimate input. The browser still has to hold the whole
@@ -96,7 +96,7 @@ async function assertSourceDuration(src: string, signal?: AbortSignal): Promise<
     // friendly message rather than crashing the tab (see decodeBytes).
     resolve();
   };
-  media.onerror = () => reject(new Error('Unable to read audio duration metadata'));
+  media.onerror = () => reject(new Error('không thể đọc metadata thời lượng âm thanh'));
   signal?.addEventListener('abort', onAbort, { once: true });
   if (signal?.aborted) onAbort();
   else media.src = src;
@@ -108,7 +108,7 @@ async function assertSourceDuration(src: string, signal?: AbortSignal): Promise<
 }
 
 async function fetchAudioBytes(src: string, signal?: AbortSignal): Promise<ArrayBuffer> {
-  if (!src.trim()) throw new Error('Audio source URL is empty');
+  if (!src.trim()) throw new Error('URL nguồn âm thanh đang trống');
   throwIfAborted(signal);
   await assertSourceDuration(src, signal);
   const controller = new AbortController();
@@ -123,7 +123,7 @@ async function fetchAudioBytes(src: string, signal?: AbortSignal): Promise<Array
     return await readLimitedResponseBytes(response);
   } catch (error) {
     if (signal?.aborted) throw abortError(signal);
-    if (controller.signal.aborted) throw new Error(`Audio fetch aborted: ${String(controller.signal.reason)}`);
+    if (controller.signal.aborted) throw new Error(`tải nguồn âm thanh đã bị hủy: ${String(controller.signal.reason)}`);
     throw new Error(`Không thể tải nguồn âm thanh: ${error instanceof Error ? error.message : String(error)}`);
   } finally {
     clearTimeout(timer);
@@ -136,7 +136,7 @@ function createDecodeContext(sampleRate: number): DecodeContext {
   const Constructor = typeof AudioContext === 'undefined' ? webkit : AudioContext;
   if (Constructor) return new Constructor({ sampleRate });
   if (typeof OfflineAudioContext !== 'undefined') return new OfflineAudioContext(1, 1, sampleRate);
-  throw new Error('Web Audio decoding is unavailable in this browser');
+  throw new Error('trình duyệt này không hỗ trợ giải mã Web Audio');
 }
 
 async function decodeBytes(
@@ -154,7 +154,7 @@ async function decodeBytes(
       else signal.addEventListener('abort', onAbort, { once: true });
     }
     const timedOut = Promise.withResolvers<never>();
-    timer = setTimeout(() => timedOut.reject(new Error('audio decoding timed out')), DECODE_TIMEOUT_MS);
+    timer = setTimeout(() => timedOut.reject(new Error('đã hết thời gian chờ giải mã âm thanh')), DECODE_TIMEOUT_MS);
     return await Promise.race([
       context.decodeAudioData(bytes),
       aborted.promise,
@@ -162,7 +162,7 @@ async function decodeBytes(
     ]);
   } catch (error) {
     if (signal?.aborted) throw abortError(signal);
-    if (error instanceof Error && /audio decoding timed out/i.test(error.message)) throw error;
+    if (error instanceof Error && /đã hết thời gian chờ giải mã âm thanh/i.test(error.message)) throw error;
     // No fixed duration cap, but the browser must hold the whole decoded PCM in
     // memory, so an oversized or un-decodable long audio surfaces here instead
     // of crashing the tab. Tell the user it is a size/resource limit, not a bug.
@@ -230,7 +230,7 @@ export async function resampleMonoSamples(
 ): Promise<Float32Array> {
   assertSampleRate(sourceRate);
   assertSampleRate(targetRate);
-  if (!(samples instanceof Float32Array) || samples.length === 0) throw new Error('Audio samples are empty');
+  if (!(samples instanceof Float32Array) || samples.length === 0) throw new Error('mẫu âm thanh đang trống');
   if (sourceRate === targetRate) return samples.slice();
   if (typeof OfflineAudioContext === 'undefined') return linearResample(samples, sourceRate, targetRate);
   try {
