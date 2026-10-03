@@ -20,7 +20,7 @@ OpenChatCut là một trình chỉnh sửa video có timeline thực, nơi Codex
 - Nhập media, chép lời, cắt lời nói, tạo phụ đề và chỉnh sửa theo đề xuất của Agent.
 - Hỗ trợ xuất video, âm thanh, phụ đề, FCPXML và bản nháp CapCut/JianYing.
 - Dữ liệu dự án ưu tiên lưu cục bộ trong trình duyệt hoặc ứng dụng desktop.
-- Giao diện hỗ trợ tiếng Việt, English, tiếng Trung giản thể, Italiano và Русский; bản fork này mặc định tiếng Việt.
+- Giao diện hỗ trợ tiếng Việt, tiếng Anh, tiếng Trung giản thể, tiếng Ý và tiếng Nga; bản fork này mặc định tiếng Việt.
 
 Website: [openchatcut.com](https://openchatcut.com)
 
