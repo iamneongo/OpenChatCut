@@ -120,81 +120,81 @@ function validateHailuo(input: ValidVideoRequest): ValidVideoRequest {
 
 function validateSeedance(input: ValidVideoRequest): ValidVideoRequest {
   const model = input.model; // seedance2 or byteplus — same Ark Seedance API/constraints
-  if (!input.prompt) throw new Error('prompt is required');
-  if (input.durationSeconds < 2 || input.durationSeconds > 15) throw new Error(`${model} durationSeconds must be between 2 and 15`);
-  if (!['16:9', '4:3', '1:1', '3:4', '9:16', '21:9', 'adaptive'].includes(input.ratio)) throw new Error(`${model} does not support ratio ${input.ratio}`);
-  if (input.resolution && !['480p', '720p', '1080p', '4k'].includes(input.resolution)) throw new Error(`${model} resolution must be 480p, 720p, 1080p, or 4k`);
+  if (!input.prompt) throw new Error('prompt là bắt buộc');
+  if (input.durationSeconds < 2 || input.durationSeconds > 15) throw new Error(`${model} durationSeconds phải từ 2 đến 15`);
+  if (!['16:9', '4:3', '1:1', '3:4', '9:16', '21:9', 'adaptive'].includes(input.ratio)) throw new Error(`${model} không hỗ trợ ratio ${input.ratio}`);
+  if (input.resolution && !['480p', '720p', '1080p', '4k'].includes(input.resolution)) throw new Error(`${model} resolution phải là 480p, 720p, 1080p hoặc 4k`);
   if (input.lastFramePath && !input.firstFramePath) throw new Error('lastFrame yêu cầu firstFrame');
-  if (input.lastFramePath && (input.refImagePaths.length || input.refVideoPaths.length || input.refAudioPaths.length)) throw new Error(`${model} lastFrame mode cannot be combined with references`);
-  if (input.refImagePaths.length > 9 || input.refVideoPaths.length > 3 || input.refAudioPaths.length > 3) throw new Error(`${model} reference limit exceeded`);
-  if (input.refAudioPaths.length && !input.firstFramePath && !input.refImagePaths.length && !input.refVideoPaths.length) throw new Error(`${model} audio references require a visual reference`);
-  if (input.shotType || input.multiPrompts?.length) throw new Error('multi-shot parameters are supported by kling only');
+  if (input.lastFramePath && (input.refImagePaths.length || input.refVideoPaths.length || input.refAudioPaths.length)) throw new Error(`${model} không thể kết hợp chế độ lastFrame với references`);
+  if (input.refImagePaths.length > 9 || input.refVideoPaths.length > 3 || input.refAudioPaths.length > 3) throw new Error(`${model} đã vượt quá giới hạn reference`);
+  if (input.refAudioPaths.length && !input.firstFramePath && !input.refImagePaths.length && !input.refVideoPaths.length) throw new Error(`${model} cần visual reference khi dùng audio references`);
+  if (input.shotType || input.multiPrompts?.length) throw new Error('tham số multi-shot chỉ được kling hỗ trợ');
   if (input.refVideoMode) throw new Error('refVideoMode chỉ được kling hỗ trợ');
-  if (input.promptOptimizer !== undefined || input.fastPretreatment !== undefined) throw new Error('promptOptimizer/fastPretreatment are supported by hailuo only');
+  if (input.promptOptimizer !== undefined || input.fastPretreatment !== undefined) throw new Error('promptOptimizer/fastPretreatment chỉ được hailuo hỗ trợ');
   validateSeedanceOptions(input);
   return input;
 }
 
 function validateKlingShots(input: ValidVideoRequest): void {
   if (input.shotType !== 'customize') {
-    if (input.multiPrompts?.length) throw new Error('kling multiPrompts require shotType=customize');
-    if (!input.prompt) throw new Error('prompt is required');
+    if (input.multiPrompts?.length) throw new Error('kling multiPrompts yêu cầu shotType=customize');
+    if (!input.prompt) throw new Error('prompt là bắt buộc');
     return;
   }
-  if (input.prompt) throw new Error('omit prompt for kling customize; use multiPrompts');
+  if (input.prompt) throw new Error('hãy bỏ prompt khi dùng kling customize; dùng multiPrompts');
   const shots = input.multiPrompts ?? [];
-  if (shots.length < 2 || shots.length > 6) throw new Error('kling customize requires 2 to 6 multiPrompts');
+  if (shots.length < 2 || shots.length > 6) throw new Error('kling customize yêu cầu từ 2 đến 6 multiPrompts');
   let total = 0;
   shots.forEach((shot, index) => {
     const duration = videoSeconds(shot.duration, 0);
-    if (shot.index !== index + 1) throw new Error('kling multiPrompt indexes must be consecutive from 1');
-    if (!shot.prompt?.trim() || shot.prompt.length > 512) throw new Error('each kling multiPrompt requires a prompt of at most 512 characters');
-    if (duration < 1) throw new Error('each kling multiPrompt duration must be at least 1 second');
+    if (shot.index !== index + 1) throw new Error('chỉ số kling multiPrompt phải liên tiếp từ 1');
+    if (!shot.prompt?.trim() || shot.prompt.length > 512) throw new Error('mỗi kling multiPrompt yêu cầu prompt dài tối đa 512 ký tự');
+    if (duration < 1) throw new Error('duration của mỗi kling multiPrompt phải ít nhất 1 giây');
     total += duration;
   });
-  if (total !== input.durationSeconds) throw new Error('kling multiPrompt durations must sum to durationSeconds');
+  if (total !== input.durationSeconds) throw new Error('tổng duration của kling multiPrompt phải bằng durationSeconds');
 }
 
 function validateKling(input: ValidVideoRequest): ValidVideoRequest {
-  if (input.durationSeconds < 3 || input.durationSeconds > 15) throw new Error('kling durationSeconds must be between 3 and 15');
-  if (!['16:9', '9:16', '1:1'].includes(input.ratio)) throw new Error(`kling does not support ratio ${input.ratio}`);
-  if (input.lastFramePath && !input.firstFramePath) throw new Error('lastFrame requires firstFrame');
-  if (input.refAudioPaths.length) throw new Error('kling does not support refAudios');
-  if (input.refVideoPaths.length > 1) throw new Error('kling accepts at most 1 reference video');
+  if (input.durationSeconds < 3 || input.durationSeconds > 15) throw new Error('durationSeconds của kling phải từ 3 đến 15');
+  if (!['16:9', '9:16', '1:1'].includes(input.ratio)) throw new Error(`kling không hỗ trợ ratio ${input.ratio}`);
+  if (input.lastFramePath && !input.firstFramePath) throw new Error('lastFrame yêu cầu firstFrame');
+  if (input.refAudioPaths.length) throw new Error('kling không hỗ trợ refAudios');
+  if (input.refVideoPaths.length > 1) throw new Error('kling nhận tối đa 1 reference video');
   if (input.refVideoMode && input.refVideoMode !== 'feature' && input.refVideoMode !== 'base') {
-    throw new Error('kling refVideoMode must be feature or base');
+    throw new Error('refVideoMode của kling phải là feature hoặc base');
   }
-  if (input.refVideoMode && !input.refVideoPaths.length) throw new Error('refVideoMode requires refVideos');
+  if (input.refVideoMode && !input.refVideoPaths.length) throw new Error('refVideoMode yêu cầu refVideos');
   const imageCount = Number(Boolean(input.firstFramePath)) + Number(Boolean(input.lastFramePath)) + input.refImagePaths.length;
   const maxImages = input.refVideoPaths.length ? 4 : 7;
-  if (imageCount > maxImages) throw new Error(input.refVideoPaths.length ? 'kling with refVideos accepts at most 4 images total (first/last/refImages)' : 'kling accepts at most 7 images');
-  if (input.resolution && !['720p', '1080p'].includes(input.resolution)) throw new Error('kling resolution must be 720p or 1080p when set');
-  if (input.mode && input.resolution && (input.mode === 'pro') !== (input.resolution === '1080p')) throw new Error('kling mode and resolution conflict');
-  if (input.promptOptimizer !== undefined || input.fastPretreatment !== undefined) throw new Error('promptOptimizer/fastPretreatment are supported by hailuo only');
+  if (imageCount > maxImages) throw new Error(input.refVideoPaths.length ? 'kling có refVideos nhận tối đa 4 image (first/last/refImages)' : 'kling nhận tối đa 7 image');
+  if (input.resolution && !['720p', '1080p'].includes(input.resolution)) throw new Error('resolution của kling phải là 720p hoặc 1080p');
+  if (input.mode && input.resolution && (input.mode === 'pro') !== (input.resolution === '1080p')) throw new Error('mode và resolution của kling xung đột');
+  if (input.promptOptimizer !== undefined || input.fastPretreatment !== undefined) throw new Error('promptOptimizer/fastPretreatment chỉ được hailuo hỗ trợ');
   rejectSeedanceOptions(input);
   validateKlingShots(input);
-  if (input.prompt.length > 2500) throw new Error('kling prompt must be at most 2500 characters');
+  if (input.prompt.length > 2500) throw new Error('prompt kling dài tối đa 2500 ký tự');
   return input;
 }
 
 /** xAI Grok Imagine Video (text-to-video): 1–15s, its own ratio set, 480/720/1080p.
  * Audio is always generated; no reference or editing options in this integration. */
 function validateGrok(input: ValidVideoRequest): ValidVideoRequest {
-  if (!input.prompt || input.prompt.length > 4000) throw new Error('grok-imagine-video prompt is required and must be at most 4000 characters');
-  if (input.durationSeconds < 1 || input.durationSeconds > 15) throw new Error('grok-imagine-video durationSeconds must be between 1 and 15');
+  if (!input.prompt || input.prompt.length > 4000) throw new Error('prompt grok-imagine-video là bắt buộc và dài tối đa 4000 ký tự');
+  if (input.durationSeconds < 1 || input.durationSeconds > 15) throw new Error('durationSeconds của grok-imagine-video phải từ 1 đến 15');
   if (!['16:9', '9:16', '1:1', '4:3', '3:4', '3:2', '2:3'].includes(input.ratio)) {
-    throw new Error(`grok-imagine-video does not support ratio ${input.ratio}`);
+    throw new Error(`grok-imagine-video không hỗ trợ ratio ${input.ratio}`);
   }
-  if (input.resolution && !['480p', '720p', '1080p'].includes(input.resolution)) throw new Error('grok-imagine-video resolution must be 480p, 720p, or 1080p');
+  if (input.resolution && !['480p', '720p', '1080p'].includes(input.resolution)) throw new Error('resolution grok-imagine-video phải là 480p, 720p hoặc 1080p');
   if (input.firstFramePath || input.lastFramePath || input.refImagePaths.length || input.refVideoPaths.length || input.refAudioPaths.length) {
-    throw new Error('grok-imagine-video is text-to-video only; references and frames are not supported');
+    throw new Error('grok-imagine-video chỉ hỗ trợ text-to-video; không hỗ trợ references và frames');
   }
   if (input.mode || input.shotType || input.multiPrompts?.length || input.refVideoMode) {
-    throw new Error('multi-shot and editing options are not supported by grok-imagine-video');
+    throw new Error('grok-imagine-video không hỗ trợ tùy chọn multi-shot và editing');
   }
   rejectSeedanceOptions(input);
   if (input.promptOptimizer !== undefined || input.fastPretreatment !== undefined) {
-    throw new Error('promptOptimizer/fastPretreatment are supported by hailuo only');
+    throw new Error('promptOptimizer/fastPretreatment chỉ được hailuo hỗ trợ');
   }
   return input;
 }
@@ -208,48 +208,48 @@ const OFOX_UNSUPPORTED_ARK_KEYS = ['cameraFixed', 'watermark', 'returnLastFrame'
  * references are mutually exclusive at the API level (400 references_conflict),
  * enforced locally before any paid submission. */
 function validateOfox(input: ValidVideoRequest): ValidVideoRequest {
-  if (!input.prompt || input.prompt.length > 4000) throw new Error('ofox prompt is required and must be at most 4000 characters');
-  if (input.durationSeconds < 2 || input.durationSeconds > 30) throw new Error('ofox durationSeconds must be between 2 and 30 (per-model limits are enforced by the API)');
+  if (!input.prompt || input.prompt.length > 4000) throw new Error('prompt ofox là bắt buộc và dài tối đa 4000 ký tự');
+  if (input.durationSeconds < 2 || input.durationSeconds > 30) throw new Error('durationSeconds của ofox phải từ 2 đến 30 (API áp dụng giới hạn theo model)');
   if (!['16:9', '9:16', '1:1', '4:3', '3:4', '3:2', '2:3', '21:9', '9:21'].includes(input.ratio)) {
-    throw new Error(`ofox does not support ratio ${input.ratio}`);
+    throw new Error(`ofox không hỗ trợ ratio ${input.ratio}`);
   }
-  if (input.resolution && !['480p', '720p', '1080p'].includes(input.resolution)) throw new Error('ofox resolution must be 480p, 720p hoặc 1080p (API sẽ áp dụng hỗ trợ theo model)');
+  if (input.resolution && !['480p', '720p', '1080p'].includes(input.resolution)) throw new Error('resolution của ofox phải là 480p, 720p hoặc 1080p (API sẽ áp dụng hỗ trợ theo model)');
   if (input.lastFramePath && !input.firstFramePath) throw new Error('lastFrame yêu cầu firstFrame');
   if ((input.firstFramePath || input.lastFramePath) && input.refImagePaths.length) {
-    throw new Error('ofox frame anchors (firstFrame/lastFrame) cannot be combined with refImages');
+    throw new Error('frame anchor của ofox (firstFrame/lastFrame) không thể kết hợp với refImages');
   }
-  if (input.refImagePaths.length > 9) throw new Error('ofox accepts at most 9 refImages');
+  if (input.refImagePaths.length > 9) throw new Error('ofox nhận tối đa 9 refImages');
   if (input.refVideoPaths.length || input.refAudioPaths.length) {
-    throw new Error('ofox refVideos/refAudios are not wired in this integration yet; use refImages or firstFrame/lastFrame');
+    throw new Error('ofox chưa tích hợp refVideos/refAudios; hãy dùng refImages hoặc firstFrame/lastFrame');
   }
   if (input.mode || input.shotType || input.multiPrompts?.length || input.refVideoMode) {
-    throw new Error('multi-shot and editing options are not supported by ofox');
+    throw new Error('ofox không hỗ trợ tùy chọn multi-shot và editing');
   }
   for (const key of OFOX_UNSUPPORTED_ARK_KEYS) {
     if (input[key] !== undefined) throw new Error(`${key} chỉ được seedance2/byteplus hỗ trợ`);
   }
-  if (input.generateAudio !== undefined && typeof input.generateAudio !== 'boolean') throw new Error('generateAudio must be a boolean');
-  if (input.seed !== undefined && !Number.isSafeInteger(input.seed)) throw new Error('seed must be a safe integer');
+  if (input.generateAudio !== undefined && typeof input.generateAudio !== 'boolean') throw new Error('generateAudio phải là boolean');
+  if (input.seed !== undefined && !Number.isSafeInteger(input.seed)) throw new Error('seed phải là số nguyên an toàn');
   if (input.promptOptimizer !== undefined || input.fastPretreatment !== undefined) {
-    throw new Error('promptOptimizer/fastPretreatment are supported by hailuo only');
+    throw new Error('promptOptimizer/fastPretreatment chỉ được hailuo hỗ trợ');
   }
   return input;
 }
 
 export function validateVideoRequest(input: VideoRequest): ValidVideoRequest {
   if (input.model === 'fal') {
-    if (!input.falModel?.trim()) throw new Error('Choose a Fal video model in Settings or specify falModel');
+    if (!input.falModel?.trim()) throw new Error('Hãy chọn model video Fal trong Settings hoặc chỉ định falModel');
     for (const key of ['mode', 'refVideoMode', 'promptOptimizer', 'fastPretreatment', 'seed', 'cameraFixed', 'watermark', 'returnLastFrame', 'executionExpiresAfter', 'priority', 'multiPrompts', 'shotType'] as const) {
-      if (input[key] !== undefined) throw new Error(`${key} is not supported by the Fal video integration`);
+      if (input[key] !== undefined) throw new Error(`${key} không được tích hợp video Fal hỗ trợ`);
     }
     const normalized = common(input, 'fal');
     buildFalCatalogVideoRequest(falVideoCatalogInput(normalized));
     return normalized;
   }
   if (input.model !== 'seedance2' && input.model !== 'kling' && input.model !== 'hailuo' && input.model !== 'byteplus' && input.model !== 'grok-imagine-video' && input.model !== 'ofox') {
-    throw new Error('model must be seedance2, kling, hailuo, byteplus, grok-imagine-video, ofox, or fal');
+    throw new Error('model phải là seedance2, kling, hailuo, byteplus, grok-imagine-video, ofox hoặc fal');
   }
-  if (input.model === 'hailuo' && input.ratio !== undefined) throw new Error('hailuo does not accept ratio; framing follows the first frame when present');
+  if (input.model === 'hailuo' && input.ratio !== undefined) throw new Error('hailuo không nhận ratio; framing sẽ theo first frame nếu có');
   const normalized = common(input, input.model);
   if (normalized.model === 'hailuo') return validateHailuo(normalized);
   if (normalized.model === 'kling') return validateKling(normalized);

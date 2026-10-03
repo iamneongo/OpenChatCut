@@ -132,7 +132,7 @@ assert.equal(expectedVideoResultCount(byteplus), 1);
 assert.equal(expectedVideoResultCount(byteplusControls), 2);
 assert.throws(
   () => validateVideoRequest({ model: 'byteplus', prompt: 'x', durationSeconds: 20 }),
-  /byteplus durationSeconds must be between 2 and 15/,
+  /byteplus durationSeconds phải từ 2 đến 15/,
 );
 assert.deepEqual(generationResultCheckpoint([], 2), { urls: [], complete: false });
 assert.deepEqual(
@@ -192,7 +192,7 @@ assert.throws(
 );
 assert.throws(
   () => validateVideoRequest({ model: 'hailuo', prompt: 'draft', ratio: '16:9' }),
-  /does not accept ratio/,
+  /không nhận ratio/,
 );
 assert.throws(
   () => validateVideoRequest({ model: 'hailuo', prompt: 'x', durationSeconds: 6, resolution: '480p' }),
@@ -230,7 +230,7 @@ assert.throws(
 );
 assert.throws(
   () => validateVideoRequest({ model: 'seedance2', prompt: 'x', durationSeconds: 5, promptOptimizer: true }),
-  /promptOptimizer\/fastPretreatment are supported by hailuo only/,
+  /promptOptimizer\/fastPretreatment chỉ được hailuo hỗ trợ/,
 );
 
 // kling: one ref video + image limit 4
@@ -250,7 +250,7 @@ assert.throws(
     durationSeconds: 5,
     refVideoPaths: ['/media/uploads/a.mp4', '/media/uploads/b.mp4'],
   }),
-  /at most 1 reference video/,
+  /nhận tối đa 1 reference video/,
 );
 assert.throws(
   () => validateVideoRequest({
@@ -261,7 +261,7 @@ assert.throws(
     refImagePaths: ['/media/uploads/2.jpg', '/media/uploads/3.jpg', '/media/uploads/4.jpg', '/media/uploads/5.jpg'],
     refVideoPaths: ['/media/uploads/c.mp4'],
   }),
-  /at most 4 images/,
+  /nhận tối đa 4 image/,
 );
 
 // kling base edit mode
@@ -275,14 +275,14 @@ const klingBase = validateVideoRequest({
 assert.equal(klingBase.refVideoMode, 'base');
 assert.throws(
   () => validateVideoRequest({ model: 'kling', prompt: 'x', durationSeconds: 5, refVideoMode: 'base' }),
-  /refVideoMode requires refVideos/,
+  /refVideoMode yêu cầu refVideos/,
 );
 assert.throws(
   () => validateVideoRequest({
     model: 'kling', prompt: 'x', durationSeconds: 5,
     refVideoPaths: ['/media/uploads/c.mp4'], refVideoMode: 'invalid' as never,
   }),
-  /refVideoMode must be feature or base/,
+  /refVideoMode của kling phải là feature hoặc base/,
 );
 assert.throws(
   () => validateVideoRequest({ model: 'seedance2', prompt: 'x', durationSeconds: 5, refVideoMode: 'feature' }),
@@ -332,15 +332,15 @@ assert.equal(grok.ratio, '9:16');
 assert.equal(grok.resolution, '720p');
 assert.throws(
   () => validateVideoRequest({ model: 'grok-imagine-video', prompt: 'x', durationSeconds: 20 }),
-  /durationSeconds must be between 1 and 15/,
+  /durationSeconds của grok-imagine-video phải từ 1 đến 15/,
 );
 assert.throws(
   () => validateVideoRequest({ model: 'grok-imagine-video', prompt: 'x', ratio: '21:9' }),
-  /does not support ratio/,
+  /không hỗ trợ ratio/,
 );
 assert.throws(
   () => validateVideoRequest({ model: 'grok-imagine-video', prompt: 'x', firstFramePath: '/media/uploads/a.jpg' }),
-  /text-to-video only/,
+  /chỉ hỗ trợ text-to-video/,
 );
 assert.throws(
   () => validateVideoRequest({ model: 'grok-imagine-video', prompt: 'x', generateAudio: false }),
@@ -355,11 +355,11 @@ assert.equal(ofox.resolution, '720p');
 assert.equal(validateVideoRequest({ model: 'ofox', prompt: 'x', ratio: '21:9' }).ratio, '21:9');
 assert.throws(
   () => validateVideoRequest({ model: 'ofox', prompt: 'x', durationSeconds: 40 }),
-  /durationSeconds must be between 2 and 30/,
+  /durationSeconds của ofox phải từ 2 đến 30/,
 );
 assert.throws(
   () => validateVideoRequest({ model: 'ofox', prompt: 'x', resolution: '4k' }),
-  /resolution must be 480p, 720p hoặc 1080p/,
+  /resolution của ofox phải là 480p, 720p hoặc 1080p/,
 );
 const ofoxI2v = validateVideoRequest({ model: 'ofox', prompt: 'x', firstFramePath: '/media/uploads/a.jpg', lastFramePath: '/media/uploads/b.jpg', generateAudio: false, seed: 7 });
 assert.equal(ofoxI2v.firstFramePath, '/media/uploads/a.jpg');
@@ -374,15 +374,15 @@ assert.throws(
 );
 assert.throws(
   () => validateVideoRequest({ model: 'ofox', prompt: 'x', firstFramePath: '/media/uploads/a.jpg', refImagePaths: ['/media/uploads/r.jpg'] }),
-  /cannot be combined with refImages/,
+  /không thể kết hợp với refImages/,
 );
 assert.throws(
   () => validateVideoRequest({ model: 'ofox', prompt: 'x', refImagePaths: Array.from({ length: 10 }, (_, i) => `/media/uploads/r${i}.jpg`) }),
-  /at most 9 refImages/,
+  /nhận tối đa 9 refImages/,
 );
 assert.throws(
   () => validateVideoRequest({ model: 'ofox', prompt: 'x', refVideoPaths: ['/media/uploads/v.mp4'] }),
-  /refVideos\/refAudios are not wired/,
+  /chưa tích hợp refVideos\/refAudios/,
 );
 assert.throws(
   () => validateVideoRequest({ model: 'ofox', prompt: 'x', watermark: true }),
@@ -390,11 +390,11 @@ assert.throws(
 );
 assert.throws(
   () => validateVideoRequest({ model: 'ofox', prompt: 'x', promptOptimizer: true }),
-  /supported by hailuo only/,
+  /chỉ được hailuo hỗ trợ/,
 );
 assert.throws(
   () => validateVideoRequest({ model: 'ofox', prompt: 'x', shotType: 'customize', multiPrompts: [{ prompt: 'a', duration: 2, index: 1 }, { prompt: 'b', duration: 2, index: 2 }] }),
-  /multi-shot and editing options are not supported by ofox/,
+  /ofox không hỗ trợ tùy chọn multi-shot và editing/,
 );
 
 console.log('video.check: ok (seedance 480p + kling base/feature + hailuo)');
