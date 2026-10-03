@@ -232,7 +232,7 @@ async function main(): Promise<void> {
       runCommand: winNone.run,
       resolveCodexBin: async () => null,
     });
-    assert.deepEqual(winMissing, { ok: false, error: 'codex-cli-failed', detail: 'codex CLI not found' });
+    assert.deepEqual(winMissing, { ok: false, error: 'codex-cli-failed', detail: 'không tìm thấy Codex CLI' });
     assert.equal(winNone.calls.length, 0);
 
     // 13. Validation: unknown client and malformed token are rejected.

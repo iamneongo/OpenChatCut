@@ -171,7 +171,7 @@ function spawnCommand(command: ConnectCommand): Promise<{ code: number | null; s
     });
     child.on('error', () => {
       clearTimeout(timer);
-      resolve({ code: null, stderr: stderr || 'spawn failed' });
+      resolve({ code: null, stderr: stderr || 'khởi chạy tiến trình thất bại' });
     });
     child.on('close', (code) => {
       clearTimeout(timer);
@@ -240,7 +240,7 @@ async function connectCodex(endpoint: string, token: string, baseDir: string, op
   const run = options.runCommand ?? spawnCommand;
   const env: NodeJS.ProcessEnv = { ...process.env, HOME: baseDir, CODEX_HOME: path.join(baseDir, '.codex') };
   const args = ['mcp', 'add', 'openchatcut', '--url', endpoint, '--bearer-token-env-var', TOKEN_ENV_VAR];
-  let lastStderr = 'codex CLI not found';
+  let lastStderr = 'không tìm thấy Codex CLI';
   for (const bin of await codexCandidates(baseDir, platform, options)) {
     const { code, stderr } = await run({ ...codexCommand(bin, args, platform), env });
     if (code === 0) {

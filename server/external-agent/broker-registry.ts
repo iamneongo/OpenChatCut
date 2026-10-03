@@ -103,7 +103,7 @@ export class EditorConnectionRegistry {
       && capabilityMatches(previous.capability, registrationCapability),
     );
     if (!trustedInternalCall && registrationCapability && !validRenewal) {
-      throw new ExternalEditorCallError('stale', 'Editor registration capability is stale.');
+      throw new ExternalEditorCallError('stale', 'quyền đăng ký editor đã hết hiệu lực.');
     }
     // A different browser window may take over the active connection for the
     // same project. Single-window desktop users never open one project in two
@@ -169,7 +169,7 @@ export class EditorConnectionRegistry {
       const renewed = await renewProjectEditOwnership(editor.ownership, baseRevision ?? editor.baseRevision);
       if (renewed.status !== 'renewed') {
         await this.unregister(projectId, editorInstanceId);
-        throw new ExternalEditorCallError('stale', `Project ${projectId} browser ownership is stale.`);
+        throw new ExternalEditorCallError('stale', `quyền sở hữu trình duyệt của project ${projectId} đã hết hiệu lực.`);
       }
       editor.ownership = renewed.claim;
       editor.ownershipEpoch = renewed.claim.epoch;

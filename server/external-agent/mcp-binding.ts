@@ -81,7 +81,7 @@ export function validateBrowserBinding(
     session.binding = current;
     return current;
   }
-  const message = `MCP session binding for project ${session.binding.projectId} is stale. Re-initialize the MCP session.`;
+  const message = `liên kết phiên MCP của project ${session.binding.projectId} đã hết hiệu lực. Hãy khởi tạo lại phiên MCP.`;
   markMcpSessionStale(session, message);
   throw new ExternalEditorCallError('stale', message);
 }
@@ -105,21 +105,21 @@ export function bindBrowserForCall(
   allowRevisionDrift = false,
 ): EditorBinding {
   if (session.offline) {
-    throw new ExternalEditorCallError('rejected', 'This MCP session is offline-bound and cannot switch binding modes.');
+    throw new ExternalEditorCallError('rejected', 'phiên MCP này được liên kết ngoại tuyến và không thể đổi chế độ liên kết.');
   }
   const projectId = requestedProjectId(requested) ?? session.binding?.projectId ?? defaultBrowserProjectId();
   if (session.binding) {
     if (session.binding.projectId !== projectId) {
       throw new ExternalEditorCallError(
         'rejected',
-        `This MCP session is bound to project ${session.binding.projectId}; it cannot operate project ${projectId}.`,
+        `phiên MCP này đang liên kết với project ${session.binding.projectId}; không thể thao tác trên project ${projectId}.`,
       );
     }
     return validateBrowserBinding(session, allowRevisionDrift)!;
   }
   const binding = editorBinding(projectId);
   if (!binding || !editorBindingMatches(binding)) {
-    throw new ExternalEditorCallError('rejected', `Project ${projectId} is not open in a connected OpenChatCut editor.`);
+    throw new ExternalEditorCallError('rejected', `project ${projectId} chưa được mở trong editor OpenChatCut đang kết nối.`);
   }
   session.binding = binding;
   return binding;
@@ -131,13 +131,13 @@ export async function targetMcpProject(
   editorUrl: string,
 ): Promise<McpTargetBinding> {
   if (!VALID_STORED_PROJECT_ID.test(projectId)) {
-    throw new ExternalEditorCallError('rejected', 'projectId is invalid');
+    throw new ExternalEditorCallError('rejected', 'projectId không hợp lệ');
   }
   const currentProjectId = boundProjectId(session);
   if (currentProjectId && currentProjectId !== projectId) {
     throw new ExternalEditorCallError(
       'rejected',
-      `This MCP session is bound to project ${currentProjectId}; it cannot operate project ${projectId}.`,
+      `phiên MCP này đang liên kết với project ${currentProjectId}; không thể thao tác trên project ${projectId}.`,
     );
   }
   if (session.binding) return validateBrowserBinding(session)!;
@@ -160,7 +160,7 @@ export function projectForRead(session: McpBindingSession, requested: unknown): 
   if (currentProjectId && currentProjectId !== projectId) {
     throw new ExternalEditorCallError(
       'rejected',
-      `This MCP session is bound to project ${currentProjectId}; it cannot address project ${projectId}.`,
+      `phiên MCP này đang liên kết với project ${currentProjectId}; không thể truy cập project ${projectId}.`,
     );
   }
   return projectId;

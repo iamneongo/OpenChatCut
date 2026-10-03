@@ -317,20 +317,20 @@ async function addClip(
   const retimed = timing.sourceStart > 0 || timing.rate !== 1;
   const materialLength = retimed ? timing.sourceStart + timing.sourceDuration : timing.duration;
   const added = await run([command, draftPath, file, secondsArg(timing.start), secondsArg(materialLength), ...storeFlags]) as CapcutOutput;
-  if (!added?.ok) return { added: false, warning: `${label}: ${added?.error || 'failed'}` };
+  if (!added?.ok) return { added: false, warning: `${label}: ${added?.error || 'thất bại'}` };
   if (!retimed) return { added: true };
   const segmentId = typeof added.segment_id === 'string' ? added.segment_id : '';
   if (!segmentId) {
-    return { added: true, warning: `${label}: capcut-cli returned no segment id; the clip plays its source from 0` };
+    return { added: true, warning: `${label}: capcut-cli không trả về segment id; clip sẽ phát nguồn từ đầu` };
   }
   if (timing.rate !== 1) {
     const sped = await run(['speed', draftPath, segmentId, String(timing.rate), ...storeFlags]) as CapcutOutput;
-    if (!sped?.ok) return { added: true, warning: `speed ${basename(file)}: ${sped?.error || 'failed'}` };
+    if (!sped?.ok) return { added: true, warning: `speed ${basename(file)}: ${sped?.error || 'thất bại'}` };
   }
   const trimmed = await run([
     'trim', draftPath, segmentId, secondsArg(timing.sourceStart), secondsArg(timing.sourceDuration), ...storeFlags,
   ]) as CapcutOutput;
-  if (!trimmed?.ok) return { added: true, warning: `trim ${basename(file)}: ${trimmed?.error || 'failed'}` };
+  if (!trimmed?.ok) return { added: true, warning: `trim ${basename(file)}: ${trimmed?.error || 'thất bại'}` };
   return { added: true };
 }
 
@@ -362,7 +362,7 @@ export async function exportJianyingDraft(
   const videos = request.items.filter((item) => isVideoKind(item.kind));
   const audios = request.items.filter((item) => isAudioKind(item.kind));
   if (videos.length === 0) {
-    return { ok: false, draftName: '', draftPath: '', addedVideos: 0, addedAudios: 0, captions: 0, warnings, error: 'timeline has no video clips to export' };
+    return { ok: false, draftName: '', draftPath: '', addedVideos: 0, addedAudios: 0, captions: 0, warnings, error: 'timeline không có clip video để xuất' };
   }
   const resolved = videos.map((clip) => ({ clip, file: resolveMediaPath(clip.src) }));
   const missing = resolved.filter((entry) => !entry.file).map((entry) => entry.clip.src);
@@ -400,14 +400,14 @@ export async function exportJianyingDraft(
     const timing = clipTiming(clip, fps, isRetimable(clip.kind) ? await lengthOf(file) : null);
     const label = `${command} ${basename(file)}`;
     if (!timing) {
-      warnings.push(`${label}: in-point is past the end of the file`);
+      warnings.push(`${label}: điểm bắt đầu nằm sau cuối tệp`);
       return false;
     }
     // Nothing to place, and a missing length would make capcut-cli take the whole file.
     if (timing.duration <= 0 || timing.sourceDuration <= 0) return false;
     // Less than a frame is frame rounding; more means the clip outlasts its file.
     if (timing.overrun >= MICROS_PER_SECOND / fps) {
-      warnings.push(`${label}: runs ${secondsArg(timing.overrun)} s past the end of the file; cut at its end`);
+      warnings.push(`${label}: vượt quá cuối tệp ${secondsArg(timing.overrun)} giây; đã cắt tại cuối tệp`);
     }
     const outcome = await addClip(run, command, draftPath, file, timing, storeFlags);
     if (outcome.warning) warnings.push(outcome.warning);
@@ -421,7 +421,7 @@ export async function exportJianyingDraft(
   for (const clip of audios) {
     const file = resolveMediaPath(clip.src);
     if (!file) {
-      warnings.push(`audio not found locally: ${clip.src}`);
+      warnings.push(`không tìm thấy audio cục bộ: ${clip.src}`);
       continue;
     }
     if (await place('add-audio', file, clip)) addedAudios += 1;
@@ -433,7 +433,7 @@ export async function exportJianyingDraft(
     try {
       const result = await run(['import-srt', draftPath, file, ...storeFlags]) as { ok?: boolean; error?: string };
       if (result?.ok) captions = captionList.length;
-      else warnings.push(`import-srt: ${result?.error || 'failed'}`);
+      else warnings.push(`import-srt: ${result?.error || 'thất bại'}`);
     } finally {
       void rm(dir, { recursive: true, force: true }).catch(() => undefined);
     }

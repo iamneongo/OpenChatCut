@@ -324,7 +324,7 @@ export function invokeEditorTool(
         finishCall(
           call,
           'cancelled',
-          `OpenChatCut tool ${name} timed out before a terminal result was received.`,
+          `tool OpenChatCut ${name} hết thời gian chờ trước khi nhận kết quả cuối.`,
           true,
         );
       }, deadline - Date.now()),
@@ -343,7 +343,7 @@ function takeNextCall(projectId: string, binding: EditorBinding): QueuedCall | u
     const call = queue.shift()!;
     if (!pending.has(call.id)) continue;
     if (call.deadline <= Date.now()) {
-      finishCall(call, 'cancelled', `OpenChatCut tool ${call.name} timed out before dispatch.`, false);
+      finishCall(call, 'cancelled', `tool OpenChatCut ${call.name} hết thời gian chờ trước khi được gửi đi.`, false);
       continue;
     }
     if (
@@ -353,7 +353,7 @@ function takeNextCall(projectId: string, binding: EditorBinding): QueuedCall | u
       finishCall(
         call,
         'stale',
-        `MCP session binding for project ${projectId} is stale. Re-initialize the MCP session.`,
+        `liên kết phiên MCP của project ${projectId} đã hết hiệu lực. Hãy khởi tạo lại phiên MCP.`,
         false,
       );
       continue;

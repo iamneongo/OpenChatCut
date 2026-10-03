@@ -151,9 +151,9 @@ try {
     ]);
     assert.equal(result.addedVideos, 3);
     assert.deepEqual(result.warnings, [
-      'add-video master.mp4: runs 0.1 s past the end of the file; cut at its end',
-      'add-video master.mp4: runs 0.6 s past the end of the file; cut at its end',
-      'add-video master.mp4: in-point is past the end of the file',
+      'add-video master.mp4: vượt quá cuối tệp 0.1 giây; đã cắt tại cuối tệp',
+      'add-video master.mp4: vượt quá cuối tệp 0.6 giây; đã cắt tại cuối tệp',
+      'add-video master.mp4: điểm bắt đầu nằm sau cuối tệp',
     ]);
   }
 
@@ -303,7 +303,7 @@ try {
   {
     const { calls, seams } = recorder();
     const result = await exportJianyingDraft({ fps: 30, items: [{ kind: 'audio', src: voice, startFrame: 0, durationInFrames: 30 }] }, seams);
-    assert.equal(result.error, 'timeline has no video clips to export');
+    assert.equal(result.error, 'timeline không có clip video để xuất');
     assert.deepEqual(calls, []);
   }
 } finally {
