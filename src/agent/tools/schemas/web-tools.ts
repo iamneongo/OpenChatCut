@@ -9,40 +9,40 @@ export const WEB_TOOL_SCHEMAS: AgentToolSchema[] = [
   {
     name: 'web_browser',
     description: [
-      'Scrape a single web page via Firecrawl (web_browser → Firecrawl /scrape).',
-      'formats: markdown (default), html, rawHtml, images, links, branding, summary, screenshot, videos.',
-      'branding = native brand kit (colors/fonts/logo); summary = native page summary.',
-      'screenshot is auto-saved to media pool as screenshotAssetId when possible.',
-      'For many known URLs use web_batch_scrape; site discovery use web_map; multi-page crawl use web_crawl; search use web_search.',
+      'Scrape một trang web qua Firecrawl (web_browser → Firecrawl /scrape).',
+      'formats: markdown (mặc định), html, rawHtml, images, links, branding, summary, screenshot, videos.',
+      'branding = bộ nhận diện thương hiệu native (màu/font/logo); summary = tóm tắt trang native.',
+      'screenshot được tự động lưu vào media pool dưới dạng screenshotAssetId khi có thể.',
+      'Với nhiều URL đã biết dùng web_batch_scrape; khám phá site dùng web_map; crawl nhiều trang dùng web_crawl; tìm kiếm dùng web_search.',
     ].join(' '),
     input_schema: {
       type: 'object',
       properties: {
-        url: { type: 'string', description: 'Page URL (http/https).' },
+        url: { type: 'string', description: 'URL trang (http/https).' },
         formats: {
           type: 'array',
           items: { type: 'string', enum: [...FORMAT_ENUM] },
-          description: "Default ['markdown'].",
+          description: "Mặc định ['markdown'].",
         },
-        onlyMainContent: { type: 'boolean', description: 'Strip nav/footer (default true).' },
-        fullPage: { type: 'boolean', description: 'Full-page screenshot when format includes screenshot.' },
-        waitFor: { type: 'number', description: 'ms wait before extract (0–10000).' },
-        timeout: { type: 'number', description: 'Timeout ms (max 60000).' },
-        country: { type: 'string', description: "Geo country code e.g. 'US'." },
-        query: { type: 'string', description: 'NL structured-extraction prompt.' },
-        schema: { description: 'JSON schema for structured extraction.' },
+        onlyMainContent: { type: 'boolean', description: 'Bỏ nav/footer (mặc định true).' },
+        fullPage: { type: 'boolean', description: 'Screenshot toàn trang khi format có screenshot.' },
+        waitFor: { type: 'number', description: 'Số ms chờ trước khi trích xuất (0–10000).' },
+        timeout: { type: 'number', description: 'Timeout ms (tối đa 60000).' },
+        country: { type: 'string', description: "Mã quốc gia địa lý, ví dụ 'US'." },
+        query: { type: 'string', description: 'Prompt trích xuất có cấu trúc bằng ngôn ngữ tự nhiên.' },
+        schema: { description: 'Schema JSON cho trích xuất có cấu trúc.' },
         actions: {
           type: 'array',
-          description: 'Firecrawl page actions before scrape (click/wait/scroll/…), max 10. '
-            + 'For type=executeJavascript, script MUST NOT contain a top-level return statement '
-            + '(Firecrawl rejects it with SyntaxError: Illegal return statement) — write the script '
-            + 'as a bare expression or wrap it in an IIFE like (() => { ... })().',
+          description: 'Action trên trang Firecrawl trước khi scrape (click/wait/scroll/…), tối đa 10. '
+            + 'Với type=executeJavascript, script KHÔNG ĐƯỢC chứa return ở cấp cao nhất '
+            + '(Firecrawl sẽ từ chối với SyntaxError: Illegal return statement) — viết script '
+            + 'dưới dạng biểu thức thuần hoặc bọc trong IIFE như (() => { ... })().',
           items: {},
         },
         execJs: {
           type: 'string',
-          description: 'JS to run before extract (max 10000 chars). '
-            + 'No top-level return allowed — use a bare expression or an IIFE.',
+          description: 'JS chạy trước khi trích xuất (tối đa 10000 ký tự). '
+            + 'Không cho phép return ở cấp cao nhất — dùng biểu thức thuần hoặc IIFE.',
         },
       },
       required: ['url'],
@@ -51,25 +51,25 @@ export const WEB_TOOL_SCHEMAS: AgentToolSchema[] = [
   {
     name: 'web_search',
     description: [
-      'Search the web via Firecrawl /search (official API). Returns titles, URLs, descriptions;',
-      'by default also scrapes markdown for each hit (scrapeMarkdown=true).',
-      'Use site: / filetype: operators in query when helpful. Prefer this to inventing URLs.',
-      'Then web_browser a specific URL for deep scrape/screenshot.',
+      'Tìm kiếm web qua Firecrawl /search (API chính thức). Trả về title, URL, description;',
+      'mặc định cũng scrape markdown cho từng kết quả (scrapeMarkdown=true).',
+      'Dùng toán tử site: / filetype: trong query khi hữu ích. Ưu tiên cách này thay vì tự đoán URL.',
+      'Sau đó dùng web_browser với URL cụ thể để scrape sâu/screenshot.',
     ].join(' '),
     input_schema: {
       type: 'object',
       properties: {
-        query: { type: 'string', description: 'Search query (supports operators like site:example.com).' },
-        limit: { type: 'number', description: 'Max results 1–20 (default 5).' },
-        country: { type: 'string', description: "ISO country e.g. 'US' (default US on Firecrawl)." },
-        lang: { type: 'string', description: 'Language code if supported by provider.' },
+        query: { type: 'string', description: 'Truy vấn tìm kiếm (hỗ trợ toán tử như site:example.com).' },
+        limit: { type: 'number', description: 'Số kết quả tối đa 1–20 (mặc định 5).' },
+        country: { type: 'string', description: "Quốc gia ISO, ví dụ 'US' (mặc định US trên Firecrawl)." },
+        lang: { type: 'string', description: 'Mã ngôn ngữ nếu provider hỗ trợ.' },
         tbs: {
           type: 'string',
-          description: 'Time filter e.g. qdr:d (day), qdr:w (week), qdr:m (month), qdr:y (year).',
+          description: 'Bộ lọc thời gian, ví dụ qdr:d (ngày), qdr:w (tuần), qdr:m (tháng), qdr:y (năm).',
         },
         scrapeMarkdown: {
           type: 'boolean',
-          description: 'If true (default), include markdown for each result via scrapeOptions.',
+          description: 'Nếu true (mặc định), bao gồm markdown cho từng kết quả qua scrapeOptions.',
         },
       },
       required: ['query'],
@@ -78,22 +78,22 @@ export const WEB_TOOL_SCHEMAS: AgentToolSchema[] = [
   {
     name: 'web_map',
     description: [
-      'Discover URLs on a website via Firecrawl /map (official API). Fast sitemap+link discovery,',
-      'does NOT download full page bodies. Use search to rank by path relevance.',
-      'Then web_browser or web_crawl selected URLs for content.',
+      'Khám phá URL trên website qua Firecrawl /map (API chính thức). Tìm sitemap+link nhanh,',
+      'KHÔNG tải toàn bộ nội dung trang. Dùng search để xếp hạng theo độ liên quan của path.',
+      'Sau đó dùng web_browser hoặc web_crawl với các URL đã chọn để lấy nội dung.',
     ].join(' '),
     input_schema: {
       type: 'object',
       properties: {
-        url: { type: 'string', description: 'Base site URL to map.' },
-        search: { type: 'string', description: 'Optional path/keyword to rank results (e.g. blog).' },
-        limit: { type: 'number', description: 'Max links 1–500 (default 100).' },
-        includeSubdomains: { type: 'boolean', description: 'Include subdomains (default true).' },
-        ignoreQueryParameters: { type: 'boolean', description: 'Drop ?query URLs (default true).' },
+        url: { type: 'string', description: 'URL site gốc cần lập bản đồ.' },
+        search: { type: 'string', description: 'Path/từ khóa tùy chọn để xếp hạng kết quả (ví dụ blog).' },
+        limit: { type: 'number', description: 'Số link tối đa 1–500 (mặc định 100).' },
+        includeSubdomains: { type: 'boolean', description: 'Bao gồm subdomain (mặc định true).' },
+        ignoreQueryParameters: { type: 'boolean', description: 'Bỏ URL có ?query (mặc định true).' },
         sitemap: {
           type: 'string',
           enum: ['skip', 'include', 'only'],
-          description: 'Sitemap mode: skip | include (default) | only.',
+          description: 'Chế độ sitemap: skip | include (mặc định) | only.',
         },
       },
       required: ['url'],
@@ -102,39 +102,39 @@ export const WEB_TOOL_SCHEMAS: AgentToolSchema[] = [
   {
     name: 'web_crawl',
     description: [
-      'Crawl multiple pages from a start URL via Firecrawl /crawl (official API).',
-      'Starts a job and waits (polls) until completed or maxWaitMs.',
-      'Returns truncated markdown per page. Keep limit small (default 10, max 50).',
-      'For one page use web_browser; for URL list only use web_map.',
+      'Crawl nhiều trang từ URL bắt đầu qua Firecrawl /crawl (API chính thức).',
+      'Khởi chạy job và chờ (poll) tới khi hoàn tất hoặc tới maxWaitMs.',
+      'Trả về markdown rút gọn cho từng trang. Giữ limit nhỏ (mặc định 10, tối đa 50).',
+      'Với một trang dùng web_browser; chỉ cần danh sách URL thì dùng web_map.',
     ].join(' '),
     input_schema: {
       type: 'object',
       properties: {
-        url: { type: 'string', description: 'Start URL.' },
-        limit: { type: 'number', description: 'Max pages 1–50 (default 10).' },
+        url: { type: 'string', description: 'URL bắt đầu.' },
+        limit: { type: 'number', description: 'Số trang tối đa 1–50 (mặc định 10).' },
         maxDiscoveryDepth: {
           type: 'number',
-          description: 'Max discovery depth 0–5 (alias maxDepth).',
+          description: 'Độ sâu khám phá tối đa 0–5 (alias maxDepth).',
         },
-        maxDepth: { type: 'number', description: 'Alias of maxDiscoveryDepth.' },
+        maxDepth: { type: 'number', description: 'Alias của maxDiscoveryDepth.' },
         includePaths: {
           type: 'array',
           items: { type: 'string' },
-          description: 'Pathname regex patterns to include (e.g. blog/.*).',
+          description: 'Mẫu regex pathname cần bao gồm (ví dụ blog/.*).',
         },
         excludePaths: {
           type: 'array',
           items: { type: 'string' },
-          description: 'Pathname regex patterns to exclude.',
+          description: 'Mẫu regex pathname cần loại trừ.',
         },
-        allowSubdomains: { type: 'boolean', description: 'Follow subdomains (default false).' },
+        allowSubdomains: { type: 'boolean', description: 'Theo dõi subdomain (mặc định false).' },
         crawlEntireDomain: {
           type: 'boolean',
-          description: 'Follow sibling/parent internal links, not only children (default false).',
+          description: 'Theo dõi link nội bộ ngang hàng/cha, không chỉ link con (mặc định false).',
         },
         maxWaitMs: {
           type: 'number',
-          description: 'Max wait for crawl job ms (default 90000, max 180000).',
+          description: 'Thời gian chờ tối đa cho crawl job tính bằng ms (mặc định 90000, tối đa 180000).',
         },
       },
       required: ['url'],
@@ -143,11 +143,11 @@ export const WEB_TOOL_SCHEMAS: AgentToolSchema[] = [
   {
     name: 'web_batch_scrape',
     description: [
-      'Batch-scrape multiple known URLs via Firecrawl /batch/scrape (official v2 API).',
-      'Starts a job and waits (polls) until completed or maxWaitMs.',
-      'Max 15 URLs per call. formats: markdown (default), summary, branding, links, html.',
-      'Use when you already have a list of URLs (e.g. from web_search or web_map).',
-      'For one page use web_browser; for discovering URLs from a seed use web_crawl or web_map.',
+      'Batch-scrape nhiều URL đã biết qua Firecrawl /batch/scrape (API v2 chính thức).',
+      'Khởi chạy job và chờ (poll) tới khi hoàn tất hoặc tới maxWaitMs.',
+      'Tối đa 15 URL mỗi lần gọi. formats: markdown (mặc định), summary, branding, links, html.',
+      'Dùng khi đã có sẵn danh sách URL (ví dụ từ web_search hoặc web_map).',
+      'Với một trang dùng web_browser; để khám phá URL từ seed dùng web_crawl hoặc web_map.',
     ].join(' '),
     input_schema: {
       type: 'object',
@@ -155,17 +155,17 @@ export const WEB_TOOL_SCHEMAS: AgentToolSchema[] = [
         urls: {
           type: 'array',
           items: { type: 'string' },
-          description: 'List of page URLs to scrape (1–15).',
+          description: 'Danh sách URL trang cần scrape (1–15).',
         },
         formats: {
           type: 'array',
           items: { type: 'string', enum: [...FORMAT_ENUM] },
-          description: "Default ['markdown']. Prefer markdown, summary, branding for agents.",
+          description: "Mặc định ['markdown']. Ưu tiên markdown, summary, branding cho agent.",
         },
-        onlyMainContent: { type: 'boolean', description: 'Strip nav/footer (default true).' },
+        onlyMainContent: { type: 'boolean', description: 'Bỏ nav/footer (mặc định true).' },
         maxWaitMs: {
           type: 'number',
-          description: 'Max wait for batch job ms (default 90000, max 180000).',
+          description: 'Thời gian chờ tối đa cho batch job tính bằng ms (mặc định 90000, tối đa 180000).',
         },
       },
       required: ['urls'],
