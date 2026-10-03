@@ -92,7 +92,7 @@ function snapToNearest(values: readonly number[], targets: readonly number[]): n
 }
 
 export function pickBeatThisPeaks(beatLogits: Float32Array, downbeatLogits: Float32Array): BeatThisPeaks {
-  if (beatLogits.length !== downbeatLogits.length) throw new Error('Beat This logit lengths do not match');
+  if (beatLogits.length !== downbeatLogits.length) throw new Error('độ dài logit Beat This không khớp');
   const beats = deduplicatePeaks(localMaxima(beatLogits));
   const snapped = snapToNearest(deduplicatePeaks(localMaxima(downbeatLogits)), beats);
   const downbeats = [...new Set(snapped)].sort((left, right) => left - right);
@@ -318,7 +318,7 @@ async function inferBeatThis(
       throwIfAborted(signal);
       const first = webGpuError instanceof Error ? webGpuError.message : String(webGpuError);
       const second = wasmError instanceof Error ? wasmError.message : String(wasmError);
-      throw new Error(`Beat This WebGPU failed (${first}); fresh WASM worker failed (${second})`);
+      throw new Error(`Beat This WebGPU thất bại (${first}); worker WASM mới cũng thất bại (${second})`);
     }
   }
 }
@@ -329,22 +329,22 @@ export async function analyzeBeatThis(
   onProgress?: ProgressListener,
   signal?: AbortSignal,
 ): Promise<BeatThisAnalysis> {
-  if (!(samples instanceof Float32Array) || samples.length === 0) throw new Error('Beat This audio samples are empty');
+  if (!(samples instanceof Float32Array) || samples.length === 0) throw new Error('mẫu âm thanh Beat This đang trống');
   if (!Number.isInteger(sampleRate) || sampleRate < 8_000 || sampleRate > 192_000) {
-    throw new Error(`Invalid Beat This sample rate: ${sampleRate}`);
+    throw new Error(`tần số lấy mẫu Beat This không hợp lệ: ${sampleRate}`);
   }
   for (let index = 0; index < samples.length; index += 1) {
-    if (!Number.isFinite(samples[index])) throw new Error(`Beat This audio contains a non-finite sample at ${index}`);
+    if (!Number.isFinite(samples[index])) throw new Error(`âm thanh Beat This chứa mẫu không hữu hạn tại ${index}`);
   }
   throwIfAborted(signal);
   if (!await areModelPacksInstalled(['rhythm-lite'])) {
-    throw new Error('Beat This model pack rhythm-lite is not installed');
+    throw new Error('chưa cài model pack Beat This rhythm-lite');
   }
   throwIfAborted(signal);
   reportProgress(onProgress, 0);
   const modelSamples = await resampleMonoSamples(samples, sampleRate, BEAT_THIS_SAMPLE_RATE);
   throwIfAborted(signal);
-  if (modelSamples.length <= 512) throw new Error('Beat This audio is too short for reflect-padded analysis');
+  if (modelSamples.length <= 512) throw new Error('âm thanh Beat This quá ngắn để phân tích có đệm phản xạ');
   const logits = await inferBeatThis(modelSamples, onProgress, signal);
   throwIfAborted(signal);
   const peaks = pickBeatThisPeaks(logits.beat, logits.downbeat);

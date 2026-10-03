@@ -29,7 +29,7 @@ assert.deepEqual(
 );
 assert.throws(
   () => pickBeatThisPeaks(new Float32Array(2), new Float32Array(3)),
-  /lengths do not match/,
+  /độ dài logit Beat This không khớp/,
 );
 const controller = new AbortController();
 controller.abort(new DOMException('cancel beat analysis', 'AbortError'));
