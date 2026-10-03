@@ -5,6 +5,7 @@ import { keyboardPreviewNudgePlan, type PreviewNudgeDirection } from '../compone
 import { saveVersion } from '../persist/versionStore';
 import type { TimelineShortcutApi } from './timelineApi';
 import type { ActionBindings } from './useActionBindings';
+import { getLocale, useT } from '../i18n/locale';
 import { useActionBindings } from './useActionBindings';
 import { useShortcutDispatcher } from './useShortcutDispatcher';
 
@@ -144,13 +145,16 @@ function viewActions(deps: EditorActionDeps): ActionBindings {
 }
 
 export function useEditorActions(deps: EditorActionDeps): void {
+  const t = useT();
   const bindings: ActionBindings = {
     ...playbackActions(deps),
     ...editingActions(deps),
     ...navigationActions(deps),
     ...viewActions(deps),
     'save-version': () => {
-      const name = `版本 ${new Date().toLocaleString('zh-CN', {
+      const locale = getLocale();
+      const browserLocale = locale === 'vi' ? 'vi-VN' : locale === 'zh' ? 'zh-CN' : locale === 'it' ? 'it-IT' : locale === 'ru' ? 'ru-RU' : 'en-US';
+      const name = `${t('版本名称')} ${new Date().toLocaleString(browserLocale, {
         month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit',
       })}`;
       void saveVersion(deps.projectId, name, deps.docRef.current).then(deps.openHistory);
