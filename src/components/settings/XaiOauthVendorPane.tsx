@@ -86,7 +86,9 @@ export function XaiOauthVendorPane({ page, hint, ctx }: {
       setStatus(body);
       await ctx.refreshStatus();
     } catch (error) {
-      setActionError(error instanceof Error ? error.message : String(error));
+      setActionError(t('失败:{error}', {
+        error: error instanceof Error ? error.message : String(error),
+      }));
       await load();
     } finally {
       setBusy('');

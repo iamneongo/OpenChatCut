@@ -88,7 +88,9 @@ function useStoredComments(projectId: string) {
     loadReviewComments(projectId)
       .then((loaded) => { if (!cancelled) setComments(loaded); })
       .catch((cause) => {
-        if (!cancelled) setError(cause instanceof Error ? cause.message : t('评论加载失败'));
+        if (!cancelled) setError(t('失败:{error}', {
+          error: cause instanceof Error ? cause.message : t('评论加载失败'),
+        }));
       });
     return () => { cancelled = true; };
   }, [projectId, t]);
@@ -101,7 +103,9 @@ function useStoredComments(projectId: string) {
       setComments(next);
       return true;
     } catch (cause) {
-      setError(cause instanceof Error ? cause.message : t('评论保存失败'));
+      setError(t('失败:{error}', {
+        error: cause instanceof Error ? cause.message : t('评论保存失败'),
+      }));
       return false;
     } finally {
       setBusy(false);

@@ -4,6 +4,7 @@ import { AbsoluteFill, cancelRender, continueRender, delayRender } from 'remotio
 import { loadTimelineFonts } from '../fonts/projectFonts';
 import { prepareTemplate } from '../template-host';
 import type { TimelineState } from './types';
+import { t } from '../i18n/locale';
 
 interface TimelineReadinessGateProps {
   state: TimelineState;
@@ -40,7 +41,7 @@ export function TimelineReadinessGate({ state, dependencies = [], children }: Ti
       if (continued) return;
       continued = true;
       const readinessError = reason instanceof Error ? reason : new Error(String(reason));
-      if (active) setError(readinessError.message);
+      if (active) setError(t('失败:{error}', { error: readinessError.message }));
       try {
         cancelRender(readinessError);
       } catch {
