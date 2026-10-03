@@ -1,4 +1,4 @@
-import { useT } from '../i18n/locale';
+import { getLocale, useT } from '../i18n/locale';
 import type { InstalledPack } from '../plugins/store';
 import { theme } from '../theme';
 import { EXTENSION_TYPE_LABEL, packCounts, secondaryButton } from './ExtensionCenterModel';
@@ -13,6 +13,20 @@ interface InstalledProps {
   onConfirm: (id: string | null) => void;
   onToggle: (pack: InstalledPack) => void;
   onRemove: (pack: InstalledPack) => void;
+}
+
+function formatInstalledDate(timestamp: number): string {
+  const locale = getLocale();
+  const browserLocale = locale === 'vi'
+    ? 'vi-VN'
+    : locale === 'zh'
+      ? 'zh-CN'
+      : locale === 'it'
+        ? 'it-IT'
+        : locale === 'ru'
+          ? 'ru-RU'
+          : 'en-US';
+  return new Date(timestamp).toLocaleDateString(browserLocale);
 }
 
 function PackDetails({ pack, props }: { pack: InstalledPack; props: InstalledProps }) {
@@ -61,7 +75,7 @@ function InstalledCard({ pack, props }: { pack: InstalledPack; props: InstalledP
             <span style={{ color: theme.textStrong, fontSize: 12.5, fontWeight: 700, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{pack.name}</span>
             <span style={{ color: theme.textDim, fontSize: 10, whiteSpace: 'nowrap' }}>v{pack.version}</span>
           </div>
-          <div style={{ color: theme.textDim, fontSize: 10, marginTop: 3, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{pack.author || t('未知作者')} · <SourceLabel pack={pack} /> · {new Date(pack.installedAt).toLocaleDateString()}</div>
+          <div style={{ color: theme.textDim, fontSize: 10, marginTop: 3, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{pack.author || t('未知作者')} · <SourceLabel pack={pack} /> · {formatInstalledDate(pack.installedAt)}</div>
         </div>
         <ExtensionToggle checked={pack.enabled} disabled={busy} onChange={() => props.onToggle(pack)} />
         <div style={{ gridColumn: '1 / -1', display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
