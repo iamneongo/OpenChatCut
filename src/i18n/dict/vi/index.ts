@@ -2029,7 +2029,7 @@ export const VI: Record<string, string> = {
   '工作流会约束 Agent 的规划与工具调用。': 'Quy trình định hướng việc lập kế hoạch và gọi công cụ của tác nhân AI.',
   '发送时以 chat_context_entry 结构化注入': 'Khi gửi sẽ đưa vào có cấu trúc dưới dạng chat_context_entry',
   '没有匹配“{query}”的创作工作流': 'Không có quy trình sáng tạo khớp với “{query}”',
-  '把带货、游戏、访谈、教学、娱乐、体育、音乐或混合直播录屏剪成有证据、可发布的高光切片。': 'Cắt livestream bán hàng, game, phỏng vấn, giảng dạy, giải trí, thể thao, âm nhạc hoặc nội dung hỗn hợp thành các đoạn highlight có căn cứ và sẵn sàng đăng tải.',
+  '把带货、游戏、访谈、教学、娱乐、体育、音乐或混合直播录屏剪成有证据、可发布的高光切片。': 'Cắt bản ghi phát trực tiếp bán hàng, trò chơi, phỏng vấn, giảng dạy, giải trí, thể thao, âm nhạc hoặc nội dung hỗn hợp thành các đoạn điểm nổi bật có căn cứ và sẵn sàng đăng tải.',
   '把新闻素材粗剪为一条内容完整、逻辑清晰、节奏紧凑的新闻短视频，不加任何外部声音。': 'Dựng thô tư liệu tin tức thành video ngắn đầy đủ nội dung, logic rõ ràng và nhịp gọn, không thêm âm thanh bên ngoài.',
   '把重复流程或想法做成可复用的自定义技能（SKILL.md），并安装到本机技能目录。': 'Biến quy trình lặp lại hoặc ý tưởng thành kỹ năng tùy chỉnh có thể tái sử dụng (SKILL.md) và cài vào thư mục kỹ năng trên máy.',
   '未知技能“{query}”，按 / 查看全部创作工作流': 'Kỹ năng không xác định “{query}”, nhập / để xem toàn bộ quy trình sáng tạo',

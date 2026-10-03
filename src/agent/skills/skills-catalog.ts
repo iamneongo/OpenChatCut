@@ -17,7 +17,7 @@ export const CREATIVE_SKILL_METADATA: CreativeSkillMetadata[] = [
     slug: 'livestream-to-clips',
     name: 'Livestream to Clips',
     nameZh: '直播智能切片',
-    nameVi: 'Cắt highlight livestream',
+    nameVi: 'Cắt đoạn nổi bật từ buổi phát trực tiếp',
     summary: '把带货、游戏、访谈、教学、娱乐、体育、音乐或混合直播录屏剪成有证据、可发布的高光切片。',
     scenarios: [
       'livestream-to-clips',
