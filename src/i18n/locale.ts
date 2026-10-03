@@ -4,7 +4,8 @@
 // Rules: Use useT() (subscription switching) in React components; pure helper modules can directly import { t }
 //  — As long as the component that renders its output calls useT(), it will be recalculated when switching languages.
 // LLM interface (systemPrompt/tool ​​description/skill content) and persistent dynamic history tags do not enter i18n.
-// Default language: the saved choice wins; otherwise the system language (zh/ru/vi), and English for everything else.
+// Default language: the saved choice wins; otherwise use the system language
+// when it is supported, and Vietnamese for this Vietnamese-first fork.
 import { useSyncExternalStore } from 'react';
 import { ensureLocaleDict, localeDictReady, localeDicts } from './dictRegistry';
 
@@ -30,9 +31,9 @@ function systemLocale(): Locale {
     if (tag.startsWith('it')) return 'it';
     if (tag.startsWith('ru')) return 'ru';
     if (tag.startsWith('vi')) return 'vi';
-    return 'en';
+    return 'vi';
   } catch {
-    return 'en';
+    return 'vi';
   }
 }
 
