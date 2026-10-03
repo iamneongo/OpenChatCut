@@ -70,7 +70,7 @@ function validatedSkillSource(
 ): { readonly available: string[] } | { readonly error: string } {
   const available = orderedPaths(Object.keys(source.contents));
   const unsafe = available.find((path) => !isSafeRelativePath(path));
-  if (unsafe) return { error: `Skill contains an unsafe file path: ${unsafe}` };
+  if (unsafe) return { error: `Skill chứa đường dẫn tệp không an toàn: ${unsafe}` };
   if (typeof source.contents['SKILL.md'] !== 'string') return { error: 'Skill đang thiếu SKILL.md.' };
   return { available };
 }
@@ -81,7 +81,7 @@ function wholeRequestError(request: readonly string[] | undefined): PluginSkillL
     return { error: `files phải chứa từ 1 đến ${MAX_REQUESTED_FILES} đường dẫn.` };
   }
   const unsafe = request.find((path) => !isSafeRelativePath(path));
-  if (unsafe) return { error: `Unsafe skill file path: ${unsafe}` };
+  if (unsafe) return { error: `Đường dẫn tệp skill không an toàn: ${unsafe}` };
   return new Set(request).size === request.length
     ? null
     : { error: 'files không được chứa đường dẫn trùng lặp.' };
@@ -201,7 +201,7 @@ function pageResult(
     omittedFiles: [],
     dependencyCheck: dependencies,
     ...(source.skillDir ? { skillDir: source.skillDir } : {}),
-    note: 'Paged skill file loaded within the active context budget. Continue with the same file and offset=nextOffset until nextOffset is null. Send only file and offset on those calls; adding files=[…] is not a paging continuation.',
+    note: 'Đã nạp một phần tệp skill trong giới hạn ngữ cảnh hiện tại. Tiếp tục với cùng tệp và offset=nextOffset cho đến khi nextOffset là null. Các lần gọi tiếp theo chỉ gửi file và offset; thêm files=[…] không được xem là tiếp tục phân trang.',
     offset,
     nextOffset: end < totalChars ? end : null,
     totalChars,
@@ -275,7 +275,7 @@ export function buildPagedSkillResult(
     const emptyPage = pageResult(source, file, offset, offset, dependencies);
     return JSON.stringify(emptyPage).length <= resultBudgetChars
       ? emptyPage
-      : { error: 'Skill-file metadata exceeds the active result budget.' };
+      : { error: 'Siêu dữ liệu của tệp skill vượt quá giới hạn kết quả hiện tại.' };
   }
   const minimumEnd = isHighSurrogate(text.charCodeAt(offset))
     && isLowSurrogate(text.charCodeAt(offset + 1)) ? offset + 2 : offset + 1;
@@ -293,7 +293,7 @@ export function buildPagedSkillResult(
     resultBudgetChars,
   );
   return best === offset
-    ? { error: 'One skill-file character plus metadata exceeds the active result budget.' }
+    ? { error: 'Chỉ một ký tự của tệp skill cùng siêu dữ liệu cũng vượt quá giới hạn kết quả hiện tại.' }
     : pageResult(source, file, offset, best, dependencies);
 }
 
@@ -327,7 +327,7 @@ export function buildBoundedSkillResult(
       omittedFiles: available.filter((path) => path !== 'SKILL.md'),
       // The only result carrying both nextOffset and omittedFiles, so it must spell out that
       // they are two sequential calls rather than one combined selector.
-      note: 'SKILL.md was paged to the active context budget. Finish it first with file="SKILL.md" and offset=nextOffset until nextOffset is null, sending no files=[…] on those calls. Only then request omittedFiles in a separate call with files=[…] and no file/offset.',
+      note: 'SKILL.md đã được phân trang theo giới hạn ngữ cảnh hiện tại. Hãy đọc hết trước bằng file="SKILL.md" và offset=nextOffset cho đến khi nextOffset là null; các lần gọi đó không gửi files=[…]. Sau đó mới yêu cầu omittedFiles trong một lần gọi riêng với files=[…] và không gửi file/offset.',
     };
   }
   if (request === undefined) return initial;
@@ -404,7 +404,7 @@ export function execPluginSkillTool(
       .map((skill) => skill.slug)
       .sort(comparePath);
     return {
-      error: `no such skill "${slug}"`,
+      error: `không có skill nào có tên "${slug}"`,
       available: PLUGIN_SKILLS.map((skill) => skill.slug).sort(comparePath),
       creativeModes,
     };

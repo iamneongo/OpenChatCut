@@ -372,7 +372,7 @@ async function rerunGenerationHandler(args: GenerateArgs, ctx: AgentContext): Pr
   const original = resolution.job;
   if (original.submitArgsVersion !== 1 || !original.submitArgs || !original.toolName) {
     return {
-      error: `operation generation ${original.operationId} chỉ là snapshot tóm tắt legacy và không thể rerun an toàn`,
+      error: `tác vụ tạo ${original.operationId} chỉ là ảnh chụp tóm tắt cũ và không thể chạy lại an toàn`,
       code: 'legacy_summary',
     };
   }
@@ -387,7 +387,7 @@ async function rerunGenerationHandler(args: GenerateArgs, ctx: AgentContext): Pr
       ? await submitMusicHandler(rerunArgs, ctx)
       : original.toolName === 'submit_sound'
         ? await submitSoundHandler(rerunArgs, ctx)
-      : { error: `operation generation ${original.operationId} dùng tool rerun không được hỗ trợ ${original.toolName}` };
+      : { error: `tác vụ tạo ${original.operationId} dùng công cụ chạy lại không được hỗ trợ ${original.toolName}` };
   return result && typeof result === 'object' && !Array.isArray(result)
     ? { ...(result as Record<string, unknown>), rerunOf: original.operationId }
     : result;

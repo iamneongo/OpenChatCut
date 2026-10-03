@@ -110,7 +110,7 @@ export function sourceSet(json: Record<string, unknown>, c: CaptionsData, ctx: A
   if (!Array.isArray(rawSources) || rawSources.length === 0) return { error: 'source_set cần {mode:"timeline"}, {sources:[...]} không rỗng hoặc {sourceScope:null}' };
   const entries: CaptionSourceEntry[] = [];
   for (const sel of rawSources) {
-    const e = sel && typeof sel === 'object' ? selectorToEntry(sel as Record<string, unknown>, s) : { error: `bad source: ${JSON.stringify(sel)}` };
+    const e = sel && typeof sel === 'object' ? selectorToEntry(sel as Record<string, unknown>, s) : { error: `nguồn không hợp lệ: ${JSON.stringify(sel)}` };
     if ('error' in e) return e;
     entries.push(e);
   }

@@ -423,7 +423,7 @@ export async function execTranscriptTool(name: string, args: Args, ctx: AgentCon
           afterWordIndex,
           gapSecondsBefore: rawSec,
           appliedSeconds: 0,
-          note: 'Gap silence removed; clip re-timed via gapCapsMs.',
+          note: 'Đã xóa khoảng lặng; thời lượng đoạn đã được tính lại qua gapCapsMs.',
         };
       }
       if (action === 'restore') {
@@ -434,7 +434,7 @@ export async function execTranscriptTool(name: string, args: Args, ctx: AgentCon
           itemId: it.id,
           afterWordIndex,
           gapSeconds: rawSec,
-          note: 'Per-gap override cleared; original pause restored (unless clean_script global cap still applies).',
+          note: 'Đã xóa ghi đè riêng cho khoảng lặng; đã khôi phục khoảng nghỉ ban đầu (trừ khi giới hạn toàn cục của clean_script vẫn áp dụng).',
         };
       }
       if (action === 'cap') {

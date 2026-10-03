@@ -320,7 +320,7 @@ export async function runMotionGraphicExportPlan(
         itemId: entry.item.id,
         renderKey: entry.renderKey,
         filename: entry.filename,
-        error: 'item is not a motion graphic',
+        error: 'đoạn không phải là motion graphic',
       });
       continue;
     }
