@@ -286,13 +286,13 @@ export async function resolveShaderRefs(
     const asset = assets.find((a) => a.id === id) ?? assets.find((a) => a.id.startsWith(id));
     if (asset) {
       if (asset.kind === 'image' || asset.kind === 'gif') { refs.imageAssets.push(asset); continue; }
-      return { error: `asset tham chiếu "${asset.name}" là ${asset.kind} — chỉ được tham chiếu asset IMAGE (làm cảm hứng hình ảnh) hoặc id effect/transition (làm mẫu phong cách mã)` };
+      return { error: `tư liệu tham chiếu "${asset.name}" là ${asset.kind} — chỉ được tham chiếu tư liệu hình ảnh (làm cảm hứng hình ảnh) hoặc mã effect/transition (làm mẫu phong cách mã)` };
     }
     const tr = getCustomTransition(id);
     if (tr) { codeRefs.push({ id: tr.id, kind: 'transition', label: tr.label, frag: tr.frag }); continue; }
     const fx = await lookupFxRef(id);
     if (fx) { codeRefs.push(fx); continue; }
-    return { error: `không tìm thấy asset tham chiếu: "${id}" — hãy truyền id asset dự án/tiền tố ngắn, hoặc id effect/transition` };
+    return { error: `không tìm thấy tư liệu tham chiếu: "${id}" — hãy truyền mã tư liệu dự án/tiền tố ngắn, hoặc mã effect/transition` };
   }
   if (codeRefs.length > 1) {
     return { error: `mỗi lần submit chỉ được tối đa MỘT tham chiếu effect/transition (đã nhận ${codeRefs.length}: ${codeRefs.map((c) => c.id).join(', ')})` };
