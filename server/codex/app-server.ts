@@ -209,7 +209,7 @@ export class CodexAppServerClient {
     this.completedLoginIds.clear();
   }
 
-  restart(message = 'Codex app-server was restarted.'): void {
+  restart(message = 'Codex app-server đã được khởi động lại.'): void {
     const child = this.child;
     if (child) this.resetProcess(child, new CodexProcessError(message));
   }
@@ -300,7 +300,7 @@ export class CodexAppServerClient {
   private handleLine(child: ChildProcessWithoutNullStreams, line: string): void {
     if (this.child !== child || !line.trim()) return;
     if (Buffer.byteLength(line) > MAX_PROTOCOL_LINE_BYTES) {
-      this.resetProcess(child, new CodexProcessError('Codex app-server sent an oversized response.'));
+      this.resetProcess(child, new CodexProcessError('Codex app-server gửi phản hồi quá lớn.'));
       return;
     }
     try {
@@ -358,7 +358,7 @@ export class CodexAppServerClient {
       return;
     }
     if (method === 'execCommandApproval' || method === 'applyPatchApproval') {
-      this.writeMessage({ id, result: { decision: { denied: { rejection: 'Use the OpenChatCut proposal review.' } } } });
+      this.writeMessage({ id, result: { decision: { denied: { rejection: 'Hãy dùng màn hình duyệt proposal của OpenChatCut.' } } } });
       return;
     }
     const request = this.serverRequest(id, method, params);
@@ -370,7 +370,7 @@ export class CodexAppServerClient {
         return;
       }
     }
-    request.reject(-32601, 'Method not supported by OpenChatCut.');
+    request.reject(-32601, 'OpenChatCut không hỗ trợ method này.');
   }
 
   private serverRequest(id: number | string, method: string, params: Record<string, unknown>): CodexServerRequest {

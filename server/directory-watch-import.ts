@@ -89,14 +89,14 @@ export interface DirectoryMediaProbe {
 
 export class DirectoryImportCancelledError extends Error {
   constructor() {
-    super('directory import was cancelled');
+    super('đã hủy nhập thư mục');
     this.name = 'DirectoryImportCancelledError';
   }
 }
 
 export class DirectoryDestinationChangedError extends Error {
   constructor() {
-    super('the media destination changed while the directory watch was active');
+    super('đích media đã thay đổi trong lúc theo dõi thư mục đang hoạt động');
     this.name = 'DirectoryDestinationChangedError';
   }
 }

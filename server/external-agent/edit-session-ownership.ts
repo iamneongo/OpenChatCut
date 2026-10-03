@@ -67,7 +67,7 @@ export class EditSessionOwnershipRegistry {
     }
     throw new ExternalEditorCallError(
       'rejected',
-      'The requested edit session does not belong to this MCP transport and editor binding.',
+      'phiên chỉnh sửa được yêu cầu không thuộc transport MCP và liên kết editor này.',
     );
   }
 
@@ -75,7 +75,7 @@ export class EditSessionOwnershipRegistry {
     if (call.name !== 'recover_edit_session') return;
     const sessionId = requestedSessionId(call);
     if (!sessionId || !this.orphans.has(sessionId)) {
-      throw new ExternalEditorCallError('rejected', 'Only an orphaned edit session can be recovered.');
+      throw new ExternalEditorCallError('rejected', 'chỉ có thể khôi phục phiên chỉnh sửa mồ côi.');
     }
     if (this.recoveryClaims.has(sessionId)) {
       throw new ExternalEditorCallError(

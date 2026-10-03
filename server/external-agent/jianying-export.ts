@@ -163,7 +163,7 @@ function runCapcut(args: string[], timeoutMs = 120_000): Promise<unknown> {
     child.on('error', (error: NodeJS.ErrnoException) => {
       clearTimeout(timer);
       const hint = error.code === 'ENOENT' && launch.executable === 'npx'
-        ? ' (capcut-cli runs through npx: install Node.js, or set CAPCUT_CLI)'
+        ? ' (capcut-cli chạy qua npx: hãy cài Node.js hoặc đặt CAPCUT_CLI)'
         : '';
       reject(new Error(`khởi chạy capcut-cli thất bại: ${error.message}${hint}`));
     });

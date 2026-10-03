@@ -464,7 +464,7 @@ export function settleEditorCall(
 export function cancelEditorCallsForOwner(
   ownerId: string,
   outcome: Extract<ExternalCallTerminalOutcome, 'cancelled' | 'stale' | 'failed'> = 'cancelled',
-  message = 'MCP transport session closed before the editor call completed.',
+  message = 'phiên transport MCP đã đóng trước khi lệnh gọi editor hoàn tất.',
 ): number {
   sessionOwnership.disconnectOwner(ownerId);
   return cancelCalls((call) => call.ownerId === ownerId, outcome, message);
@@ -481,7 +481,7 @@ export function pendingEditorCallsForTest(ownerId?: string): Array<{
 }
 
 export function resetExternalAgentBrokerForTest(): void {
-  cancelCalls(() => true, 'cancelled', 'External agent broker reset.', false);
+  cancelCalls(() => true, 'cancelled', 'broker external-agent đã được đặt lại.', false);
   registry.reset();
   queues.clear();
   waiters.clear();
