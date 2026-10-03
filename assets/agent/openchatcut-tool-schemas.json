@@ -2892,13 +2892,13 @@
     },
     {
       "name": "find_highlights",
-      "description": "Create short-form highlights from long-form content: read the word-level transcript of a timeline clip, use an LLM to select the strongest self-contained moments, duplicate each into a vertical sequence (default 9:16), and trim it to the selected frame range. The clip must be transcribed first with transcribe_track. Returns each sequence id, title, and frame range. Falls back to information-density heuristics if LLM selection fails.",
+      "description": "Tạo highlight dạng ngắn từ nội dung dài: đọc transcript cấp từ của một clip timeline, dùng LLM chọn các khoảnh khắc độc lập nổi bật nhất, nhân bản mỗi khoảnh khắc thành sequence dọc (mặc định 9:16) và cắt theo phạm vi frame đã chọn. Clip phải được chuyển lời trước bằng transcribe_track. Trả về id sequence, title và phạm vi frame của từng kết quả. Nếu LLM chọn thất bại, fallback sang heuristic mật độ thông tin.",
       "input_schema": {
         "type": "object",
         "properties": {
           "count": {
             "type": "integer",
-            "description": "Number of short videos to create; default 3."
+            "description": "Số video ngắn cần tạo; mặc định 3."
           },
           "ratio": {
             "type": "string",
@@ -2909,27 +2909,27 @@
               "4:3",
               "3:4"
             ],
-            "description": "Short-video canvas ratio; default 9:16."
+            "description": "Tỷ lệ canvas video ngắn; mặc định 9:16."
           },
           "topic": {
             "type": "string",
-            "description": "Optional: select only highlights related to this topic."
+            "description": "Tùy chọn: chỉ chọn highlight liên quan tới chủ đề này."
           },
           "instruction": {
             "type": "string",
-            "description": "Optional selection preference, such as strongest emotional conflict or moments containing data points."
+            "description": "Ưu tiên chọn tùy chọn, như xung đột cảm xúc mạnh nhất hoặc khoảnh khắc có số liệu."
           },
           "itemId": {
             "type": "string",
-            "description": "Optional transcribed video/audio clip; defaults to the clip with the most words."
+            "description": "Clip video/audio đã chuyển lời, tùy chọn; mặc định clip có nhiều từ nhất."
           },
           "minSeconds": {
             "type": "number",
-            "description": "Minimum duration per highlight; default 3 seconds."
+            "description": "Thời lượng tối thiểu mỗi highlight; mặc định 3 giây."
           },
           "maxSeconds": {
             "type": "number",
-            "description": "Maximum duration per highlight; default 60 seconds."
+            "description": "Thời lượng tối đa mỗi highlight; mặc định 60 giây."
           }
         }
       }
@@ -3120,7 +3120,7 @@
     },
     {
       "name": "manage_template",
-      "description": "A project template packages motion graphics and a design style for reuse across projects. action: get | list_assets | apply | copy_assets | save. get without templateId lists saved templates with id/name/asset count; get with templateId returns motion graphics, design-style summary, and asset count. list_assets with templateId lists bundled media assets by id/name/kind so you can choose reuse versus regeneration; call it before apply. apply with templateId applies the template to the current project. placement accepts append/replace or exact startFrame, durationInFrames, and targetTrackId. omitAssetIds skips bundled assets and clips that directly reference them. copy_assets with templateId copies only bundled assets into the current project and returns new project-local asset ids without placing the template timeline. save with name packages the current project as a template and replaces a template with the same name.",
+      "description": "Template dự án đóng gói đồ họa chuyển động và phong cách thiết kế để tái sử dụng giữa các dự án. action: get | list_assets | apply | copy_assets | save. get không có templateId sẽ liệt kê template đã lưu cùng id/name/số asset; get có templateId trả về motion graphic, tóm tắt phong cách thiết kế và số asset. list_assets với templateId liệt kê media asset đóng gói theo id/name/kind để chọn tái sử dụng hay sinh lại; gọi trước apply. apply với templateId áp dụng template vào dự án hiện tại. placement nhận append/replace hoặc startFrame, durationInFrames, targetTrackId chính xác. omitAssetIds bỏ qua asset đóng gói và clip tham chiếu trực tiếp tới chúng. copy_assets với templateId chỉ sao chép asset đóng gói vào dự án hiện tại và trả về id asset cục bộ mới mà không đặt timeline của template. save với name đóng gói dự án hiện tại thành template và thay thế template cùng tên.",
       "input_schema": {
         "type": "object",
         "properties": {
@@ -3136,10 +3136,10 @@
           },
           "templateId": {
             "type": "string",
-            "description": "Target template id for get details/list_assets/apply/copy_assets; call get without arguments to list templates first."
+            "description": "Id template đích cho get details/list_assets/apply/copy_assets; gọi get không tham số để liệt kê template trước."
           },
           "placement": {
-            "description": "apply: append/replace, or an object specifying start frame, target total duration, and target primary track.",
+            "description": "apply: append/replace, hoặc object chỉ định frame bắt đầu, tổng thời lượng đích và track chính đích.",
             "oneOf": [
               {
                 "type": "string",
@@ -3172,11 +3172,11 @@
             "items": {
               "type": "string"
             },
-            "description": "apply: skip these bundled assets and clips that directly reference them."
+            "description": "apply: bỏ qua các asset đóng gói này và clip tham chiếu trực tiếp tới chúng."
           },
           "name": {
             "type": "string",
-            "description": "save: required template name; replaces a template with the same name."
+            "description": "save: tên template bắt buộc; thay thế template cùng tên."
           }
         },
         "required": [
@@ -3326,7 +3326,7 @@
     },
     {
       "name": "manage_markers",
-      "description": "Manage timeline annotation/TODO anchors using the marker-note-v2 contract. A marker is a point when durationFrames=0 or omitted, otherwise a range. scope=project anchors to a ruler frame; scope=item anchors to a clip. action: list all | create one or a markers[] batch | update one or an updates[] batch | delete. For transcript-backed notes, pass transcriptSegments using Active Script [sN] segment ids plus optional notePrefix instead of writing note manually. fromFrame defaults to the start of the first selected segment unless provided explicitly, and the note body is copied from read_script output. color must be one of blue/cyan/fuchsia/green/pink/purple/red/yellow.",
+      "description": "Quản lý anchor chú thích/TODO trên timeline theo contract marker-note-v2. Marker là point khi durationFrames=0 hoặc bỏ qua, nếu không sẽ là một range. scope=project neo vào frame trên thước; scope=item neo vào một clip. action: list tất cả | create một marker hoặc batch markers[] | update một marker hoặc batch updates[] | delete. Với note dựa trên transcript, truyền transcriptSegments dùng id segment [sN] của Active Script cùng notePrefix tùy chọn thay vì tự viết note. fromFrame mặc định là đầu segment đầu tiên được chọn nếu không truyền rõ, còn nội dung note được sao chép từ output read_script. color phải là một trong blue/cyan/fuchsia/green/pink/purple/red/yellow.",
       "input_schema": {
         "type": "object",
         "properties": {
@@ -3341,19 +3341,19 @@
           },
           "timelineId": {
             "type": "string",
-            "description": "Target timeline id or prefix; omit to use the current timeline without switching timelines."
+            "description": "Id hoặc tiền tố timeline đích; bỏ qua để dùng timeline hiện tại mà không chuyển timeline."
           },
           "fromFrame": {
             "type": "number",
-            "description": "Integer timeline frame to anchor the marker at (required for create unless transcriptSegments is used)."
+            "description": "Frame timeline nguyên để neo marker (bắt buộc cho create trừ khi dùng transcriptSegments)."
           },
           "durationFrames": {
             "type": "number",
-            "description": "Range length; 0 or omitted creates a point marker. With transcriptSegments, defaults to covering the selected segments."
+            "description": "Độ dài range; 0 hoặc bỏ qua sẽ tạo point marker. Với transcriptSegments, mặc định phủ các segment đã chọn."
           },
           "note": {
             "type": "string",
-            "description": "Marker note text (required for create unless transcriptSegments is used)."
+            "description": "Nội dung note của marker (bắt buộc cho create trừ khi dùng transcriptSegments)."
           },
           "color": {
             "type": "string",
@@ -3374,38 +3374,38 @@
               "project",
               "item"
             ],
-            "description": "item requires itemId; default project."
+            "description": "item yêu cầu itemId; mặc định project."
           },
           "itemId": {
             "type": "string",
-            "description": "Clip id to anchor when scope=item."
+            "description": "Id clip cần neo khi scope=item."
           },
           "markerId": {
             "type": "string",
-            "description": "Target marker id for update/delete."
+            "description": "Id marker đích cho update/delete."
           },
           "transcriptSegments": {
             "type": "string",
-            "description": "Active Script segment ids/ranges from timeline.md, e.g. \"3-4\"; note text is copied from read_script output."
+            "description": "Id/range segment Active Script từ timeline.md, ví dụ \"3-4\"; nội dung note được sao chép từ output read_script."
           },
           "transcriptTrack": {
             "type": "string",
-            "description": "Track filter for transcriptSegments, e.g. V1 or A1."
+            "description": "Bộ lọc track cho transcriptSegments, ví dụ V1 hoặc A1."
           },
           "notePrefix": {
             "type": "string",
-            "description": "Optional label prefix when transcriptSegments derives the note body."
+            "description": "Tiền tố nhãn tùy chọn khi transcriptSegments tạo nội dung note."
           },
           "markers": {
             "type": "array",
-            "description": "create batch: each entry is {fromFrame?, note?, color?, durationFrames?, scope?, itemId?, transcriptSegments?, transcriptTrack?, notePrefix?}; omit fromFrame when transcriptSegments determines placement.",
+            "description": "create batch: mỗi entry là {fromFrame?, note?, color?, durationFrames?, scope?, itemId?, transcriptSegments?, transcriptTrack?, notePrefix?}; bỏ qua fromFrame khi transcriptSegments quyết định vị trí.",
             "items": {
               "type": "object"
             }
           },
           "updates": {
             "type": "array",
-            "description": "update batch: each entry is {id, note?, color?, fromFrame?, durationFrames?}.",
+            "description": "update batch: mỗi entry là {id, note?, color?, fromFrame?, durationFrames?}.",
             "items": {
               "type": "object"
             }
