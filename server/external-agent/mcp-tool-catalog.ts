@@ -1,7 +1,8 @@
 import type { Tool } from '@modelcontextprotocol/sdk/types.js';
+import { localized } from '../ui-locale.ts';
 import { connectedProjectIds, editorStatuses, registeredTools } from './broker.ts';
 import { bindingMode } from './mcp-binding.ts';
-import { MCP_CONTROL_TOOL_NAMES, MCP_CONTROL_TOOLS } from './mcp-controls.ts';
+import { MCP_CONTROL_TOOL_NAMES, mcpControlTools } from './mcp-controls.ts';
 import { offlineExternalToolSchemas } from './offline-tools.ts';
 import { mcpSessionStatus } from './mcp-session-status.ts';
 import {
@@ -17,7 +18,7 @@ import type { McpSession } from './mcp.ts';
 
 const PROJECT_SELECTOR = {
   type: 'string',
-  description: 'OpenChatCut project id. It must match the project bound to this MCP transport session.',
+  description: localized({ zh: 'OpenChatCut 项目 ID。必须与此 MCP 传输会话绑定的项目一致。', en: 'OpenChatCut project id. It must match the project bound to this MCP transport session.', vi: 'ID dự án OpenChatCut. ID này phải khớp với dự án được liên kết với phiên truyền MCP.' }),
 };
 
 export function fullMcpTools(session?: McpSession): Tool[] {
@@ -40,7 +41,7 @@ export function fullMcpTools(session?: McpSession): Tool[] {
       },
     },
   }));
-  return [...MCP_CONTROL_TOOLS, ...editorTools];
+  return [...mcpControlTools(), ...editorTools];
 }
 
 export function mcpTools(session?: McpSession): Tool[] {
