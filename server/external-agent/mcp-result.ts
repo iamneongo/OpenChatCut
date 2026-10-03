@@ -56,7 +56,7 @@ export function mcpToolError(error: unknown): {
 } {
   const message = redactTextForAgentRuntime(
     error instanceof Error ? error.message : String(error),
-  ).slice(0, 1_200) || 'External tool call failed.';
+  ).slice(0, 1_200) || 'lời gọi tool bên ngoài thất bại.';
   return {
     outcome: error instanceof ExternalEditorCallError ? error.outcome : 'failed',
     message,

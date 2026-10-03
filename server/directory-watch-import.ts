@@ -223,7 +223,7 @@ export async function removeDirectoryImportFiles(
       if ((error as NodeJS.ErrnoException).code !== 'ENOENT') failures.push(error);
     }
   }
-  if (failures.length) throw new AggregateError(failures, 'failed to clean directory import files');
+  if (failures.length) throw new AggregateError(failures, 'dọn dẹp tệp nhập thư mục thất bại');
 }
 
 function parseRational(value: unknown): number | undefined {
@@ -441,7 +441,7 @@ async function finishImportedCandidate(
       ),
     ];
     await removeDirectoryImportFiles(cleanupPaths, dependencies).catch((cleanupError) => {
-      throw new AggregateError([error, cleanupError], 'directory import and cleanup failed');
+      throw new AggregateError([error, cleanupError], 'nhập thư mục và dọn dẹp thất bại');
     });
     throw error;
   }

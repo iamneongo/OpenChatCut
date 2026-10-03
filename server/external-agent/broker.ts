@@ -283,7 +283,7 @@ function requireCurrentBinding(
   }
   throw new ExternalEditorCallError(
     'stale',
-    `MCP session binding for project ${binding.projectId} is stale. Re-initialize the MCP session.`,
+    `liên kết phiên MCP của project ${binding.projectId} đã hết hiệu lực. Hãy khởi tạo lại phiên MCP.`,
   );
 }
 

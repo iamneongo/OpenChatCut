@@ -387,7 +387,7 @@ export class DirectoryWatchSession {
           .filter((result): result is PromiseRejectedResult => result.status === 'rejected')
           .map((result) => result.reason);
         if (failures.length) {
-          throw new AggregateError([error, ...failures], 'directory reconcile cleanup failed');
+          throw new AggregateError([error, ...failures], 'dọn dẹp khi đồng bộ thư mục thất bại');
         }
       }
       throw error;
@@ -479,7 +479,7 @@ export class DirectoryWatchSession {
     );
     this.phase = 'stopped';
     const failures = results.filter((result) => result.status === 'rejected');
-    if (failures.length) throw new AggregateError(failures, 'failed to close directory watch');
+    if (failures.length) throw new AggregateError(failures, 'đóng theo dõi thư mục thất bại');
   }
 
   private handleBackgroundFailure(error: unknown): void {

@@ -176,7 +176,7 @@ try {
     const result = await exportJianyingDraft(request, { run: probed.run });
     assert.deepEqual(probed.calls.at(-1), ['add-audio', DRAFT, tone, '0', '0.5', ...STORE_FLAGS],
       '0.667 s of timeline over a 0.5 s file stops at 0.5 s');
-    assert.deepEqual(result.warnings, ['add-audio tone.wav: runs 0.166667 s past the end of the file; cut at its end']);
+    assert.deepEqual(result.warnings, ['add-audio tone.wav: vượt quá cuối tệp 0.166667 giây; đã cắt tại cuối tệp']);
   }
 
   // ── frame boundaries round once, so neighbours stay edge to edge ─────────────
@@ -193,7 +193,7 @@ try {
     const result = await exportJianyingDraft({ draftName: 'occ-verify', draftsDir: DRAFTS, fps: 30, items: [video(0, 30, { srcInFrame: 60 })] }, seams);
     assert.equal(result.ok, true);
     assert.equal(result.addedVideos, 1);
-    assert.deepEqual(result.warnings, ['add-video master.mp4: capcut-cli returned no segment id; the clip plays its source from 0']);
+    assert.deepEqual(result.warnings, ['add-video master.mp4: capcut-cli không trả về segment id; clip sẽ phát nguồn từ đầu']);
     assert.deepEqual(calls.map((args) => args[0]), ['init', 'add-video'], 'no speed/trim without a segment id');
   }
 
