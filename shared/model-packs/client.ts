@@ -24,7 +24,7 @@ function modelPackMutationHeaders(headers: HeadersInit): Headers {
 export async function fetchModelPackCatalog(): Promise<readonly ModelPackCatalogEntry[]> {
   const response = await fetch('/api/model-packs', { cache: 'no-store' });
   const body = await responseJson<CatalogResponse>(response);
-  if (!Array.isArray(body.packs)) throw new Error('Invalid model pack catalog response');
+  if (!Array.isArray(body.packs)) throw new Error('phản hồi catalog pack model không hợp lệ');
   return body.packs;
 }
 
@@ -42,7 +42,7 @@ export async function installModelPack(id: ModelPackId, headers: HeadersInit): P
     body: JSON.stringify({ id }),
   });
   const body = await responseJson<{ task?: ModelPackTask; error?: string }>(response);
-  if (!body.task) throw new Error('Invalid model pack download response');
+  if (!body.task) throw new Error('phản hồi tải pack model không hợp lệ');
   notifyModelPackCatalogChange();
   return body.task;
 }

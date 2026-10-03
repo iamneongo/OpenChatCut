@@ -67,7 +67,7 @@ export function extractPcm(
     child.once('error', (error) => reject(error));
     child.once('close', (code) => {
       if (code !== 0) {
-        reject(withStderr(`FFmpeg PCM extraction failed (${code})`, stderr));
+        reject(withStderr(`trích xuất PCM bằng FFmpeg thất bại (${code})`, stderr));
         return;
       }
       try {

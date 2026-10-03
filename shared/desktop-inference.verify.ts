@@ -91,7 +91,7 @@ assert.equal(
 );
 assert.throws(() => parseDesktopSemanticRequest(
   duplicateRequest(SEMANTIC_INFERENCE_CONTRACT.maxVectorsPerAsset + 1),
-), /invalid desktop semantic request/);
+), /request semantic desktop không hợp lệ/);
 assert.equal(parseDesktopClapRequest({
   requestId: 'clap-embed-1234',
   contractId: CLAP_INFERENCE_CONTRACT.id,

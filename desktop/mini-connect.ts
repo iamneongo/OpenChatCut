@@ -72,7 +72,7 @@ export function createMiniConnect(onError: (err: unknown) => void): MiniConnect 
         }
         if (!res.headersSent) {
           res.statusCode = 404;
-          res.end('not found');
+          res.end('không tìm thấy');
         }
       };
       step();

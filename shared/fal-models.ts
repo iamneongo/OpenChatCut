@@ -267,7 +267,7 @@ export function isFalEndpoint(endpoint: string): boolean {
 
 export function falModelSummary(modelOrId: FalModelDefinition | string): string {
   const model = typeof modelOrId === 'string' ? getFalModel(modelOrId) : modelOrId;
-  if (!model) return `Unknown Fal model (${String(modelOrId)})`;
+  if (!model) return `không tìm thấy model Fal (${String(modelOrId)})`;
   const details: string[] = [];
   if (model.constraints.count) details.push(`count ${model.constraints.count.min}–${model.constraints.count.max}`);
   if (model.kind === 'video') details.push(model.constraints.supportsAudio ? 'audio toggle supported' : 'no audio toggle');

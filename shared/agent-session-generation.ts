@@ -10,7 +10,7 @@ const PROJECT_ID = /^[A-Za-z0-9_-]{1,160}$/;
 const GENERATION = /^[A-Za-z0-9_-]{1,80}$/;
 
 export function requireAgentSessionProjectId(projectId: string): void {
-  if (!PROJECT_ID.test(projectId)) throw new Error('Invalid Agent session project id.');
+  if (!PROJECT_ID.test(projectId)) throw new Error('ID project của phiên Agent không hợp lệ.');
 }
 
 export function parseAgentSessionGenerationRecord(

@@ -97,7 +97,7 @@ const validatedRequest = validateCreateInput(validRequest);
 const configuredProvider = normalizeLlmProvider(getKey('LLM_PROVIDER'));
 for (const provider of ['retired-provider', 42, false, {}]) {
   assert.throws(() => resolveRunExecution({ provider }, validatedRequest, 'http://localhost:5199', false),
-    /Unsupported LLM provider/, 'invalid API providers must fail before a run can start');
+    /provider LLM không được hỗ trợ/, 'provider API không hợp lệ phải bị từ chối trước khi lượt chạy bắt đầu');
 }
 for (const provider of [undefined, null, '', '  ']) {
   assert.equal(resolveRunExecution({ provider }, validatedRequest, 'http://localhost:5199', false).provider,

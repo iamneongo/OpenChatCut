@@ -131,10 +131,10 @@ const supportedOverride = { backend: 'api', provider: 'openai', modelId: 'custom
 const overridesWithRetiredProvider = JSON.stringify([
   { ...supportedOverride, provider: 'retired-provider' }, supportedOverride,
 ]);
-assert.throws(() => parseModelCapabilityOverrides(overridesWithRetiredProvider), /Invalid model capability provider/,
+assert.throws(() => parseModelCapabilityOverrides(overridesWithRetiredProvider), /provider của capability model không hợp lệ/,
   'new configuration still rejects unavailable providers');
 await assert.rejects(setKeys({ [MODEL_CAPABILITY_OVERRIDES_KEY]: overridesWithRetiredProvider }),
-  /Invalid model capability provider/, 'settings writes reject unavailable providers before persistence');
+  /provider của capability model không hợp lệ/, 'settings writes reject unavailable providers before persistence');
 seedKeystore({ ...isolatedSeed, [MODEL_CAPABILITY_OVERRIDES_KEY]: overridesWithRetiredProvider });
 assert.deepEqual(JSON.parse(getKey(MODEL_CAPABILITY_OVERRIDES_KEY)), [supportedOverride],
   'loading old settings retains valid overrides when another provider was removed');

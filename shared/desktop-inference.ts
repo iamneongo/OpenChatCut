@@ -248,7 +248,7 @@ function validSourcePath(value: unknown): value is string {
 export function parseDesktopAsrRequest(value: unknown): DesktopAsrRequest {
   if (typeof value !== 'object' || value === null
     || !hasExactKeys(value, ['requestId', 'contractId', 'sourcePath', 'modelId', 'revision', 'language'])) {
-    throw new Error('invalid desktop ASR request');
+    throw new Error('request ASR desktop không hợp lệ');
   }
   const request = value as Partial<DesktopAsrRequest>;
   if (!isDesktopInferenceRequestId(request.requestId)
@@ -257,7 +257,7 @@ export function parseDesktopAsrRequest(value: unknown): DesktopAsrRequest {
     || typeof request.modelId !== 'string' || !MODEL_ID.test(request.modelId)
     || typeof request.revision !== 'string' || !REVISION.test(request.revision)
     || typeof request.language !== 'string' || !LANGUAGE.test(request.language)) {
-    throw new Error('invalid desktop ASR request');
+    throw new Error('request ASR desktop không hợp lệ');
   }
   return {
     requestId: request.requestId,
@@ -271,7 +271,7 @@ export function parseDesktopAsrRequest(value: unknown): DesktopAsrRequest {
 export function parseDesktopAsrPreloadRequest(value: unknown): DesktopAsrPreloadRequest {
   if (typeof value !== 'object' || value === null
     || !hasExactKeys(value, ['requestId', 'contractId', 'action', 'modelId', 'revision'])) {
-    throw new Error('invalid desktop ASR preload request');
+    throw new Error('request preload ASR desktop không hợp lệ');
   }
   const request = value as Partial<DesktopAsrPreloadRequest>;
   if (!isDesktopInferenceRequestId(request.requestId)
@@ -279,7 +279,7 @@ export function parseDesktopAsrPreloadRequest(value: unknown): DesktopAsrPreload
     || request.contractId !== ASR_INFERENCE_CONTRACT.id
     || typeof request.modelId !== 'string' || !MODEL_ID.test(request.modelId)
     || typeof request.revision !== 'string' || !REVISION.test(request.revision)) {
-    throw new Error('invalid desktop ASR preload request');
+    throw new Error('request preload ASR desktop không hợp lệ');
   }
   return {
     requestId: request.requestId,
@@ -336,7 +336,7 @@ function validPackedSemanticVectors(value: unknown): value is DesktopPackedSeman
 }
 
 export function parseDesktopSemanticRequest(value: unknown): DesktopSemanticRequest {
-  if (typeof value !== 'object' || value === null) throw new Error('invalid desktop semantic request');
+  if (typeof value !== 'object' || value === null) throw new Error('request semantic desktop không hợp lệ');
   const request = value as Partial<DesktopSemanticRequest>;
   const common = isDesktopInferenceRequestId(request.requestId)
     && request.contractId === SEMANTIC_INFERENCE_CONTRACT.id;
@@ -365,11 +365,11 @@ export function parseDesktopSemanticRequest(value: unknown): DesktopSemanticRequ
       threshold: request.threshold, vectors: request.vectors,
     };
   }
-  throw new Error('invalid desktop semantic request');
+  throw new Error('request semantic desktop không hợp lệ');
 }
 
 export function parseDesktopClapRequest(value: unknown): DesktopClapRequest {
-  if (typeof value !== 'object' || value === null) throw new Error('invalid desktop CLAP request');
+  if (typeof value !== 'object' || value === null) throw new Error('request CLAP desktop không hợp lệ');
   const request = value as Partial<DesktopClapRequest>;
   const common = isDesktopInferenceRequestId(request.requestId)
     && request.contractId === CLAP_INFERENCE_CONTRACT.id;
@@ -388,7 +388,7 @@ export function parseDesktopClapRequest(value: unknown): DesktopClapRequest {
       samples: request.samples, sampleRate: request.sampleRate,
     };
   }
-  throw new Error('invalid desktop CLAP request');
+  throw new Error('request CLAP desktop không hợp lệ');
 }
 
 function hasExactKeys(value: object, expected: readonly string[]): boolean {
@@ -399,7 +399,7 @@ function hasExactKeys(value: object, expected: readonly string[]): boolean {
 }
 
 export function parseDesktopRhythmRequest(value: unknown): DesktopRhythmRequest {
-  if (typeof value !== 'object' || value === null) throw new Error('invalid desktop rhythm request');
+  if (typeof value !== 'object' || value === null) throw new Error('request rhythm desktop không hợp lệ');
   const request = value as Partial<DesktopRhythmRequest>;
   const common = isDesktopInferenceRequestId(request.requestId)
     && request.contractId === RHYTHM_INFERENCE_CONTRACT.id;
@@ -414,7 +414,7 @@ export function parseDesktopRhythmRequest(value: unknown): DesktopRhythmRequest 
     || request.samples.length > MAX_RHYTHM_SAMPLES
     || request.sampleRate !== RHYTHM_INFERENCE_CONTRACT.sampleRate
     || !request.samples.every(Number.isFinite)) {
-    throw new Error('invalid desktop rhythm request');
+    throw new Error('request rhythm desktop không hợp lệ');
   }
   return {
     requestId: request.requestId!, contractId: request.contractId, action: 'analyze',

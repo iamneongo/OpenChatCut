@@ -120,62 +120,62 @@ function parseIdentity(value: Record<string, unknown>): ModelIdentity {
   const provider = value.provider;
   const modelId = typeof value.modelId === 'string' ? value.modelId.trim() : '';
   if (backend !== 'api' && backend !== 'codex' && backend !== 'copilot' && backend !== 'claude-code') {
-    throw new Error('Invalid model capability backend.');
+    throw new Error('backend của capability model không hợp lệ.');
   }
-  if (typeof provider !== 'string' || !PROVIDERS.has(provider)) throw new Error('Invalid model capability provider.');
-  if (backend === 'codex' && provider !== 'openai') throw new Error('Codex capabilities require the OpenAI provider.');
+  if (typeof provider !== 'string' || !PROVIDERS.has(provider)) throw new Error('provider của capability model không hợp lệ.');
+  if (backend === 'codex' && provider !== 'openai') throw new Error('capability Codex yêu cầu provider OpenAI.');
   if (backend === 'claude-code' && provider !== 'anthropic') {
-    throw new Error('Claude Code capabilities require the Anthropic provider.');
+    throw new Error('capability Claude Code yêu cầu provider Anthropic.');
   }
   if (!modelId || modelId.length > 256 || [...modelId].some((ch) => {
     const code = ch.charCodeAt(0);
     return code < 0x20 || code === 0x7f;
   })) {
-    throw new Error('Invalid model capability model ID.');
+    throw new Error('ID model của capability không hợp lệ.');
   }
   return { backend, provider: provider as LlmProvider, modelId };
 }
 
 function parseEfforts(value: unknown): readonly string[] | undefined {
   if (value === undefined) return undefined;
-  if (!Array.isArray(value) || value.length > 16) throw new Error('Invalid model reasoning efforts.');
+  if (!Array.isArray(value) || value.length > 16) throw new Error('danh sách mức suy luận model không hợp lệ.');
   const efforts = value.map((effort) => {
-    if (typeof effort !== 'string' || !EFFORT_PATTERN.test(effort)) throw new Error('Invalid model reasoning effort.');
+    if (typeof effort !== 'string' || !EFFORT_PATTERN.test(effort)) throw new Error('mức suy luận model không hợp lệ.');
     return effort;
   });
-  if (new Set(efforts).size !== efforts.length) throw new Error('Duplicate model reasoning effort.');
+  if (new Set(efforts).size !== efforts.length) throw new Error('mức suy luận model bị trùng.');
   return efforts;
 }
 
 function optionalBoolean(value: unknown, name: string): boolean | undefined {
   if (value === undefined) return undefined;
-  if (typeof value !== 'boolean') throw new Error(`Invalid ${name} capability.`);
+  if (typeof value !== 'boolean') throw new Error(`${name} của capability không hợp lệ.`);
   return value;
 }
 
 function parseOverride(value: unknown): ModelCapabilityOverride {
-  if (!value || typeof value !== 'object' || Array.isArray(value)) throw new Error('Invalid model capability record.');
+  if (!value || typeof value !== 'object' || Array.isArray(value)) throw new Error('bản ghi capability model không hợp lệ.');
   const record = value as Record<string, unknown>;
-  if (Object.keys(record).some((key) => !ALLOWED_FIELDS.has(key))) throw new Error('Unknown model capability field.');
+  if (Object.keys(record).some((key) => !ALLOWED_FIELDS.has(key))) throw new Error('trường capability model không được nhận diện.');
   const identity = parseIdentity(record);
   const context = record.contextWindowTokens === undefined ? undefined : positiveInteger(record.contextWindowTokens, MIN_CONTEXT_TOKENS);
   const input = record.maxInputTokens === undefined ? undefined : positiveInteger(record.maxInputTokens);
   const output = record.maxOutputTokens === undefined ? undefined : positiveInteger(record.maxOutputTokens);
-  if (record.contextWindowTokens !== undefined && context === undefined) throw new Error('Invalid model context window.');
-  if (record.maxInputTokens !== undefined && input === undefined) throw new Error('Invalid model input limit.');
-  if (record.maxOutputTokens !== undefined && output === undefined) throw new Error('Invalid model output limit.');
-  if (context !== undefined && input !== undefined && input > context) throw new Error('Model input limit exceeds its context window.');
-  if (context !== undefined && output !== undefined && output > context) throw new Error('Model output limit exceeds its context window.');
+  if (record.contextWindowTokens !== undefined && context === undefined) throw new Error('cửa sổ ngữ cảnh model không hợp lệ.');
+  if (record.maxInputTokens !== undefined && input === undefined) throw new Error('giới hạn input model không hợp lệ.');
+  if (record.maxOutputTokens !== undefined && output === undefined) throw new Error('giới hạn output model không hợp lệ.');
+  if (context !== undefined && input !== undefined && input > context) throw new Error('giới hạn input model vượt quá cửa sổ ngữ cảnh.');
+  if (context !== undefined && output !== undefined && output > context) throw new Error('giới hạn output model vượt quá cửa sổ ngữ cảnh.');
   const supportsTools = optionalBoolean(record.supportsTools, 'supportsTools');
   const supportsImages = optionalBoolean(record.supportsImages, 'supportsImages');
   const supportsReasoning = optionalBoolean(record.supportsReasoning, 'supportsReasoning');
   const efforts = parseEfforts(record.reasoningEfforts);
   const defaultEffort = record.defaultReasoningEffort;
   if (defaultEffort !== undefined && (typeof defaultEffort !== 'string' || !EFFORT_PATTERN.test(defaultEffort))) {
-    throw new Error('Invalid default reasoning effort.');
+    throw new Error('mức suy luận mặc định không hợp lệ.');
   }
-  if (supportsReasoning === false && (efforts?.length || defaultEffort)) throw new Error('Disabled reasoning cannot declare efforts.');
-  if (defaultEffort && (!efforts || !efforts.includes(defaultEffort))) throw new Error('Default reasoning effort is not supported.');
+  if (supportsReasoning === false && (efforts?.length || defaultEffort)) throw new Error('suy luận đã tắt không được khai báo mức suy luận.');
+  if (defaultEffort && (!efforts || !efforts.includes(defaultEffort))) throw new Error('mức suy luận mặc định không được hỗ trợ.');
   const override: ModelCapabilityOverride = {
     ...identity,
     ...(context ? { contextWindowTokens: context } : {}),
@@ -187,7 +187,7 @@ function parseOverride(value: unknown): ModelCapabilityOverride {
     ...(efforts ? { reasoningEfforts: efforts } : {}),
     ...(defaultEffort ? { defaultReasoningEffort: defaultEffort } : {}),
   };
-  if (!CAPABILITY_FIELDS.some((key) => key in override)) throw new Error('Empty model capability override.');
+  if (!CAPABILITY_FIELDS.some((key) => key in override)) throw new Error('override capability model đang trống.');
   return override;
 }
 
@@ -200,14 +200,14 @@ export function parseModelCapabilityOverrides(
   { ignoreUnavailableProviders = false }: { ignoreUnavailableProviders?: boolean } = {},
 ): readonly ModelCapabilityOverride[] {
   if (raw === undefined || raw === null || raw === '') return [];
-  if (typeof raw !== 'string' || new TextEncoder().encode(raw).byteLength > MAX_OVERRIDE_BYTES) throw new Error('Model capability overrides are too large.');
+  if (typeof raw !== 'string' || new TextEncoder().encode(raw).byteLength > MAX_OVERRIDE_BYTES) throw new Error('override capability model quá lớn.');
   let decoded: unknown;
-  try { decoded = JSON.parse(raw); } catch { throw new Error('Model capability overrides must be valid JSON.'); }
-  if (!Array.isArray(decoded) || decoded.length > MAX_OVERRIDE_RECORDS) throw new Error('Invalid model capability override list.');
+  try { decoded = JSON.parse(raw); } catch { throw new Error('override capability model phải là JSON hợp lệ.'); }
+  if (!Array.isArray(decoded) || decoded.length > MAX_OVERRIDE_RECORDS) throw new Error('danh sách override capability model không hợp lệ.');
   const records = decoded.filter((record) => !ignoreUnavailableProviders
     || typeof record?.provider !== 'string' || PROVIDERS.has(record.provider)).map(parseOverride);
   const keys = records.map(identityKey);
-  if (new Set(keys).size !== keys.length) throw new Error('Duplicate model capability override.');
+  if (new Set(keys).size !== keys.length) throw new Error('override capability model bị trùng.');
   return records.sort((a, b) => identityKey(a).localeCompare(identityKey(b)));
 }
 

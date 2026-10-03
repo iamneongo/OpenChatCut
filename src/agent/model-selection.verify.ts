@@ -84,24 +84,24 @@ assert.equal(overridden.supportsTools.value, false);
 assert.equal(overridden.supportsImages.value, true);
 assert.equal(serializeModelCapabilityOverrides(overrides).includes(' custom/model:v2 '), false);
 
-assert.throws(() => parseModelCapabilityOverrides('[{"backend":"api","provider":"openai","modelId":"x","apiKey":"secret"}]'), /Unknown/);
+assert.throws(() => parseModelCapabilityOverrides('[{"backend":"api","provider":"openai","modelId":"x","apiKey":"secret"}]'), /không được nhận diện/);
 assert.throws(() => parseModelCapabilityOverrides(JSON.stringify([
   { backend: 'api', provider: 'openai', modelId: 'x', supportsTools: true },
   { backend: 'api', provider: 'openai', modelId: 'x', supportsImages: true },
-])), /Duplicate/);
+])), /bị trùng/);
 assert.throws(() => parseModelCapabilityOverrides(JSON.stringify([{
   backend: 'api', provider: 'openai', modelId: 'x', supportsReasoning: false, reasoningEfforts: ['high'],
-}])), /Disabled reasoning/);
+}])), /suy luận đã tắt/);
 assert.throws(() => parseModelCapabilityOverrides(JSON.stringify([{
   backend: 'api', provider: 'openai', modelId: 'x', contextWindowTokens: 8_192, maxInputTokens: 8_193,
-}])), /input limit exceeds/);
+}])), /giới hạn input model vượt quá/);
 
 // ── Claude Code backend: provider/backend pairing is enforced ────────────────
 assert.throws(
   () => parseModelCapabilityOverrides(JSON.stringify([
     { backend: 'claude-code', provider: 'openai', modelId: 'sonnet', supportsTools: true },
   ])),
-  /Anthropic provider/,
+  /provider Anthropic/,
   'claude-code capabilities are rejected for a non-Anthropic provider',
 );
 assert.doesNotThrow(

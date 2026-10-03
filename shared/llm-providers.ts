@@ -187,9 +187,9 @@ export function normalizeLlmProvider(value: unknown): LlmProvider {
 /** Request boundaries must not silently route an unsupported vendor to the default. */
 export function requireLlmProvider(value: unknown): LlmProvider {
   if (value === undefined || value === null || value === '') return DEFAULT_LLM_PROVIDER;
-  if (typeof value !== 'string') throw new Error('Unsupported LLM provider');
+  if (typeof value !== 'string') throw new Error('provider LLM không được hỗ trợ');
   const normalized = value.trim().toLowerCase();
-  if (normalized && !PRESETS.has(normalized)) throw new Error('Unsupported LLM provider');
+  if (normalized && !PRESETS.has(normalized)) throw new Error('provider LLM không được hỗ trợ');
   return normalizeLlmProvider(normalized);
 }
 

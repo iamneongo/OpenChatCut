@@ -58,7 +58,7 @@ assert.equal(llmOperationPath('cheaperinference'), '/chat/completions');
     LLM_API_KEY: 'ak-1',
   } as Record<string, string>);
   const reqFor = (provider: string) => ({ headers: { 'x-openchatcut-provider': provider } } as never);
-  assert.throws(() => llmProviderForRequest(reqFor('retired-provider')), /Unsupported LLM provider/);
+  assert.throws(() => llmProviderForRequest(reqFor('retired-provider')), /provider LLM không được hỗ trợ/);
   for (const preset of LLM_PROVIDER_PRESETS) {
     assert.equal(llmProviderForRequest(reqFor(` ${preset.id.toUpperCase()} `)), preset.id);
   }
@@ -144,7 +144,7 @@ try {
     body: '{}',
   });
   assert.equal(unsupported.status, 400);
-  assert.deepEqual(await unsupported.json(), { error: { message: 'Unsupported LLM provider' } });
+  assert.deepEqual(await unsupported.json(), { error: { message: 'provider LLM không được hỗ trợ' } });
   assert.equal(seen.length, 0, 'unsupported provider must not reach the configured fallback upstream');
   const first = await fetch(`http://127.0.0.1:${proxyPort}/llm/chat/completions?stream=true`, {
     method: 'POST',
