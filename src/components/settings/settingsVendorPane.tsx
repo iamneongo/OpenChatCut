@@ -458,7 +458,9 @@ function DirectoryInput({ field, shown, stagedClear, onStage }: {
       const selected = await picker(shown || undefined);
       if (selected) onStage(field, selected);
     } catch (reason) {
-      setError(reason instanceof Error ? reason.message : t('无法打开目录选择器'));
+      setError(t('失败:{error}', {
+        error: reason instanceof Error ? reason.message : t('无法打开目录选择器'),
+      }));
     } finally {
       setBusy(false);
     }

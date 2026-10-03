@@ -99,7 +99,9 @@ export class EditorErrorBoundary extends Component<EditorErrorBoundaryProps, Edi
           </>
         )}
       >
-        <span style={{ ...BODY_TEXT, wordBreak: 'break-word' }}>{error.message}</span>
+        <span style={{ ...BODY_TEXT, wordBreak: 'break-word' }}>
+          {translate('失败:{error}', { error: error.message })}
+        </span>
       </GuardScreen>
     );
   }
