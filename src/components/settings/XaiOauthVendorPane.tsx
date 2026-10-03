@@ -115,8 +115,8 @@ export function XaiOauthVendorPane({ page, hint, ctx }: {
         <div style={{ fontSize: 11.5, display: 'flex', flexDirection: 'column', gap: 4 }}>
           {loggedIn && status.email && <span>{status.email}</span>}
           {expiryText && <span style={note}>{expiryText}</span>}
-          {status?.error && <span style={{ color: '#f77' }}>{status.error}</span>}
-          {actionError && <span style={{ color: '#f77' }}>{actionError}</span>}
+          {status?.error && <span style={{ color: '#f77' }}>{t('失败:{error}', { error: status.error })}</span>}
+          {actionError && <span style={{ color: '#f77' }}>{t('失败:{error}', { error: actionError })}</span>}
           {!loggedIn && (
             <>
               <span>{t('请先在终端运行官方 Grok CLI 登录，再回到这里导入登录状态：')}</span>
