@@ -7,6 +7,7 @@ import type {
 } from '../../shared/directory-import';
 import { normalizeSha256Hash } from '../../shared/content-hash';
 import type { MediaAsset } from '../editor/types';
+import { localizedCatalogText } from '../i18n/locale';
 import type { t as translate } from '../i18n/locale';
 import { directoryFileToAsset } from './directoryImportAsset';
 
@@ -89,7 +90,14 @@ export class DirectoryImportRuntime {
       if (version !== this.#startVersion || result.projectId !== projectId
         || this.#options.getProjectId() !== projectId) {
         await this.#options.api.stopImportDirectoryWatch(result.watchId);
-        if (result.projectId !== projectId) this.#options.onError(new Error('directory watch project mismatch'));
+        if (result.projectId !== projectId) {
+          this.#options.onError(new Error(localizedCatalogText(
+            'directory watch project mismatch',
+            '目录监视项目不匹配',
+            undefined,
+            'Theo dõi thư mục không khớp với dự án',
+          )));
+        }
         return null;
       }
       const session = this.#createSession(result, hashes);
