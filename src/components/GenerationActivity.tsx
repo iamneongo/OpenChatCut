@@ -17,6 +17,14 @@ interface GenerationActivityProps {
 
 type Translate = ReturnType<typeof useT>;
 
+function toolLabel(toolName: string | undefined, t: Translate): string {
+  return {
+    submit_video: t('视频生成'),
+    submit_sound: t('音效生成'),
+    submit_music: t('音乐生成'),
+  }[toolName ?? ''] ?? t('生成任务');
+}
+
 function operationSummary(job: TrackedJob, t: Translate): string {
   const args = job.submitArgs;
   if (!args) return job.params ? t('旧版参数摘要（不可安全重跑）') : t('参数快照不可用');
@@ -34,7 +42,7 @@ function operationSummary(job: TrackedJob, t: Translate): string {
     const prompt = args.prompt.trim();
     fields.push(prompt.length > 100 ? `${prompt.slice(0, 97)}…` : prompt);
   }
-  return fields.join(' · ') || job.toolName || t('生成任务');
+  return fields.join(' · ') || toolLabel(job.toolName, t);
 }
 function isResumable(job: TrackedJob): boolean {
   return !isTerminal(job.status)
@@ -147,7 +155,7 @@ export function GenerationActivity({ projectId, onResume }: GenerationActivityPr
               const retryLabel = retryClassLabel(job.retryClass, t);
               return <article key={job.operationId} style={{ padding: '10px 0', borderTop: `0.5px solid ${theme.border}` }}>
                 <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 10 }}>
-                  <strong style={{ color: theme.text, fontSize: 12.5, fontWeight: 600 }}>{job.label || job.toolName || t('生成任务')}</strong>
+                  <strong style={{ color: theme.text, fontSize: 12.5, fontWeight: 600 }}>{job.label || toolLabel(job.toolName, t)}</strong>
                   <span style={{ color: isTerminal(job.status) ? theme.textDim : theme.accent, fontSize: 11 }}>{statusLabel(job.status, t)}</span>
                 </div>
                 <div style={{ color: theme.textDim, fontSize: 11.5, lineHeight: 1.5, marginTop: 4, overflowWrap: 'anywhere' }}>{operationSummary(job, t)}</div>
