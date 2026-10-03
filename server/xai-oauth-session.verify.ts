@@ -8,9 +8,11 @@ import { join } from 'node:path';
 
 const throwawayHome = mkdtempSync(join(tmpdir(), 'xai-oauth-verify-'));
 process.env.HOME = throwawayHome;
+if (process.platform === 'win32') process.env.USERPROFILE = throwawayHome;
 // Intentionally dynamic: the module resolves its profile paths (HOME-rooted)
 // at import time, so the throwaway HOME must exist before it loads.
 const mod = await import('./xai-oauth-session.ts');
+const { runtimeProfile } = await import('./runtime-profile.ts');
 const {
   parseGrokAuthJson, refreshTokens, persistSession, readSessionFile, dropSessionFile,
   importXaiOauthFromCli, logoutXaiOauth, xaiOauthAccessToken, xaiOauthStatus,
@@ -106,7 +108,8 @@ const reloaded = readSessionFile();
 assert.ok(reloaded, 'persisted session reads back');
 assert.equal(reloaded.access, 'at-jwt-2');
 assert.equal(reloaded.clientId, CLIENT_ID);
-writeFileSync(join(throwawayHome, '.openchatcut', 'xai-oauth-session.json'), '{broken', 'utf8');
+mkdirSync(runtimeProfile().rootDir, { recursive: true });
+writeFileSync(join(runtimeProfile().rootDir, 'xai-oauth-session.json'), '{broken', 'utf8');
 assert.equal(readSessionFile(), null, 'corrupt file reads as no session');
 dropSessionFile();
 
