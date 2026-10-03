@@ -39,22 +39,22 @@ function failedBatch(
     failed: 1,
     results,
     error,
-    note: 'No draft was published. Fix the reported entry and retry the whole batch.',
+    note: 'Không có bản nháp nào được công bố. Hãy sửa mục được báo lỗi rồi thử lại toàn bộ batch.',
   };
 }
 
 function collectOperations(args: Args): { operations?: EditItemOperation[]; error?: string } {
   const unknown = Object.keys(args).find((key) => !TOP_LEVEL_KEYS[key]);
-  if (unknown) return { error: `unknown field "${unknown}" on edit_item` };
+  if (unknown) return { error: `Trường không xác định "${unknown}" trong edit_item` };
   const operations: EditItemOperation[] = [];
   for (const bucket of ['adds', 'updates', 'deletes'] as const) {
     const rawBucket = args[bucket];
     if (rawBucket !== undefined && !Array.isArray(rawBucket)) {
-      return { error: `${bucket} must be an array` };
+      return { error: `${bucket} phải là một mảng` };
     }
     for (const [index, raw] of (rawBucket ?? []).entries()) {
       if (!raw || typeof raw !== 'object' || Array.isArray(raw)) {
-        return { error: `${bucket}[${index}]: invalid ${bucket.slice(0, -1)} entry` };
+        return { error: `${bucket}[${index}]: mục ${bucket.slice(0, -1)} không hợp lệ` };
       }
       operations.push({ bucket, index, entry: raw as Record<string, unknown> });
     }
@@ -73,14 +73,14 @@ export function executeAtomicEditBatch<Draft>(
 ): OpResult {
   const validateOnly = args.validateOnly === true;
   if (validateOnly && args.ripple === true) {
-    return { error: 'do not combine validateOnly with ripple' };
+    return { error: 'không kết hợp validateOnly với ripple' };
   }
   const collected = collectOperations(args);
   if (collected.error) return failedBatch([], validateOnly, collected.error);
   const operations = collected.operations!;
   if (!operations.length) {
     return {
-      error: 'pass adds, updates, and/or deletes',
+      error: 'Hãy truyền adds, updates và/hoặc deletes',
       hint: 'browse_library → edit_item adds:[{type:"effect"|"transition"|"motion-graphic"|"audio",...}]',
     };
   }

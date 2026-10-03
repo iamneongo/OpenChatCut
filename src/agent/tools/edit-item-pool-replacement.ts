@@ -30,13 +30,13 @@ function findItem(items: readonly TimelineItem[], value: unknown): TimelineItem 
 
 function findAsset(assets: readonly MediaAsset[], value: unknown): MediaAsset | OpResult {
   const query = String(value ?? '').trim();
-  if (!query) return { error: 'pool asset replacement needs assetId' };
+  if (!query) return { error: 'Thay asset trong kho cần có assetId' };
   const exact = assets.find((asset) => asset.id === query);
   const matches = exact ? [exact] : assets.filter((asset) => asset.id.startsWith(query));
-  if (!matches.length) return { error: `no pool asset matching "${query}"` };
+  if (!matches.length) return { error: `Không có asset trong kho khớp với "${query}"` };
   if (matches.length > 1) {
     return {
-      error: `ambiguous asset prefix "${query}"`,
+      error: `Tiền tố asset không đủ rõ ràng: "${query}"`,
       candidates: matches.slice(0, 6).map((asset) => ({ id: asset.id, name: asset.name, kind: asset.kind })),
     };
   }
@@ -48,7 +48,7 @@ function positiveFrame(value: unknown, field: string, allowZero: boolean): numbe
   const parsed = finiteNumber(value);
   const minimum = allowZero ? 0 : 1;
   if (parsed === undefined || parsed < minimum) {
-    return { error: `${field} must be a finite ${allowZero ? 'non-negative' : 'positive'} frame count` };
+    return { error: `${field} phải là số frame hữu hạn ${allowZero ? 'không âm' : 'dương'}` };
   }
   return Math.round(parsed);
 }
@@ -61,35 +61,35 @@ export function validatePoolAssetReplacement(
   const unknown = rejectUnknownFields(entry, REPLACEMENT_KEYS);
   if (unknown) return { error: unknown };
   const item = findItem(state.items, entry.itemId ?? entry.id);
-  if (!item) return { error: `item not found: ${String(entry.itemId ?? entry.id ?? '')}` };
-  if (!isFileMediaKind(item.kind)) return { error: `pool asset replacement requires a file-backed clip, got ${item.kind}` };
+  if (!item) return { error: `Không tìm thấy item: ${String(entry.itemId ?? entry.id ?? '')}` };
+  if (!isFileMediaKind(item.kind)) return { error: `Thay asset trong kho cần clip có file, nhưng nhận ${item.kind}` };
   const resolved = findAsset(assets, entry.assetId);
   if ('error' in resolved) return resolved;
   const asset = resolved;
   const assetKind = asset.kind;
   if (assetKind !== 'video' && assetKind !== 'audio' && assetKind !== 'image' && assetKind !== 'gif') {
-    return { error: `asset ${asset.id} is not file-backed media` };
+    return { error: `Asset ${asset.id} không phải media có file` };
   }
   if ((item.kind === 'audio') !== (asset.kind === 'audio')) {
-    return { error: `asset ${asset.id} kind=${asset.kind} is incompatible with ${item.kind} clip ${item.id}` };
+    return { error: `Asset ${asset.id} kind=${asset.kind} không tương thích với clip ${item.kind} ${item.id}` };
   }
   const startAlias = positiveFrame(entry.srcInFrame, 'srcInFrame', true);
   if (startAlias && typeof startAlias === 'object') return startAlias;
   const sourceStart = positiveFrame(entry.sourceStartFrame, 'sourceStartFrame', true);
   if (sourceStart && typeof sourceStart === 'object') return sourceStart;
   if (startAlias !== undefined && sourceStart !== undefined && startAlias !== sourceStart) {
-    return { error: 'srcInFrame and sourceStartFrame must match when both are provided' };
+    return { error: 'srcInFrame và sourceStartFrame phải khớp khi cùng được cung cấp' };
   }
   const sourceDuration = positiveFrame(entry.sourceDurationInFrames, 'sourceDurationInFrames', false);
   if (sourceDuration && typeof sourceDuration === 'object') return sourceDuration;
   const timelineDuration = positiveFrame(entry.durationInFrames, 'durationInFrames', false);
   if (timelineDuration && typeof timelineDuration === 'object') return timelineDuration;
   if (sourceDuration !== undefined && timelineDuration !== undefined) {
-    return { error: 'use sourceDurationInFrames or durationInFrames, not both' };
+    return { error: 'chỉ dùng sourceDurationInFrames hoặc durationInFrames, không dùng cả hai' };
   }
   if (asset.kind === 'audio' && hasOperationalTranscript(asset)
     && (sourceStart !== undefined || startAlias !== undefined || sourceDuration !== undefined)) {
-    return { error: 'raw source-frame windows are unsupported for audio assets with an operational transcript' };
+    return { error: 'không hỗ trợ cửa sổ frame nguồn thô cho asset audio có transcript hoạt động' };
   }
   const srcInFrame = asset.kind === 'video' || asset.kind === 'audio'
     ? sourceStart ?? startAlias ?? 0
@@ -102,7 +102,7 @@ export function validatePoolAssetReplacement(
     const sourceSpan = sourceDuration ?? timelineFramesToSourceFrames(item, durationInFrames);
     if ((srcInFrame ?? 0) + sourceSpan > assetDuration) {
       return {
-        error: `source window [${srcInFrame ?? 0}, ${(srcInFrame ?? 0) + sourceSpan}) exceeds asset ${asset.id} length ${assetDuration}`,
+        error: `Cửa sổ nguồn [${srcInFrame ?? 0}, ${(srcInFrame ?? 0) + sourceSpan}) vượt quá độ dài ${assetDuration} của asset ${asset.id}`,
       };
     }
   }

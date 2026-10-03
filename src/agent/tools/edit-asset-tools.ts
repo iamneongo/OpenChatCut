@@ -30,13 +30,13 @@ async function update(asset: MediaAsset, args: Args, ctx: AgentContext): Promise
   if (args.props && typeof args.props === 'object') patch.props = { ...asset.props, ...(args.props as Record<string, unknown>) };
   if (args.sourceTimecode !== undefined) {
     if (!isSourceClockMetadata(args.sourceTimecode)) {
-      return { error: 'sourceTimecode must use integer frameCount, positive rational frameRate, and boolean dropFrame' };
+      return { error: 'sourceTimecode phải dùng frameCount số nguyên, frameRate hữu tỉ dương và dropFrame boolean' };
     }
     patch.sourceTimecode = args.sourceTimecode;
   }
   if (args.captureClock !== undefined) {
     if (!isSourceClockMetadata(args.captureClock)) {
-      return { error: 'captureClock must use integer frameCount, positive rational frameRate, and boolean dropFrame' };
+      return { error: 'captureClock phải dùng frameCount số nguyên, frameRate hữu tỉ dương và dropFrame boolean' };
     }
     patch.captureClock = args.captureClock;
   }
@@ -45,16 +45,16 @@ async function update(asset: MediaAsset, args: Args, ctx: AgentContext): Promise
 
   const code = strArg(args.code);
   if (code) {
-    if (asset.kind !== 'motion-graphic') return { error: `asset "${asset.name}" is ${asset.kind}, not a code (motion-graphic) asset — code cannot be set` };
+    if (asset.kind !== 'motion-graphic') return { error: `asset "${asset.name}" là ${asset.kind}, không phải asset code (motion-graphic) — không thể đặt code` };
     try {
       await prepareTemplate(code); // Sandbox validation and restricted-scope compilation must complete before persistence.
     } catch (e) {
-      return { error: `new code rejected by sandbox: ${e instanceof Error ? e.message : String(e)}`, code };
+      return { error: `Sandbox từ chối code mới: ${e instanceof Error ? e.message : String(e)}`, code };
     }
     patch.code = code;
   }
 
-  if (Object.keys(patch).length === 0) return { error: 'nothing to update; pass name / code / props / favorite / sourceTimecode / captureClock' };
+  if (Object.keys(patch).length === 0) return { error: 'Không có gì để cập nhật; hãy truyền name / code / props / favorite / sourceTimecode / captureClock' };
   ctx.commands.editMediaAsset(asset.id, patch);
   return { ok: true, updated: Object.keys(patch), assetId: asset.id };
 }
@@ -69,14 +69,14 @@ function remove(asset: MediaAsset, args: Args, ctx: AgentContext): unknown {
 }
 
 export async function execEditAssetTool(name: string, args: Args, ctx: AgentContext): Promise<unknown> {
-  if (name !== 'edit_asset') return { error: `unknown tool ${name}` };
+  if (name !== 'edit_asset') return { error: `Công cụ không xác định: ${name}` };
   const id = strArg(args.assetId);
-  if (!id) return { error: 'edit_asset requires assetId' };
+  if (!id) return { error: 'edit_asset cần có assetId' };
   const asset = ctx.getDoc().assets.find((a) => a.id === id || a.id.startsWith(id));
-  if (!asset) return { error: `no asset ${id}` };
+  if (!asset) return { error: `Không tìm thấy asset ${id}` };
 
   const action = String(args.action ?? '');
   if (action === 'update') return update(asset, args, ctx);
   if (action === 'delete') return remove(asset, args, ctx);
-  return { error: `unknown action "${action}"; use update|delete` };
+  return { error: `Action không xác định "${action}"; dùng update|delete` };
 }

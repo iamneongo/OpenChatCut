@@ -31,7 +31,7 @@ export function validateMediaSourceUpdate(state: TimelineState, entry: Record<st
   if (op !== 'replace_media' && op !== 'relink_media') {
     return {
       ok: false,
-      error: `update operation not supported: ${op}`,
+      error: `Không hỗ trợ operation update: ${op}`,
       code: 'unknown-operation',
       supported: ['slip', 'replace_media', 'relink_media'],
     };
@@ -41,12 +41,12 @@ export function validateMediaSourceUpdate(state: TimelineState, entry: Record<st
   const itemRef = entry.itemId ?? entry.id;
   const item = findItem(state.items, itemRef);
   if (!item) {
-    return { ok: false, error: `item not found: ${String(itemRef ?? '')}`, code: 'unknown-item' };
+    return { ok: false, error: `Không tìm thấy item: ${String(itemRef ?? '')}`, code: 'unknown-item' };
   }
   const src = String(entry.src ?? '').trim();
-  if (!src) return { error: `${op} requires src (replacement media path or URL)` };
+  if (!src) return { error: `${op} cần có src (đường dẫn hoặc URL media thay thế)` };
   if (src.startsWith('blob:') || src.startsWith('file:')) {
-    return { error: 'src must be a project media path or https URL, not a blob:/file: URL' };
+    return { error: 'src phải là đường dẫn media của dự án hoặc URL https, không phải URL blob:/file:' };
   }
   if (op === 'replace_media') {
     return {
@@ -55,11 +55,11 @@ export function validateMediaSourceUpdate(state: TimelineState, entry: Record<st
       kind: item.kind,
       itemId: item.id,
       src,
-      note: 'Replaces the clip with a video shell at the same track/start/duration (MG/text bake path); effects/transform are dropped.',
+      note: 'Thay clip bằng vỏ video trên cùng track/start/duration (đường kết xuất MG/text); effects/transform sẽ bị loại bỏ.',
     };
   }
   if (item.kind === 'motion-graphic' || item.kind === 'text' || item.kind === 'solid') {
-    return { error: 'relink_media is for file-backed clips (video/audio/image/gif/svg); use replace_media to bake MG/text into video' };
+    return { error: 'relink_media dành cho clip có file (video/audio/image/gif/svg); dùng replace_media để kết xuất MG/text thành video' };
   }
   const name = typeof entry.name === 'string' && entry.name.trim() ? entry.name.trim() : undefined;
   const sourceFilename = typeof entry.sourceFilename === 'string' && entry.sourceFilename.trim()
@@ -79,6 +79,6 @@ export function validateMediaSourceUpdate(state: TimelineState, entry: Record<st
     ...(durationInFrames !== undefined && durationInFrames > 0 ? { durationInFrames: Math.round(durationInFrames) } : {}),
     ...(width !== undefined && width > 0 ? { width: Math.round(width) } : {}),
     ...(height !== undefined && height > 0 ? { height: Math.round(height) } : {}),
-    note: 'Clip-only relink: detaches former pool master (sourceAssetId cleared). Prefer manage_media_pool relink_asset to update pool + all linked clips.',
+    note: 'Relink chỉ ở cấp clip: tách khỏi asset gốc trong kho (đã xóa sourceAssetId). Nên dùng manage_media_pool relink_asset để cập nhật kho và mọi clip liên kết.',
   };
 }

@@ -85,6 +85,6 @@ assert.equal(item.transcript, undefined, 'old source transcript identity is clea
 const incompatible = validatePoolAssetReplacement(doc.timelines[0]!, [{
   id: 'audio', name: 'audio', kind: 'audio', src: '/media/audio.mp3', durationInFrames: 300,
 } as MediaAsset], { type: 'video', itemId: 'clip', assetId: 'audio' });
-assert.match(String(incompatible.error), /incompatible/);
+assert.match(String(incompatible.error), /không tương thích/);
 
 console.log('edit-item-pool-replacement.verify: all assertions passed');
