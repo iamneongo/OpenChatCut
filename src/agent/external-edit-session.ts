@@ -85,7 +85,7 @@ function normalizedClientName(value: unknown): string {
 function normalizedApprovalMode(value: unknown): ExternalApprovalMode {
   if (value === undefined || value === 'manual') return 'manual';
   if (value === 'auto') return 'auto';
-  throw new Error('approvalMode must be "manual" or "auto".');
+  throw new Error('approvalMode phải là "manual" hoặc "auto".');
 }
 
 export function isExternalEditSessionStale(session: ExternalEditSession, liveDoc: ProjectDoc): boolean {
@@ -117,7 +117,7 @@ export function checkpointExternalEditSession(
   session: ExternalEditSession,
 ): ExternalDraftCheckpoint {
   if (session.status !== 'drafting' || !session.draft) {
-    throw new Error(`Edit session ${session.id} is ${session.status}, not drafting.`);
+    throw new Error(`Phiên chỉnh sửa ${session.id} đang ở trạng thái ${session.status}, không phải drafting.`);
   }
   return {
     version: 1,
@@ -156,7 +156,7 @@ export function restoreDraftingExternalEditSession(
  *  The session's approvalMode still reaches the external real-tool gate, so
  *  auto (YOLO) sessions skip that external-client confirmation. */
 export function externalDraftContext(session: ExternalEditSession, live: AgentContext): AgentContext {
-  if (!session.draft) throw new Error(`Edit session ${session.id} is no longer writable.`);
+  if (!session.draft) throw new Error(`Phiên chỉnh sửa ${session.id} không còn cho phép ghi.`);
   return {
     commands: session.draft.commands,
     getState: session.draft.getState,
@@ -174,7 +174,7 @@ export function externalDraftContext(session: ExternalEditSession, live: AgentCo
 /** Isolate one tool call so a throwing tool cannot leave a half-written draft. */
 export function forkExternalEditSession(session: ExternalEditSession): ExternalEditSession {
   if (session.status !== 'drafting' || !session.draft) {
-    throw new Error(`Edit session ${session.id} is ${session.status}, not drafting.`);
+    throw new Error(`Phiên chỉnh sửa ${session.id} đang ở trạng thái ${session.status}, không phải drafting.`);
   }
   return { ...session, draft: makeDraft(session.draft.getDoc()) };
 }
@@ -185,7 +185,7 @@ export function captureExternalToolActions(
   tool: string,
   args: Record<string, unknown>,
 ): ExternalEditSession {
-  if (!session.draft) throw new Error(`Edit session ${session.id} is no longer writable.`);
+  if (!session.draft) throw new Error(`Phiên chỉnh sửa ${session.id} không còn cho phép ghi.`);
   const actions = session.draft.takeActions();
   const operations = actions.length
     ? [...session.operations, buildOperation(tool, args, actions)]
@@ -198,9 +198,9 @@ export function reviewExternalEditSession(
   summary?: unknown,
 ): ExternalEditSession {
   if (session.status !== 'drafting' || !session.draft) {
-    throw new Error(`Edit session ${session.id} is ${session.status}, not drafting.`);
+    throw new Error(`Phiên chỉnh sửa ${session.id} đang ở trạng thái ${session.status}, không phải drafting.`);
   }
-  if (!session.operationCount) throw new Error('The edit session has no staged project changes to review.');
+  if (!session.operationCount) throw new Error('Phiên chỉnh sửa không có thay đổi dự án đã dàn dựng để xem xét.');
   const text = typeof summary === 'string' ? summary.trim() : '';
   const proposal = buildProposal(session.operations, text, session.baseDoc, session.draft.getState());
   return {

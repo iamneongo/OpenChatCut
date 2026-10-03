@@ -24,12 +24,12 @@ async function requestEditorBootstrap(signal?: AbortSignal): Promise<EditorBoots
       body: '{}',
       signal,
     });
-    if (!response.ok) throw new Error(`editor bootstrap failed: HTTP ${response.status}`);
+    if (!response.ok) throw new Error(`Khởi tạo editor thất bại: HTTP ${response.status}`);
     value = await response.json();
   }
   if (!value || typeof value !== 'object' || Array.isArray(value)
     || !('mcpToken' in value) || typeof value.mcpToken !== 'string' || !value.mcpToken) {
-    throw new Error('editor bootstrap returned invalid credentials');
+    throw new Error('Khởi tạo editor trả về thông tin xác thực không hợp lệ');
   }
   return { mcpToken: value.mcpToken };
 }

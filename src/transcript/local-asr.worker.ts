@@ -142,11 +142,11 @@ function toChunks(output: WhisperOutput): AsrChunk[] {
 async function transcribe(
   request: Extract<LocalAsrWorkerRequest, { type: 'transcribe' }>,
 ): Promise<AsrResult> {
-  if (!asr) throw new Error('Local ASR model is not loaded');
-  if (!(request.samples instanceof Float32Array)) throw new Error('Invalid audio samples');
+  if (!asr) throw new Error('Chưa tải mô hình ASR cục bộ');
+  if (!(request.samples instanceof Float32Array)) throw new Error('Mẫu âm thanh không hợp lệ');
   const n = request.samples.length;
   if (n === 0 || n > MAX_AUDIO_SAMPLES) {
-    throw new Error(`Audio length out of range (${Math.round(n / ASR_INFERENCE_CONTRACT.sampleRate)}s; max ${ASR_INFERENCE_CONTRACT.maxAudioSeconds}s)`);
+    throw new Error(`Độ dài âm thanh nằm ngoài phạm vi (${Math.round(n / ASR_INFERENCE_CONTRACT.sampleRate)}s; tối đa ${ASR_INFERENCE_CONTRACT.maxAudioSeconds}s)`);
   }
   const output = await asr(request.samples, {
     return_timestamps: 'word',
@@ -168,10 +168,10 @@ async function transcribe(
 }
 
 function validateRequest(value: unknown): LocalAsrWorkerRequest {
-  if (!value || typeof value !== 'object') throw new Error('Invalid local ASR worker request');
+  if (!value || typeof value !== 'object') throw new Error('Yêu cầu worker ASR cục bộ không hợp lệ');
   const request = value as Record<string, unknown>;
   if (!Number.isSafeInteger(request.id) || (request.id as number) < 0) {
-    throw new Error('Invalid local ASR worker request id');
+    throw new Error('ID yêu cầu worker ASR cục bộ không hợp lệ');
   }
   if (request.type === 'load'
     && (request.device === 'webgpu' || request.device === 'wasm')
@@ -184,7 +184,7 @@ function validateRequest(value: unknown): LocalAsrWorkerRequest {
     && typeof request.language === 'string' && request.language.length > 0) {
     return request as LocalAsrWorkerRequest;
   }
-  throw new Error('Invalid local ASR worker request payload');
+  throw new Error('Dữ liệu yêu cầu worker ASR cục bộ không hợp lệ');
 }
 
 async function handleRequest(value: unknown): Promise<void> {
