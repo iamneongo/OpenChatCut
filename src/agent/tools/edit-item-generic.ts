@@ -418,18 +418,18 @@ export function validateGenericAdd(
   const unknown = rejectUnknownFields(entry, GENERIC_ADD_KEYS);
   if (unknown) return { error: unknown };
   const q = String(entry.assetId ?? '').trim();
-  if (!q) return { error: `${type} add cần assetId (id/tiền tố asset trong kho; xem manage_media_pool action=list)` };
+  if (!q) return { error: `${type} add cần mã tư liệu (id/tiền tố tư liệu trong kho; xem manage_media_pool action=list)` };
   const exact = assets.find((asset) => asset.id === q);
   const hits = exact ? [exact] : assets.filter((asset) => asset.id.startsWith(q));
   if (hits.length === 0) {
-    return { error: `Không có asset trong kho khớp với "${q}"`, hint: 'manage_media_pool action=list hiển thị id/tên asset' };
+    return { error: `Không có tư liệu trong kho khớp với "${q}"`, hint: 'manage_media_pool action=list hiển thị mã/tên tư liệu' };
   }
   if (hits.length > 1) {
-    return { error: `Tiền tố asset "${q}" không đủ rõ ràng`, candidates: hits.slice(0, 6).map((asset) => ({ id: asset.id, name: asset.name, kind: asset.kind })) };
+    return { error: `Tiền tố tư liệu "${q}" không đủ rõ ràng`, candidates: hits.slice(0, 6).map((asset) => ({ id: asset.id, name: asset.name, kind: asset.kind })) };
   }
   const asset = hits[0]!;
   if (asset.kind !== type) {
-    return { error: `Asset ${asset.id} có kind=${asset.kind}, không phải ${type} — hãy truyền type:"${asset.kind}"` };
+  return { error: `Tư liệu ${asset.id} có loại=${asset.kind}, không phải ${type} — hãy truyền type:"${asset.kind}"` };
   }
   const family = type === 'audio' ? 'audio' : 'video';
   const track = resolveTrackId(state, entry.track ?? entry.trackId ?? (family === 'audio' ? 'A1' : 'V1'), family)

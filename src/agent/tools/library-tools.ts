@@ -39,7 +39,7 @@ export async function execLibraryTool(name: string, args: Args, ctx: AgentContex
     if (!hit) {
       return {
         error: `unknown library id ${id}`,
-        hint: 'Call browse_library with category or query first.',
+        hint: 'Trước hết hãy gọi browse_library với category hoặc query.',
         categories: LIBRARY_CATEGORIES,
       };
     }

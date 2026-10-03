@@ -64,7 +64,7 @@ export async function execBeatTool(name: string, args: Args, ctx: AgentContext):
     } else if (typeof args.assetId === 'string' && args.assetId.trim()) {
       const q = args.assetId.trim();
       const asset = ctx.getDoc().assets.find((a) => a.id === q || a.id.startsWith(q));
-      if (!asset) return { error: `Không tìm thấy asset trong kho tư liệu ${q}` };
+      if (!asset) return { error: `Không tìm thấy tư liệu trong kho tư liệu ${q}` };
       src = asset.src;
     } else {
       return { error: 'Hãy truyền assetId (kho tư liệu) hoặc itemId (clip trên dòng thời gian)' };

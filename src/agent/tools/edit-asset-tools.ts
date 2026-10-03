@@ -45,7 +45,7 @@ async function update(asset: MediaAsset, args: Args, ctx: AgentContext): Promise
 
   const code = strArg(args.code);
   if (code) {
-    if (asset.kind !== 'motion-graphic') return { error: `asset "${asset.name}" là ${asset.kind}, không phải asset code (motion-graphic) — không thể đặt code` };
+    if (asset.kind !== 'motion-graphic') return { error: `tư liệu "${asset.name}" là ${asset.kind}, không phải mã tư liệu (motion-graphic) — không thể đặt mã` };
     try {
       await prepareTemplate(code); // Sandbox validation and restricted-scope compilation must complete before persistence.
     } catch (e) {
@@ -73,7 +73,7 @@ export async function execEditAssetTool(name: string, args: Args, ctx: AgentCont
   const id = strArg(args.assetId);
   if (!id) return { error: 'edit_asset cần có assetId' };
   const asset = ctx.getDoc().assets.find((a) => a.id === id || a.id.startsWith(id));
-  if (!asset) return { error: `Không tìm thấy asset ${id}` };
+  if (!asset) return { error: `Không tìm thấy tư liệu ${id}` };
 
   const action = String(args.action ?? '');
   if (action === 'update') return update(asset, args, ctx);

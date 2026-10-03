@@ -61,7 +61,7 @@ export function jianyingExportOutcome(
     addedAudios: data.addedAudios,
     captions: data.captions,
     warnings: data.warnings ?? [],
-    note: 'Draft written to the CapCut/JianYing store. Restart CapCut/JianYing if the project list does not refresh.',
+    note: 'Đã ghi bản nháp vào kho CapCut/JianYing. Hãy khởi động lại CapCut/JianYing nếu danh sách dự án chưa cập nhật.',
   };
 }
 

@@ -236,7 +236,7 @@ async function manageTranscript(args: Args, ctx: AgentContext, track: TrackId, a
     const lang = String(args.lang ?? args.targetLanguage ?? '').trim();
     if (!lang) return { error: 'translation_read needs lang / targetLanguage (which variant to read)' };
     const v = it.variants ? findVariantByLang(it.variants, lang, 'translation') : undefined;
-    if (!v) return { error: `no "${lang}" translation variant on item ${it.id}; create it with translation_create / translation_ensure first` };
+    if (!v) return { error: `đoạn ${it.id} chưa có biến thể dịch "${lang}"; trước hết hãy tạo bằng translation_create / translation_ensure` };
     return { ok: true, action, itemId: it.id, lang: v.lang, variantId: v.id, words: v.words.length, text: v.words.map((w) => w.text).join(' ').slice(0, 400) };
   }
 

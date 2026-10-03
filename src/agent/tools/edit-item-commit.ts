@@ -30,7 +30,7 @@ export function commitPlan(ctx: AgentContext, plan: OpResult, ripple = false): O
 function commitPoolAssetReplacement(ctx: AgentContext, plan: OpResult): OpResult {
   const doc = ctx.getDoc();
   const asset = doc.assets.find((candidate) => candidate.id === plan.assetId);
-  if (!asset) return { error: `pool asset vanished: ${String(plan.assetId)}` };
+  if (!asset) return { error: `tư liệu trong kho không còn tồn tại: ${String(plan.assetId)}` };
   const next = replaceTimelineItemAsset(doc, doc.activeTimelineId, String(plan.itemId), asset, {
     durationInFrames: Number(plan.durationInFrames),
     srcInFrame: typeof plan.srcInFrame === 'number' ? plan.srcInFrame : undefined,
@@ -161,7 +161,7 @@ function commitMotionGraphicPlan(ctx: AgentContext, plan: OpResult, ripple: bool
 
 function commitMediaPlan(ctx: AgentContext, plan: OpResult): OpResult {
   const asset = (ctx.getDoc().assets ?? []).find((item) => item.id === plan.assetId);
-  if (!asset) return { error: `pool asset vanished: ${String(plan.assetId)}` };
+  if (!asset) return { error: `tư liệu trong kho không còn tồn tại: ${String(plan.assetId)}` };
   const placed = typeof plan.durationInFrames === 'number'
     ? { ...asset, durationInFrames: Number(plan.durationInFrames) }
     : asset;

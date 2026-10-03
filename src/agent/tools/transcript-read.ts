@@ -14,7 +14,7 @@ interface TimelinePhrase extends TranscriptPhrase {
 
 function transcriptUnavailable(items: readonly TimelineItem[], itemId?: string, track?: string): Record<string, unknown> {
   if (items.some((item) => item.transcriptStale)) {
-    return { error: 'matching transcript is stale after a source change; call transcribe_track again' };
+    return { error: 'bản chép lời tương ứng đã cũ sau khi nguồn thay đổi; hãy gọi lại transcribe_track' };
   }
   return {
     ok: true,

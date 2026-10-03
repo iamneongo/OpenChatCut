@@ -253,7 +253,7 @@ const submitVideoHandler: Handler = async (args, ctx) => {
 };
 
 async function trackProgressHandler(args: GenerateArgs, ctx: AgentContext): Promise<unknown> {
-  if (args.target !== 'generation') return { error: 'this local track_progress implementation currently supports target=generation only' };
+  if (args.target !== 'generation') return { error: 'track_progress cục bộ hiện chỉ hỗ trợ target=generation' };
   const action = args.action as 'params' | 'status' | 'wait' | 'resume';
   if (!['params', 'status', 'wait', 'resume'].includes(action)) return { error: 'action phải là params, status, wait hoặc resume' };
   const jobIds = String(args.jobIds ?? '').split(',').map((id) => id.trim()).filter(Boolean);

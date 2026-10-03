@@ -263,7 +263,7 @@ function existingFinalizeResult(
     next: finalize.offersTranscription
       ? `No transcription was started. If transcription is desired, place asset ${asset.id} on an audio/video track and invoke transcribe_track for that track.`
       : undefined,
-    note: 'Existing asset replaced from a verified import receipt.',
+    note: 'Đã thay thế tư liệu hiện có từ biên nhận nhập đã xác minh.',
   };
 }
 
@@ -284,7 +284,7 @@ function newFinalizeResult(
     next: finalize.offersTranscription
       ? `No transcription was started. If transcription is desired, place asset ${asset.id} on an audio/video track and invoke transcribe_track for that track.`
       : undefined,
-    note: 'Asset registered in media pool (local-dev finalize).',
+    note: 'Đã đăng ký tư liệu vào kho media (hoàn tất cục bộ trong môi trường phát triển).',
   };
 }
 
