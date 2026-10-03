@@ -4,25 +4,25 @@ export const SCRIPT_TOOL_SCHEMAS: AgentToolSchema[] = [
   {
     name: 'read_script',
     description:
-      'Materialize the current timeline as timeline.md (segment-id-coded Markdown). Track sections (## V1/A1…), source regions (### file), rows: [sN] transcript sentence / [cN] Nf clip / [gap Nf]. Body order = playback order. Read this before apply_script; edit the TEXT then pass it back. Keep the <!-- script-stamp --> comment intact.',
+      'Kết xuất timeline hiện tại thành timeline.md (Markdown có mã segment-id). Phần track (## V1/A1…), vùng nguồn (### file), các dòng: câu transcript [sN] / clip [cN] Nf / khoảng trống [gap Nf]. Thứ tự nội dung = thứ tự phát. Đọc tool này trước apply_script; chỉnh phần TEXT rồi gửi lại. Giữ nguyên comment <!-- script-stamp -->.',
     input_schema: {
       type: 'object',
       properties: {
-        track: { type: 'string', description: 'Optional timeline track alias/id. Omit to keep the existing full-timeline behavior.' },
-        showSilence: { type: 'boolean', description: 'Include editable [silence=Ns] markers. Default false.' },
+        track: { type: 'string', description: 'Alias/id track timeline tùy chọn. Bỏ qua để giữ hành vi hiện tại trên toàn timeline.' },
+        showSilence: { type: 'boolean', description: 'Bao gồm marker [silence=Ns] có thể chỉnh sửa. Mặc định false.' },
       },
     },
   },
   {
     name: 'apply_script',
     description:
-      'Commit an edited timeline.md back to the timeline (atomic; any invalid row rejects the whole script). Edit grammar: strike words inside a [sN] row with ~~word~~ (delete text = delete video); strike or delete a whole row to remove it; reorder rows to reorder clips (frames are re-derived from body order — never write frame numbers); deleting a [gap Nf] row closes the gap. Re-adding previously deleted words restores them. Do NOT change spoken words. preview=true validates and reports without changing anything.',
+      'Ghi timeline.md đã chỉnh sửa trở lại timeline (nguyên tử; chỉ cần một dòng không hợp lệ là toàn bộ script bị từ chối). Cú pháp chỉnh sửa: gạch từ trong dòng [sN] bằng ~~word~~ (xóa text = xóa video); gạch hoặc xóa cả dòng để loại bỏ; sắp xếp lại dòng để đổi thứ tự clip (frame được tính lại từ thứ tự nội dung — không bao giờ tự ghi số frame); xóa dòng [gap Nf] để đóng khoảng trống. Thêm lại từ đã xóa sẽ khôi phục chúng. KHÔNG thay đổi lời nói. preview=true chỉ kiểm tra và báo diff mà không thay đổi gì.',
     input_schema: {
       type: 'object',
       properties: {
-        timelineMd: { type: 'string', description: 'The FULL edited timeline.md content (from read_script, with your edits).' },
-        preview: { type: 'boolean', description: 'true = validate + report the diff without applying.' },
-        track: { type: 'string', description: 'Optional timeline track alias/id. Use the same scope as read_script.' },
+        timelineMd: { type: 'string', description: 'Toàn bộ nội dung timeline.md đã chỉnh sửa (lấy từ read_script, kèm thay đổi của bạn).' },
+        preview: { type: 'boolean', description: 'true = kiểm tra + báo diff mà không áp dụng.' },
+        track: { type: 'string', description: 'Alias/id track timeline tùy chọn. Dùng cùng phạm vi với read_script.' },
       },
       required: ['timelineMd'],
     },
