@@ -12,7 +12,7 @@ assert.equal(resampleMonoTo16k(ramp, 16_000), ramp, '16k passes through unchange
 const down = resampleMonoTo16k(ramp, 32_000);
 assert.equal(down.length, 80, '32k decimates to half length');
 assert.ok(Math.abs(down[0] - 0) < 1e-6, 'first sample preserved');
-assert.throws(() => resampleMonoTo16k(ramp, 8_000), /unsupported sample rate/);
+assert.throws(() => resampleMonoTo16k(ramp, 8_000), /tần số lấy mẫu không được hỗ trợ/);
 
 // ── span aggregation ─────────────────────────────────────────────────────────
 

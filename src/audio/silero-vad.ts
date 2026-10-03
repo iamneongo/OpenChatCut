@@ -40,7 +40,7 @@ function loadSession(): Promise<ort.InferenceSession> {
  * insensitive to the resampling method). Pure and exported for verifies. */
 export function resampleMonoTo16k(samples: Float32Array, sampleRate: number): Float32Array {
   if (sampleRate === VAD_SAMPLE_RATE) return samples;
-  if (sampleRate < VAD_SAMPLE_RATE) throw new Error(`unsupported sample rate ${sampleRate}`);
+  if (sampleRate < VAD_SAMPLE_RATE) throw new Error(`tần số lấy mẫu không được hỗ trợ: ${sampleRate}`);
   const ratio = sampleRate / VAD_SAMPLE_RATE;
   const length = Math.floor(samples.length / ratio);
   const out = new Float32Array(length);
@@ -118,7 +118,7 @@ async function runSileroVad(
     'int64', BigInt64Array.from([BigInt(VAD_SAMPLE_RATE)]), [],
   );
   for (let window = 0; window < windowCount; window += 1) {
-    if (signal?.aborted) throw new Error('VAD cancelled');
+    if (signal?.aborted) throw new Error('VAD đã bị hủy');
     const offset = window * WINDOW_SIZE;
     const input = new ort.Tensor(
       'float32', mono.slice(offset, offset + WINDOW_SIZE), [1, WINDOW_SIZE],

@@ -148,13 +148,13 @@ const projectFrame = (
 
 const validateFilterbank = (filterbank: Float32Array): void => {
   if (filterbank.length !== BEAT_THIS_FFT_BINS * BEAT_THIS_MEL_BINS) {
-    throw new Error(`Invalid Beat This filterbank length: ${filterbank.length}`);
+    throw new Error(`độ dài filterbank của Beat This không hợp lệ: ${filterbank.length}`);
   }
 };
 
 export function beatThisFrameCount(samples: Float32Array): number {
   if (samples.length <= BEAT_THIS_N_FFT / 2) {
-    throw new Error('Beat This audio must contain more than 512 samples for reflect padding');
+    throw new Error('âm thanh Beat This phải có hơn 512 mẫu để đệm phản xạ');
   }
   return Math.floor(samples.length / BEAT_THIS_HOP_LENGTH) + 1;
 }
@@ -205,7 +205,7 @@ export function preprocessBeatThisWindow(
 ): BeatThisWindow {
   const fullFrames = beatThisFrameCount(samples);
   validateFilterbank(filterbank);
-  if (!Number.isSafeInteger(start)) throw new Error('Beat This window start must be an integer');
+  if (!Number.isSafeInteger(start)) throw new Error('điểm bắt đầu cửa sổ Beat This phải là số nguyên');
   const frames = beatThisWindowFrames(fullFrames);
   const values = new Float32Array(frames * BEAT_THIS_MEL_BINS);
   const sourceStart = Math.max(start, 0);
@@ -216,7 +216,7 @@ export function preprocessBeatThisWindow(
 }
 
 export function beatThisWindowStarts(frames: number): number[] {
-  if (!Number.isSafeInteger(frames) || frames <= 0) throw new Error('Beat This frame count must be positive');
+  if (!Number.isSafeInteger(frames) || frames <= 0) throw new Error('số frame Beat This phải là số dương');
   const stride = BEAT_THIS_CHUNK_FRAMES - 2 * BEAT_THIS_BORDER_FRAMES;
   const starts: number[] = [];
   for (let start = -BEAT_THIS_BORDER_FRAMES; start < frames - BEAT_THIS_BORDER_FRAMES; start += stride) {
@@ -228,7 +228,7 @@ export function beatThisWindowStarts(frames: number): number[] {
 
 export function createBeatThisWindow(features: BeatThisFeatures, start: number): BeatThisWindow {
   if (features.values.length !== features.frames * BEAT_THIS_MEL_BINS) {
-    throw new Error('Beat This feature shape does not match its frame count');
+    throw new Error('hình dạng đặc trưng Beat This không khớp số frame');
   }
   const frames = beatThisWindowFrames(features.frames);
   const values = new Float32Array(frames * BEAT_THIS_MEL_BINS);
@@ -250,14 +250,14 @@ export function mergeBeatThisLogits(
   predictions: readonly BeatThisWindowLogits[],
   fullFrames: number,
 ): BeatThisLogits {
-  if (windows.length !== predictions.length) throw new Error('Beat This window/prediction count mismatch');
+  if (windows.length !== predictions.length) throw new Error('số cửa sổ và prediction Beat This không khớp');
   const beat = new Float32Array(fullFrames).fill(BEAT_THIS_EMPTY_LOGIT);
   const downbeat = new Float32Array(fullFrames).fill(BEAT_THIS_EMPTY_LOGIT);
   for (let index = windows.length - 1; index >= 0; index -= 1) {
     const window = windows[index]!;
     const prediction = predictions[index]!;
     if (prediction.beat.length !== window.frames || prediction.downbeat.length !== window.frames) {
-      throw new Error(`Beat This prediction shape mismatch at window ${index}`);
+      throw new Error(`hình dạng prediction Beat This không khớp tại cửa sổ ${index}`);
     }
     for (let frame = BEAT_THIS_BORDER_FRAMES; frame < window.frames - BEAT_THIS_BORDER_FRAMES; frame += 1) {
       const target = window.start + frame;

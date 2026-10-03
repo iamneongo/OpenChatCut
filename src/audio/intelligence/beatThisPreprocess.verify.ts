@@ -111,11 +111,11 @@ assert.equal(merged.downbeat[1_488], 20);
 
 assert.throws(
   () => preprocessBeatThis(new Float32Array(512), filterbank),
-  /more than 512 samples/,
+  /phải có hơn 512 mẫu/,
 );
 assert.throws(
   () => preprocessBeatThis(impulse, new Float32Array(1)),
-  /filterbank length/,
+  /độ dài filterbank .* không hợp lệ/,
 );
 
 console.log('beatThisPreprocess.verify: ok');
