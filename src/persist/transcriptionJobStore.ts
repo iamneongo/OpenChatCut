@@ -43,7 +43,7 @@ export interface TranscriptionCheckpointKey {
 
 const queues = new Map<string, Promise<unknown>>();
 const checkpointKey = (key: TranscriptionCheckpointKey): string => {
-  if (!key.projectId) throw new Error('transcription checkpoint projectId is required');
+  if (!key.projectId) throw new Error('checkpoint transcript bắt buộc phải có projectId');
   return `transcription-job:${encodeURIComponent(key.projectId)}:${encodeURIComponent(key.assetId)}:${encodeURIComponent(key.sourceRevision)}`;
 };
 

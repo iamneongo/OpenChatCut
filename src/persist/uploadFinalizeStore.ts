@@ -63,7 +63,7 @@ function canonicalValue(value: unknown): unknown {
 }
 
 async function journalKey(projectId: string, receipt: string): Promise<string> {
-  if (!PROJECT_ID.test(projectId)) throw new Error('Invalid upload finalize project id.');
+  if (!PROJECT_ID.test(projectId)) throw new Error('project id hoàn tất upload không hợp lệ.');
   return `upload-finalize:${projectId}:${await sha256Text(receipt)}`;
 }
 
@@ -86,7 +86,7 @@ export async function uploadFinalizeEffectiveHash(
     mutation: journal.mutation,
     result: journal.result,
   }));
-  if (serialized === undefined) throw new Error('Upload finalize journal is not serializable.');
+  if (serialized === undefined) throw new Error('journal hoàn tất upload không thể tuần tự hóa.');
   return sha256Text(serialized);
 }
 
@@ -99,7 +99,7 @@ export async function loadUploadFinalizeJournal(
   const journal = parseJournal(raw);
   if (!journal || journal.identity.projectId !== projectId || journal.identity.receipt !== receipt
     || journal.effectiveHash !== await uploadFinalizeEffectiveHash(journal)) {
-    throw new Error('Stored upload finalize journal failed its integrity check.');
+    throw new Error('journal hoàn tất upload đã lưu không vượt qua kiểm tra toàn vẹn.');
   }
   return journal;
 }
@@ -107,7 +107,7 @@ export async function loadUploadFinalizeJournal(
 export async function saveUploadFinalizeJournal(journal: UploadFinalizeJournal): Promise<void> {
   if (!parseJournal(journal)
     || journal.effectiveHash !== await uploadFinalizeEffectiveHash(journal)) {
-    throw new Error('Upload finalize journal failed its integrity check.');
+    throw new Error('journal hoàn tất upload không vượt qua kiểm tra toàn vẹn.');
   }
   await kvSet(await journalKey(journal.identity.projectId, journal.identity.receipt), journal);
 }

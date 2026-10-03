@@ -19,7 +19,7 @@ function validSnapshot(value: unknown): value is StoreSnapshot {
 
 export async function requestSnapshot(): Promise<StoreSnapshot> {
   const value = await requestProjectStore({ operation: 'snapshot' });
-  if (!validSnapshot(value)) throw new Error('invalid project store response');
+  if (!validSnapshot(value)) throw new Error('phản hồi kho project không hợp lệ');
   return value;
 }
 
@@ -27,7 +27,7 @@ export async function requestMerge(
   entries: Record<string, unknown>, documentKeys: readonly string[] = [],
 ): Promise<StoreSnapshot> {
   const value = await requestProjectStore({ operation: 'merge', entries });
-  if (!validSnapshot(value)) throw new Error('invalid project store response');
+  if (!validSnapshot(value)) throw new Error('phản hồi kho project không hợp lệ');
   // HTTP merge returns only the index. Confirm submitted pending bodies through
   // entry reads before acknowledging them; ordinary bootstrap adds no reads.
   const confirmed = { ...value.entries };
@@ -42,7 +42,7 @@ export async function requestMerge(
 export async function requestEntry(key: string): Promise<EntryResponse> {
   const value = await requestProjectStore({ operation: 'entry', key });
   if (!('found' in value) || typeof value.found !== 'boolean') {
-    throw new Error('invalid project index response');
+    throw new Error('phản hồi chỉ mục project không hợp lệ');
   }
   return value;
 }
@@ -65,12 +65,12 @@ function validProjectDocumentMutation(value: unknown): value is ProjectDocumentM
 
 export async function requestProjectDocumentMutation(request: DocumentWrite): Promise<ProjectDocumentMutationResponse> {
   const value = await requestProjectStore(request);
-  if (!validProjectDocumentMutation(value)) throw new Error('invalid project document mutation response');
+  if (!validProjectDocumentMutation(value)) throw new Error('phản hồi mutation tài liệu project không hợp lệ');
   return value;
 }
 
 export async function requestMutation(request: RuntimeWrite): Promise<ProjectStoreMutationResponse> {
   const value = await requestProjectStore(request);
-  if (!validMutationResponse(value)) throw new Error('invalid project store mutation response');
+  if (!validMutationResponse(value)) throw new Error('phản hồi mutation kho project không hợp lệ');
   return value;
 }

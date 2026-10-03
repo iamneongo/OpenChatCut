@@ -226,7 +226,7 @@ async function persistRecord(projectId: string, record: StoredProposalRecord): P
   await idbSet(key, next);
   const stored = parseStoredProposalRecord(await idbGet<unknown>(key));
   if (!stored || stored.sessionGeneration !== sessionGeneration || !sameRecord(stored, next)) {
-    throw new Error('Proposal durability verification failed.');
+    throw new Error('xác minh độ bền proposal thất bại.');
   }
 }
 async function existingRecord(projectId: string): Promise<StoredProposalRecord | null> {
@@ -234,7 +234,7 @@ async function existingRecord(projectId: string): Promise<StoredProposalRecord |
   const raw = await idbGet<unknown>(proposalKey(projectId, generation));
   if (raw === undefined) return null;
   const record = parseStoredProposalRecord(raw);
-  if (!record) throw new Error('Stored proposal is invalid and was preserved for recovery.');
+  if (!record) throw new Error('proposal đã lưu không hợp lệ và đã được giữ lại để khôi phục.');
   return agentSessionGenerationMatches(record.sessionGeneration, generation) ? record : null;
 }
 
@@ -249,7 +249,7 @@ export function saveProposalRecord(
   const parsed = parseStoredProposalRecord(record);
   if (!parsed) return Promise.reject(new Error('Proposal record is invalid.'));
   return serialize(projectId, async () => {
-    if (await existingRecord(projectId)) throw new Error('A durable proposal already exists.');
+    if (await existingRecord(projectId)) throw new Error('đã tồn tại proposal bền vững.');
     await persistRecord(projectId, parsed);
   });
 }
@@ -267,7 +267,7 @@ export function saveProposal(projectId: string, proposal: Proposal): Promise<voi
   return serialize(projectId, async () => {
     const current = await existingRecord(projectId);
     if (current && (current.phase !== 'prepared' || !sameRecord(current, prepared))) {
-      throw new Error('A different durable proposal already exists.');
+      throw new Error('đã tồn tại một proposal bền vững khác.');
     }
     await persistRecord(projectId, prepared);
   });
@@ -279,7 +279,7 @@ export function restorePreparedProposal(projectId: string, proposal: Proposal): 
   return serialize(projectId, async () => {
     const current = await existingRecord(projectId);
     if (!current || current.phase !== 'applying' || current.proposal.id !== parsed.id) {
-      throw new Error('Applying proposal recovery does not match the durable proposal.');
+      throw new Error('proposal khôi phục được áp dụng không khớp với proposal bền vững.');
     }
     await persistRecord(projectId, { version: 1, phase: 'prepared', proposal: parsed });
   });
@@ -294,12 +294,12 @@ export function markProposalApplying(
   const parsed = parseProposal(proposal);
   const parsedResult = migrateProjectDoc(resultDoc);
   if (!parsed || !parsedResult || !Number.isInteger(operationCount) || operationCount < 0) {
-    return Promise.reject(new Error('Proposal application payload is invalid.'));
+    return Promise.reject(new Error('payload áp dụng proposal không hợp lệ.'));
   }
   return serialize(projectId, async () => {
     const current = await existingRecord(projectId);
     if (!current || current.proposal.id !== parsed.id) {
-      throw new Error('Proposal application does not match the durable proposal.');
+      throw new Error('proposal được áp dụng không khớp với proposal bền vững.');
     }
     await persistRecord(projectId, {
       version: 1,
@@ -318,7 +318,7 @@ export function settleProposal(
   return serialize(projectId, async () => {
     const current = await existingRecord(projectId);
     if (!current || current.proposal.id !== proposal.id) {
-      throw new Error('Proposal settlement does not match the durable proposal.');
+      throw new Error('việc tất toán proposal không khớp với proposal bền vững.');
     }
     await persistRecord(projectId, {
       ...current,
@@ -332,13 +332,13 @@ export function clearProposal(projectId: string, expectedProposalId?: string): P
   return serialize(projectId, async () => {
     const current = await existingRecord(projectId);
     if (expectedProposalId && current?.proposal.id !== expectedProposalId) {
-      throw new Error('Proposal removal does not match the durable proposal.');
+      throw new Error('việc xóa proposal không khớp với proposal bền vững.');
     }
     const generation = await currentAgentSessionGeneration(projectId);
     const key = proposalKey(projectId, generation);
     await idbDel(key);
     if (await idbGet<unknown>(key) !== undefined) {
-      throw new Error('Proposal removal durability verification failed.');
+    throw new Error('xác minh độ bền sau khi xóa proposal thất bại.');
     }
   });
 }

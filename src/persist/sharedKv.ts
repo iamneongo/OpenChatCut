@@ -85,7 +85,7 @@ export async function kvWriteAgentRuntime(
     : remote
       ? await requestMutation(request)
       : await localAgentRuntimeWrite(request);
-  if (!validMutationResponse(result)) throw new Error('invalid agent runtime CAS response');
+  if (!validMutationResponse(result)) throw new Error('phản hồi CAS runtime Agent không hợp lệ');
   if (remote) await cacheMutation(request.key, result);
   return result;
 }
@@ -106,7 +106,7 @@ export async function kvUpdateAgentRunLease(
   const result = injectedBackend
     ? await injectedBackend.updateAgentRunLease(request)
     : await requestMutation(request);
-  if (!validMutationResponse(result)) throw new Error('invalid agent run lease response');
+  if (!validMutationResponse(result)) throw new Error('phản hồi lease lượt chạy Agent không hợp lệ');
   if (!injectedBackend) await cacheMutation(request.key, result);
   return result;
 }
@@ -291,7 +291,7 @@ async function setProjectDocument(key: string, value: unknown): Promise<void> {
   const local = await localGet<unknown>(key);
   if (!ownership && local !== undefined) {
     ownership = await waitForBrowserProjectOwnership(projectId);
-    if (!ownership) throw new Error('工程编辑权尚未注册，工程未保存');
+    if (!ownership) throw new Error('quyền chỉnh sửa project chưa được đăng ký, project chưa được lưu');
   }
   const request: ProjectDocumentWriteRequest = ownership
     ? {
@@ -312,14 +312,14 @@ async function setProjectDocument(key: string, value: unknown): Promise<void> {
   }
   if (!result.accepted) {
     await cacheMutation(key, result);
-    throw new Error('工程已被其他编辑器更新，请手动刷新页面后重试');
+    throw new Error('project đã được editor khác cập nhật, hãy tự làm mới trang rồi thử lại');
   }
   if (!result.found || typeof result.currentRevision !== 'string') {
-    throw new Error('invalid successful project document CAS response');
+    throw new Error('phản hồi CAS tài liệu project thành công không hợp lệ');
   }
   if (ownership) {
     if (result.ownershipEpoch !== ownership.epoch) {
-      throw new Error('project ownership epoch changed during save');
+      throw new Error('epoch quyền sở hữu project đã thay đổi trong lúc lưu');
     }
     advanceBrowserProjectOwnership(ownership, result.currentRevision);
   }
@@ -339,13 +339,13 @@ export async function kvSet(key: string, value: unknown): Promise<void> {
     return;
   }
   if (!projectStoreWriteCredential()) {
-    throw new Error('共享工程库为只读模式（未连接编辑器会话），修改未同步');
+    throw new Error('kho project dùng chung đang ở chế độ chỉ đọc (chưa kết nối phiên editor), thay đổi chưa được đồng bộ');
   }
   try {
     await requestProjectStore({ operation: 'set', key, value });
   } catch (error) {
     if (isAuthError(error)) {
-      throw new Error('共享工程库只读（编辑器会话失效），修改未同步');
+      throw new Error('kho project dùng chung ở chế độ chỉ đọc (phiên editor đã hết hiệu lực), thay đổi chưa được đồng bộ');
     }
     await disableRemote();
     await localSet(key, value);
@@ -366,18 +366,18 @@ export async function kvDel(key: string): Promise<void> {
   // Node memory fallback (no IndexedDB) keeps local semantics for checks.
   const requireSharedDelete = isProjectDocumentKey(key) && (canSync() || hasIdb());
   if (!remoteCache) {
-    if (requireSharedDelete) throw new Error('共享工程数据库暂时不可用，工程未删除');
+    if (requireSharedDelete) throw new Error('database project dùng chung tạm thời không khả dụng, project chưa được xóa');
     await localDel(key);
     return;
   }
   if (isProjectDocumentKey(key) && !projectStoreWriteCredential()) {
-    throw new Error('共享工程库为只读模式（未连接编辑器会话），工程未删除');
+    throw new Error('kho project dùng chung đang ở chế độ chỉ đọc (chưa kết nối phiên editor), project chưa được xóa');
   }
   try {
     await requestProjectStore({ operation: 'delete', key });
   } catch (error) {
     if (isAuthError(error) && isProjectDocumentKey(key)) {
-      throw new Error('共享工程库只读（编辑器会话失效），工程未删除');
+      throw new Error('kho project dùng chung ở chế độ chỉ đọc (phiên editor đã hết hiệu lực), project chưa được xóa');
     }
     await disableRemote();
     if (requireSharedDelete) throw error;
@@ -409,7 +409,7 @@ export async function kvPurgeProject(projectId: string): Promise<void> {
   await ready();
   const requireSharedDelete = canSync();
   if (!remoteCache) {
-    if (requireSharedDelete) throw new Error('共享工程数据库暂时不可用，工程未删除');
+    if (requireSharedDelete) throw new Error('database project dùng chung tạm thời không khả dụng, project chưa được xóa');
     await purgeLocalProjectEntries(projectId);
     return;
   }
