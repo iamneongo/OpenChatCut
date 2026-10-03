@@ -5,6 +5,7 @@ import type { LibraryDragPayload } from '../library/drag';
 import { pluginResourceItems } from '../library/pluginResources';
 import { pluginTemplates } from '../library/pluginTemplateCatalog';
 import { docFromTimeline } from '../persist/projectStore';
+import { localizedCatalogText } from '../i18n/locale';
 import {
   HOVER_DURATION_MS,
   HOVER_HOLD_FRACTION,
@@ -60,7 +61,7 @@ function coverAsset(
 ): MediaAsset {
   return {
     id,
-    name: 'Preview source',
+    name: localizedCatalogText('Preview source', '预览素材', undefined, 'Nguồn xem trước'),
     kind: 'image',
     src,
     durationInFrames,
@@ -74,7 +75,14 @@ function resourcePayload(
   category: Exclude<ResourcePreviewCategory, 'mg'>,
 ): LibraryDragPayload {
   const resource = pluginResourceItems([pack], category)[0];
-  if (!resource) throw new Error(`package has no ${category} item`);
+  if (!resource) {
+    throw new Error(localizedCatalogText(
+      `package has no ${category} item`,
+      `资源包没有 ${category} 项目`,
+      undefined,
+      `Gói tài nguyên không có mục ${category}`,
+    ));
+  }
   return {
     v: 1,
     kind: category,
