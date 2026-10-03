@@ -107,7 +107,7 @@ export async function prepareServerContext(
       input.maxInputTokens,
       input.maxOutputTokens,
       async (prompt: string, maxOutputTokens: number, systemPrompt?: string) => {
-        if (!systemPrompt) throw new Error('Context summary system prompt is unavailable.');
+        if (!systemPrompt) throw new Error('Không có system prompt để tóm tắt ngữ cảnh.');
         const result = await generateText({
           model: input.model,
           system: systemPrompt,

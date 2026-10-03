@@ -94,7 +94,7 @@ async function summarizeWithCopilot(
     },
     input.signal,
   );
-  if (!text.trim()) throw new Error('Copilot context summary returned no text.');
+  if (!text.trim()) throw new Error('Bản tóm tắt ngữ cảnh Copilot không trả về nội dung.');
   return text.slice(0, maxOutputTokens * 4);
 }
 
@@ -118,7 +118,7 @@ async function prepareCopilotContext(
       input.maxInputTokens,
       input.maxOutputTokens,
       (prompt: string, maxOutputTokens: number, systemPrompt?: string) => {
-        if (!systemPrompt) throw new Error('Context summary system prompt is unavailable.');
+        if (!systemPrompt) throw new Error('Không có system prompt để tóm tắt ngữ cảnh.');
         return summarizeWithCopilot(input, prompt, maxOutputTokens, systemPrompt);
       },
     ),
@@ -249,7 +249,7 @@ export async function executeServerCopilotTurn(
     pushRunEvent(input.run, 'text-end', serverRunTextMetadata(state.text));
   }
   if (state.errorMessage) throw new Error(state.errorMessage);
-  if (!state.done) throw new Error('Copilot turn ended without a terminal event.');
+  if (!state.done) throw new Error('Lượt Copilot kết thúc mà không có sự kiện cuối.');
   return {
     messages: [...prepared.messages,
       ...(state.text ? [{ role: 'assistant', content: state.text } as ModelMessage] : []),

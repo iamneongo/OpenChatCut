@@ -79,7 +79,7 @@ async function summarizeWithClaudeCode(
     },
     input.signal,
   );
-  if (!text.trim()) throw new Error('Claude Code context summary returned no text.');
+  if (!text.trim()) throw new Error('Bản tóm tắt ngữ cảnh Claude Code không trả về nội dung.');
   return text.slice(0, maxOutputTokens * 4);
 }
 
@@ -126,7 +126,7 @@ async function prepareClaudeCodeContext(
       input.maxInputTokens,
       input.maxOutputTokens,
       (prompt: string, maxOutputTokens: number, systemPrompt?: string) => {
-        if (!systemPrompt) throw new Error('Context summary system prompt is unavailable.');
+        if (!systemPrompt) throw new Error('Không có system prompt để tóm tắt ngữ cảnh.');
         return summarizeWithClaudeCode(input, prompt, maxOutputTokens, systemPrompt);
       },
     ),
@@ -334,7 +334,7 @@ export async function executeServerClaudeCodeTurn(
     throw new Error(errorMessage);
   }
   if (!done) {
-    throw new Error('Claude Code turn ended without a terminal event.');
+    throw new Error('Lượt Claude Code kết thúc mà không có sự kiện cuối.');
   }
   const messages: ModelMessage[] = [
     ...prepared.messages,

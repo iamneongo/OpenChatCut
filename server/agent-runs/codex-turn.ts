@@ -88,7 +88,7 @@ async function summarizeWithCodex(
     },
     input.signal,
   );
-  if (!text.trim()) throw new Error('Codex context summary returned no text.');
+  if (!text.trim()) throw new Error('Bản tóm tắt ngữ cảnh Codex không trả về nội dung.');
   return text.slice(0, maxOutputTokens * 4);
 }
 
@@ -110,7 +110,7 @@ async function prepareCodexContext(
       input.maxInputTokens,
       input.maxOutputTokens,
       (prompt: string, maxOutputTokens: number, systemPrompt?: string) => {
-        if (!systemPrompt) throw new Error('Context summary system prompt is unavailable.');
+        if (!systemPrompt) throw new Error('Không có system prompt để tóm tắt ngữ cảnh.');
         return summarizeWithCodex(input, prompt, maxOutputTokens, systemPrompt);
       },
     ),
@@ -269,7 +269,7 @@ export async function executeServerCodexTurn(
     throw new Error(errorMessage);
   }
   if (!done) {
-    throw new Error('Codex turn ended without a terminal event.');
+    throw new Error('Lượt Codex kết thúc mà không có sự kiện cuối.');
   }
   const messages: ModelMessage[] = [
     ...prepared.messages,

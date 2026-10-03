@@ -315,7 +315,7 @@ function sequence(events: readonly CodexTurnStreamEvent[]): ServerCodexTurnDeps 
   const deps = sequence([{ type: 'text-delta', delta: 'half' }]);
   await assert.rejects(
     executeServerCodexTurn(input, deps),
-    /without a terminal event/,
+    /không có sự kiện cuối/,
     'a turn that never emits done fails',
   );
 }

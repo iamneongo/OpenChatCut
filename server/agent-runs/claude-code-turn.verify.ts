@@ -300,7 +300,7 @@ function sequence(events: readonly ClaudeCodeTurnStreamEvent[]): ServerClaudeCod
   const deps = sequence([{ type: 'text-delta', delta: 'half' }]);
   await assert.rejects(
     executeServerClaudeCodeTurn(input, deps),
-    /without a terminal event/,
+    /không có sự kiện cuối/,
     'a turn that never emits done fails',
   );
 }
