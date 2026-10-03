@@ -461,6 +461,8 @@ export const VI: Record<string, string> = {
   '音频解码': 'Giải mã âm thanh',
   '模型加载': 'Tải mô hình',
   '模型推理': 'Suy luận mô hình',
+  '模型下载 {percent}%': 'Đang tải mô hình {percent}%',
+  '加载模型 {file}': 'Đang tải mô hình {file}',
   '停顿': 'Khoảng dừng',
   '段落视图': 'Chế độ đoạn văn',
   '片段视图': 'Chế độ đoạn',
