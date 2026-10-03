@@ -63,9 +63,9 @@ export async function soniloProviderError(response: Response): Promise<string> {
   try {
     const data = JSON.parse(text) as { message?: string; detail?: string; error?: { message?: string } | string };
     const error = typeof data.error === 'string' ? data.error : data.error?.message;
-    return error ?? data.message ?? data.detail ?? `Sonilo request failed (${response.status})`;
+    return error ?? data.message ?? data.detail ?? `yêu cầu Sonilo thất bại (${response.status})`;
   } catch {
-    return text.slice(0, 300) || `Sonilo request failed (${response.status})`;
+    return text.slice(0, 300) || `yêu cầu Sonilo thất bại (${response.status})`;
   }
 }
 
@@ -100,9 +100,9 @@ export function pickSoniloTracks(task: SoniloTask): SoniloAudioTrack[] {
 
 function localVideoUpload(uploadPath: string): { file: string; name: string } {
   const clean = uploadPath.split(/[?#]/, 1)[0];
-  if (!clean.startsWith('/media/uploads/')) throw new Error('Sonilo source must be a project upload');
+  if (!clean.startsWith('/media/uploads/')) throw new Error('nguồn Sonilo phải là tệp upload của project');
   const name = clean.slice('/media/uploads/'.length);
-  if (!isSafeUploadName(name)) throw new Error('invalid Sonilo source path');
+  if (!isSafeUploadName(name)) throw new Error('đường dẫn nguồn Sonilo không hợp lệ');
   const file = resolveUploadFile(name);
   if (!file) throw new Error(`không tìm thấy nguồn Sonilo: ${uploadPath}`);
   return { file, name };
@@ -117,7 +117,7 @@ export function probeMediaDurationSeconds(file: string): Promise<number> {
     child.on('close', (code) => {
       const duration = Number(output.trim());
       if (code === 0 && Number.isFinite(duration) && duration > 0) resolvePromise(duration);
-      else reject(new Error('unable to probe Sonilo source video'));
+      else reject(new Error('không thể kiểm tra video nguồn Sonilo'));
     });
   });
 }
@@ -160,7 +160,7 @@ export async function submitSoniloVideoTask(
   if (!response.ok) throw new Error(await soniloProviderError(response));
   const task = await response.json() as SoniloTask;
   const id = soniloTaskId(task);
-  if (!id) throw new Error('Sonilo did not return a task id');
+  if (!id) throw new Error('Sonilo không trả về task id');
   return id;
 }
 

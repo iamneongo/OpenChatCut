@@ -101,9 +101,9 @@ async function providerError(response: Response): Promise<string> {
   const text = await response.text();
   try {
     const data = JSON.parse(text) as { detail?: { message?: string }; error?: { message?: string } };
-    return data.detail?.message ?? data.error?.message ?? `sound provider failed (${response.status})`;
+    return data.detail?.message ?? data.error?.message ?? `provider sound thất bại (${response.status})`;
   } catch {
-    return text.slice(0, 300) || `sound provider failed (${response.status})`;
+    return text.slice(0, 300) || `provider sound thất bại (${response.status})`;
   }
 }
 
@@ -316,9 +316,9 @@ export function soundGenerationPlugin(options: SoundOptions): Plugin {
             sendJson(res, 202, submission);
             return;
           }
-          if (!options.apiKey) throw new Error('Sound generation is not configured. Set ELEVENLABS_API_KEY in .env.local.');
+          if (!options.apiKey) throw new Error('Chưa cấu hình tạo sound. Hãy đặt ELEVENLABS_API_KEY trong .env.local.');
           if (input.loop && options.model !== 'eleven_text_to_sound_v2') {
-            throw new Error('loop requires ELEVENLABS_SOUND_MODEL eleven_text_to_sound_v2');
+            throw new Error('loop yêu cầu ELEVENLABS_SOUND_MODEL eleven_text_to_sound_v2');
           }
           const response = await fetchWithProxy(`${options.baseUrl.replace(/\/$/, '')}/v1/sound-generation?output_format=${encodeURIComponent(input.outputFormat)}`, {
             method: 'POST',

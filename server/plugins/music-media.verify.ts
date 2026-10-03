@@ -14,7 +14,7 @@ try {
 
   await assert.rejects(
     saveAudioResponse(new Response(Uint8Array.of(1, 2, 3, 4)), 'flac'),
-    /unable to probe generated music/,
+    /không thể kiểm tra nhạc đã tạo/,
   );
   assert.deepEqual(await readdir(uploads), [], 'failed media validation must remove its partial file');
 

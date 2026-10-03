@@ -34,7 +34,7 @@ export function imageMimeType(file: string): string {
 
 export async function imageProviderError(response: Response): Promise<string> {
   const body = await response.json().catch(() => null) as { error?: { message?: string } } | null;
-  return body?.error?.message ?? `image provider failed (${response.status})`;
+  return body?.error?.message ?? `provider image thất bại (${response.status})`;
 }
 
 export async function callGeminiProvider(baseUrl: string, apiKey: string, model: string, body: {
@@ -120,7 +120,7 @@ export async function callMinimaxProvider(baseUrl: string, apiKey: string, model
   if (!response.ok) throw new Error(await imageProviderError(response));
   const result = await response.json() as MinimaxImageResponse;
   if (result.base_resp && result.base_resp.status_code !== 0) {
-    throw new Error(result.base_resp.status_msg || `MiniMax image failed (${result.base_resp.status_code})`);
+    throw new Error(result.base_resp.status_msg || `MiniMax image thất bại (${result.base_resp.status_code})`);
   }
   const images: ProviderImage[] = [
     ...(result.data?.image_urls ?? []).map((url) => ({ url })),
@@ -136,7 +136,7 @@ interface WaveSpeedResult {
 
 async function waveSpeedError(response: Response): Promise<string> {
   const body = await response.json().catch(() => null) as { message?: string; data?: { error?: string } } | null;
-  return body?.data?.error ?? body?.message ?? `WaveSpeed request failed (${response.status})`;
+  return body?.data?.error ?? body?.message ?? `yêu cầu WaveSpeed thất bại (${response.status})`;
 }
 
 const WAVESPEED_TERMINAL_FAILURES = new Set(['failed', 'cancelled', 'timeout']);

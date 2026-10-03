@@ -21,9 +21,9 @@ export async function musicProviderError(response: Response): Promise<string> {
   const text = await response.text();
   try {
     const data = JSON.parse(text) as { message?: string; detail?: string; error?: { message?: string } };
-    return data.error?.message ?? data.message ?? data.detail ?? `music provider failed (${response.status})`;
+    return data.error?.message ?? data.message ?? data.detail ?? `provider music thất bại (${response.status})`;
   } catch {
-    return text.slice(0, 300) || `music provider failed (${response.status})`;
+    return text.slice(0, 300) || `provider music thất bại (${response.status})`;
   }
 }
 
@@ -36,7 +36,7 @@ function probeDuration(file: string): Promise<number> {
     child.on('close', (code) => {
       const duration = Number(output.trim());
       if (code === 0 && Number.isFinite(duration) && duration > 0) resolvePromise(duration);
-      else reject(new Error('unable to probe generated music'));
+      else reject(new Error('không thể kiểm tra nhạc đã tạo'));
     });
   });
 }
@@ -62,7 +62,7 @@ export async function saveAudioResponse(
     const bytes = (await stat(partial)).size;
     if (!bytes) throw new Error('provider music trả về audio rỗng');
     const durationSeconds = ext === 'pcm' ? bytes / (rawSampleRate * 2) : await probeDuration(partial);
-    if (!Number.isFinite(durationSeconds) || durationSeconds <= 0) throw new Error('unable to determine generated music duration');
+    if (!Number.isFinite(durationSeconds) || durationSeconds <= 0) throw new Error('không thể xác định thời lượng nhạc đã tạo');
     await rename(partial, file);
     return { path: `/media/uploads/${filename}`, durationSeconds };
   } catch (error) {
