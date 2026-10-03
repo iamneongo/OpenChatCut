@@ -2255,8 +2255,8 @@ export const VI: Record<string, string> = {
   '桌面引擎的模型文件未下载，本次使用浏览器引擎': 'Chưa tải tệp mô hình cho bộ máy bản máy tính, lần này dùng bộ máy trình duyệt',
   '桌面原生推理不可用，已回退浏览器引擎': 'Suy luận trực tiếp trên máy tính không khả dụng, đã chuyển sang bộ máy trình duyệt',
   '桌面原生推理（whisper.cpp）未能完成转写：{reason}。回退到浏览器引擎需要 {model} 的 ONNX 模型文件，但尚未下载完整。请到 设置 → 本地模型 → 本地转写 下载该模型后重试。': 'Suy luận trực tiếp trên máy tính (whisper.cpp) không hoàn tất chép lời: {reason}. Chuyển sang bộ máy trình duyệt cần tệp mô hình ONNX của {model} nhưng chưa tải đầy đủ. Hãy vào Cài đặt → Mô hình cục bộ → Chép lời cục bộ để tải mô hình rồi thử lại.',
-  '本地转写模型 {model} 尚未下载：桌面引擎需要的 whisper.cpp 模型文件（GGML）和浏览器引擎需要的 ONNX 模型文件都未就绪。请到 设置 → 本地模型 → 本地转写 下载该模型后再试。': 'Mô hình chép lời cục bộ {model} chưa được tải: cả tệp mô hình whisper.cpp (GGML) cho bộ máy máy tính và tệp ONNX cho bộ máy trình duyệt đều chưa sẵn sàng. Hãy vào Cài đặt → Mô hình cục bộ → Chép lời cục bộ để tải mô hình rồi thử lại.',
-  '本地转写模型 {model} 的浏览器引擎文件（ONNX）未下载完整或校验失败。请到 设置 → 本地模型 → 本地转写 下载该模型后再试。': 'Tệp bộ máy trình duyệt (ONNX) của mô hình chép lời cục bộ {model} chưa tải đầy đủ hoặc kiểm tra thất bại. Hãy vào Cài đặt → Mô hình cục bộ → Chép lời cục bộ để tải mô hình rồi thử lại.',
+  '本地转写模型 {model} 尚未下载：桌面引擎需要的 whisper.cpp 模型文件（GGML）和浏览器引擎需要的 ONNX 模型文件都未就绪。请到 设置 → 本地模型 → 本地转写 下载该模型后再试。': 'Mô hình chép lời cục bộ {model} chưa được tải: cả tệp mô hình whisper.cpp (GGML) cho công cụ máy tính và tệp ONNX cho công cụ trình duyệt đều chưa sẵn sàng. Hãy vào Cài đặt → Mô hình cục bộ → Chép lời cục bộ để tải mô hình rồi thử lại.',
+  '本地转写模型 {model} 的浏览器引擎文件（ONNX）未下载完整或校验失败。请到 设置 → 本地模型 → 本地转写 下载该模型后再试。': 'Tệp ONNX của công cụ trình duyệt cho mô hình chép lời cục bộ {model} chưa được tải đầy đủ hoặc kiểm tra không đạt. Hãy vào Cài đặt → Mô hình cục bộ → Chép lời cục bộ để tải mô hình rồi thử lại.',
   '{stage}失败：{detail}': '{stage} thất bại: {detail}',
   '本地转写模型 {model} 超出了浏览器引擎（wasm）的内存上限。请到 设置 → 本地模型 → 本地转写 改选更小的模型（Base / Small），或开启「桌面原生推理加速」并下载该模型，改由没有此限制的 whisper.cpp 运行。': 'Mô hình chép lời cục bộ {model} vượt giới hạn bộ nhớ của bộ máy trình duyệt (wasm). Hãy vào Cài đặt → Mô hình cục bộ → Chép lời cục bộ để chọn mô hình nhỏ hơn (Base / Small), hoặc bật “Tăng tốc suy luận trực tiếp trên máy tính” và tải mô hình để chạy bằng whisper.cpp không có giới hạn này.',
   '本地转写模型 {model} 超出了浏览器引擎（wasm）的内存上限。请到 设置 → 本地模型 → 本地转写 改选更小的模型（Base / Small），或改用桌面版，由没有此限制的 whisper.cpp 原生运行。': 'Mô hình chép lời cục bộ {model} vượt giới hạn bộ nhớ của bộ máy trình duyệt (wasm). Hãy vào Cài đặt → Mô hình cục bộ → Chép lời cục bộ để chọn mô hình nhỏ hơn (Base / Small), hoặc dùng bản máy tính để chạy trực tiếp bằng whisper.cpp không có giới hạn này.',
@@ -2662,5 +2662,5 @@ export const VI: Record<string, string> = {
   '清脆 UI 点击，适合按钮、选中、确认操作反馈。': 'Tiếng nhấp giao diện trong, phù hợp phản hồi nút, chọn mục và xác nhận thao tác.',
   '成功完成提示音，适合任务完成、发布成功、正向反馈。': 'Âm báo hoàn tất thành công, phù hợp hoàn thành tác vụ, đăng thành công hoặc phản hồi tích cực.',
   '当前环境不支持素材预览上传': 'Môi trường hiện tại không hỗ trợ tải lên tài nguyên để xem trước.',
-  'style 忽略字段': 'style đã bỏ qua các trường',
+  'style 忽略字段': 'Đã bỏ qua trường style',
 };
