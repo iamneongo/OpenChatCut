@@ -65,9 +65,11 @@ export async function submitSound(
   const sourceAsset = provider === 'sonilo' && args.sourceAssetId
     ? resolveVideoAsset(args.sourceAssetId, state)
     : undefined;
+  const sfxLabel = localizedCatalogText('SFX', '音效', undefined, 'Hiệu ứng âm thanh');
+  const soundLabel = localizedCatalogText('Sound', '声音', undefined, 'Âm thanh');
   const fallbackName = provider === 'sonilo'
-    ? `SFX · ${(sourceAsset?.name ?? 'cut').slice(0, 36)}`
-    : `Sound · ${prompt.slice(0, 36)}`;
+    ? `${sfxLabel} · ${(sourceAsset?.name ?? 'cut').slice(0, 36)}`
+    : `${soundLabel} · ${prompt.slice(0, 36)}`;
   const name = args.name?.trim() || fallbackName;
   const sourceRevisions = sourceAsset?.sourceRevision ? [sourceAsset.sourceRevision] : [];
   const response = await fetch('/generate/sound', {
