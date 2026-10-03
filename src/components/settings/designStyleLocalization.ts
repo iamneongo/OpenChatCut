@@ -193,10 +193,10 @@ const ROLE_ZH: Record<string, string> = {
 const ROLE_VI: Record<string, string> = {
   primary: 'màu chính', secondary: 'màu phụ', accent: 'màu nhấn', background: 'nền', text: 'chữ',
   'text secondary': 'chữ phụ', 'text-secondary': 'chữ phụ', 'text-on-dark': 'chữ trên nền tối',
-  heading: 'font tiêu đề', body: 'font nội dung', quote: 'font trích dẫn', display: 'font trình bày',
-  'display number': 'font số trình bày', mono: 'font đơn cách', script: 'font chữ viết tay',
-  'heading serif': 'font serif tiêu đề', Chinese: 'font tiếng Trung', 'Chinese heading': 'font tiêu đề tiếng Trung',
-  'Chinese body': 'font nội dung tiếng Trung', 'Chinese accent': 'font nhấn tiếng Trung', 'Chinese quote': 'font trích dẫn tiếng Trung',
+  heading: 'phông chữ tiêu đề', body: 'phông chữ nội dung', quote: 'phông chữ trích dẫn', display: 'phông chữ trình bày',
+  'display number': 'phông chữ số trình bày', mono: 'phông chữ đơn cách', script: 'phông chữ viết tay',
+  'heading serif': 'phông chữ có chân cho tiêu đề', Chinese: 'phông chữ tiếng Trung', 'Chinese heading': 'phông chữ tiêu đề tiếng Trung',
+  'Chinese body': 'phông chữ nội dung tiếng Trung', 'Chinese accent': 'phông chữ nhấn tiếng Trung', 'Chinese quote': 'phông chữ trích dẫn tiếng Trung',
   'accent copper': 'màu nhấn đồng', 'accent amber': 'màu nhấn hổ phách', 'accent tan': 'màu nhấn nâu vàng',
   'accent gradient start': 'đầu chuyển màu nhấn', 'accent gradient end': 'cuối chuyển màu nhấn',
   'accent-red': 'màu nhấn đỏ', 'accent-red-dark': 'màu nhấn đỏ sẫm', 'accent-red-panel': 'màu nhấn đỏ cho bảng',
@@ -213,7 +213,7 @@ const ROLE_VI: Record<string, string> = {
   'blob blue': 'mảng xanh dương', 'blob deep purple': 'mảng tím đậm', 'blob green': 'mảng xanh lá',
   'blob magenta': 'mảng đỏ tươi', 'blob purple': 'mảng tím', 'blob warm': 'mảng tông ấm',
   'wash blue': 'màu nước xanh dương', 'wash flower': 'màu nước hoa', 'wash peach': 'màu nước đào',
-  'wash pink': 'màu nước hồng', burgundy: 'đỏ rượu', cobalt: 'xanh cobalt', coral: 'san hô', gold: 'vàng kim',
+  'wash pink': 'màu nước hồng', burgundy: 'đỏ rượu', cobalt: 'xanh cô-ban', coral: 'san hô', gold: 'vàng kim',
   orange: 'cam', pink: 'hồng', red: 'đỏ', teal: 'xanh ngọc', yellow: 'vàng',
 };
 
