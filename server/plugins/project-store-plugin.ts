@@ -90,7 +90,7 @@ export function projectStorePlugin(options: { http?: boolean } = {}): Plugin {
         // the migration itself is a write and requires a real session.
         if (req.method === 'GET' && req.url === '/migrate-status') {
           if (!projectStoreReadAuthorized(req) && !projectStoreHttpAuthorized(req)) {
-            sendProjectStoreJson(res, 403, { error: 'invalid project store session' });
+            sendProjectStoreJson(res, 403, { error: 'session project store không hợp lệ' });
             return;
           }
           sendProjectStoreJson(res, 200, sqliteMigrationStatus());
@@ -98,7 +98,7 @@ export function projectStorePlugin(options: { http?: boolean } = {}): Plugin {
         }
         if (req.method === 'POST' && req.url === '/migrate-cleanup') {
           if (!projectStoreHttpAuthorized(req)) {
-            sendProjectStoreJson(res, 403, { error: 'invalid project store session' });
+            sendProjectStoreJson(res, 403, { error: 'session project store không hợp lệ' });
             return;
           }
           try {
@@ -112,7 +112,7 @@ export function projectStorePlugin(options: { http?: boolean } = {}): Plugin {
         }
         if (req.method === 'POST' && req.url === '/migrate') {
           if (!projectStoreHttpAuthorized(req)) {
-            sendProjectStoreJson(res, 403, { error: 'invalid project store session' });
+            sendProjectStoreJson(res, 403, { error: 'session project store không hợp lệ' });
             return;
           }
           try {
@@ -129,7 +129,7 @@ export function projectStorePlugin(options: { http?: boolean } = {}): Plugin {
         // Full-text search: read-only, no session needed (loopback same-origin).
         if (req.method === 'GET' && req.url?.startsWith('/search')) {
           if (!projectStoreReadAuthorized(req) && !projectStoreHttpAuthorized(req)) {
-            sendProjectStoreJson(res, 403, { error: 'invalid project store session' });
+            sendProjectStoreJson(res, 403, { error: 'session project store không hợp lệ' });
             return;
           }
           try {
@@ -151,7 +151,7 @@ export function projectStorePlugin(options: { http?: boolean } = {}): Plugin {
         // Hybrid search: text (FTS5) + visual (sqlite-vec) fused by RRF.
         if (req.method === 'POST' && req.url === '/hybrid-search') {
           if (!projectStoreReadAuthorized(req) && !projectStoreHttpAuthorized(req)) {
-            sendProjectStoreJson(res, 403, { error: 'invalid project store session' });
+            sendProjectStoreJson(res, 403, { error: 'session project store không hợp lệ' });
             return;
           }
           try {
@@ -180,7 +180,7 @@ export function projectStorePlugin(options: { http?: boolean } = {}): Plugin {
           ? projectStoreReadAuthorized(req) || projectStoreHttpAuthorized(req)
           : projectStoreHttpAuthorized(req);
         if (!authorized) {
-          sendProjectStoreJson(res, 403, { error: 'invalid project store session' });
+          sendProjectStoreJson(res, 403, { error: 'session project store không hợp lệ' });
           return;
         }
         try {

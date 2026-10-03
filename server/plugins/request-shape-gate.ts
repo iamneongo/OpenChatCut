@@ -42,7 +42,7 @@ export function requestShapeGatePlugin(): Plugin {
         }
         res.statusCode = 403;
         res.setHeader('Content-Type', 'application/json');
-        res.end(JSON.stringify({ error: 'invalid request origin' }));
+        res.end(JSON.stringify({ error: 'origin của request không hợp lệ' }));
       });
     },
   };

@@ -72,11 +72,11 @@ async function handleEditorBootstrap(req: IncomingMessage, res: ServerResponse):
     return;
   }
   if (!isJsonRequest(req) || headerValue(req, EDITOR_BOOTSTRAP_HEADER) !== '1') {
-    sendBridgeJson(res, 415, { error: 'editor bootstrap requires JSON and bootstrap header' });
+    sendBridgeJson(res, 415, { error: 'bootstrap editor yêu cầu JSON và bootstrap header' });
     return;
   }
   if (!editorCredentialAuthorized(req, true)) {
-    sendBridgeJson(res, 401, { error: 'invalid editor launch credential' });
+    sendBridgeJson(res, 401, { error: 'credential khởi chạy editor không hợp lệ' });
     return;
   }
   await readBridgeJson(req);
@@ -99,7 +99,7 @@ export async function handleExternalAgentBridge(
     return;
   }
   if (!editorCredentialAuthorized(req, write)) {
-    sendBridgeJson(res, 401, { error: 'invalid editor bridge credential' });
+    sendBridgeJson(res, 401, { error: 'credential bridge editor không hợp lệ' });
     return;
   }
   if (write && !isJsonRequest(req)) {
@@ -138,7 +138,7 @@ export function externalAgentPlugin(): Plugin {
       });
       server.middlewares.use('/api/external-mcp/mcp', (req, res) => {
         if (!externalMcpAuthorized(req)) {
-          sendBridgeJson(res, 401, { error: 'invalid OpenChatCut MCP token' });
+          sendBridgeJson(res, 401, { error: 'token MCP OpenChatCut không hợp lệ' });
           return;
         }
         void handleMcpRequest(req, res, requestBaseUrl(req)).catch((error) => {
