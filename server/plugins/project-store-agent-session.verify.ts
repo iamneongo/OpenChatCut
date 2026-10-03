@@ -153,7 +153,7 @@ await assert.rejects(
       clearedAt: Date.now(),
     },
   }),
-  /active legacy run/,
+  /lượt chạy legacy đang hoạt động/,
   'first-open browser migration cannot bypass the active-run clear guard',
 );
 entries.delete(agentSessionRuntimeKey(projectId, 'legacy'));

@@ -77,7 +77,7 @@ await assert.rejects(
     ownershipEpoch: claim.epoch,
     value: projectDoc(640),
   }),
-  /corrupt or unsupported/,
+  /bị hỏng hoặc không được hỗ trợ/,
 );
 assert.equal(entries.get(projectKey), future, 'unsupported future ProjectDoc bytes remain unchanged');
 

@@ -72,7 +72,7 @@ export async function atomicWriteFile(
   let renamed = false;
   try {
     handle = await operations.open(temp, 'wx', options.mode ?? 0o600);
-    if (!handle.writeFile) throw new Error('atomic write handle is not writable');
+    if (!handle.writeFile) throw new Error('handle ghi atomic không thể ghi');
     await handle.writeFile(data);
     await handle.sync();
     await handle.close();
@@ -93,7 +93,7 @@ export async function atomicWriteFile(
 
 export async function atomicWriteJson(target: string, value: unknown): Promise<void> {
   const encoded = JSON.stringify(value);
-  if (encoded === undefined) throw new Error('project store value is not JSON serializable');
+  if (encoded === undefined) throw new Error('giá trị kho project không thể tuần tự hóa thành JSON');
   await atomicWriteFile(target, encoded);
 }
 

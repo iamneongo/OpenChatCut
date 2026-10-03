@@ -65,7 +65,7 @@ async function currentGeneration(
   const entry = await store.readEntry(agentSessionGenerationKey(projectId));
   if (!entry.found) return { generation: LEGACY_AGENT_SESSION_GENERATION, clearedAt: 0 };
   const record = parseAgentSessionGenerationRecord(entry.value);
-  if (!record) throw new Error('Stored Agent session generation is invalid.');
+  if (!record) throw new Error('generation phiên Agent đã lưu không hợp lệ.');
   return record;
 }
 
@@ -111,7 +111,7 @@ export async function assertAgentSessionMigrationSafe(
     ));
     const sidecar = normalizeAgentRuntimeSidecar(projectId, runtime.value);
     if (sidecar.runs.some((run) => ACTIVE_RUN_STATUS[run.status] === true)) {
-      throw new Error('Agent session migration cannot replace an active legacy run.');
+      throw new Error('migration phiên Agent không thể thay thế lượt chạy legacy đang hoạt động.');
     }
   }
 }

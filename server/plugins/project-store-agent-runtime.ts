@@ -140,9 +140,9 @@ function supportedRuntimeEntry(key: string, entry: StoredEntryValue): Record<str
     return compatibility.value;
   }
   if (compatibility.kind === 'future') {
-    throw new Error(`agent runtime version ${compatibility.version} is not supported`);
+    throw new Error(`phiên bản runtime Agent ${compatibility.version} không được hỗ trợ`);
   }
-  throw new Error('agent runtime entry is corrupt');
+  throw new Error('entry runtime Agent bị hỏng');
 }
 
 async function writeAgentRuntime(
@@ -158,7 +158,7 @@ async function writeAgentRuntime(
     // the revision increment and terminal-status guards below still protect
     // data integrity inside the lock.
     const incoming = classifyAgentRuntimeStoreValue(input.key, input.value);
-    if (incoming.kind !== 'supported') throw new Error('invalid agent runtime CAS value');
+    if (incoming.kind !== 'supported') throw new Error('giá trị CAS runtime Agent không hợp lệ');
     normalizeAgentRuntimeSidecar(String(incoming.value.projectId), incoming.value);
     if (!preservesTerminalStatuses(runtime, incoming.value)) {
       return mutationResponse(current, false);
@@ -206,7 +206,7 @@ async function updateLease(
   input: AgentRunLeaseInput,
 ): Promise<ProjectStoreMutationResponse> {
   if ((input.action === 'claim' || input.action === 'renew') && input.leaseMs === undefined) {
-    throw new Error('agent run lease duration is required');
+    throw new Error('thời lượng lease lượt chạy Agent là bắt buộc');
   }
   return withStoreLock(async (store) => {
     const current = await store.readEntry(input.key);

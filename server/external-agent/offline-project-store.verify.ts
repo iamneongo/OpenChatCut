@@ -98,7 +98,7 @@ try {
   await setStoredEntry(`offline-edit-session:${projectId}`, futureCheckpoint);
   await assert.rejects(
     loadOfflineEditCheckpoint(projectId, snapshot.revision),
-    /version 2 is not supported/,
+    /Phiên bản checkpoint chỉnh sửa ngoại tuyến 2 không được hỗ trợ/,
   );
   await assert.rejects(
     saveOfflineEditCheckpoint({
@@ -108,11 +108,11 @@ try {
       ownership,
       canSave: () => true,
     }),
-    /version 2 is not supported/,
+    /Phiên bản checkpoint chỉnh sửa ngoại tuyến 2 không được hỗ trợ/,
   );
   await assert.rejects(
     deleteOfflineEditCheckpoint(projectId, checkpoint.sessionId, ownership),
-    /corrupt or unsupported/,
+    /bị hỏng hoặc không được hỗ trợ/,
   );
   assert.deepEqual(
     (await getStoredEntry(`offline-edit-session:${projectId}`)).value,

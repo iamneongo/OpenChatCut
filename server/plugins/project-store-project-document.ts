@@ -109,14 +109,14 @@ export function createProjectDocumentStoreOperation(withStoreLock: WithStoreLock
       const current = await store.readEntry(request.key);
       const currentDoc = current.found ? normalizedProject(current.value) : null;
       if (current.found && !currentDoc) {
-        throw new Error('stored project document is corrupt or unsupported');
+        throw new Error('tài liệu project đã lưu bị hỏng hoặc không được hỗ trợ');
       }
       // CAS removed: writes are serialized by the store lock (single local
       // instance); the revision still increments for audit/ordering but is
       // no longer compared against the request's expected revision, so a
       // concurrent save can no longer fail with a revision mismatch.
       const project = normalizedProject(request.value);
-      if (!project) throw new Error('project document CAS value is invalid or unsupported');
+      if (!project) throw new Error('giá trị CAS tài liệu project không hợp lệ hoặc không được hỗ trợ');
       const projectId = request.key.slice('project:'.length);
       return current.found
         ? updateProjectDocument(store, request as ProjectDocumentUpdateRequest, current, project, projectId)

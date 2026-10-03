@@ -81,7 +81,7 @@ async function readLegacyStore(): Promise<{ exists: boolean; store: StoreFile }>
   try {
     const parsed: unknown = JSON.parse(await readFile(LEGACY_STORE_PATH, 'utf8'));
     if (!isProjectStoreRecord(parsed) || parsed.version !== 1 || !isProjectStoreEntries(parsed.entries)) {
-      throw new Error('invalid legacy project store');
+      throw new Error('kho project legacy không hợp lệ');
     }
     return { exists: true, store: { version: 1, entries: parsed.entries } };
   } catch (error) {
@@ -140,19 +140,19 @@ async function readDeletedProjects(): Promise<Record<string, number>> {
     const row = await sqliteReadEntry(DELETED_PROJECTS_KV_KEY);
     if (!row.found) return {};
     const parsed = row.value;
-    if (!isProjectStoreRecord(parsed)) throw new Error('invalid deleted project registry');
+    if (!isProjectStoreRecord(parsed)) throw new Error('registry project đã xóa không hợp lệ');
     const entries = Object.entries(parsed);
     if (!entries.every(([id, deletedAt]) => VALID_PROJECT_ID.test(id) && typeof deletedAt === 'number')) {
-      throw new Error('invalid deleted project registry');
+      throw new Error('registry project đã xóa không hợp lệ');
     }
     return Object.fromEntries(entries) as Record<string, number>;
   }
   try {
     const parsed: unknown = JSON.parse(await readFile(DELETED_PROJECTS_PATH, 'utf8'));
-    if (!isProjectStoreRecord(parsed)) throw new Error('invalid deleted project registry');
+    if (!isProjectStoreRecord(parsed)) throw new Error('registry project đã xóa không hợp lệ');
     const entries = Object.entries(parsed);
     if (!entries.every(([id, deletedAt]) => VALID_PROJECT_ID.test(id) && typeof deletedAt === 'number')) {
-      throw new Error('invalid deleted project registry');
+      throw new Error('registry project đã xóa không hợp lệ');
     }
     return Object.fromEntries(entries) as Record<string, number>;
   } catch (error) {
@@ -249,13 +249,13 @@ export async function readStore(): Promise<StoreFile> {
     await ensureStoreReady();
     const deletedIds = new Set(Object.keys(await readDeletedProjects()));
     const entries = withoutDeletedProjects(await readDirectoryEntries(), deletedIds);
-    if (!isProjectStoreEntries(entries)) throw new Error('invalid project store entries');
+    if (!isProjectStoreEntries(entries)) throw new Error('các entry kho project không hợp lệ');
     return { version: 1, entries };
   });
 }
 
 export async function mergeStoredEntries(incoming: Record<string, unknown>): Promise<StoreFile> {
-  if (!isProjectStoreEntries(incoming)) throw new Error('invalid project store entries');
+  if (!isProjectStoreEntries(incoming)) throw new Error('các entry kho project không hợp lệ');
   return serializeProjectStore(async () => {
     await ensureStoreReady();
     const deletedIds = new Set(Object.keys(await readDeletedProjects()));
@@ -275,10 +275,10 @@ export async function mergeStoredEntries(incoming: Record<string, unknown>): Pro
 }
 
 export async function setStoredEntry(key: string, value: unknown): Promise<void> {
-  if (!isProjectStoreKey(key)) throw new Error('invalid project store entry key');
+  if (!isProjectStoreKey(key)) throw new Error('khóa entry kho project không hợp lệ');
   if (key.startsWith(PROJECT_EDIT_OWNERSHIP_PREFIX)
     || key.startsWith('agent-session-generation:')) {
-    throw new Error('project store entry is server-managed');
+    throw new Error('entry kho project do server quản lý');
   }
   await serializeProjectStore(async () => {
     await ensureStoreReady();
@@ -357,16 +357,16 @@ async function purgeProjectLocked(id: string): Promise<void> {
 }
 
 export async function deleteStoredEntry(key: string): Promise<void> {
-  if (!isProjectStoreKey(key)) throw new Error('invalid project store entry key');
+  if (!isProjectStoreKey(key)) throw new Error('khóa entry kho project không hợp lệ');
   if (key.startsWith(PROJECT_EDIT_OWNERSHIP_PREFIX)
     || key.startsWith('agent-session-generation:')) {
-    throw new Error('project store entry is server-managed');
+    throw new Error('entry kho project do server quản lý');
   }
   await serializeProjectStore(async () => {
     await ensureStoreReady();
     const projectId = PROJECT_DOCUMENT_KEY.exec(key)?.[1];
     if (projectId) {
-      if (!VALID_PROJECT_ID.test(projectId)) throw new Error('invalid project id');
+      if (!VALID_PROJECT_ID.test(projectId)) throw new Error('project id không hợp lệ');
       await purgeProjectLocked(projectId);
       removeStoreKey(`chat:${projectId}`);
       removeStoreKey(`project:${projectId}`);
@@ -386,7 +386,7 @@ const { createLockedProjectStore, readEntryFile } = createProjectStoreEntryAdapt
 });
 
 export async function getStoredEntry(key: string): Promise<StoredEntryValue> {
-  if (!isProjectStoreKey(key)) throw new Error('invalid project store entry key');
+  if (!isProjectStoreKey(key)) throw new Error('khóa entry kho project không hợp lệ');
   await ensureStoreReady();
   const projectId = projectIdFromProjectStoreKey(key);
   if (projectId && Object.hasOwn(await readDeletedProjects(), projectId)) return { found: false };

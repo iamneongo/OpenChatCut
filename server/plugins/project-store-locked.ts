@@ -51,7 +51,7 @@ export function createProjectStoreEntryAdapter(
   }
 
   function validateLockedEntryKey(key: string): string | undefined {
-    if (!isProjectStoreKey(key)) throw new Error('invalid project store entry key');
+    if (!isProjectStoreKey(key)) throw new Error('khóa entry kho project không hợp lệ');
     return projectIdFromProjectStoreKey(key);
   }
 
@@ -59,7 +59,7 @@ export function createProjectStoreEntryAdapter(
     projectId: string | undefined,
     deletedIds: ReadonlySet<string>,
   ): void {
-    if (projectId && deletedIds.has(projectId)) throw new Error('project was deleted');
+    if (projectId && deletedIds.has(projectId)) throw new Error('project đã bị xóa');
   }
 
   async function readLockedEntry(
@@ -93,7 +93,7 @@ export function createProjectStoreEntryAdapter(
   ): Promise<void> {
     const projectId = validateLockedEntryKey(key);
     if (!key.startsWith('agent-runtime:') && !key.startsWith('agent-session-runtime:')) {
-      throw new Error('exact write is limited to agent runtime');
+      throw new Error('ghi chính xác chỉ áp dụng cho runtime Agent');
     }
     assertProjectNotDeleted(projectId, deletedIds);
     await options.writeStoredEntry(key, value);
@@ -106,7 +106,7 @@ export function createProjectStoreEntryAdapter(
   ): Promise<void> {
     const projectId = validateLockedEntryKey(key);
     if (!key.startsWith('project:') && !key.startsWith('project-edit-ownership:')) {
-      throw new Error('exact write is limited to project document CAS');
+      throw new Error('ghi chính xác chỉ áp dụng cho CAS tài liệu project');
     }
     assertProjectNotDeleted(projectId, deletedIds);
     await options.writeStoredEntry(key, value);

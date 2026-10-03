@@ -224,7 +224,7 @@ export function reduceExportRecoveryMutation(
 
 function requireLeaseDuration(input: ExportRecoveryLeaseInput): void {
   if ((input.action === 'claim' || input.action === 'renew') && input.leaseMs === undefined) {
-    throw new Error('export recovery lease duration is required');
+    throw new Error('thời lượng lease khôi phục export là bắt buộc');
   }
 }
 
