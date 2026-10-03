@@ -80,7 +80,7 @@ async function restoreInterruptedApplyBeforePublication(
   await input.markTerminal('failed');
   throw new ExternalEditSessionOutcomeError(
     'failed',
-    'The edited project could not be restored after its live commit was interrupted. Reload before continuing.',
+    'không thể khôi phục dự án sau khi ghi trực tiếp bị gián đoạn. Hãy tải lại trước khi tiếp tục.',
   );
 }
 
@@ -113,12 +113,12 @@ async function publishAppliedProposal(
       await input.markTerminal('failed');
       throw new ExternalEditSessionOutcomeError(
         'failed',
-        'The proposal commit and project restoration both failed. Reload before continuing.',
+        'ghi proposal và khôi phục dự án đều thất bại. Hãy tải lại trước khi tiếp tục.',
       );
     }
     throw new ExternalEditSessionOutcomeError(
       'failed',
-      'The proposal commit could not be published; the latest project was restored and the proposal remains pending.',
+      'không thể phát hành proposal; dự án mới nhất đã được khôi phục và proposal vẫn đang chờ xử lý.',
     );
   }
 }
@@ -136,7 +136,7 @@ export async function commitExternalProposal(
     await input.markTerminal('stale');
     throw new ExternalEditSessionOutcomeError(
       'stale',
-      `Edit session ${input.session.id} is stale; begin a new session.`,
+      `phiên chỉnh sửa ${input.session.id} đã hết hiệu lực; hãy bắt đầu phiên mới.`,
     );
   }
   const chosen = input.proposal.options[0].operations
@@ -148,7 +148,7 @@ export async function commitExternalProposal(
   if (!saved.saved) {
     throw new ExternalEditSessionOutcomeError(
       'failed',
-      'The edited project could not be saved. The proposal remains pending.',
+      'không thể lưu dự án đã chỉnh sửa. Proposal vẫn đang chờ xử lý.',
     );
   }
   const expectedRevision = revisionOf(currentDoc);
@@ -161,10 +161,10 @@ export async function commitExternalProposal(
     throw new ExternalEditSessionOutcomeError(
       interruption.status,
       interruption.status === 'cancelled'
-        ? 'The apply was cancelled before its terminal commit was published; the proposal remains pending.'
+          ? 'thao tác áp dụng đã bị hủy trước khi ghi cuối được phát hành; proposal vẫn đang chờ xử lý.'
         : interruption.status === 'stale'
-          ? `Edit session ${input.session.id} became stale while applying; the proposal remains pending.`
-          : 'The open editor could not apply the saved edit; the latest project was restored and the proposal remains pending.',
+          ? `phiên chỉnh sửa ${input.session.id} hết hiệu lực trong lúc áp dụng; proposal vẫn đang chờ xử lý.`
+          : 'editor đang mở không thể áp dụng chỉnh sửa đã lưu; dự án mới nhất đã được khôi phục và proposal vẫn đang chờ xử lý.',
     );
   }
   await publishAppliedProposal(input, chosen.length, currentDoc, result);

@@ -62,7 +62,7 @@ class NativeBeatThisWorkerAdapter {
     if (this.terminated || this.started) return;
     this.started = true;
     if (!this.isRequest(value)) {
-      this.emit({ id: -1, type: 'error', message: 'Invalid Beat This worker request' });
+      this.emit({ id: -1, type: 'error', message: 'yêu cầu worker Beat This không hợp lệ' });
       return;
     }
     if (value.samples.length > RHYTHM_INFERENCE_CONTRACT.sampleRate

@@ -38,7 +38,7 @@ assert.throws(
   () => projectExternalReply({
     __images: [{ base64: 'a'.repeat(13 * 1024 * 1024), mimeType: 'image/jpeg' }],
   }),
-  /image payload exceeds/i,
+  /payload hình ảnh bên ngoài vượt quá/i,
   'oversized embedded images fail before the bridge request is sent',
 );
 assert.throws(
@@ -49,7 +49,7 @@ assert.throws(
       note: '图'.repeat(5 * 1024 * 1024),
     }],
   }),
-  /image payload exceeds/i,
+  /payload hình ảnh bên ngoài vượt quá/i,
   'the client budget counts UTF-8 bytes instead of JavaScript string characters',
 );
 const cancellationBeforeRegister = new ExternalCallCancellationRegistry();
@@ -224,7 +224,7 @@ await executeExternalCall(
   captureAdapterDelivery,
 );
 assert.equal(adapterDeliveries[0]?.outcome, 'failed');
-assert.match(String(adapterDeliveries[0]?.value), /no recoverable artifact reference/);
+assert.match(String(adapterDeliveries[0]?.value), /không có tham chiếu artifact để khôi phục/);
 assert.ok(JSON.stringify(adapterDeliveries[0]?.value).length < 300);
 assert.deepEqual(adapterDeliveries[1], {
   outcome: 'applied',

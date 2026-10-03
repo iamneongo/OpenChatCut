@@ -16,13 +16,13 @@ function assertImagePayloadBudget(images: unknown[]): void {
   } catch {
     throw new ExternalEditSessionOutcomeError(
       'failed',
-      'The external image payload could not be serialized safely.',
+      'payload hình ảnh bên ngoài không thể tuần tự hóa an toàn.',
     );
   }
   if (new TextEncoder().encode(encoded).byteLength > EXTERNAL_AGENT_IMAGE_PAYLOAD_LIMIT_BYTES) {
     throw new ExternalEditSessionOutcomeError(
       'failed',
-      'The external image payload exceeds the bounded bridge result limit.',
+      'payload hình ảnh bên ngoài vượt quá giới hạn kết quả bridge.',
     );
   }
 }
@@ -38,13 +38,13 @@ export function projectExternalReply(value: unknown): unknown {
   if (!sanitized) {
     throw new ExternalEditSessionOutcomeError(
       'failed',
-      'The external result could not be serialized safely.',
+      'kết quả bên ngoài không thể tuần tự hóa an toàn.',
     );
   }
   if (sanitized.originalChars > TOOL_ARTIFACT_THRESHOLD) {
     throw new ExternalEditSessionOutcomeError(
       'failed',
-      'The external result was too large and no recoverable artifact reference was available.',
+      'kết quả bên ngoài quá lớn và không có tham chiếu artifact để khôi phục.',
     );
   }
   const projected = JSON.parse(sanitized.body) as unknown;

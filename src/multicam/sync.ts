@@ -153,7 +153,7 @@ export async function runMulticamSync(args: {
       syncedItemIds: [],
       skippedItemIds: followers.map((item) => item.id),
       offsets: [],
-      message: `Reference clip "${refItem.name || refItem.id}" has an invalid playback rate. Reset it to a finite rate and retry multicam sync.`,
+      message: `clip tham chiếu "${refItem.name || refItem.id}" có tốc độ phát không hợp lệ. Hãy đặt lại thành tốc độ hữu hạn rồi thử đồng bộ multicam.`,
     };
   }
   const rateMismatches = followers.filter((follower) => {
@@ -172,7 +172,7 @@ export async function runMulticamSync(args: {
       syncedItemIds: [],
       skippedItemIds: followers.map((item) => item.id),
       offsets: [],
-      message: `Multicam sync requires matching playback rates. Set all selected clips to ${referenceRate}× before retrying; mismatched: ${mismatchSummary}.`,
+      message: `đồng bộ multicam yêu cầu các clip có cùng tốc độ phát. Hãy đặt tất cả clip đã chọn thành ${referenceRate}× rồi thử lại; clip không khớp: ${mismatchSummary}.`,
     };
   }
   const offsets: MulticamSyncOffset[] = [];
@@ -261,7 +261,7 @@ export async function runMulticamSync(args: {
       syncedItemIds: [],
       skippedItemIds,
       offsets,
-      message: 'Could not align any follower clips (missing clock metadata, low confidence, or decode failed).',
+      message: 'không thể căn chỉnh clip phụ nào (thiếu metadata đồng hồ, độ tin cậy thấp hoặc giải mã thất bại).',
     };
   }
 
@@ -277,7 +277,7 @@ export async function runMulticamSync(args: {
     return {
       status: 'failed', changed: false, referenceItemId: refId,
       syncedItemIds: [], skippedItemIds, offsets,
-      message: 'Could not persist the multicam group.',
+      message: 'không thể lưu nhóm multicam.',
     };
   }
   const syncedItemIds = placements
