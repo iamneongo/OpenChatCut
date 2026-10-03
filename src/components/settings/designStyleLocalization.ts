@@ -83,10 +83,10 @@ const PRESET_GUIDE_ZH: Record<string, string> = {
 };
 
 const PRESET_GUIDE_VI: Record<string, string> = {
-  'Terracotta Editorial': 'Phong cách biên tập ấm áp với chuyển động lò xo có chủ đích, bảng màu đất nung, đồng và hổ phách; dùng chữ trắng và serif trang nhã.',
+  'Terracotta Editorial': 'Phong cách biên tập ấm áp với chuyển động lò xo có chủ đích, bảng màu đất nung, đồng và hổ phách; dùng chữ trắng và kiểu chữ có chân trang nhã.',
   'Retro Duotone Print': 'Phong cách in hai màu hoài cổ: chữ xuất hiện như máy đánh chữ, biểu đồ phát triển tuyến tính, nền kem ấm với xanh hải quân và đỏ cam.',
   'Highlighter Notebook': 'Phong cách sổ tay: nét bút nhớ quét sau chữ, dấu tích được vẽ dần, giấy trắng, xanh ngọc dịu và vàng sáng.',
-  'Soft Organic Gradient': 'Nền kem với mảng chuyển màu đào và xanh xô thơm, chuyển động mượt và tiết chế, kết hợp tiêu đề serif cùng nội dung sans-serif.',
+  'Soft Organic Gradient': 'Nền kem với mảng chuyển màu đào và xanh xô thơm, chuyển động mượt và tiết chế, kết hợp tiêu đề có chân cùng nội dung không chân.',
   'Doodle Explainer': 'Phong cách giải thích thân thiện với nét vẽ tay, dấu sao và khung xuất hiện bằng chuyển động nảy nhẹ trên nền trắng ấm.',
   'Emerald Deco': 'Phong cách trang trí ngọc lục bảo: nền xanh đậm, chữ kem, đường viền vàng và chuyển động lò xo mềm mại, thanh lịch.',
   'Black Yellow Type': 'Phong cách chữ đen vàng mạnh mẽ: bố cục trực tiếp, chỉ dùng đen và vàng sáng, không dùng chuyển màu hay xám.',
@@ -96,7 +96,7 @@ const PRESET_GUIDE_VI: Record<string, string> = {
   'Pale Tech Dashboard': 'Bảng điều khiển công nghệ sáng với nền gần trắng, mảng tím xanh dịu, số lớn và biểu đồ chuyển động mượt.',
   'Liquid Aura': 'Phong cách hào quang chất lỏng: nền tím xanh sâu, các mảng sáng tím-hồng-xanh chuyển động chậm và chữ trắng nổi bật.',
   'Grainy Heatwave': 'Phong cách sóng nhiệt nhiễu hạt: phần tử dần hiện ra từ kết cấu nhiễu, dùng cam và đỏ tươi trên nền chuyển màu mạnh.',
-  'Blush Watercolor': 'Phong cách màu nước hồng phấn: các mảng hồng, xanh và đào lan nhẹ như màu nước, kết hợp tiêu đề serif thanh thoát.',
+  'Blush Watercolor': 'Phong cách màu nước hồng phấn: các mảng hồng, xanh và đào lan nhẹ như màu nước, kết hợp tiêu đề có chân thanh thoát.',
   'Archive Typewriter': 'Phong cách máy đánh chữ lưu trữ: chữ xuất hiện từng ký tự, biểu đồ vẽ tuyến tính trên nền giấy da ấm và chữ đen.',
   'Cubist Collage': 'Phong cách tranh ghép lập thể: mảng màu bật từ tâm, chữ trượt từ nhiều hướng, dùng các hình học và màu bão hòa.',
   'Redline Tech': 'Phong cách công nghệ công nghiệp đường đỏ: bề mặt than đen, lưới chấm, bảng đỏ sắc và kiểu chữ cô đọng mạnh.',
