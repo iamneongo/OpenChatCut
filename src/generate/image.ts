@@ -45,7 +45,7 @@ const newId = () => crypto.randomUUID?.() ?? `generated_${Date.now()}_${Math.ran
 export async function submitImage(args: SubmitImageArgs, state: TimelineState): Promise<MediaAsset[]> {
   const prompt = args.prompt.trim();
   const name = args.name.trim();
-  if (!prompt) throw new Error(localizedCatalogText('prompt is required', '需要填写提示词', undefined, 'Cần nhập prompt'));
+  if (!prompt) throw new Error(localizedCatalogText('prompt is required', '需要填写提示词', undefined, 'Cần nhập lời nhắc'));
   if (!name) throw new Error(localizedCatalogText('name is required', '需要填写名称', undefined, 'Cần nhập tên'));
   const referencePaths = (args.referenceAssetIds ?? []).map((id) => {
     const asset = (state.assets ?? []).find((candidate) => candidate.id === id);

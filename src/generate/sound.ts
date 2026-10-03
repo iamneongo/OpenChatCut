@@ -61,7 +61,7 @@ export async function submitSound(
 ): Promise<MediaAsset | SoundGenerationSubmission> {
   const provider = args.provider === 'sonilo' ? 'sonilo' : 'elevenlabs';
   const prompt = args.prompt?.trim() ?? '';
-  if (provider === 'elevenlabs' && !prompt) throw new Error(localizedCatalogText('prompt is required', '需要填写提示词', undefined, 'Cần nhập prompt'));
+  if (provider === 'elevenlabs' && !prompt) throw new Error(localizedCatalogText('prompt is required', '需要填写提示词', undefined, 'Cần nhập lời nhắc'));
   const sourceAsset = provider === 'sonilo' && args.sourceAssetId
     ? resolveVideoAsset(args.sourceAssetId, state)
     : undefined;

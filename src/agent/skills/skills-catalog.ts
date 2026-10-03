@@ -49,7 +49,7 @@ export const CREATIVE_SKILL_METADATA: CreativeSkillMetadata[] = [
     slug: 'multi-clips-to-reels',
     name: 'Multi Clips to Reels',
     nameZh: '多素材剪 Reels',
-    nameVi: 'Dựng Reels từ nhiều clip',
+    nameVi: 'Dựng Reels từ nhiều đoạn video',
     summary: '把产品、活动、旅行或游戏素材剪成适合社媒发布的 Reels。',
     scenarios: [
       'multi-clips-to-reels',
@@ -113,7 +113,7 @@ export const CREATIVE_SKILL_METADATA: CreativeSkillMetadata[] = [
     slug: 'motion-graphic-placement',
     name: 'Motion Graphic Placement',
     nameZh: '动效点缀指南',
-    nameVi: 'Hướng dẫn bố trí motion graphic',
+    nameVi: 'Hướng dẫn bố trí đồ họa chuyển động',
     summary: '在合适时机添加动效，强化表达且不遮挡内容。',
     scenarios: [
       'creator-video',
@@ -129,7 +129,7 @@ export const CREATIVE_SKILL_METADATA: CreativeSkillMetadata[] = [
     slug: 'storyboard-shot-breakdown',
     name: 'Storyboard Shot Breakdown',
     nameZh: '拉片分镜图',
-    nameVi: 'Phân tích shot và storyboard',
+    nameVi: 'Phân tích cảnh quay và bảng phân cảnh',
     summary: '逐镜拆解镜头语言，并生成分镜参考图。',
     scenarios: [
       'cinematography',
@@ -145,7 +145,7 @@ export const CREATIVE_SKILL_METADATA: CreativeSkillMetadata[] = [
     slug: 'video-thumbnail-generator',
     name: 'Video Thumbnail Generator',
     nameZh: '视频封面生成',
-    nameVi: 'Tạo thumbnail video',
+    nameVi: 'Tạo ảnh bìa video',
     summary: '基于视频内容和真实画面生成适合平台的封面图。',
     scenarios: [
       'bilibili-cover',
@@ -177,7 +177,7 @@ export const CREATIVE_SKILL_METADATA: CreativeSkillMetadata[] = [
     slug: 'skill-creator',
     name: 'Skill Creator',
     nameZh: '技能创作器',
-    nameVi: 'Trình tạo skill',
+    nameVi: 'Trình tạo kỹ năng',
     summary: '把重复流程或想法做成可复用的自定义技能（SKILL.md），并安装到本机技能目录。',
     scenarios: [
       'create-skill',
