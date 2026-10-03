@@ -1,4 +1,5 @@
 import type { AutoGradeAnalysis } from './autoGradeCore';
+import { t } from '../i18n/locale';
 
 export interface AutoGradeRequest {
   src: string;
@@ -23,6 +24,6 @@ export async function analyzeAutoGrade(
     body: JSON.stringify(request),
   });
   const body = (await response.json().catch(() => ({}))) as AutoGradeResponse & { error?: string };
-  if (!response.ok) throw new Error(body.error ?? `phân tích chấm màu tự động thất bại (${response.status})`);
+  if (!response.ok) throw new Error(body.error ?? t('自动校色分析失败（{status}）', { status: response.status }));
   return body;
 }
