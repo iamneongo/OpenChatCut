@@ -4,11 +4,11 @@ export const PROBE_TOOL_SCHEMAS: AgentToolSchema[] = [
   {
     name: 'probe_media',
     description:
-      'Probe a media file with the ffprobe bundled in the app (no sandbox or API key needed). Returns measured duration, dimensions, average fps, stream presence/codecs, plus explicit qualityRisks (low resolution, mono, very short, variable/low frame rate). Accepts a media-pool assetId/prefix, local /media/… path, or public https URL. Use before finalize_uploaded_asset to pass hasAudioTrack and measured fps/duration. download_media/push_asset results already include the same measurements as `probe`, so do not re-probe a file you just imported. It fails only when the source cannot be read; finalize may then proceed with ingest defaults.',
+      'Phân tích file media bằng ffprobe được đóng gói trong ứng dụng (không cần sandbox hoặc API key). Trả về thời lượng, kích thước, fps trung bình, sự hiện diện/codec của stream cùng qualityRisks rõ ràng (độ phân giải thấp, mono, quá ngắn, frame rate biến thiên/thấp). Nhận assetId/tiền tố trong media pool, path cục bộ /media/… hoặc URL https công khai. Dùng trước finalize_uploaded_asset để truyền hasAudioTrack và fps/thời lượng đã đo. Kết quả download_media/push_asset đã chứa cùng phép đo như `probe`, nên không phân tích lại file vừa import. Tool chỉ lỗi khi không đọc được source; sau đó finalize vẫn có thể dùng giá trị mặc định lúc ingest.',
     input_schema: {
       type: 'object',
       properties: {
-        source: { type: 'string', description: 'Media-pool assetId/prefix, a local /media/… path, or a public https:// URL.' },
+        source: { type: 'string', description: 'AssetId/tiền tố trong media pool, path cục bộ /media/… hoặc URL https:// công khai.' },
       },
       required: ['source'],
     },

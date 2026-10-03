@@ -3,7 +3,7 @@ import type { AgentToolSchema } from '../../tool-schema';
 export const MEDIA_POOL_TOOL_SCHEMAS: AgentToolSchema[] = [{
   name: 'manage_media_pool',
   description:
-    'Organize the project media pool: list, create/rename/delete empty folders, move assets, rename display names, favorite/unfavorite, delete assets from the pool, or relink an offline/missing master to a new same-origin media path. Folder and metadata actions do not change timeline clips; relink_asset updates the pool asset and every clip that uses that master.',
+    'Sắp xếp media pool của dự án: liệt kê, tạo/đổi tên/xóa folder rỗng, di chuyển asset, đổi tên hiển thị, đánh dấu/bỏ yêu thích, xóa asset khỏi pool hoặc liên kết lại master offline/thất lạc tới một path media cùng origin mới. Các action folder và metadata không thay đổi clip timeline; relink_asset cập nhật asset trong pool và mọi clip dùng master đó.',
   input_schema: {
     type: 'object',
     properties: {
@@ -25,26 +25,26 @@ export const MEDIA_POOL_TOOL_SCHEMAS: AgentToolSchema[] = [{
       assetIds: {
         type: 'string',
         description:
-          'Comma-separated asset ids/prefixes/names for move_assets, rename_asset (one id), favorite_assets, unfavorite_assets, delete_assets; relink_asset accepts exactly one id.',
+          'Các id/tiền tố/tên asset phân tách bằng dấu phẩy cho move_assets, rename_asset (một id), favorite_assets, unfavorite_assets, delete_assets; relink_asset nhận đúng một id.',
       },
-      folderPath: { type: 'string', description: 'Folder path such as Master/B-roll, or folder id prefix.' },
-      name: { type: 'string', description: 'New folder name for create_folder; cannot contain /. relink_asset: optional display name for the replacement source.' },
-      newName: { type: 'string', description: 'New folder or asset display name for rename actions.' },
-      parentPath: { type: 'string', description: 'Parent folder path for create_folder; defaults to Master.' },
-      targetPath: { type: 'string', description: 'Destination folder path for move_assets; defaults to Master.' },
+      folderPath: { type: 'string', description: 'Path folder như Master/B-roll, hoặc tiền tố id folder.' },
+      name: { type: 'string', description: 'Tên folder mới cho create_folder; không được chứa /. relink_asset: tên hiển thị tùy chọn cho source thay thế.' },
+      newName: { type: 'string', description: 'Tên hiển thị mới của folder hoặc asset cho action đổi tên.' },
+      parentPath: { type: 'string', description: 'Path folder cha cho create_folder; mặc định là Master.' },
+      targetPath: { type: 'string', description: 'Path folder đích cho move_assets; mặc định là Master.' },
       src: {
         type: 'string',
         description:
-          'relink_asset: replacement media path (same-origin /media/uploads/… after re-upload, or another reachable project media URL). Prefer re-upload + finalize_uploaded_asset with the same assetId when replacing local files.',
+          'relink_asset: path media thay thế (cùng origin /media/uploads/… sau khi upload lại, hoặc URL media khác của dự án có thể truy cập). Khi thay file cục bộ, ưu tiên upload lại + finalize_uploaded_asset với cùng assetId.',
       },
-      durationInFrames: { type: 'number', description: 'relink_asset: optional new duration in frames when known.' },
-      width: { type: 'number', description: 'relink_asset: optional pixel width.' },
-      height: { type: 'number', description: 'relink_asset: optional pixel height.' },
-      sourceFilename: { type: 'string', description: 'relink_asset: optional original filename for NLE identity.' },
+      durationInFrames: { type: 'number', description: 'relink_asset: thời lượng mới tính bằng frame, tùy chọn khi đã biết.' },
+      width: { type: 'number', description: 'relink_asset: chiều rộng pixel, tùy chọn.' },
+      height: { type: 'number', description: 'relink_asset: chiều cao pixel, tùy chọn.' },
+      sourceFilename: { type: 'string', description: 'relink_asset: tên file gốc tùy chọn để giữ identity trong NLE.' },
       confirm: {
         type: 'boolean',
         description:
-          'delete_assets: when any selected asset is still referenced by timeline clips, first call returns needsConfirm; resend with confirm:true to delete pool entries only (clips keep their copied media).',
+          'delete_assets: khi asset được chọn vẫn được clip timeline tham chiếu, lần gọi đầu trả về needsConfirm; gửi lại với confirm:true để chỉ xóa entry trong pool (clip vẫn giữ media đã sao chép).',
       },
     },
     required: ['action'],
