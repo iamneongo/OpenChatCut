@@ -7,6 +7,6 @@ export async function execDesignTool(
   args: DesignToolArgs,
   ctx: AgentContext,
 ): Promise<unknown> {
-  if (name !== 'manage_design_style') return { error: `unknown tool ${name}` };
+  if (name !== 'manage_design_style') return { error: `công cụ không xác định: ${name}` };
   return executeDesignAction(String(args.action ?? ''), args, ctx);
 }

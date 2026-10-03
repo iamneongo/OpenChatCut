@@ -16,12 +16,12 @@ type Args = Record<string, unknown>;
 
 export async function execFontTool(name: string, args: Args, _ctx: AgentContext): Promise<unknown> {
   if (name === 'search_fonts') return execSearchFonts(args);
-  return { error: `unknown tool ${name}` };
+  return { error: `công cụ không xác định: ${name}` };
 }
 
 function execSearchFonts(args: Args): unknown {
   const query = String(args.query ?? '').trim();
-  if (!query) return { error: 'query is required', results: [] };
+  if (!query) return { error: 'query là bắt buộc', results: [] };
   const results = searchFontCatalog(query, 25);
   return {
     ok: true,
@@ -34,7 +34,7 @@ function execSearchFonts(args: Args): unknown {
       source: r.source,
     })),
     note: results.some((r) => !r.loadable)
-      ? 'Some hits are catalog aliases only (loadable=false) — export may require confirmFontFallback=true.'
+      ? 'Một số kết quả chỉ là alias trong catalog (loadable=false) — export có thể cần confirmFontFallback=true.'
       : undefined,
   };
 }
@@ -72,9 +72,9 @@ export function fontFallbackGate(
     ok: false,
     error: 'unsupported_fonts',
     message:
-      'Timeline references fonts the renderer cannot load. Tell the user which fonts will fall back, then retry submit_export with confirmFontFallback=true only after they accept.',
+      'Timeline đang tham chiếu các font mà renderer không thể tải. Hãy cho người dùng biết font nào sẽ bị fallback, rồi chỉ thử lại submit_export với confirmFontFallback=true sau khi họ chấp thuận.',
     unsupportedFonts: unsupported,
     referencedFonts: referenced,
-    hint: 'Use search_fonts to pick a loadable family, or pass confirmFontFallback: true after user consent.',
+    hint: 'Dùng search_fonts để chọn family có thể tải, hoặc truyền confirmFontFallback: true sau khi người dùng chấp thuận.',
   };
 }

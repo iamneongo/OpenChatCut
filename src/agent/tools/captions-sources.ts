@@ -42,7 +42,7 @@ const transcribedItems = (s: TimelineState) => s.items.filter((it) => hasOperati
 /** One selector → a rich CaptionSourceEntry (variant/label/priority/slotId ride along). */
 function selectorToEntry(sel: Record<string, unknown>, s: TimelineState): CaptionSourceEntry | { error: string } {
   const itemId = selectorToItemId(sel, s);
-  if (!itemId) return { error: `unresolved/untranscribed source: ${JSON.stringify(sel)}` };
+  if (!itemId) return { error: `source chưa xác định hoặc chưa được chép lời: ${JSON.stringify(sel)}` };
   const entry: CaptionSourceEntry = { id: newLaneId(), itemId };
   const variantObj = sel.variant && typeof sel.variant === 'object' ? (sel.variant as Record<string, unknown>) : undefined;
   const vKind = str(variantObj?.variantKind ?? sel.variantKind);
@@ -132,7 +132,7 @@ export function sourceAdd(json: Record<string, unknown>, c: CaptionsData, ctx: A
   const cur = ensureEntries(c, s);
   // The same item+variant is already in scope → idempotent without duplication
   if (cur.some((x) => x.itemId === e.itemId && (x.variant?.languageCode ?? '') === (e.variant?.languageCode ?? ''))) {
-    return { ok: true, sources: cur.map((x, i) => entryRow(x, i, s)), note: 'already in scope (idempotent)' };
+    return { ok: true, sources: cur.map((x, i) => entryRow(x, i, s)), note: 'đã có trong scope (idempotent)' };
   }
   let next = normalizeCaptionSourceEntries([...cur, e]);
   if (e.trackOrder !== undefined) next = moveCaptionSourceEntry(next, e.id, e.trackOrder);

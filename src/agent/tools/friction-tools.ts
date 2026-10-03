@@ -57,14 +57,14 @@ export async function execFrictionTool(
   args: Args,
   ctx: AgentContext,
 ): Promise<unknown> {
-  if (name !== 'report_user_friction') return { error: `unknown tool ${name}` };
+  if (name !== 'report_user_friction') return { error: `công cụ không xác định: ${name}` };
 
   const category = String(args.category ?? '').trim();
   const summary = String(args.summary ?? '').trim();
   if (!CATEGORIES.includes(category as (typeof CATEGORIES)[number])) {
-    return { error: `category must be one of ${CATEGORIES.join('|')}` };
+    return { error: `category phải là một trong ${CATEGORIES.join('|')}` };
   }
-  if (!summary) return { error: 'summary is required' };
+  if (!summary) return { error: 'summary là bắt buộc' };
 
   const projectId =
     (typeof args.projectId === 'string' && args.projectId.trim())
@@ -93,6 +93,6 @@ export async function execFrictionTool(
     recorded: true,
     id: entry.id,
     localDev: true,
-    note: 'Friction recorded locally (localStorage). Not sent to a remote backend.',
+    note: 'Đã ghi nhận friction cục bộ (localStorage), không gửi lên backend từ xa.',
   };
 }

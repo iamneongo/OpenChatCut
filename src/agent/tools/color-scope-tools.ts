@@ -19,7 +19,7 @@ async function decodeBase64Pixels(base64: string): Promise<{ data: Uint8ClampedA
   const height = Math.max(1, Math.round(bitmap.height * scale));
   const canvas = new OffscreenCanvas(width, height);
   const context = canvas.getContext('2d');
-  if (!context) throw new Error('2d canvas unavailable');
+  if (!context) throw new Error('không có canvas 2D');
   context.drawImage(bitmap, 0, 0, width, height);
   bitmap.close();
   return { data: context.getImageData(0, 0, width, height).data, width, height };
@@ -34,11 +34,11 @@ async function timelineFrameBase64(ctx: AgentContext, frame: number): Promise<st
   });
   if (!res.ok) {
     const info = (await res.json().catch(() => null)) as { error?: string } | null;
-    throw new Error(info?.error ?? `render-still failed (${res.status})`);
+    throw new Error(info?.error ?? `render-still thất bại (${res.status})`);
   }
   const data = (await res.json()) as { frames: { frame: number; base64: string }[] };
   const base64 = data.frames?.[0]?.base64;
-  if (!base64) throw new Error('render-still returned no frame');
+  if (!base64) throw new Error('render-still không trả về frame nào');
   return base64;
 }
 
@@ -53,10 +53,10 @@ async function assetFrameBase64(src: string, sourceMs: number | undefined): Prom
   });
   if (!res.ok) {
     const info = (await res.json().catch(() => null)) as { error?: string } | null;
-    throw new Error(info?.error ?? `extract-frames failed (${res.status})`);
+    throw new Error(info?.error ?? `extract-frames thất bại (${res.status})`);
   }
   const data = (await res.json()) as { base64?: string };
-  if (!data.base64) throw new Error('extract-frames returned no image');
+  if (!data.base64) throw new Error('extract-frames không trả về ảnh nào');
   return data.base64;
 }
 
@@ -140,9 +140,9 @@ export function compareColorScopes(target: ColorScopeStats, reference: ColorScop
 async function measureAsset(ctx: AgentContext, rawId: unknown, rawSeconds: unknown): Promise<ScopeResult> {
   const q = typeof rawId === 'string' ? rawId.trim() : '';
   const asset = ctx.getDoc().assets.find((item) => item.id === q || item.id.startsWith(q));
-  if (!asset) throw new Error(`no media-pool asset ${q}`);
+  if (!asset) throw new Error(`không tìm thấy asset ${q} trong media pool`);
   if (!asset.src.startsWith('/media/uploads/')) {
-    throw new Error(`asset ${asset.id} is not an uploaded media file — inspect the timeline instead`);
+    throw new Error(`asset ${asset.id} không phải media file đã tải lên — hãy kiểm tra timeline thay thế`);
   }
   const sourceMs = typeof rawSeconds === 'number'
     ? rawSeconds * 1000
@@ -159,7 +159,7 @@ async function measureAsset(ctx: AgentContext, rawId: unknown, rawSeconds: unkno
 async function measureTimeline(ctx: AgentContext, rawFrame: unknown, rawSeconds: unknown): Promise<ScopeResult> {
   const state = ctx.getState();
   const contentEnd = state.items.reduce((max, item) => Math.max(max, item.startFrame + item.durationInFrames), 0);
-  if (contentEnd === 0) throw new Error('timeline is empty — nothing to measure');
+  if (contentEnd === 0) throw new Error('timeline trống — không có gì để đo');
   const frame = typeof rawFrame === 'number' ? Math.max(0, Math.round(rawFrame))
     : typeof rawSeconds === 'number' ? Math.max(0, Math.round(rawSeconds * state.fps))
       : Math.floor(contentEnd / 2);
@@ -177,7 +177,7 @@ function publicResult(result: ScopeResult): Record<string, unknown> {
 }
 
 export async function execColorScopeTool(name: string, args: Args, ctx: AgentContext): Promise<unknown> {
-  if (name !== 'inspect_color') return { error: `unknown tool ${name}` };
+  if (name !== 'inspect_color') return { error: `công cụ không xác định: ${name}` };
   try {
     const target = typeof args.assetId === 'string' && args.assetId.trim()
       ? await measureAsset(ctx, args.assetId, args.sourceSeconds)
