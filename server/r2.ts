@@ -19,6 +19,7 @@ import { NodeHttpHandler } from '@smithy/node-http-handler';
 import { getKey, type KeyName } from './keystore.ts';
 import { outboundHttpAgent } from './outbound-proxy.ts';
 import { isIsolatedDevProfile } from './runtime-profile.ts';
+import type { UiLocale } from './ui-locale.ts';
 
 const MAX_SAFE_BYTES = Number.MAX_SAFE_INTEGER;
 /** Finite default: large enough for long-form source masters while bounding disk/R2 abuse. */
@@ -441,7 +442,7 @@ export async function presignGetUpload(
 
 /** Test connection probe: HeadBucket synthetic response (bucket exists + authentication passed = 200).
  * S3 errors are mapped to the corresponding HTTP status to classifyStatus; network layer errors are thrown to networkMessage as they are.*/
-export async function r2Probe(get: Get): Promise<Response> {
+export async function r2Probe(get: Get, locale: UiLocale = 'zh'): Promise<Response> {
   const cfg = r2Config(get, { ignoreEnabled: true });
   if (!cfg) return new Response('missing config', { status: 400 });
   try {
@@ -451,7 +452,11 @@ export async function r2Probe(get: Get): Promise<Response> {
     const status = (err as { $metadata?: { httpStatusCode?: number } }).$metadata?.httpStatusCode;
     const name = (err as { name?: string }).name ?? '';
     if (typeof status === 'number' && status > 0) {
-      const note = status === 404 ? `bucket「${cfg.bucket}」不存在` : name;
+      const note = status === 404
+        ? locale === 'vi' ? `Bucket “${cfg.bucket}” không tồn tại`
+          : locale === 'en' ? `Bucket “${cfg.bucket}” does not exist`
+            : `bucket「${cfg.bucket}」不存在`
+        : name;
       return new Response(note, { status });
     }
     throw err; // Network layer (DNS/timeouts/proxy) → runProbe's networkMessage

@@ -30,7 +30,7 @@ import {
   type ProbeResult,
 } from './key-probe-result.ts';
 import { PROBE_TIMEOUT_MS, runDataDirProbe, runProxyProbe } from './key-probe-local.ts';
-import { localized } from './ui-locale.ts';
+import { localized, uiLocale } from './ui-locale.ts';
 export { classifyStatus, networkMessage, parseModelCatalog, type ProbeResult } from './key-probe-result.ts';
 export { runDataDirProbe, runProxyProbe } from './key-probe-local.ts';
 // Proxy-aware fetch: attaches the configured outbound proxy (keystore
@@ -422,7 +422,7 @@ export const PROBES: Record<string, ProbeDef> = {
   // 200=The bucket exists and has been authenticated; 403/404 goes to classifyStatus; the network layer throws it to networkMessage as it is.
   'storage/r2': {
     needs: [['R2_ACCOUNT_ID', 'R2_ACCESS_KEY_ID', 'R2_SECRET_ACCESS_KEY', 'R2_BUCKET']],
-    run: (get) => r2Probe(get),
+    run: (get) => r2Probe(get, uiLocale()),
   },
   // Local saving directory: disk check (create directory + write and delete detection files), non-network request. Empty group needs = not filled in
   // It can also be tested (if not set = use the default directory, it is legal).
