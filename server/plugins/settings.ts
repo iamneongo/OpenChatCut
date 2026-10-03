@@ -42,10 +42,10 @@ export function assertProfileSensitiveSettingsPatch(
 ): void {
   if (!isIsolatedDevProfile(profile)) return;
   if (Object.hasOwn(patch, 'MEDIA_DIR')) {
-    throw new Error('MEDIA_DIR cannot be changed while an isolated development profile is active');
+    throw new Error('không thể đổi MEDIA_DIR khi profile phát triển isolated đang hoạt động');
   }
   if (ISOLATED_R2_SETTINGS.some((name) => Object.hasOwn(patch, name))) {
-    throw new Error('R2 settings cannot be changed while an isolated development profile is active');
+    throw new Error('không thể đổi cài đặt R2 khi profile phát triển isolated đang hoạt động');
   }
 }
 
@@ -58,7 +58,7 @@ async function readBody(req: IncomingMessage): Promise<Record<string, unknown>> 
   for await (const chunk of req) {
     const buf = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk);
     total += buf.length;
-    if (total > 100_000) throw new Error('request body too large');
+    if (total > 100_000) throw new Error('thân request quá lớn');
     chunks.push(buf);
   }
   if (chunks.length === 0) return {};
@@ -68,9 +68,9 @@ async function readBody(req: IncomingMessage): Promise<Record<string, unknown>> 
   } catch {
     // Generic message on purpose: V8's SyntaxError can echo the raw body (which may
     // contain a key value) and our catch-all logs error messages.
-    throw new Error('invalid JSON body');
+    throw new Error('thân request chứa JSON không hợp lệ');
   }
-  if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) throw new Error('body must be a JSON object');
+  if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) throw new Error('thân request phải là một đối tượng JSON');
   return parsed as Record<string, unknown>;
 }
 
@@ -114,13 +114,13 @@ async function applyDataDirChange(
   log: (msg: string) => void,
 ): Promise<void> {
   if (process.env[DATA_DIR_ENV]?.trim()) {
-    throw new Error(`storage directory is pinned by ${DATA_DIR_ENV} and cannot be changed from settings`);
+    throw new Error(`thư mục lưu trữ được ghim bởi ${DATA_DIR_ENV} và không thể đổi từ phần cài đặt`);
   }
   if (isIsolatedDevProfile(profile)) {
-    throw new Error('storage directory cannot be changed while an isolated development profile is active');
+    throw new Error('không thể đổi thư mục lưu trữ khi profile phát triển isolated đang hoạt động');
   }
   const checked = await checkDataDir(raw, defaultRootDir(profile), uiLocale());
-  if (!checked.ok) throw new Error(checked.error ?? 'invalid storage directory');
+  if (!checked.ok) throw new Error(checked.error ?? 'thư mục lưu trữ không hợp lệ');
   const target = expandDataDir(raw);
   // Clearing the field is a relocation too: it sends the next launch back to the
   // default root, which is empty or stale for anyone who has been running

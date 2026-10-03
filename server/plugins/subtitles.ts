@@ -23,7 +23,7 @@ async function readJson(req: IncomingMessage): Promise<SubtitleRequest> {
   for await (const chunk of req) {
     const bytes = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk);
     total += bytes.length;
-    if (total > 2_000_000) throw new Error('request body too large');
+    if (total > 2_000_000) throw new Error('thân request quá lớn');
     chunks.push(bytes);
   }
   return JSON.parse(Buffer.concat(chunks).toString('utf8')) as SubtitleRequest;
@@ -51,14 +51,14 @@ function serialize(cues: SubtitleCue[], format: 'srt' | 'txt'): string {
 
 function validate(input: SubtitleRequest): { format: 'srt' | 'txt'; name: string; cues: SubtitleCue[] } {
   const format = input.format ?? 'srt';
-  if (format !== 'srt' && format !== 'txt') throw new Error('subtitle format must be srt or txt');
-  if (!Array.isArray(input.cues) || !input.cues.length) throw new Error('the timeline has no captions to export');
-  if (input.cues.length > 10_000) throw new Error('too many subtitle cues');
+  if (format !== 'srt' && format !== 'txt') throw new Error('định dạng subtitle phải là srt hoặc txt');
+  if (!Array.isArray(input.cues) || !input.cues.length) throw new Error('timeline không có caption để export');
+  if (input.cues.length > 10_000) throw new Error('quá nhiều cue subtitle');
   const cues = input.cues.map((cue) => {
     const start = Number(cue.start);
     const end = Number(cue.end);
     const text = String(cue.text ?? '').trim();
-    if (!Number.isFinite(start) || !Number.isFinite(end) || start < 0 || end <= start || !text) throw new Error('invalid subtitle cue');
+    if (!Number.isFinite(start) || !Number.isFinite(end) || start < 0 || end <= start || !text) throw new Error('cue subtitle không hợp lệ');
     return { start, end, text };
   });
   const stem = String(input.name ?? 'subtitles').replace(/\.(srt|txt)$/i, '').replace(/[^\p{L}\p{N}._ -]+/gu, '_').trim() || 'subtitles';

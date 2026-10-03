@@ -88,7 +88,7 @@ function outputCodec(result: SpeechResult, input: ValidVoiceRequest): string {
 }
 
 export async function generateAiVoice(options: VoiceOptions, input: ValidVoiceRequest): Promise<AiVoiceAudio> {
-  if (!isAiVoiceProvider(input.provider)) throw new Error(`unsupported AI SDK voice provider: ${input.provider}`);
+  if (!isAiVoiceProvider(input.provider)) throw new Error(`provider voice AI SDK không được hỗ trợ: ${input.provider}`);
   const result = await runAiProvider(options, input, input.provider);
   return {
     bytes: Buffer.from(result.audio.uint8Array),

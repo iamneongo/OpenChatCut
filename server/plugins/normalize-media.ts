@@ -102,7 +102,7 @@ function readJson(req: IncomingMessage, max = MAX_JSON): Promise<unknown> {
     }
   });
   req.on('error', deferred.reject);
-  req.on('aborted', () => deferred.reject(new Error('request body aborted')));
+  req.on('aborted', () => deferred.reject(new Error('thân request đã bị hủy')));
   return deferred.promise;
 }
 

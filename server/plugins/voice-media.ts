@@ -69,7 +69,7 @@ function extension(codec: string): string {
 }
 
 export async function saveVoiceAudio(bytes: Buffer, codec: string, sampleRate: number, pitch = 0): Promise<{ path: string; durationSeconds: number }> {
-  if (!bytes.length) throw new Error('voice provider returned empty audio');
+  if (!bytes.length) throw new Error('provider voice trả về audio rỗng');
   const dir = uploadDir();
   await mkdir(dir, { recursive: true });
   let file: string;

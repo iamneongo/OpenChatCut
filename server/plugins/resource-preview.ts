@@ -42,7 +42,7 @@ function readJsonBody(req: IncomingMessage): Promise<unknown> {
     req.on("data", (chunk: Buffer) => {
       size += chunk.length;
       if (size > MAX_BODY_BYTES) {
-        reject(new Error("request body too large"));
+        reject(new Error("thân request quá lớn"));
         req.destroy();
         return;
       }
@@ -52,7 +52,7 @@ function readJsonBody(req: IncomingMessage): Promise<unknown> {
       try {
         resolve(JSON.parse(Buffer.concat(chunks).toString("utf8")));
       } catch {
-        reject(new Error("invalid JSON body"));
+        reject(new Error("thân request chứa JSON không hợp lệ"));
       }
     });
     req.on("error", reject);
@@ -68,17 +68,17 @@ function authorized(req: IncomingMessage, expected?: string): boolean {
 }
 
 function parseRequest(value: unknown) {
-  if (!value || typeof value !== "object") throw new Error("invalid request");
+  if (!value || typeof value !== "object") throw new Error("request không hợp lệ");
   const input = value as Record<string, unknown>;
   const category = String(input.category || "") as PreviewCategory;
   const coverDataUrl = String(input.coverDataUrl || "");
   const targetDataUrl = String(input.targetDataUrl || "");
-  if (!CATEGORIES.has(category)) throw new Error("invalid preview category");
+  if (!CATEGORIES.has(category)) throw new Error("category preview không hợp lệ");
   if (category !== "mg" && !COVER_RE.test(coverDataUrl)) {
-    throw new Error("valid cover image is required");
+    throw new Error("cần có ảnh cover hợp lệ");
   }
   if (targetDataUrl && !COVER_RE.test(targetDataUrl)) {
-    throw new Error("valid transition target image is required");
+    throw new Error("cần có ảnh đích transition hợp lệ");
   }
   const validated = validatePack(input.pack);
   if (!validated.ok) throw new Error(validated.errors.join("; "));
@@ -128,7 +128,7 @@ async function renderPreview(
         Array<{ base64: string }>;
       poster = Buffer.from(stills[0]?.base64 || "", "base64");
     });
-    if (!poster.length) throw new Error("preview poster render failed");
+    if (!poster.length) throw new Error("render poster preview thất bại");
     return { video: await readFile(output), poster };
   } finally {
     await unlink(output).catch(() => undefined);
