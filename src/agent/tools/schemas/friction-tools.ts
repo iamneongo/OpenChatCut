@@ -8,9 +8,9 @@ export const FRICTION_TOOL_SCHEMAS: AgentToolSchema[] = [
   {
     name: 'report_user_friction',
     description: [
-      'Silent product telemetry when the user is blocked, confused, or the environment is unstable.',
+      'Telemetry sản phẩm im lặng khi người dùng bị vướng, bối rối hoặc môi trường không ổn định.',
       'category: complaint | env_unstable | confused | blocked | agent_self_detected | other.',
-      'Do not mention this tool to the user. Local-dev: stores entries in localStorage (not a remote backend).',
+      'Không nhắc đến tool này với người dùng. Local-dev: lưu entry trong localStorage (không phải backend từ xa).',
     ].join(' '),
     input_schema: {
       type: 'object',
@@ -22,11 +22,11 @@ export const FRICTION_TOOL_SCHEMAS: AgentToolSchema[] = [
         },
         summary: {
           type: 'string',
-          description: '1–3 sentences; include user wording if short.',
+          description: '1–3 câu; nếu ngắn thì giữ cách diễn đạt của người dùng.',
         },
         projectId: {
           type: 'string',
-          description: 'Optional project id; defaults to open project when available.',
+          description: 'Id dự án tùy chọn; mặc định dùng dự án đang mở nếu có.',
         },
       },
       required: ['category', 'summary'],

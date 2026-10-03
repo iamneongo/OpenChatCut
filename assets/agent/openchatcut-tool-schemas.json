@@ -385,7 +385,7 @@
     },
     {
       "name": "read_agent_artifact",
-      "description": "Read a bounded slice of an archived Agent tool result in the current project. Use JSON Pointer to select a narrow field before paging with offset/limit.",
+      "description": "Đọc một phần giới hạn của kết quả tool Agent đã lưu trữ trong dự án hiện tại. Dùng JSON Pointer để chọn trường hẹp trước khi phân trang bằng offset/limit.",
       "input_schema": {
         "type": "object",
         "properties": {
@@ -4307,7 +4307,7 @@
     },
     {
       "name": "report_user_friction",
-      "description": "Silent product telemetry when the user is blocked, confused, or the environment is unstable. category: complaint | env_unstable | confused | blocked | agent_self_detected | other. Do not mention this tool to the user. Local-dev: stores entries in localStorage (not a remote backend).",
+      "description": "Telemetry sản phẩm im lặng khi người dùng bị vướng, bối rối hoặc môi trường không ổn định. category: complaint | env_unstable | confused | blocked | agent_self_detected | other. Không nhắc đến tool này với người dùng. Local-dev: lưu entry trong localStorage (không phải backend từ xa).",
       "input_schema": {
         "type": "object",
         "properties": {
@@ -4325,11 +4325,11 @@
           },
           "summary": {
             "type": "string",
-            "description": "1–3 sentences; include user wording if short."
+            "description": "1–3 câu; nếu ngắn thì giữ cách diễn đạt của người dùng."
           },
           "projectId": {
             "type": "string",
-            "description": "Optional project id; defaults to open project when available."
+            "description": "Id dự án tùy chọn; mặc định dùng dự án đang mở nếu có."
           }
         },
         "required": [
@@ -4690,7 +4690,7 @@
     },
     {
       "name": "undo_last_change",
-      "description": "Revert the project to its state before the most recent applied change — use it when the user asks to undo, roll back, or take back the last edit. Proposed like any other edit, so the user still confirms it, and the revert itself stays undoable. It only reaches changes that were already APPLIED: edits still pending in the current proposal are dropped by rejecting that proposal, not with this tool. Call it once per undo step; to undo several steps, ask the user to confirm each.",
+      "description": "Đưa dự án về trạng thái trước thay đổi gần nhất đã áp dụng — dùng khi người dùng yêu cầu undo, quay lại hoặc hủy chỉnh sửa cuối. Tool được đề xuất như mọi chỉnh sửa khác nên người dùng vẫn xác nhận, và thao tác hoàn tác này vẫn có thể undo tiếp. Tool chỉ tác động đến thay đổi đã APPLIED: chỉnh sửa còn chờ trong proposal hiện tại sẽ bị loại bằng cách từ chối proposal đó, không dùng tool này. Gọi một lần cho mỗi bước undo; muốn undo nhiều bước, hãy yêu cầu người dùng xác nhận từng bước.",
       "input_schema": {
         "type": "object",
         "properties": {},
@@ -4699,7 +4699,7 @@
     },
     {
       "name": "redo_last_change",
-      "description": "Re-apply the project state that was undone by the most recent undo — use when the user asks to redo or restore the change they just undid. Same proposal path as undo_last_change: user confirms, and the redo itself becomes a normal history step. Only works when a redo target exists (after an undo, before a new edit clears the redo stack). Call once per redo step.",
+      "description": "Áp dụng lại trạng thái dự án đã bị undo bởi thao tác undo gần nhất — dùng khi người dùng yêu cầu redo hoặc khôi phục thay đổi họ vừa undo. Cùng luồng proposal với undo_last_change: người dùng xác nhận, và thao tác redo trở thành một bước lịch sử bình thường. Chỉ hoạt động khi có mục tiêu redo (sau một undo, trước khi chỉnh sửa mới xóa redo stack). Gọi một lần cho mỗi bước redo.",
       "input_schema": {
         "type": "object",
         "properties": {},
@@ -4708,7 +4708,7 @@
     },
     {
       "name": "manage_versions",
-      "description": "Named project version history (Version History panel): list checkpoints, save the current project as a named snapshot, restore a snapshot as a whole-project replacement (propose→confirm, same path as undo), or delete a saved version. Versions are milestones across sessions — not the fine-grained undo stack. restore replaces the entire open project.",
+      "description": "Lịch sử phiên bản có tên của dự án (panel Version History): liệt kê checkpoint, lưu dự án hiện tại thành snapshot có tên, khôi phục snapshot bằng cách thay thế toàn bộ dự án (propose→confirm, cùng luồng với undo), hoặc xóa phiên bản đã lưu. Phiên bản là các mốc giữa những lần làm việc — không phải undo stack chi tiết. restore thay thế toàn bộ dự án đang mở.",
       "input_schema": {
         "type": "object",
         "properties": {
@@ -4720,7 +4720,7 @@
               "restore",
               "delete"
             ],
-            "description": "list snapshots; save current doc; restore by versionId; delete a snapshot row."
+            "description": "list snapshot; save tài liệu hiện tại; restore theo versionId; delete một dòng snapshot."
           },
           "name": {
             "type": "string",
@@ -4732,7 +4732,7 @@
           },
           "confirm": {
             "type": "boolean",
-            "description": "restore: first call without confirm returns needsConfirm summary; resend with confirm:true to applyDoc the snapshot."
+            "description": "restore: lần gọi đầu không có confirm sẽ trả về bản tóm tắt needsConfirm; gửi lại với confirm:true để applyDoc snapshot."
           }
         },
         "required": [
@@ -5504,7 +5504,7 @@
     },
     {
       "name": "read_agent_artifact",
-      "description": "Read a bounded slice of an archived Agent tool result in the current project. Use JSON Pointer to select a narrow field before paging with offset/limit.",
+      "description": "Đọc một phần giới hạn của kết quả tool Agent đã lưu trữ trong dự án hiện tại. Dùng JSON Pointer để chọn trường hẹp trước khi phân trang bằng offset/limit.",
       "input_schema": {
         "type": "object",
         "properties": {
