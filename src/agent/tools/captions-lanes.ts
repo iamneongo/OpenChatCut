@@ -92,7 +92,7 @@ export function matchEntries(entries: CaptionSourceEntry[], sel: Json, s: Timeli
   if (assetId) {
     const item = s.items.find((it) => it.src === assetId || it.templateId === assetId);
     const hits = item ? entries.flatMap((e, i) => (e.itemId === item.id ? [i] : [])) : [];
-    return hits.length ? hits : { error: `Không có source cho asset "${assetId}"` };
+    return hits.length ? hits : { error: `Không có nguồn phụ đề cho tư liệu "${assetId}"` };
   }
   const track = str(sel.trackId) || str(sel.track);
   if (track) {

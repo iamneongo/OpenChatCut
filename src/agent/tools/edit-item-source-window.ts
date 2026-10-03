@@ -63,7 +63,7 @@ export function validateSourceFrameUpdate(
   }
   if ((sourceStart !== undefined || sourceDuration !== undefined)
     && item.kind === 'audio' && hasOperationalTranscript(item)) {
-    return { error: 'không hỗ trợ cửa sổ frame nguồn thô cho audio có transcript hoạt động' };
+    return { error: 'không hỗ trợ cửa sổ khung nguồn thô cho âm thanh có bản chép lời đang hoạt động' };
   }
   const requestedStart = sourceStart ?? srcInFrame;
   return {
@@ -105,19 +105,19 @@ export function validateSourceWindow(
       return { error: `cửa sổ frame nguồn chỉ áp dụng cho adds video/audio (nhận ${type})` };
     }
     if (type === 'audio' && hasOperationalTranscript(asset)) {
-      return { error: 'không hỗ trợ cửa sổ frame nguồn thô cho audio có transcript hoạt động' };
+    return { error: 'không hỗ trợ cửa sổ khung nguồn thô cho âm thanh có bản chép lời đang hoạt động' };
     }
     const startFrameIn = Math.round(sourceStartFrame);
     const available = asset.durationInFrames > 0 ? asset.durationInFrames - startFrameIn : null;
     if (available !== null && available <= 0) {
-      return { error: `sourceStartFrame ${startFrameIn} nằm sau cuối asset ${asset.id}` };
+    return { error: `sourceStartFrame ${startFrameIn} nằm sau cuối tư liệu ${asset.id}` };
     }
     const sourceFrames = sourceDurationInFrames === undefined
       ? available
       : Math.round(sourceDurationInFrames);
     if (sourceFrames === null) return { error: 'Cần có sourceDurationInFrames khi chưa biết thời lượng asset' };
     if (available !== null && sourceFrames > available) {
-      return { error: `Cửa sổ frame nguồn vượt quá độ dài ${asset.durationInFrames} của asset ${asset.id}` };
+      return { error: `Cửa sổ khung nguồn vượt quá độ dài ${asset.durationInFrames} của tư liệu ${asset.id}` };
     }
     return {
       srcInFrame: startFrameIn,
@@ -157,7 +157,7 @@ export function validateSourceWindow(
   const startSec = start.value ?? 0;
   const startFrameIn = Math.round(startSec * fps);
   if (assetFrames !== null && startFrameIn >= assetFrames) {
-    return { error: `source start ${startSec}s nằm sau cuối asset (${(assetFrames / fps).toFixed(2)}s)` };
+    return { error: `source start ${startSec}s nằm sau cuối tư liệu (${(assetFrames / fps).toFixed(2)}s)` };
   }
   const endSec = end.value ?? (assetFrames !== null ? assetFrames / fps : undefined);
   if (endSec === undefined) return { error: 'Cần có source end khi chưa biết thời lượng asset' };
@@ -166,7 +166,7 @@ export function validateSourceWindow(
   }
   const endFrameIn = Math.max(startFrameIn + 1, Math.round(endSec * fps));
   if (assetFrames !== null && endFrameIn > assetFrames) {
-    return { error: `source end ${endSec}s vượt quá độ dài asset (${(assetFrames / fps).toFixed(2)}s)` };
+    return { error: `source end ${endSec}s vượt quá độ dài tư liệu (${(assetFrames / fps).toFixed(2)}s)` };
   }
   return {
     srcInFrame: startFrameIn,

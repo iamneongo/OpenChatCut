@@ -342,7 +342,7 @@ export async function execTemplateTool(name: string, args: Args, ctx: AgentConte
       if (!tpl) return { error: `Không tìm thấy template "${id}"` };
       const copied = copyTemplateAssets(ctx.getDoc(), tpl);
       const clean = migrateProjectDoc(copied.doc);
-      if (!clean) return { error: 'Asset của template tạo ra tài liệu dự án không hợp lệ' };
+      if (!clean) return { error: 'Tư liệu của mẫu tạo ra tài liệu dự án không hợp lệ' };
       if (copied.assets.length) ctx.commands.applyDoc(clean);
       return { ok: true, templateId: id, assets: copied.assets };
     }

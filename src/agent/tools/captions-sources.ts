@@ -165,7 +165,7 @@ export async function languageMode(json: Record<string, unknown>, c: CaptionsDat
     if (!lang) return { error: 'Chế độ translation cần languageCode (ngôn ngữ đích)' };
     const it = c.sourceItemId ? s.items.find((x) => x.id === c.sourceItemId) : firstTranscribedOnTrack(s, 'A1');
     const v = it?.variants ? findVariantByLang(it.variants, lang, 'translation') : undefined;
-    if (!v) return { error: `Nguồn phụ đề chưa có variant transcript "${lang}"; hãy chạy manage_transcript translation_ensure trước` };
+    if (!v) return { error: `Nguồn phụ đề chưa có biến thể bản chép lời "${lang}"; hãy chạy manage_transcript translation_ensure trước` };
     ctx.commands.updateCaptions({ captionVariantId: v.id, bilingual: false, translation: undefined });
     return { ok: true, mode: 'translation', languageCode: v.lang, note: 'Dòng phụ đề chính giờ hiển thị biến thể bản dịch (giữ nguyên timing nguồn).' };
   }

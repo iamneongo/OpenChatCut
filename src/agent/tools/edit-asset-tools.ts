@@ -71,7 +71,7 @@ function remove(asset: MediaAsset, args: Args, ctx: AgentContext): unknown {
 export async function execEditAssetTool(name: string, args: Args, ctx: AgentContext): Promise<unknown> {
   if (name !== 'edit_asset') return { error: `Công cụ không xác định: ${name}` };
   const id = strArg(args.assetId);
-  if (!id) return { error: 'edit_asset cần có assetId' };
+  if (!id) return { error: 'edit_asset cần có mã tư liệu (assetId)' };
   const asset = ctx.getDoc().assets.find((a) => a.id === id || a.id.startsWith(id));
   if (!asset) return { error: `Không tìm thấy tư liệu ${id}` };
 

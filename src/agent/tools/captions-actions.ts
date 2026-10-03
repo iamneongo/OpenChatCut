@@ -75,7 +75,7 @@ function displayText(json: Record<string, unknown>, c: CaptionsData, ctx: AgentC
   }
   const item = c.sourceItemId ? s.items.find((candidate) => candidate.id === c.sourceItemId) : undefined;
   if (c.sourceItemId && !hasOperationalTranscript(item)) {
-    return { error: `Nguồn phụ đề ${c.sourceItemId} chưa có transcript hiện tại; hãy chép lời lại` };
+    return { error: `Nguồn phụ đề ${c.sourceItemId} chưa có bản chép lời hiện tại; hãy chép lời lại` };
   }
   const result = applyDisplayTextEntries(raw, c, s.items, s.fps);
   ctx.commands.updateCaptions({ wordOverrides: result.wordOverrides });
@@ -128,7 +128,7 @@ export async function editCaptions(args: Args, ctx: AgentContext): Promise<Resul
   if (action === 'enable') {
     const transcribed = s.items.filter((it) => hasOperationalTranscript(it));
     const hasManualWords = !!c?.words?.length || !!c?.sourceEntries?.some((entry) => entry.words !== undefined);
-    if (!transcribed.length && !hasManualWords) return { error: 'Chưa có transcript hiện tại để tạo phụ đề; hãy chạy transcribe_track trước' };
+    if (!transcribed.length && !hasManualWords) return { error: 'Chưa có bản chép lời hiện tại để tạo phụ đề; hãy chạy transcribe_track trước' };
     const presetArg = str(args.preset);
     const template: CaptionTemplate = presetArg && presetArg !== 'auto' && isTemplate(presetArg) ? presetArg : (c?.template ?? 'plain');
     const pacing: CaptionPacing = c?.pacing ?? 'phrase';

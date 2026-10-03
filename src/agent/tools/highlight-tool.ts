@@ -376,7 +376,7 @@ export async function execHighlightTool(name: string, args: Args, ctx: AgentCont
   if (!highlights.length) {
     ctx.commands.switchTimeline(originalActiveId);
     return {
-      error: 'Transcript chưa đủ để chọn đoạn nổi bật: cả model và heuristic đều không tìm thấy ứng viên. Hãy kiểm tra transcript của clip (dùng read_transcript), hoặc thử clip có nội dung lời thoại phong phú hơn.',
+      error: 'Bản chép lời chưa đủ để chọn đoạn nổi bật: cả mô hình và phương pháp heuristic đều không tìm thấy ứng viên. Hãy kiểm tra bản chép lời của clip (dùng read_transcript), hoặc thử clip có nội dung lời thoại phong phú hơn.',
     };
   }
 

@@ -237,7 +237,7 @@ async function syncImages(args: Args, ctx: AgentContext): Promise<unknown> {
   const prepared = buildMusicImagePlacementActions(built.plan, ctx.getState(), ctx.getDoc().assets);
   if (prepared.missingAssetIds.length) {
     return {
-      error: 'Một số asset hình ảnh trong kế hoạch không còn trong kho media; hãy tạo lại kế hoạch hình theo nhạc',
+      error: 'Một số tư liệu hình ảnh trong kế hoạch không còn trong kho media; hãy tạo lại kế hoạch hình theo nhạc',
       changed: false,
       missingAssetIds: prepared.missingAssetIds,
     };

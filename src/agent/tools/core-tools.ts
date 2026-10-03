@@ -136,7 +136,7 @@ async function createMotionGraphic(args: Args, ctx: AgentContext): Promise<unkno
     ok: true, status: 'succeeded', jobId: `mg_${asset.id}`, assetId: asset.id,
     name: asset.name, kind: asset.kind, durationInFrames: asset.durationInFrames,
     width: asset.width, height: asset.height,
-    note: 'Asset motion graphic hiện chỉ nằm trong kho media (contract submit_*). Đặt bằng edit_item với adds:[{type:"motion-graphic",assetId:"<this assetId>",trackId?,fromFrame?}]. Với template trong catalog, dùng library:motion-graphic:<templateId> hoặc add_motion_graphic.',
+    note: 'Tư liệu motion graphic hiện chỉ nằm trong kho media (hợp đồng submit_*). Đặt bằng edit_item với adds:[{type:"motion-graphic",assetId:"<mã tư liệu>",trackId?,fromFrame?}]. Với mẫu trong catalog, dùng library:motion-graphic:<templateId> hoặc add_motion_graphic.',
   };
 }
 

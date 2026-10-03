@@ -406,5 +406,5 @@ const COMMANDS: Record<string, Handler> = {
 
 export function executeGenerateCommand(name: string, args: GenerateArgs, ctx: AgentContext): unknown | Promise<unknown> {
   const handler = COMMANDS[name];
-  return handler ? handler(args, ctx) : { error: `generate tool not implemented: ${name}` };
+  return handler ? handler(args, ctx) : { error: `công cụ tạo nội dung chưa được triển khai: ${name}` };
 }

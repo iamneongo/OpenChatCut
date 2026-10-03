@@ -132,7 +132,7 @@ export function parseTransformArg(
     else out.crop = parsed.crop;
   }
   if (!Object.keys(out).length && !cropClear) {
-    return { error: 'transform needs at least one of scale/scaleX/scaleY/x/y/rotation/opacity/borderRadius/crop/flexCrop' };
+    return { error: 'transform cần ít nhất một trong các trường scale/scaleX/scaleY/x/y/rotation/opacity/borderRadius/crop/flexCrop' };
   }
   return { transform: out, cropClear };
 }

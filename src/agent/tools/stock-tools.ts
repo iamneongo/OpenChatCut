@@ -100,12 +100,12 @@ async function materializeUrl(url: string): Promise<Materialized> {
     if (body.code === 'upstream_http') {
       return { src: url, local: false, note: `Không thể tải địa chỉ này (${err}); hãy dùng địa chỉ media có thể truy cập trực tiếp`, failed: true };
     }
-    return { src: url, local: false, note: `remote src (import-url: ${err})` };
+    return { src: url, local: false, note: `nguồn từ xa (import-url: ${err})` };
   } catch (e) {
     return {
       src: url,
       local: false,
-      note: `remote src (${e instanceof Error ? e.message : 'no proxy'})`,
+      note: `nguồn từ xa (${e instanceof Error ? e.message : 'không có proxy'})`,
     };
   }
 }

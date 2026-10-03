@@ -170,7 +170,7 @@ export async function unavailableAnalysis(asset: MediaAsset): Promise<Record<str
     // Catalog status is advisory here; cache absence remains the authoritative result.
   }
   return {
-    error: 'Nhạc chưa được phân tích; hãy gọi analyze_music cho asset này rồi thử lại',
+    error: 'Nhạc chưa được phân tích; hãy gọi analyze_music cho tư liệu này rồi thử lại',
     assetId: asset.id,
     requiredModelPacks: required,
     action: MISSING_MODEL_PACKS_ACTION,

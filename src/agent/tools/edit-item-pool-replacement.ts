@@ -30,13 +30,13 @@ function findItem(items: readonly TimelineItem[], value: unknown): TimelineItem 
 
 function findAsset(assets: readonly MediaAsset[], value: unknown): MediaAsset | OpResult {
   const query = String(value ?? '').trim();
-  if (!query) return { error: 'Thay asset trong kho cần có assetId' };
+  if (!query) return { error: 'Thay tư liệu trong kho cần có mã tư liệu (assetId)' };
   const exact = assets.find((asset) => asset.id === query);
   const matches = exact ? [exact] : assets.filter((asset) => asset.id.startsWith(query));
-  if (!matches.length) return { error: `Không có asset trong kho khớp với "${query}"` };
+  if (!matches.length) return { error: `Không có tư liệu trong kho khớp với "${query}"` };
   if (matches.length > 1) {
     return {
-      error: `Tiền tố asset không đủ rõ ràng: "${query}"`,
+      error: `Tiền tố tư liệu không đủ rõ ràng: "${query}"`,
       candidates: matches.slice(0, 6).map((asset) => ({ id: asset.id, name: asset.name, kind: asset.kind })),
     };
   }
@@ -62,16 +62,16 @@ export function validatePoolAssetReplacement(
   if (unknown) return { error: unknown };
   const item = findItem(state.items, entry.itemId ?? entry.id);
   if (!item) return { error: `Không tìm thấy item: ${String(entry.itemId ?? entry.id ?? '')}` };
-  if (!isFileMediaKind(item.kind)) return { error: `Thay asset trong kho cần clip có file, nhưng nhận ${item.kind}` };
+  if (!isFileMediaKind(item.kind)) return { error: `Thay tư liệu trong kho cần clip có tệp, nhưng nhận ${item.kind}` };
   const resolved = findAsset(assets, entry.assetId);
   if ('error' in resolved) return resolved;
   const asset = resolved;
   const assetKind = asset.kind;
   if (assetKind !== 'video' && assetKind !== 'audio' && assetKind !== 'image' && assetKind !== 'gif') {
-    return { error: `Asset ${asset.id} không phải media có file` };
+    return { error: `Tư liệu ${asset.id} không phải media có tệp` };
   }
   if ((item.kind === 'audio') !== (asset.kind === 'audio')) {
-    return { error: `Asset ${asset.id} kind=${asset.kind} không tương thích với clip ${item.kind} ${item.id}` };
+    return { error: `Tư liệu ${asset.id} loại=${asset.kind} không tương thích với clip ${item.kind} ${item.id}` };
   }
   const startAlias = positiveFrame(entry.srcInFrame, 'srcInFrame', true);
   if (startAlias && typeof startAlias === 'object') return startAlias;
@@ -102,7 +102,7 @@ export function validatePoolAssetReplacement(
     const sourceSpan = sourceDuration ?? timelineFramesToSourceFrames(item, durationInFrames);
     if ((srcInFrame ?? 0) + sourceSpan > assetDuration) {
       return {
-        error: `Cửa sổ nguồn [${srcInFrame ?? 0}, ${(srcInFrame ?? 0) + sourceSpan}) vượt quá độ dài ${assetDuration} của asset ${asset.id}`,
+        error: `Cửa sổ nguồn [${srcInFrame ?? 0}, ${(srcInFrame ?? 0) + sourceSpan}) vượt quá độ dài ${assetDuration} của tư liệu ${asset.id}`,
       };
     }
   }
