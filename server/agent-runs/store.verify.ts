@@ -285,7 +285,7 @@ await assert.rejects(
     abandonedDigest,
     5,
   ),
-  /tool request timed out/i,
+  /Yêu cầu tool Agent hết thời gian chờ/i,
   'a disconnected editor cannot park a server run forever',
 );
 assert.equal(claimToolRequest(abandonedRun, {
