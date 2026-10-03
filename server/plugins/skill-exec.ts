@@ -46,7 +46,7 @@ export function interpreterGuardError(dir: string, binary: string, args: string[
     if (!arg.startsWith('-') || arg === '-') { script = arg === '-' ? undefined : arg; break; }
     if (pattern.test(arg)) return `inline execution flag not allowed for ${binary}: ${arg}`;
   }
-  if (!script) return `${binary} requires a script file inside the skill directory`;
+  if (!script) return `${binary} yêu cầu tệp script bên trong thư mục skill`;
   const resolved = resolve(dir, script);
   if (resolved !== dir && !resolved.startsWith(dir + sep)) {
     return `script path escapes the skill directory: ${script}`;

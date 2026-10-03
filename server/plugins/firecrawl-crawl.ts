@@ -16,7 +16,7 @@ export async function handleCrawl(
 ): Promise<void> {
   const url = String(body.url ?? '').trim();
   if (!url || !isHttpUrl(url)) {
-    sendJson(res, 400, { error: 'url must be a valid http(s) URI' });
+    sendJson(res, 400, { error: 'url phải là URI http(s) hợp lệ' });
     return;
   }
 
@@ -83,7 +83,7 @@ export async function handleCrawl(
     sendJson(res, 200, {
       configured: true,
       ok: false,
-      error: 'Firecrawl crawl did not return a job id',
+      error: 'Firecrawl crawl không trả về job id',
       raw: start.json,
     });
     return;
@@ -166,7 +166,7 @@ export async function handleBatchScrape(
     .filter((u) => isHttpUrl(u))
     .slice(0, 15);
   if (!urls.length) {
-    sendJson(res, 400, { error: 'urls must be a non-empty array of http(s) URIs (max 15)' });
+    sendJson(res, 400, { error: 'urls phải là mảng URI http(s) không rỗng (tối đa 15)' });
     return;
   }
 

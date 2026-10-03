@@ -16,7 +16,7 @@ export async function handleScrape(
 ): Promise<void> {
   const url = String(body.url ?? '').trim();
   if (!url || !isHttpUrl(url)) {
-    sendJson(res, 400, { error: 'url must be a valid http(s) URI' });
+    sendJson(res, 400, { error: 'url phải là URI http(s) hợp lệ' });
     return;
   }
 
@@ -199,7 +199,7 @@ export async function handleMap(
 ): Promise<void> {
   const url = String(body.url ?? '').trim();
   if (!url || !isHttpUrl(url)) {
-    sendJson(res, 400, { error: 'url must be a valid http(s) URI' });
+    sendJson(res, 400, { error: 'url phải là URI http(s) hợp lệ' });
     return;
   }
   const limit = typeof body.limit === 'number'

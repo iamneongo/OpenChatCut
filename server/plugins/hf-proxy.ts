@@ -177,7 +177,7 @@ function downloadExpectation(
     throw new Error(`kích thước model dự kiến không hợp lệ: ${bytes}`);
   }
   if (sha256 !== undefined && (!bytes || !/^[a-f0-9]{64}$/.test(sha256))) {
-    throw new Error('expected model SHA-256 requires a valid size and lowercase digest');
+    throw new Error('SHA-256 model yêu cầu size hợp lệ và digest chữ thường');
   }
   return { bytes, sha256 };
 }
@@ -340,7 +340,7 @@ export function hfProxyPlugin(): Plugin {
       server.middlewares.use('/api/hf-proxy', (req, res) => {
         void handleHfProxyRequest(req, res).catch((error) => {
           if (!res.headersSent) {
-            sendJson(res, 500, { error: 'model file request failed' });
+            sendJson(res, 500, { error: 'yêu cầu tệp model thất bại' });
             return;
           }
           if (!res.destroyed) res.destroy(error instanceof Error ? error : undefined);

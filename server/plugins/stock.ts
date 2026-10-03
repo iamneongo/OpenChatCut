@@ -195,7 +195,7 @@ async function searchPexels(
   }
   const endpoint = kind === 'video' ? 'https://api.pexels.com/videos/search' : 'https://api.pexels.com/v1/search';
   const res = await fetchImpl(`${endpoint}?${params.toString()}`, { headers: { Authorization: apiKey } });
-  if (!res.ok) throw new Error(`Pexels search failed (${res.status})`);
+  if (!res.ok) throw new Error(`tìm kiếm Pexels thất bại (${res.status})`);
   if (kind === 'video') {
     const body = await res.json() as { videos?: PexelsVideo[] };
     return (body.videos ?? []).map((video): StockResult | null => {
@@ -235,7 +235,7 @@ async function searchPixabay(
   if (orientation === 'horizontal' || orientation === 'vertical') params.set('orientation', orientation);
   const endpoint = kind === 'video' ? 'https://pixabay.com/api/videos/' : 'https://pixabay.com/api/';
   const res = await fetchImpl(`${endpoint}?${params.toString()}`);
-  if (!res.ok) throw new Error(`Pixabay search failed (${res.status})`);
+  if (!res.ok) throw new Error(`tìm kiếm Pixabay thất bại (${res.status})`);
   if (kind === 'video') {
     const body = await res.json() as { hits?: PixabayVideoHit[] };
     return (body.hits ?? []).slice(0, limit).map((hit) => {
@@ -276,7 +276,7 @@ async function searchUnsplash(
   const res = await fetchImpl(`https://api.unsplash.com/search/photos?${params.toString()}`, {
     headers: { Authorization: `Client-ID ${accessKey}` },
   });
-  if (!res.ok) throw new Error(`Unsplash search failed (${res.status})`);
+  if (!res.ok) throw new Error(`tìm kiếm Unsplash thất bại (${res.status})`);
   const body = await res.json() as { results?: UnsplashPhoto[] };
   return (body.results ?? []).map((photo) => ({
     platform: 'unsplash', kind: 'image', previewUrl: photo.urls.small ?? photo.urls.regular,
@@ -307,7 +307,7 @@ async function searchFreesound(
   });
   if (musicOnly) params.set('filter', 'tag:music');
   const res = await fetchImpl(`https://freesound.org/apiv2/search/text/?${params.toString()}`);
-  if (!res.ok) throw new Error(`Freesound search failed (${res.status})`);
+  if (!res.ok) throw new Error(`tìm kiếm Freesound thất bại (${res.status})`);
   const body = await res.json() as { results?: FreesoundHit[] };
   return (body.results ?? []).map((hit): StockResult | null => {
     const mediaUrl = hit.previews?.['preview-hq-mp3'] ?? hit.previews?.['preview-lq-mp3'];

@@ -88,7 +88,7 @@ export async function searchFirecrawl(
     body: JSON.stringify(payload),
     signal: AbortSignal.timeout(30_000),
   });
-  if (!res.ok) throw new Error(`Firecrawl stock search failed (${res.status})`);
+  if (!res.ok) throw new Error(`tìm kiếm stock bằng Firecrawl thất bại (${res.status})`);
   const body = await res.json() as FirecrawlResponse;
   if (kind === 'image') return parseFirecrawlImages(body.data?.images ?? [], orientation, limit, platforms);
   const markdown = (body.data?.web ?? []).map((hit) => hit.markdown ?? '').join('\n');
