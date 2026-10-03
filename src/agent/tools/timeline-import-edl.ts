@@ -10,6 +10,7 @@
 // timeline-import-media.ts). Drop-frame comes from a ';' label or the
 // "FCM: DROP FRAME" statement that governs the events after it (CMX 3600 spec).
 import type { MediaAsset, TimelineState } from '../../editor/types';
+import { localizedCatalogText } from '../../i18n/locale';
 import { fromFrames, rateFromNumber, rational, toFrames, toNumber, type Rational } from './timeline-import-rational';
 import {
   isTimelineAsset, resolveAsset, resolveSourceIn, sourceNoteLog, type SourceNoteLog,
@@ -330,7 +331,7 @@ export function parseEdl(
   return {
     ok: true,
     timeline: {
-      name: scanned.title || 'Imported EDL',
+      name: scanned.title || localizedCatalogText('Imported EDL', '导入的 EDL', undefined, 'EDL đã nhập'),
       fps: fallback.fps,
       sourceFps: toNumber(clock.fps),
       width: fallback.width,

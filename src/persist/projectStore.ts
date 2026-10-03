@@ -1,5 +1,6 @@
 export { loadProjectThumb, saveProjectThumb } from './projectThumbStore';
 import type { ProjectDoc, TimelineState } from '../editor/types';
+import { localizedCatalogText } from '../i18n/locale';
 import type { LlmProvider } from '../../shared/llm-providers';
 import { CURRENT_PROJECT_VERSION } from '../../shared/project-version';
 import {
@@ -412,7 +413,7 @@ export async function duplicateProject(id: string, name?: string): Promise<Proje
   if (!doc) return null;
   // Allow duplicating soft-deleted sources too (copy is active).
   const src = (await readIndex()).find((m) => m.id === id);
-  const copyName = (name?.trim() || `[Bản sao] ${src?.name ?? 'Project'}`);
+  const copyName = (name?.trim() || `[Bản sao] ${src?.name ?? localizedCatalogText('Project', '项目', undefined, 'Dự án')}`);
   return createProject(copyName, doc, src?.description ? { description: src.description } : undefined);
 }
 

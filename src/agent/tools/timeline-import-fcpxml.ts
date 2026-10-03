@@ -2,6 +2,7 @@
 // time; this module resolves each one against the media pool, measures its
 // in-point from the file's own start, and converts to timeline frames.
 import type { MediaAsset, TimelineState } from '../../editor/types';
+import { localizedCatalogText } from '../../i18n/locale';
 import {
   ONE, ZERO, add, cmp, div, floorToInt, fromFrames, mul, parseTime, rateFromNumber, sub, toFrames, toNumber,
   type Rational,
@@ -288,7 +289,7 @@ export function parseFcpxml(
   return {
     ok: true,
     timeline: {
-      name: attr(project ?? sequence, 'name') || 'Imported FCPXML',
+      name: attr(project ?? sequence, 'name') || localizedCatalogText('Imported FCPXML', '导入的 FCPXML', undefined, 'FCPXML đã nhập'),
       fps: fallback.fps,
       sourceFps: toNumber(fps),
       width: Number(attr(format ?? sequence, 'width')) || fallback.width,
