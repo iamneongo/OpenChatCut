@@ -23,6 +23,9 @@ assert.equal(component.match(/retryClassLabel\(job\.retryClass, t\)/g)?.length, 
 
 const generationActivityKeys = [
   '生成任务',
+  '视频生成',
+  '音效生成',
+  '音乐生成',
   '旧版参数摘要（不可安全重跑）',
   '参数快照不可用',
   '刷新后仍可继续检查、下载或重跑',
