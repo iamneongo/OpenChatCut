@@ -47,10 +47,10 @@ function report(id: number, progress: number): void {
 }
 
 function validateRequest(value: unknown): AnalyzeRequest {
-  if (!value || typeof value !== 'object') throw new Error('request worker Beat This không hợp lệ');
+  if (!value || typeof value !== 'object') throw new Error('yêu cầu worker Beat This không hợp lệ');
   const request = value as Partial<AnalyzeRequest>;
   if (request.type !== 'analyze' || !Number.isSafeInteger(request.id) || (request.id ?? -1) < 0) {
-    throw new Error('envelope request worker Beat This không hợp lệ');
+    throw new Error('gói yêu cầu worker Beat This không hợp lệ');
   }
   if (request.backend !== 'webgpu' && request.backend !== 'wasm') throw new Error('backend Beat This không hợp lệ');
   if (!(request.samples instanceof Float32Array)) throw new Error('mẫu âm thanh Beat This không hợp lệ');

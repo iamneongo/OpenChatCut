@@ -113,7 +113,7 @@ function validateRequest(value: unknown): WorkerRequest {
   if (!value || typeof value !== 'object') throw new Error('yêu cầu worker ngữ nghĩa không hợp lệ');
   const request = value as Record<string, unknown>;
   if (!Number.isSafeInteger(request.id) || (request.id as number) < 0) {
-    throw new Error('request id của worker ngữ nghĩa không hợp lệ');
+    throw new Error('mã yêu cầu của worker ngữ nghĩa không hợp lệ');
   }
   if (request.type === 'load' && (request.device === 'webgpu' || request.device === 'wasm')) return request as WorkerRequest;
   if (request.type === 'embed-text' && typeof request.text === 'string'
@@ -121,7 +121,7 @@ function validateRequest(value: unknown): WorkerRequest {
   if (request.type === 'embed-image' && isValidFrame(request.frame)) return request as WorkerRequest;
   if (request.type === 'find-duplicates' && typeof request.threshold === 'number'
     && Number.isFinite(request.threshold) && isValidPackedVectors(request.vectors)) return request as WorkerRequest;
-  throw new Error('payload yêu cầu worker ngữ nghĩa không hợp lệ');
+  throw new Error('dữ liệu yêu cầu worker ngữ nghĩa không hợp lệ');
 }
 
 function isValidFrame(value: unknown): boolean {

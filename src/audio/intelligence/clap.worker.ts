@@ -152,17 +152,17 @@ async function embed(request: Extract<ClapWorkerRequest, { type: 'embed' }>): Pr
 }
 
 function validateRequest(value: unknown): ClapWorkerRequest {
-  if (!value || typeof value !== 'object') throw new Error('request worker CLAP không hợp lệ');
+  if (!value || typeof value !== 'object') throw new Error('yêu cầu worker CLAP không hợp lệ');
   const request = value as Record<string, unknown>;
   if (!Number.isSafeInteger(request.id) || (request.id as number) < 0) {
-    throw new Error('request id worker CLAP không hợp lệ');
+    throw new Error('mã yêu cầu worker CLAP không hợp lệ');
   }
   if (request.type === 'load' && (request.backend === 'webgpu' || request.backend === 'wasm')) {
     return request as ClapWorkerRequest;
   }
   if (request.type === 'embed' && request.samples instanceof Float32Array
     && request.sampleRate === CLAP_SAMPLE_RATE) return request as ClapWorkerRequest;
-  throw new Error('payload request worker CLAP không hợp lệ');
+  throw new Error('dữ liệu yêu cầu worker CLAP không hợp lệ');
 }
 
 async function handleRequest(value: unknown): Promise<void> {

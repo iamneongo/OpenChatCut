@@ -182,17 +182,17 @@ function workerRequestId(value: unknown): number {
 }
 
 function parseWorkerRequest(value: unknown): ClapWorkerRequest {
-  if (typeof value !== 'object' || value === null) throw new Error('request worker CLAP không hợp lệ');
+  if (typeof value !== 'object' || value === null) throw new Error('yêu cầu worker CLAP không hợp lệ');
   const request = value as Partial<ClapWorkerRequest>;
   if (!Number.isSafeInteger(request.id) || (request.id as number) < 0) {
-    throw new Error('request id worker CLAP không hợp lệ');
+    throw new Error('mã yêu cầu worker CLAP không hợp lệ');
   }
   if (request.type === 'load' && (request.backend === 'webgpu' || request.backend === 'wasm')) {
     return request as ClapWorkerRequest;
   }
   if (request.type === 'embed' && request.samples instanceof Float32Array
     && request.sampleRate === CLAP_SAMPLE_RATE) return request as ClapWorkerRequest;
-  throw new Error('payload request worker CLAP không hợp lệ');
+  throw new Error('dữ liệu yêu cầu worker CLAP không hợp lệ');
 }
 
 function workerResult(request: ClapWorkerRequest, requestId: string, value: unknown): ClapWorkerResult {

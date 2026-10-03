@@ -164,7 +164,7 @@ function createSemanticWorker(): Worker {
 }
 
 function semanticAbortError(): DOMException {
-  return new DOMException('Semantic request canceled', 'AbortError');
+  return new DOMException('Yêu cầu tìm kiếm ngữ nghĩa đã bị hủy', 'AbortError');
 }
 
 function requireLoaded(result: WorkerResult): void {
@@ -184,13 +184,13 @@ function requireDuplicates(result: WorkerResult): DuplicateMatch[] {
 function validateWorkerResponse(value: unknown): WorkerResponse {
   if (!value || typeof value !== 'object') throw new Error('worker ngữ nghĩa trả về phản hồi không hợp lệ');
   const response = value as Record<string, unknown>;
-  if (!Number.isSafeInteger(response.id)) throw new Error('worker ngữ nghĩa trả về request id không hợp lệ');
+  if (!Number.isSafeInteger(response.id)) throw new Error('worker ngữ nghĩa trả về mã yêu cầu không hợp lệ');
   if (response.type === 'error' && typeof response.message === 'string') return response as WorkerResponse;
   if (response.type === 'progress'
     && (response.progress === undefined || typeof response.progress === 'number')
     && (response.file === undefined || typeof response.file === 'string')) return response as WorkerResponse;
   if (response.type === 'result' && isWorkerResult(response.result)) return response as WorkerResponse;
-  throw new Error('worker ngữ nghĩa trả về payload phản hồi không hợp lệ');
+  throw new Error('worker ngữ nghĩa trả về dữ liệu phản hồi không hợp lệ');
 }
 
 function isWorkerResult(value: unknown): value is WorkerResult {

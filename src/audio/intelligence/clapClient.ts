@@ -152,7 +152,7 @@ function createClapWorker(): Worker {
 
 function positiveTimeout(value: number | undefined, fallback: number): number {
   if (value === undefined) return fallback;
-  if (!Number.isFinite(value) || value <= 0) throw new Error('timeout CLAP phải là số dương');
+  if (!Number.isFinite(value) || value <= 0) throw new Error('thời gian chờ CLAP phải là số dương');
   return value;
 }
 
@@ -297,14 +297,14 @@ function settlePending(
 function validateWorkerResponse(value: unknown): ClapWorkerResponse {
   if (!value || typeof value !== 'object') throw new Error('worker CLAP trả về phản hồi không hợp lệ');
   const response = value as Record<string, unknown>;
-  if (!Number.isSafeInteger(response.id)) throw new Error('worker CLAP trả về request id không hợp lệ');
+  if (!Number.isSafeInteger(response.id)) throw new Error('worker CLAP trả về mã yêu cầu không hợp lệ');
   if (response.type === 'error' && typeof response.message === 'string') return response as ClapWorkerResponse;
   if (response.type === 'progress' && typeof response.progress === 'number'
     && Number.isFinite(response.progress) && response.progress >= 0 && response.progress <= 1) {
     return response as ClapWorkerResponse;
   }
   if (response.type === 'result' && isWorkerResult(response.result)) return response as ClapWorkerResponse;
-  throw new Error('worker CLAP trả về payload phản hồi không hợp lệ');
+  throw new Error('worker CLAP trả về dữ liệu phản hồi không hợp lệ');
 }
 
 function isWorkerResult(value: unknown): value is ClapWorkerResult {
