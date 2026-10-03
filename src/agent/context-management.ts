@@ -95,7 +95,7 @@ async function summarizeForPreparation(
     (prompt, outputTokens) => {
       if (options.choice.backend === 'copilot') {
         // The browser loop has no Copilot turn runner; server runs own that path.
-        throw new Error('Copilot summarization runs server-side only.');
+        throw new Error('Việc tóm tắt Copilot chỉ được thực hiện ở phía máy chủ.');
       }
       return options.choice.backend === 'codex'
         ? summarizeWithCodex(prompt, outputTokens, options)

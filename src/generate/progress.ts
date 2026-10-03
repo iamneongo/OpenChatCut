@@ -60,7 +60,7 @@ export async function trackGenerationProgress(
     body: JSON.stringify({ ...args, target: 'generation' }),
   });
   const data = await response.json().catch(() => ({})) as ProgressResponse;
-  if (!response.ok) throw new Error(data.error ?? `generation progress failed (${response.status})`);
+  if (!response.ok) throw new Error(data.error ?? `Không thể lấy tiến độ tạo nội dung (${response.status})`);
   const reports = data.reports ?? [];
   const existing = new Set((state.assets ?? []).map((asset) => asset.id));
   const completedAssets: MediaAsset[] = [];

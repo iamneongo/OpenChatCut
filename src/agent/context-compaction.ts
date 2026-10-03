@@ -263,7 +263,7 @@ function deterministicCheckpointEvidence(
 }
 async function sha256Text(text: string): Promise<string> {
   if (!globalThis.crypto?.subtle) {
-    throw new Error('The current environment cannot create a secure context checkpoint digest.');
+    throw new Error('Môi trường hiện tại không thể tạo digest checkpoint ngữ cảnh an toàn.');
   }
   const digest = await globalThis.crypto.subtle.digest(
     'SHA-256',
@@ -293,7 +293,7 @@ async function createCheckpoint(
     sha256Text(sanitizedSummary),
   ]);
   if (!globalThis.crypto?.randomUUID) {
-    throw new Error('The current environment cannot create a unique context checkpoint id.');
+    throw new Error('Môi trường hiện tại không thể tạo ID checkpoint ngữ cảnh duy nhất.');
   }
   return {
     summary: sanitizedSummary,
@@ -450,7 +450,7 @@ export async function prepareContext(
   if (start <= 0) {
     const rescued = rescueOversizedTail(shaken);
     if (!rescued) {
-      throw new Error('The current request is too large for this model context window. Remove large attachments or choose a model with a larger context window.');
+    throw new Error('Yêu cầu hiện tại quá lớn so với cửa sổ ngữ cảnh của model này. Hãy xóa tệp đính kèm lớn hoặc chọn model có cửa sổ ngữ cảnh lớn hơn.');
     }
     return prepareContext({ ...options, messages: rescued });
   }
@@ -458,7 +458,7 @@ export async function prepareContext(
   const summarizedMessages = shaken.slice(0, start);
   const sourceText = serializeMessagesForSummary(summarizedMessages);
   const generatedSummary = (await options.summarize(summarizedMessages)).trim();
-  if (!generatedSummary) throw new Error('The model returned an empty context summary.');
+  if (!generatedSummary) throw new Error('Model trả về bản tóm tắt ngữ cảnh trống.');
   const summary = deterministicCheckpointEvidence(
     generatedSummary,
     summarizedMessages,
@@ -479,7 +479,7 @@ export async function prepareContext(
     options.requestOverheadTokens,
   );
   if (compactedTokens > triggerTokens) {
-    throw new Error('The recent conversation is still too large after context compaction. Remove large attachments or start a new chat.');
+  throw new Error('Cuộc trò chuyện gần đây vẫn quá lớn sau khi rút gọn ngữ cảnh. Hãy xóa tệp đính kèm lớn hoặc bắt đầu cuộc trò chuyện mới.');
   }
   return {
     messages,

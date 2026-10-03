@@ -66,7 +66,7 @@ export async function submitMediaExport(
   const codec = args.codec ?? (args.format === 'video' ? 'h264' : 'mp3');
   const ext = codec === 'h264' ? 'mp4' : codec === 'vp8' ? 'webm' : codec;
   const selected = project.timelines.find((timeline) => timeline.id === timelineId);
-  if (!selected) throw new Error(`timeline not found: ${timelineId}`);
+  if (!selected) throw new Error(`Không tìm thấy dòng thời gian: ${timelineId}`);
   const geometry = applyExportGeometry(selected, { fps: args.fps, resolution: args.resolution });
   const exportProject: ProjectDoc = {
     ...project,
@@ -94,7 +94,7 @@ export async function submitMediaExport(
   });
   if (!response.ok) {
     const result = await response.json().catch(() => ({})) as { error?: string };
-    throw new Error(result.error ?? `media export failed (${response.status})`);
+    throw new Error(result.error ?? `Xuất media thất bại (${response.status})`);
   }
   const blob = await response.blob();
   // The client already has the correct UTF-8 name, and it can be used directly as anchor.download (anchor uses JS strings,

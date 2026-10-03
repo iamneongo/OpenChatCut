@@ -241,7 +241,7 @@ export async function submitVideo(args: SubmitVideoArgs, state: TimelineState): 
     if (result.code === 'generation_reference_preflight' && result.issues?.length) {
       throw new GenerationReferencePreflightError(result.issues);
     }
-    throw new Error(result.error ?? `video generation failed (${response.status})`);
+    throw new Error(result.error ?? `Tạo video thất bại (${response.status})`);
   }
   if (!result.operationId || !result.jobId || result.status !== 'queued') throw new Error(localizedCatalogText('video generation returned an invalid job submission', '视频生成返回了无效的任务提交结果', undefined, 'Tạo video trả về yêu cầu tác vụ không hợp lệ'));
   return {

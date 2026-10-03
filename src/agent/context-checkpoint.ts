@@ -42,7 +42,7 @@ export class ContextIntegrityError extends Error {
 
 async function sha256Text(text: string): Promise<string> {
   if (!globalThis.crypto?.subtle) {
-    throw new Error('The current environment cannot verify a secure context checkpoint digest.');
+    throw new Error('Môi trường hiện tại không thể xác minh digest checkpoint ngữ cảnh an toàn.');
   }
   const digest = await globalThis.crypto.subtle.digest(
     'SHA-256',
