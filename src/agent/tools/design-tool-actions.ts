@@ -21,14 +21,14 @@ type ParsedSpec = DesignToolArgs | { error: string };
 function parseSpec(value: unknown): ParsedSpec {
   if (value === undefined || value === null || value === '') return {};
   if (typeof value === 'object' && !Array.isArray(value)) return value as DesignToolArgs;
-  if (typeof value !== 'string') return { error: 'designSpec must be a JSON object string' };
+  if (typeof value !== 'string') return { error: 'designSpec phải là chuỗi JSON dạng đối tượng' };
   try {
     const parsed = JSON.parse(value) as unknown;
     return parsed && typeof parsed === 'object' && !Array.isArray(parsed)
       ? parsed as DesignToolArgs
-      : { error: 'designSpec must decode to an object' };
+      : { error: 'designSpec phải giải mã thành một đối tượng' };
   } catch (error) {
-    return { error: `invalid JSON: ${error instanceof Error ? error.message : String(error)}` };
+    return { error: `JSON không hợp lệ: ${error instanceof Error ? error.message : String(error)}` };
   }
 }
 function isSpecError(spec: ParsedSpec): spec is { error: string } {
@@ -133,7 +133,7 @@ async function getStyle(args: DesignToolArgs, ctx: AgentContext): Promise<unknow
     designStyle: styleSummary(preset.style),
   };
   const owned = (await loadOwnedStyles()).find((style) => style.id === id);
-  if (!owned) return { error: `no style "${id}"` };
+  if (!owned) return { error: `Không có style "${id}"` };
   return {
     presetId: owned.id,
     name: owned.name,
@@ -153,7 +153,7 @@ async function resolveStyle(args: DesignToolArgs): Promise<DesignStyle | { error
   if (preset) return preset.style;
   const owned = (await loadOwnedStyles()).find((style) => style.id === id);
   return owned?.style ?? {
-    error: `no style "${id}"`,
+    error: `Không có style "${id}"`,
     available: DESIGN_STYLE_PRESETS.map((candidate) => candidate.id),
   };
 }
@@ -162,7 +162,7 @@ async function applyStyle(args: DesignToolArgs, ctx: AgentContext): Promise<unkn
   const style = await resolveStyle(args);
   if ('error' in style) return style;
   if (style.colors.length === 0 && style.fonts.length === 0 && !style.styleGuide) {
-    return { error: 'empty designSpec: need at least one color, font, or styleGuide (or a presetId)' };
+    return { error: 'designSpec trống: cần ít nhất một màu, phông chữ, styleGuide hoặc presetId' };
   }
   if (args.applyToProject === false) {
     return { ok: true, applied: false, style: styleSummary(style) };
@@ -182,9 +182,9 @@ function updatedOwnedStyle(current: DesignStyle, spec: DesignToolArgs): DesignSt
 }
 
 async function updateOwned(args: DesignToolArgs, id: string): Promise<unknown> {
-  if (findPreset(id)) return { error: "catalog styles can't be updated" };
+  if (findPreset(id)) return { error: 'Không thể cập nhật style có sẵn trong catalog' };
   const owned = (await loadOwnedStyles()).find((style) => style.id === id);
-  if (!owned) return { error: `no owned style "${id}"` };
+  if (!owned) return { error: `Không có style tự tạo "${id}"` };
   const spec = parseSpec(args.patch ?? args.designSpec);
   if (isSpecError(spec)) return spec;
   const style = updatedOwnedStyle(owned.style, spec);
@@ -201,7 +201,7 @@ async function updateOwned(args: DesignToolArgs, id: string): Promise<unknown> {
 
 function updateProject(args: DesignToolArgs, ctx: AgentContext): unknown {
   const current = ctx.getDoc().designStyle;
-  if (!current) return { error: 'no design style applied yet; use action="apply" first' };
+  if (!current) return { error: 'Chưa áp dụng style thiết kế; hãy dùng action="apply" trước' };
   const spec = parseSpec(args.patch ?? args.designSpec);
   if (isSpecError(spec)) return spec;
   const patch: Partial<DesignStyle> = {};
@@ -220,20 +220,20 @@ async function updateStyle(args: DesignToolArgs, ctx: AgentContext): Promise<unk
 function styleForSave(args: DesignToolArgs, ctx: AgentContext): DesignStyle | { error: string } {
   if (!args.designSpec) {
     return ctx.getDoc().designStyle
-      ?? { error: 'no designSpec given and no style applied to the project yet' };
+      ?? { error: 'Chưa có designSpec và dự án cũng chưa áp dụng style' };
   }
   const spec = parseSpec(args.designSpec);
   if (isSpecError(spec)) return spec;
   const style = normalizeStyle(spec);
   if (style.colors.length === 0 && style.fonts.length === 0 && !style.styleGuide) {
-    return { error: 'empty designSpec: need at least one color, font, or styleGuide' };
+    return { error: 'designSpec trống: cần ít nhất một màu, phông chữ hoặc styleGuide' };
   }
   return style;
 }
 
 async function saveStyle(args: DesignToolArgs, ctx: AgentContext): Promise<unknown> {
   const styleName = String(args.name ?? '').trim();
-  if (!styleName) return { error: 'save requires a non-empty "name"' };
+  if (!styleName) return { error: 'save cần trường "name" không rỗng' };
   const style = styleForSave(args, ctx);
   if ('error' in style) return style;
   const saved = await saveOwnedStyle(styleName, style, {
@@ -245,10 +245,10 @@ async function saveStyle(args: DesignToolArgs, ctx: AgentContext): Promise<unkno
 
 async function deleteStyle(args: DesignToolArgs): Promise<unknown> {
   const id = String(args.presetId ?? '').trim();
-  if (!id) return { error: 'delete requires "presetId" (the owned style id)' };
-  if (findPreset(id)) return { error: "catalog styles can't be deleted" };
+  if (!id) return { error: 'delete cần "presetId" (mã style tự tạo)' };
+  if (findPreset(id)) return { error: 'Không thể xóa style có sẵn trong catalog' };
   const owned = await loadOwnedStyles();
-  if (!owned.some((style) => style.id === id)) return { error: `no owned style "${id}"` };
+  if (!owned.some((style) => style.id === id)) return { error: `Không có style tự tạo "${id}"` };
   await deleteOwnedStyle(id);
   return { ok: true, deleted: id };
 }
@@ -269,6 +269,6 @@ export function executeDesignAction(
     case 'save': return saveStyle(args, ctx);
     case 'delete': return deleteStyle(args);
     default:
-      return { error: `unknown action "${action}"; use list|get|apply|update|clear|save|delete` };
+      return { error: `Action không xác định "${action}"; dùng list|get|apply|update|clear|save|delete` };
   }
 }

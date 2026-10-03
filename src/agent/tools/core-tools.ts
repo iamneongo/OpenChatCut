@@ -12,7 +12,7 @@ type Args = Record<string, unknown>;
 
 function searchTools(args: Args, schemas: readonly AgentToolSchema[]): unknown {
   const query = String(args.query ?? '').trim().toLowerCase();
-  if (!query) return { error: 'query is required', results: [] };
+  if (!query) return { error: 'Cần có từ khóa tìm kiếm', results: [] };
   const limit = Math.min(12, Math.max(1, Math.round(Number(args.limit) || 8)));
   const tokens = query.split(/\s+/).filter(Boolean);
   const scored = schemas
@@ -40,8 +40,8 @@ function searchTools(args: Args, schemas: readonly AgentToolSchema[]): unknown {
     results,
     activatedTools: results.map((tool) => tool.name),
     note: results.length
-      ? 'Matching schemas are active for the next model step. Call tools by exact name.'
-      : 'No tools matched; try export / caption / stock / video / voice.',
+      ? 'Các công cụ khớp đã được bật cho bước tiếp theo. Hãy gọi đúng tên công cụ.'
+      : 'Không tìm thấy công cụ phù hợp; hãy thử export / caption / stock / video / voice.',
   };
 }
 
@@ -62,11 +62,11 @@ function execTemplateCatalog(name: string, args: Args, ctx: AgentContext): unkno
   }
   const query = String(args.templateName ?? '').toLowerCase();
   const matches = ctx.templates.filter((template) => template.name.toLowerCase().includes(query));
-  if (!matches.length) return { error: `no template matching "${args.templateName}"`, available: ctx.templates.map((template) => template.name) };
+  if (!matches.length) return { error: `Không có template nào khớp với "${args.templateName}"`, available: ctx.templates.map((template) => template.name) };
   const template = matches[0];
   const state = ctx.getState();
   const track = resolveTrackId(state, args.track ?? 'V1', 'video') ?? defaultTrackId(state, 'video');
-  if (!track) return { error: 'no video track; create one with edit_track first' };
+  if (!track) return { error: 'Chưa có track video; hãy tạo bằng edit_track trước' };
   const startFrame = typeof args.startFrame === 'number' ? args.startFrame : undefined;
   ctx.commands.addMotionGraphic(template, { track, startFrame, ripple: args.ripple === true });
   return { ok: true, added: template.name, trackId: track, track: trackAlias(ctx.getState(), track) };
@@ -115,18 +115,18 @@ function generatedAsset(args: Args, code: string, ctx: AgentContext): MediaAsset
 
 async function createMotionGraphic(args: Args, ctx: AgentContext): Promise<unknown> {
   const description = String(args.prompt ?? args.description ?? '').trim();
-  if (!description) return { error: 'prompt (or description) is required' };
+  if (!description) return { error: 'Cần có prompt (hoặc description)' };
   let code: string;
   try {
     code = await generateMgCode(description, designStyleHint(ctx.getDoc().designStyle));
   } catch (error) {
-    return { error: `generation failed: ${error instanceof Error ? error.message : String(error)}` };
+    return { error: `Tạo nội dung thất bại: ${error instanceof Error ? error.message : String(error)}` };
   }
-  if (!code) return { error: 'model returned empty code' };
+  if (!code) return { error: 'Mô hình không trả về mã nguồn' };
   try {
     await prepareTemplate(code);
   } catch (error) {
-    return { error: `generated code rejected by sandbox: ${error instanceof Error ? error.message : String(error)}`, code };
+    return { error: `Mã nguồn tạo ra bị sandbox từ chối: ${error instanceof Error ? error.message : String(error)}`, code };
   }
   const asset = generatedAsset(args, code, ctx);
   ctx.commands.addAsset(asset);
