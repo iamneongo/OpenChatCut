@@ -27,7 +27,7 @@ export async function runCodexSummary(request: CodexSummaryRequest): Promise<str
     if (event.type === 'text-delta') {
       const candidate = text + event.delta;
       if (estimateTextTokens(candidate) > request.maxOutputTokens) {
-        throw new Error('Codex context summary exceeded its output limit.');
+        throw new Error('Bản tóm tắt ngữ cảnh Codex vượt quá giới hạn đầu ra.');
       }
       text = candidate;
     } else if (event.type === 'error') {
@@ -36,6 +36,6 @@ export async function runCodexSummary(request: CodexSummaryRequest): Promise<str
       done = true;
     }
   }, request.signal);
-  if (!done) throw new Error('Codex context summary ended before completion.');
+  if (!done) throw new Error('Bản tóm tắt ngữ cảnh Codex kết thúc trước khi hoàn tất.');
   return text.trim();
 }

@@ -376,7 +376,7 @@ export async function handleCodexStreamEvent(
   opts: CodexRuntimeOptions,
   onEvent: (event: AgentEvent) => void,
 ): Promise<StreamState> {
-  if (state.done) throw new Error('Malformed Codex stream: event received after done.');
+  if (state.done) throw new Error('Luồng Codex không hợp lệ: nhận sự kiện sau khi đã hoàn tất.');
   if (event.type === 'tool-start') return handleToolStart(event, state, requestId, opts, onEvent);
   if (event.type === 'text-delta' || event.type === 'thinking-delta') {
     return handleOutputDelta(event, state, opts, onEvent);

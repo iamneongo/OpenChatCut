@@ -462,7 +462,7 @@ try {
       projectId: 'project-1',
       maxOutputTokens: 10,
     }),
-    /exceeded its output limit/,
+    /vượt quá giới hạn đầu ra/,
   );
 } finally {
   globalThis.fetch = originalFetch;

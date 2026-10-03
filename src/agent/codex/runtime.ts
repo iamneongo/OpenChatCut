@@ -134,7 +134,7 @@ async function settleToolResult(
   const enriched = changed && rawResult && typeof rawResult === 'object' && !Array.isArray(rawResult)
     ? { ...(rawResult as Record<string, unknown>), changed } : rawResult;
   const sanitized = sanitizeJsonForArtifact(enriched);
-  if (!sanitized) throw new Error('tool_result_archive: result could not be serialized safely');
+  if (!sanitized) throw new Error('tool_result_archive: không thể tuần tự hóa kết quả một cách an toàn');
   const archiveExempt = schema.name === 'read_agent_artifact' || schema.name === 'load_skill';
   const requiresArchive = !archiveExempt && sanitized.originalChars > TOOL_ARTIFACT_THRESHOLD;
   const ref = await execution.runRecorder?.archiveToolResult({
@@ -147,7 +147,7 @@ async function settleToolResult(
   // requirement only applies when a recorder is wired and the result would
   // otherwise be dropped from the model context.
   if (requiresArchive && execution.runRecorder && !ref) {
-    throw new Error('tool_result_archive: oversized result could not be archived safely');
+    throw new Error('tool_result_archive: kết quả quá lớn, không thể lưu trữ an toàn');
   }
   const result = ref && (!enriched || typeof enriched !== 'object')
     ? artifactPlaceholder(ref)
@@ -298,7 +298,7 @@ async function runCodexAttempt(
       next = await handleCodexStreamEvent(event, next, requestId, attemptOpts, onEvent);
       onState(next);
     }, turnAbort.signal);
-    if (!next.done) throw new Error('Codex stream ended before the done event.');
+    if (!next.done) throw new Error('Luồng Codex kết thúc trước sự kiện hoàn tất.');
     return next;
   } catch (error) {
     turnAbort.abort(error);

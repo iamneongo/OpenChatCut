@@ -11,7 +11,7 @@ async function responseError(response: Response): Promise<Error> {
   } catch {
     // The status text below remains useful when an upstream proxy returns HTML.
   }
-  return new Error(message || `${response.status} ${response.statusText || 'Request failed'}`);
+  return new Error(message || `${response.status} ${response.statusText || 'Yêu cầu thất bại'}`);
 }
 
 async function requestJson<T>(path: string, init?: RequestInit): Promise<T> {
@@ -20,7 +20,7 @@ async function requestJson<T>(path: string, init?: RequestInit): Promise<T> {
   try {
     return await response.json() as T;
   } catch {
-    throw new Error(`Invalid JSON response from ${path}.`);
+    throw new Error(`Phản hồi JSON từ ${path} không hợp lệ.`);
   }
 }
 

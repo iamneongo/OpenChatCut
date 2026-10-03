@@ -54,14 +54,14 @@ function isStreamEvent(value: unknown): value is CodexTurnStreamEvent {
 }
 
 function parseStreamLine(line: string): CodexTurnStreamEvent {
-  if (!line.trim()) throw new Error('Malformed Codex stream: empty NDJSON line.');
+  if (!line.trim()) throw new Error('Luồng Codex không hợp lệ: dòng NDJSON trống.');
   let parsed: unknown;
   try {
     parsed = JSON.parse(line);
   } catch {
-    throw new Error('Malformed Codex stream: invalid JSON.');
+    throw new Error('Luồng Codex không hợp lệ: JSON không hợp lệ.');
   }
-  if (!isStreamEvent(parsed)) throw new Error('Malformed Codex stream: invalid event.');
+  if (!isStreamEvent(parsed)) throw new Error('Luồng Codex không hợp lệ: sự kiện không hợp lệ.');
   return parsed;
 }
 
@@ -73,7 +73,7 @@ async function responseError(response: Response): Promise<Error> {
   } catch {
     // The status text below remains useful when an upstream proxy returns HTML.
   }
-  return new Error(message || `${response.status} ${response.statusText || 'Request failed'}`);
+  return new Error(message || `${response.status} ${response.statusText || 'Yêu cầu thất bại'}`);
 }
 
 async function requestJson<T>(path: string, init?: RequestInit): Promise<T> {
@@ -82,7 +82,7 @@ async function requestJson<T>(path: string, init?: RequestInit): Promise<T> {
   try {
     return await response.json() as T;
   } catch {
-    throw new Error(`Invalid JSON response from ${path}.`);
+    throw new Error(`Phản hồi JSON từ ${path} không hợp lệ.`);
   }
 }
 
@@ -141,7 +141,7 @@ async function consumeNdjson(
         if (index < value.length && value[index] !== 10) continue;
         const segment = value.subarray(start, index);
         lineBytes += segment.byteLength;
-        if (lineBytes > MAX_NDJSON_LINE_BYTES) throw new Error('Codex stream line exceeds the 1 MiB limit.');
+        if (lineBytes > MAX_NDJSON_LINE_BYTES) throw new Error('Dòng luồng Codex vượt quá giới hạn 1 MiB.');
         line += decoder.decode(segment, { stream: true });
         if (index === value.length) break;
         line += decoder.decode();
@@ -170,6 +170,6 @@ export async function runCodexTurn(
 ): Promise<void> {
   const response = await fetch('/api/codex/turn', postJson(request, signal));
   if (!response.ok) throw await responseError(response);
-  if (!response.body) throw new Error('Codex turn returned no response stream.');
+  if (!response.body) throw new Error('Lượt Codex không trả về luồng phản hồi.');
   await consumeNdjson(response.body, onEvent);
 }
