@@ -53,7 +53,7 @@ async function handleDeleteUpload(req: IncomingMessage, res: ServerResponse): Pr
     if (!isSafeUploadName(name)) { sendError(res, 400, 'unsafe or missing name'); return; }
     const rollbackToken = url.searchParams.get('rollbackToken') ?? undefined;
     if (url.searchParams.has('rollbackToken') && !/^[A-Za-z0-9-]{1,128}$/.test(rollbackToken ?? '')) {
-      sendError(res, 400, 'invalid rollback token');
+      sendError(res, 400, 'rollback token không hợp lệ');
       return;
     }
     const result = await enqueueUploadMutation(name, async () => {

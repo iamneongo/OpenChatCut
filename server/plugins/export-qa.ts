@@ -235,7 +235,7 @@ export function exportQaPlugin(): Plugin {
           const body = (await readJson(req)) as Partial<AnalyzeExportFileOptions> & { src?: string };
           const name = uploadNameFromSrc(String(body.src ?? ''));
           if (!name) {
-            sendJson(res, 400, { error: 'src must be /media/uploads/<safe-name>' });
+            sendJson(res, 400, { error: 'src phải là /media/uploads/<safe-name>' });
             return;
           }
           const file = resolveUploadFile(name);

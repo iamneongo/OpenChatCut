@@ -110,7 +110,7 @@ async function handleStage(req: IncomingMessage, res: ServerResponse): Promise<v
   }
   if (req.method === 'DELETE') {
     const name = stageNameFromPath(req);
-    if (!name) { sendJson(res, 400, { error: 'invalid staged export name' }); return; }
+    if (!name) { sendJson(res, 400, { error: 'tên export staged không hợp lệ' }); return; }
     await unlink(join(uploadDir(), name)).catch((error: NodeJS.ErrnoException) => {
       if (error.code !== 'ENOENT') throw error;
     });
@@ -118,7 +118,7 @@ async function handleStage(req: IncomingMessage, res: ServerResponse): Promise<v
     res.end();
     return;
   }
-  sendJson(res, 405, { error: 'method not allowed' });
+  sendJson(res, 405, { error: 'method không được phép' });
 }
 
 export function exportStagePlugin(): Plugin {

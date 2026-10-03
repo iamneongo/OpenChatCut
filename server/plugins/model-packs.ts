@@ -58,7 +58,7 @@ export function modelPackMutationRequestError(
   headers: IncomingHttpHeaders,
 ): { status: number; error: string } | null {
   const contentType = String(headers['content-type'] ?? '').split(';', 1)[0]!.trim().toLowerCase();
-  if (contentType !== 'application/json') return { status: 415, error: 'content-type must be application/json' };
+  if (contentType !== 'application/json') return { status: 415, error: 'content-type phải là application/json' };
   const fetchSite = String(headers['sec-fetch-site'] ?? '').trim().toLowerCase();
   if (fetchSite && fetchSite !== 'same-origin' && fetchSite !== 'same-site' && fetchSite !== 'none') {
     return { status: 403, error: 'cross-site requests are not allowed' };
@@ -78,7 +78,7 @@ export function modelPackMutationRequestError(
 function requireModelPackMutationCredential(req: IncomingMessage, res: ServerResponse): boolean {
   if (editorCredentialAuthorized(req, true)) return true;
   req.resume();
-  sendJson(res, 401, { error: 'editor credential required' });
+  sendJson(res, 401, { error: 'bắt buộc phải có credential editor' });
   return false;
 }
 
@@ -99,7 +99,7 @@ function readJson(req: IncomingMessage): Promise<Record<string, unknown>> {
     try {
       resolve(JSON.parse(Buffer.concat(chunks).toString('utf8') || '{}') as Record<string, unknown>);
     } catch {
-      reject(new Error('Request body must be valid JSON'));
+      reject(new Error('body request phải là JSON hợp lệ'));
     }
   });
   req.on('error', reject);

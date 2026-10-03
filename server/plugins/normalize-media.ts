@@ -221,7 +221,7 @@ async function handleNormalizeRequest(
   const src = String(body.src ?? '').trim();
   const name = uploadNameFromSrc(src);
   if (!name) {
-    sendJson(res, 400, { error: 'src must be /media/uploads/<safe-name>' });
+    sendJson(res, 400, { error: 'src phải là /media/uploads/<safe-name>' });
     return;
   }
   const inputPath = resolveUploadFile(name);
@@ -260,7 +260,7 @@ export function normalizeMediaPlugin(options: NormalizeMediaPluginOptions = {}):
           // Parsing errors happen before normalization owns the response.
           if (!res.writableEnded && !res.socket?.destroyed) {
             sendJson(res, error instanceof NormalizeBodyTooLargeError ? 413 : 400, {
-              error: error instanceof Error ? error.message : 'invalid request',
+              error: error instanceof Error ? error.message : 'request không hợp lệ',
             });
           }
         }

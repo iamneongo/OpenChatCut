@@ -150,7 +150,7 @@ async function readCachedPreview(path: string): Promise<Buffer> {
 async function resolveReq(req: IncomingMessage, res: ServerResponse) {
   const url = new URL(req.url ?? '/', 'http://localhost');
   const name = uploadNameFromSrc(url.searchParams.get('src') ?? '');
-  if (!name) { sendJson(res, 400, { error: 'src must be /media/uploads/<name>' }); return null; }
+  if (!name) { sendJson(res, 400, { error: 'src phải là /media/uploads/<name>' }); return null; }
   const file = resolveUploadFile(name);
   if (!file || !existsSync(file)) { sendJson(res, 404, { error: 'không tìm thấy media' }); return null; }
   const source = await stat(file);
@@ -267,7 +267,7 @@ async function handleMediaFrame(req: IncomingMessage, res: ServerResponse, logEr
     const rawTime = new URL(req.url ?? '/', 'http://localhost').searchParams.get('time');
     const requested = rawTime === null ? Number.NaN : Number(rawTime);
     if (!Number.isFinite(requested) || requested < 0) {
-      sendJson(res, 400, { error: 'time must be a non-negative number' });
+      sendJson(res, 400, { error: 'time phải là số không âm' });
       return;
     }
     const cache = previewCachePath(hit.name, hit.source, `frame-${Math.round(requested * 1000)}`, 'jpg');

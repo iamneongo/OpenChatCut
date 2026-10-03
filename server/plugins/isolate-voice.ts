@@ -185,7 +185,7 @@ export function isolateVoicePlugin(): Plugin {
           const src = String(body.src ?? '').trim();
           const name = uploadNameFromSrc(src);
           if (!name) {
-            sendJson(res, 400, { error: 'src must be /media/uploads/<safe-name>' });
+            sendJson(res, 400, { error: 'src phải là /media/uploads/<safe-name>' });
             return;
           }
           const inputPath = resolveUploadFile(name);

@@ -57,13 +57,13 @@ async function handleUploadWrite(
     const requestedRollbackToken = url.searchParams.get('rollbackToken') ?? '';
     if (ifAbsent && requestedRollbackToken && !/^[A-Za-z0-9-]{1,128}$/.test(requestedRollbackToken)) {
       req.resume();
-      sendError(res, 400, 'invalid rollback token');
+      sendError(res, 400, 'rollback token không hợp lệ');
       return;
     }
     const extension = handoff
       ? externalUploadMediaType(handoff.assetType, handoff.contentType)?.extension
       : extname(original).toLowerCase().replace(/[^.a-z0-9]/g, '') || '.bin';
-    if (!extension) throw new Error('unsupported upload handoff media type');
+    if (!extension) throw new Error('media type upload handoff không được hỗ trợ');
     if (rejectDeclaredSize(req, res, maxBytes)) return;
     const declaredBytes = contentLengthOf(req);
     if (handoff && declaredBytes !== null && declaredBytes !== handoff.expectedBytes) {
@@ -276,14 +276,14 @@ async function handleUpload(req: IncomingMessage, res: ServerResponse, logger: L
   if (req.method === 'DELETE') {
     if (!editorCredentialAuthorized(req, true)) {
       req.resume();
-      sendError(res, 401, 'editor credential required');
+      sendError(res, 401, 'bắt buộc phải có credential editor');
       return;
     }
     await handleDeleteUpload(req, res);
     return;
   }
   if (req.method !== 'POST' && req.method !== 'PUT') {
-    sendError(res, 405, 'method not allowed — use POST, PUT or DELETE');
+    sendError(res, 405, 'method không được phép — hãy dùng POST, PUT hoặc DELETE');
     return;
   }
   const url = new URL(req.url ?? '/', 'http://localhost');
@@ -302,7 +302,7 @@ async function handleUpload(req: IncomingMessage, res: ServerResponse, logger: L
     handoff = authorization.scope;
   } else if (!editorCredentialAuthorized(req, true)) {
     req.resume();
-    sendError(res, 401, 'editor credential required');
+    sendError(res, 401, 'bắt buộc phải có credential editor');
     return;
   }
   await handleUploadWrite(req, res, logger, handoff);
@@ -321,7 +321,7 @@ async function fetchRemoteImport(
   res: ServerResponse,
 ): Promise<RemoteImport | null> {
   const remote = String(body.url ?? '').trim();
-  if (!remote) { sendError(res, 400, 'url must be a public http(s) URI'); return null; }
+  if (!remote) { sendError(res, 400, 'url phải là URI http(s) công khai'); return null; }
   const nameHint = typeof body.name === 'string' ? body.name.trim() : undefined;
   let response: Response;
   try {
@@ -395,7 +395,7 @@ function importedFilename(imported: RemoteImport, fallback: string): string {
 }
 
 async function handleImportUrl(req: IncomingMessage, res: ServerResponse, logger: Logger): Promise<void> {
-  if (req.method !== 'POST') { sendError(res, 405, 'method not allowed — use POST'); return; }
+  if (req.method !== 'POST') { sendError(res, 405, 'method không được phép — hãy dùng POST'); return; }
   const maxBytes = maxUploadBytes();
   try {
     const body = JSON.parse((await readBody(req)).toString('utf8') || '{}') as { url?: string; name?: string };

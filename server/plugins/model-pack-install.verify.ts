@@ -11,7 +11,7 @@ import { recoverDirectorySwap, replaceDirectoryAtomically } from './model-pack-i
 assert.equal(modelPackMutationRequestError({ 'content-type': 'application/json' }), null);
 assert.deepEqual(modelPackMutationRequestError({ 'content-type': 'text/plain' }), {
   status: 415,
-  error: 'content-type must be application/json',
+  error: 'content-type phải là application/json',
 });
 assert.deepEqual(modelPackMutationRequestError({
   'content-type': 'application/json',

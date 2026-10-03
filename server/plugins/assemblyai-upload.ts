@@ -58,17 +58,17 @@ export async function handleAssemblyAiUpload(
   dependencies: AssemblyAiUploadDependencies = {},
 ): Promise<void> {
   if (req.method !== 'POST') {
-    sendJson(res, 405, { error: 'method not allowed — use POST' });
+    sendJson(res, 405, { error: 'method không được phép — hãy dùng POST' });
     return;
   }
   if (!editorCredentialAuthorized(req, true)) {
     req.resume();
-    sendJson(res, 401, { error: 'editor credential required' });
+    sendJson(res, 401, { error: 'bắt buộc phải có credential editor' });
     return;
   }
   const contentType = String(req.headers['content-type'] ?? '').split(';', 1)[0]!.trim().toLowerCase();
   if (contentType !== 'application/json') {
-    sendJson(res, 415, { error: 'content-type must be application/json' });
+    sendJson(res, 415, { error: 'content-type phải là application/json' });
     return;
   }
 
@@ -91,7 +91,7 @@ export async function handleAssemblyAiUpload(
     const body = await readJson(req);
     const name = uploadName(String(body.src ?? '').trim());
     if (!name) {
-      sendJson(res, 400, { error: 'src must be /media/uploads/<safe-name>' });
+      sendJson(res, 400, { error: 'src phải là /media/uploads/<safe-name>' });
       return;
     }
     const file = (dependencies.resolveFile ?? resolveUploadFile)(name);
@@ -143,7 +143,7 @@ export async function handleAssemblyAiUpload(
     try {
       parsed = JSON.parse(responseText) as { upload_url?: unknown };
     } catch {
-      sendJson(res, 502, { error: 'AssemblyAI upload returned invalid JSON' });
+      sendJson(res, 502, { error: 'upload AssemblyAI trả về JSON không hợp lệ' });
       return;
     }
     if (typeof parsed.upload_url !== 'string' || !parsed.upload_url) {
@@ -155,7 +155,7 @@ export async function handleAssemblyAiUpload(
     if (clientClosed || res.destroyed) return;
     const message = error instanceof Error ? error.message : String(error);
     if (error instanceof BodyTooLargeError) sendJson(res, 413, { error: message });
-    else if (error instanceof SyntaxError) sendJson(res, 400, { error: 'invalid JSON body' });
+    else if (error instanceof SyntaxError) sendJson(res, 400, { error: 'body JSON không hợp lệ' });
     else if (timedOut) sendJson(res, 504, { error: message });
     else sendJson(res, 502, { error: message });
   } finally {

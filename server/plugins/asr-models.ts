@@ -67,13 +67,13 @@ function sendJson(res: ServerResponse, status: number, body: unknown): void {
 function requireAsrMutation(req: IncomingMessage, res: ServerResponse): boolean {
   if (!editorCredentialAuthorized(req, true)) {
     req.resume();
-    sendJson(res, 401, { error: 'editor credential required' });
+    sendJson(res, 401, { error: 'bắt buộc phải có credential editor' });
     return false;
   }
   const contentType = String(req.headers['content-type'] ?? '').split(';', 1)[0]!.trim().toLowerCase();
   if (contentType === 'application/json') return true;
   req.resume();
-  sendJson(res, 415, { error: 'content-type must be application/json' });
+  sendJson(res, 415, { error: 'content-type phải là application/json' });
   return false;
 }
 

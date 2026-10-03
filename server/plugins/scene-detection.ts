@@ -330,9 +330,9 @@ async function runJob(job: InternalJob): Promise<void> {
 
 function mediaFromSrc(src: string): { src: string; file: string } | { error: string; status: number } {
   const name = uploadNameFromSrc(src);
-  if (!name) return { error: 'src must be /media/uploads/<safe-name>', status: 400 };
+  if (!name) return { error: 'src phải là /media/uploads/<safe-name>', status: 400 };
   const file = resolveUploadFile(name);
-  if (!file || !existsSync(file)) return { error: `media not found: ${name}`, status: 404 };
+  if (!file || !existsSync(file)) return { error: `không tìm thấy media: ${name}`, status: 404 };
   return { src, file };
 }
 
@@ -377,7 +377,7 @@ export function sceneDetectionPlugin(): Plugin {
             const media = mediaFromSrc(url.searchParams.get('src') ?? '');
             if ('error' in media) { sendJson(res, media.status, { error: media.error }); return; }
             const timeMs = Number(url.searchParams.get('timeMs'));
-            if (!Number.isFinite(timeMs) || timeMs < 0) { sendJson(res, 400, { error: 'timeMs must be a non-negative number' }); return; }
+            if (!Number.isFinite(timeMs) || timeMs < 0) { sendJson(res, 400, { error: 'timeMs phải là số không âm' }); return; }
             const fileSize = (await stat(media.file)).size;
             const frame = await evidenceFrame(media.file, fileSize, timeMs);
             res.statusCode = 200;

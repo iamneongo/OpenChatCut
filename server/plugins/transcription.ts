@@ -67,14 +67,14 @@ async function readAudio(req: IncomingMessage): Promise<Buffer> {
     chunks.push(bytes);
   }
   const audio = Buffer.concat(chunks);
-  if (!audio.length) throw new TranscriptionRequestError(400, 'audio body is required');
+  if (!audio.length) throw new TranscriptionRequestError(400, 'bắt buộc phải có body audio');
   return audio;
 }
 
 function requestProvider(url: URL): CloudTranscriptionProvider {
   const provider = (url.searchParams.get('provider') ?? '').trim();
   if (!isCloudTranscriptionProvider(provider)) {
-    throw new TranscriptionRequestError(400, 'provider must be openai, deepgram, groq, elevenlabs, or cartesia');
+    throw new TranscriptionRequestError(400, 'provider phải là openai, deepgram, groq, elevenlabs hoặc cartesia');
   }
   return provider;
 }
@@ -82,7 +82,7 @@ function requestProvider(url: URL): CloudTranscriptionProvider {
 function requestLanguage(url: URL, fallback: string): string {
   const language = (url.searchParams.get('language') ?? fallback).trim();
   if (!/^(?:auto|[A-Za-z]{2,3}(?:-[A-Za-z0-9]{2,8})*)$/.test(language)) {
-    throw new TranscriptionRequestError(400, 'language must be an ISO language code or auto');
+    throw new TranscriptionRequestError(400, 'language phải là mã ngôn ngữ ISO hoặc auto');
   }
   return language;
 }
@@ -92,7 +92,7 @@ function requestDiarization(url: URL, fallback: boolean): boolean {
   if (value == null) return fallback;
   if (value === '0') return false;
   if (value === '1') return true;
-  throw new TranscriptionRequestError(400, 'diarize must be 0 or 1');
+  throw new TranscriptionRequestError(400, 'diarize phải là 0 hoặc 1');
 }
 
 async function handleTranscription(
@@ -102,15 +102,15 @@ async function handleTranscription(
   logger: { error(message: string): void },
 ): Promise<void> {
   if (req.method !== 'POST') {
-    rejectBeforeBody(req, res, 405, 'method not allowed — use POST');
+    rejectBeforeBody(req, res, 405, 'method không được phép — hãy dùng POST');
     return;
   }
   if (!editorCredentialAuthorized(req, true)) {
-    rejectBeforeBody(req, res, 401, 'editor credential required');
+    rejectBeforeBody(req, res, 401, 'bắt buộc phải có credential editor');
     return;
   }
   if (!hasBinaryContentType(req)) {
-    rejectBeforeBody(req, res, 415, 'content-type must be application/octet-stream');
+    rejectBeforeBody(req, res, 415, 'content-type phải là application/octet-stream');
     return;
   }
   try {
@@ -128,7 +128,7 @@ async function handleTranscription(
     logger.error(`[api:transcribe] ${message}`);
     if (error instanceof TranscriptionRequestError) sendJson(res, error.status, { error: message });
     else if (error instanceof TranscriptionConfigurationError) sendJson(res, 400, { error: message });
-    else sendJson(res, 502, { error: 'transcription provider request failed — check the provider settings and audio format' });
+    else sendJson(res, 502, { error: 'request provider transcription thất bại — hãy kiểm tra cài đặt provider và định dạng audio' });
   }
 }
 

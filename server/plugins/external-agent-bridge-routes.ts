@@ -324,7 +324,7 @@ async function handleBridgeReceipt(req: IncomingMessage, res: ServerResponse): P
       : { error: 'upload receipt claim is invalid, expired, or no longer current' });
     return;
   }
-  sendBridgeJson(res, 400, { error: 'upload receipt action must be claim, commit, or abort' });
+  sendBridgeJson(res, 400, { error: 'action receipt upload phải là claim, commit hoặc abort' });
 }
 
 export async function routeExternalAgentBridge(

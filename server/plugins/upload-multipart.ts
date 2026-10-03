@@ -78,7 +78,7 @@ function sendError(res: ServerResponse, status: number, message: string): void {
 function requireEditorCredential(req: IncomingMessage, res: ServerResponse): boolean {
   if (editorCredentialAuthorized(req, req.method !== 'GET')) return true;
   req.resume();
-  sendError(res, 401, 'editor credential required');
+  sendError(res, 401, 'bắt buộc phải có credential editor');
   return false;
 }
 function readJson(req: IncomingMessage, max = 64 * 1024): Promise<unknown> {
@@ -301,7 +301,7 @@ export function uploadMultipartPlugin(): Plugin {
           const uploadId = url.searchParams.get('uploadId') ?? '';
           const part = Number(url.searchParams.get('part'));
           if (!isSafeUploadId(uploadId)) {
-            sendError(res, 400, 'invalid uploadId');
+            sendError(res, 400, 'uploadId không hợp lệ');
             return;
           }
           activeUploadId = uploadId;
@@ -313,7 +313,7 @@ export function uploadMultipartPlugin(): Plugin {
             return;
           }
           if (!Number.isInteger(part) || part < 1 || part > meta.partCount) {
-            sendError(res, 400, `part must be 1..${meta.partCount}`);
+            sendError(res, 400, `part phải từ 1..${meta.partCount}`);
             return;
           }
           const expectedMax = part === meta.partCount
@@ -351,7 +351,7 @@ export function uploadMultipartPlugin(): Plugin {
           const url = new URL(req.url ?? '/', 'http://localhost');
           const uploadId = url.searchParams.get('uploadId') ?? '';
           if (!isSafeUploadId(uploadId)) {
-            sendError(res, 400, 'invalid uploadId');
+            sendError(res, 400, 'uploadId không hợp lệ');
             return;
           }
           activeUploadId = uploadId;
@@ -388,7 +388,7 @@ export function uploadMultipartPlugin(): Plugin {
           const body = (await readJson(req)) as { uploadId?: string };
           const uploadId = String(body.uploadId ?? '');
           if (!isSafeUploadId(uploadId)) {
-            sendError(res, 400, 'invalid uploadId');
+            sendError(res, 400, 'uploadId không hợp lệ');
             return;
           }
           activeUploadId = uploadId;
@@ -468,7 +468,7 @@ export function uploadMultipartPlugin(): Plugin {
           const url = new URL(req.url ?? '/', 'http://localhost');
           const uploadId = url.searchParams.get('uploadId') ?? '';
           if (!isSafeUploadId(uploadId)) {
-            sendError(res, 400, 'invalid uploadId');
+            sendError(res, 400, 'uploadId không hợp lệ');
             return;
           }
           await rm(sessionDir(uploadId), { recursive: true, force: true }).catch(() => {});

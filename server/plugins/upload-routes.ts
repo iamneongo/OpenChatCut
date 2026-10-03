@@ -88,7 +88,7 @@ function handleMediaRead(
 }
 
 async function handleUploadList(req: IncomingMessage, res: ServerResponse): Promise<void> {
-  if (req.method !== 'GET') { sendError(res, 405, 'method not allowed — use GET'); return; }
+  if (req.method !== 'GET') { sendError(res, 405, 'method không được phép — hãy dùng GET'); return; }
   try {
     const directories = uploadReadDirs();
     const seen = new Map<string, { name: string; bytes: number; mtimeMs: number }>();
@@ -125,7 +125,7 @@ async function handleHydrate(
   logger: Logger,
   dependencies: UploadRouteDependencies,
 ): Promise<void> {
-  if (req.method !== 'POST') { sendError(res, 405, 'method not allowed — use POST'); return; }
+  if (req.method !== 'POST') { sendError(res, 405, 'method không được phép — hãy dùng POST'); return; }
   try {
     const body = JSON.parse((await readBody(req)).toString('utf8') || '{}') as { name?: string; path?: string };
     const name = hydrateName(body);
@@ -211,7 +211,7 @@ async function handlePresignPost(req: IncomingMessage, res: ServerResponse): Pro
 async function handlePresign(req: IncomingMessage, res: ServerResponse): Promise<void> {
   try {
     if (req.method === 'GET') { await handlePresignGet(req, res); return; }
-    if (req.method !== 'POST') { sendError(res, 405, 'method not allowed — use GET or POST'); return; }
+    if (req.method !== 'POST') { sendError(res, 405, 'method không được phép — hãy dùng GET hoặc POST'); return; }
     await handlePresignPost(req, res);
   } catch (error) {
     sendError(res, 500, error instanceof Error ? error.message : String(error));
@@ -222,7 +222,7 @@ async function handlePresign(req: IncomingMessage, res: ServerResponse): Promise
 function requireEditorMutation(req: IncomingMessage, res: ServerResponse): boolean {
   if (editorCredentialAuthorized(req, true)) return true;
   req.resume();
-  sendError(res, 401, 'editor credential required');
+  sendError(res, 401, 'bắt buộc phải có credential editor');
   return false;
 }
 

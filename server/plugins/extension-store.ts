@@ -170,7 +170,7 @@ async function handleRequest(rootDir: string, req: IncomingMessage, res: ServerR
   const url = new URL(req.url ?? '/', 'http://localhost');
   const rawId = url.pathname.split('/').filter(Boolean)[0] ?? '';
   const id = decodeURIComponent(rawId);
-  if (id && !ID_RE.test(id)) { sendJson(res, 400, { error: 'invalid extension id' }); return; }
+  if (id && !ID_RE.test(id)) { sendJson(res, 400, { error: 'id extension không hợp lệ' }); return; }
 
   if (req.method === 'GET' && !id) {
     sendJson(res, 200, { packs: await listPacks(rootDir) });
@@ -178,7 +178,7 @@ async function handleRequest(rootDir: string, req: IncomingMessage, res: ServerR
   }
   if (req.method === 'PUT' && id) {
     const pack = validPack(await readBody(req));
-    if (!pack || pack.id !== id) { sendJson(res, 400, { error: 'invalid extension pack' }); return; }
+  if (!pack || pack.id !== id) { sendJson(res, 400, { error: 'pack extension không hợp lệ' }); return; }
     await serializeWrite(() => savePack(rootDir, pack));
     sendJson(res, 200, { ok: true });
     return;
@@ -186,7 +186,7 @@ async function handleRequest(rootDir: string, req: IncomingMessage, res: ServerR
   if (req.method === 'PATCH' && id) {
     const body = await readBody(req);
     if (!isRecord(body) || typeof body.enabled !== 'boolean') {
-      sendJson(res, 400, { error: 'enabled must be boolean' });
+      sendJson(res, 400, { error: 'enabled phải là boolean' });
       return;
     }
     const found = await serializeWrite(() => setEnabled(rootDir, id, body.enabled as boolean));
@@ -198,7 +198,7 @@ async function handleRequest(rootDir: string, req: IncomingMessage, res: ServerR
     sendJson(res, found ? 200 : 404, found ? { ok: true } : { error: 'không tìm thấy extension' });
     return;
   }
-  sendJson(res, 405, { error: 'method not allowed' });
+  sendJson(res, 405, { error: 'method không được phép' });
 }
 
 export function extensionStorePlugin(options: { rootDir?: string } = {}): Plugin {
