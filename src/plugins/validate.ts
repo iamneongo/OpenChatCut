@@ -101,7 +101,7 @@ function checkThumb(errors: string[], at: string, v: unknown): void {
 function checkItem(errors: string[], item: unknown, index: number): void {
   const at = `items[${index}]`;
   if (!isObj(item)) {
-    errors.push(`${at}: 必须是对象`);
+    errors.push(`${at}: phải là một đối tượng`);
     return;
   }
   if (!isStr(item.id) || !ITEM_ID_RE.test(item.id))

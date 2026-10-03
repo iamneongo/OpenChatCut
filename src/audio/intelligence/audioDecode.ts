@@ -124,7 +124,7 @@ async function fetchAudioBytes(src: string, signal?: AbortSignal): Promise<Array
   } catch (error) {
     if (signal?.aborted) throw abortError(signal);
     if (controller.signal.aborted) throw new Error(`Audio fetch aborted: ${String(controller.signal.reason)}`);
-    throw new Error(`Unable to fetch audio source: ${error instanceof Error ? error.message : String(error)}`);
+    throw new Error(`Không thể tải nguồn âm thanh: ${error instanceof Error ? error.message : String(error)}`);
   } finally {
     clearTimeout(timer);
     signal?.removeEventListener('abort', onAbort);
@@ -167,7 +167,7 @@ async function decodeBytes(
     // memory, so an oversized or un-decodable long audio surfaces here instead
     // of crashing the tab. Tell the user it is a size/resource limit, not a bug.
     throw new Error(
-      '无法分析的音频：文件过大或浏览器内存不足。请裁剪为较短的片段后再分析。'
+      'Không thể phân tích âm thanh: tệp quá lớn hoặc trình duyệt không đủ bộ nhớ. Hãy cắt thành đoạn ngắn hơn rồi phân tích lại.'
       + ` (${error instanceof Error ? error.message : String(error)})`,
     );
   } finally {
@@ -177,7 +177,7 @@ async function decodeBytes(
 }
 
 function mixToMono(audio: AudioBuffer): Float32Array {
-  if (audio.numberOfChannels < 1 || audio.length < 1) throw new Error('Decoded audio contains no samples');
+  if (audio.numberOfChannels < 1 || audio.length < 1) throw new Error('Âm thanh đã giải mã không có mẫu dữ liệu');
   const mono = new Float32Array(audio.length);
   for (let channel = 0; channel < audio.numberOfChannels; channel += 1) {
     const source = audio.getChannelData(channel);
@@ -236,7 +236,7 @@ export async function resampleMonoSamples(
   try {
     return await offlineResample(samples, sourceRate, targetRate);
   } catch (error) {
-    if (error instanceof RangeError) throw new Error(`Unable to resample audio: ${error.message}`);
+    if (error instanceof RangeError) throw new Error(`Không thể đổi tần số lấy mẫu âm thanh: ${error.message}`);
     return linearResample(samples, sourceRate, targetRate);
   }
 }

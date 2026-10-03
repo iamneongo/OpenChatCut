@@ -94,7 +94,7 @@ try {
   globalThis.fetch = (async () => new Response('', { status: 404 })) as typeof fetch;
   await assert.rejects(
     decodeAudioSource('/missing.wav', 22_050),
-    /Unable to fetch audio source: HTTP 404/,
+    /Không thể tải nguồn âm thanh: HTTP 404/,
   );
 
   globalThis.fetch = (async () => new Response('', {
