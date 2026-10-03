@@ -13,6 +13,7 @@ import { dirname, join } from 'node:path';
 import { setKeys } from './keystore.ts';
 import { proxyDispatcher } from './outbound-proxy.ts';
 import { runtimeProfile } from './runtime-profile.ts';
+import { localized } from './ui-locale.ts';
 
 export const XAI_OAUTH_ISSUER = 'https://auth.x.ai';
 const TOKEN_ENDPOINT = `${XAI_OAUTH_ISSUER}/oauth2/token`;
@@ -206,7 +207,7 @@ export async function refreshTokens(session: XaiSession): Promise<XaiSession> {
 async function invalidateSession(): Promise<void> {
   clearTimer();
   current = null;
-  statusError = '登录会话已失效，请重新导入。';
+  statusError = localized({ zh: '登录会话已失效，请重新导入。', en: 'The login session has expired; import it again.', vi: 'Phiên đăng nhập đã hết hiệu lực; hãy nhập lại.' });
   dropSessionFile();
   retryDelayMs = RETRY_MIN_MS;
   await setKeys({ [ACCESS_KEY]: '' });
@@ -278,11 +279,11 @@ export function importXaiOauthFromCli(): Promise<XaiOauthStatus> {
     try {
       text = readFileSync(CLI_AUTH_JSON, 'utf8');
     } catch {
-      throw new Error('未找到 ~/.grok/auth.json。请先在终端运行官方 Grok CLI 登录：grok login，完成后回来点击导入。');
+      throw new Error(localized({ zh: '未找到 ~/.grok/auth.json。请先在终端运行官方 Grok CLI 登录：grok login，完成后回来点击导入。', en: 'Could not find ~/.grok/auth.json. Run the official Grok CLI login command in a terminal first: grok login, then return and click Import.', vi: 'Không tìm thấy ~/.grok/auth.json. Trước tiên hãy chạy lệnh đăng nhập Grok CLI chính thức trong terminal: grok login, sau đó quay lại và bấm Nhập.' }));
     }
     const parsed = parseGrokAuthJson(text);
     if (!parsed) {
-      throw new Error('无法解析 ~/.grok/auth.json 中的登录会话。请先在终端运行 grok login 完成登录。');
+      throw new Error(localized({ zh: '无法解析 ~/.grok/auth.json 中的登录会话。请先在终端运行 grok login 完成登录。', en: 'Could not parse the login session in ~/.grok/auth.json. Run grok login in a terminal first to complete login.', vi: 'Không thể đọc phiên đăng nhập trong ~/.grok/auth.json. Trước tiên hãy chạy grok login trong terminal để hoàn tất đăng nhập.' }));
     }
     const previous = current;
     try {
@@ -298,7 +299,7 @@ export function importXaiOauthFromCli(): Promise<XaiOauthStatus> {
       current = previous;
       statusError = messageOf(error).slice(0, 160);
       armTimer();
-      throw new Error(`登录会话已读取但刷新失败：${messageOf(error)}`);
+      throw new Error(localized({ zh: `登录会话已读取但刷新失败：${messageOf(error)}`, en: `The login session was read, but refreshing it failed: ${messageOf(error)}`, vi: `Đã đọc phiên đăng nhập nhưng không thể làm mới: ${messageOf(error)}` }));
     }
   });
 }
