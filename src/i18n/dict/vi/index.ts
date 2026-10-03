@@ -1234,7 +1234,7 @@ export const VI: Record<string, string> = {
   '闪色转场': 'Chuyển cảnh nháy màu',
   '音频交叉淡化': 'Nối liền âm thanh',
   '自定义着色器转场': 'Chuyển cảnh bộ đổ bóng tùy chỉnh',
-  '保调变速（预览/导出）· 时长随速率伸缩并波纹合缝': 'Tăng tốc giữ cao độ (xem trước/xuất) · thời lượng co giãn theo tốc độ và nối liền các đoạn sau',
+  '保调变速（预览/导出）· 时长随速率伸缩并波纹合缝': 'Đổi tốc độ, giữ cao độ (xem trước/xuất) · thời lượng co giãn theo tốc độ và nối liền các đoạn sau',
   '分析中…': 'Đang phân tích…',
   '分析并归一到 -14 LUFS': 'Phân tích và chuẩn hóa về -14 LUFS',
   '响度归一 (-14 LUFS)': 'Chuẩn hóa độ lớn âm thanh (-14 LUFS)',
