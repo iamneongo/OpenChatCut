@@ -20,7 +20,7 @@ export const VERSION_TOOL_SCHEMAS: AgentToolSchema[] = [{
       },
       versionId: {
         type: 'string',
-        description: 'restore/delete: version id or unique prefix from list.',
+        description: 'restore/delete: ID phiên bản hoặc tiền tố duy nhất lấy từ list.',
       },
       confirm: {
         type: 'boolean',
