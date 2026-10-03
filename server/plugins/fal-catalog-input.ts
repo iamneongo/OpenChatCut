@@ -25,37 +25,37 @@ export interface FalRequest {
 
 function requireModel(id: string, kind: 'image' | 'video'): FalModelDefinition {
   const model = getFalModel(id);
-  if (!model) throw new Error(`Unknown Fal model: ${id || '(missing)'}`);
-  if (model.kind !== kind) throw new Error(`${model.label} is not a Fal ${kind} model`);
+  if (!model) throw new Error(`Không biết model Fal: ${id || '(thiếu)'}`);
+  if (model.kind !== kind) throw new Error(`${model.label} không phải model Fal loại ${kind}`);
   return model;
 }
 
 function requirePrompt(prompt: string): string {
-  if (typeof prompt !== 'string') throw new Error('Fal generation requires a non-empty prompt');
+  if (typeof prompt !== 'string') throw new Error('Tạo nội dung Fal yêu cầu prompt không rỗng');
   const value = prompt.trim();
-  if (!value) throw new Error('Fal generation requires a non-empty prompt');
+  if (!value) throw new Error('Tạo nội dung Fal yêu cầu prompt không rỗng');
   return value;
 }
 
 function requireChoice(name: string, value: string, allowed?: readonly string[]): string {
   if (!allowed?.includes(value)) {
-    throw new Error(`Fal model does not support ${name} ${value}; allowed: ${allowed?.join(', ') || 'none'}`);
+    throw new Error(`Model Fal không hỗ trợ ${name} ${value}; giá trị cho phép: ${allowed?.join(', ') || 'không có'}`);
   }
   return value;
 }
 
 function requireUrls(name: string, values: string[] | undefined): string[] {
-  if (values !== undefined && !Array.isArray(values)) throw new Error(`${name} must be an array of uploaded URLs`);
+  if (values !== undefined && !Array.isArray(values)) throw new Error(`${name} phải là mảng URL đã tải lên`);
   const urls = values ?? [];
   if (urls.some((url) => typeof url !== 'string' || !url.trim())) {
-    throw new Error(`${name} must contain non-empty uploaded URLs`);
+    throw new Error(`${name} phải chứa các URL đã tải lên không rỗng`);
   }
   return urls;
 }
 
 function requireOptionalUrl(name: string, value: string | undefined): void {
   if (value !== undefined && (typeof value !== 'string' || !value.trim())) {
-    throw new Error(`${name} must be a non-empty uploaded URL`);
+    throw new Error(`${name} phải là URL đã tải lên không rỗng`);
   }
 }
 
@@ -63,7 +63,7 @@ function requireCount(model: FalModelDefinition, count: number | undefined): num
   const value = count ?? model.defaults.count ?? 1;
   const limit = model.constraints.count;
   if (!Number.isInteger(value) || !limit || value < limit.min || value > limit.max) {
-    throw new Error(`${model.label} supports at most ${limit?.max ?? 1} images per request`);
+    throw new Error(`${model.label} hỗ trợ tối đa ${limit?.max ?? 1} ảnh mỗi request`);
   }
   return value;
 }
@@ -77,7 +77,7 @@ function imageSizePreset(aspectRatio: string, resolution: string): string {
     '16:9': 'landscape_16_9', '9:16': 'portrait_16_9',
   };
   const preset = presets[aspectRatio];
-  if (!preset) throw new Error(`Fal preset-based image models do not support aspect ratio ${aspectRatio}`);
+  if (!preset) throw new Error(`Model ảnh preset của Fal không hỗ trợ tỷ lệ khung hình ${aspectRatio}`);
   return preset;
 }
 
@@ -99,30 +99,30 @@ function seedreamImageSize(aspectRatio: string, resolution: string): string | { 
     '3:4': { width: 1536, height: 2048 },
   };
   const size = sizes[aspectRatio];
-  if (!size) throw new Error(`Seedream 5.0 Pro does not support aspect ratio ${aspectRatio} at ${resolution}`);
+  if (!size) throw new Error(`Seedream 5.0 Pro không hỗ trợ tỷ lệ khung hình ${aspectRatio} ở ${resolution}`);
   return size;
 }
 
 function rejectVideoFields(body: FalCatalogInput): void {
   if (body.duration !== undefined || body.firstFrame || body.lastFrame || body.generateAudio !== undefined
     || body.videoUrls?.length || body.audioUrls?.length) {
-    throw new Error('Fal image models do not accept video-generation fields');
+    throw new Error('Model ảnh Fal không nhận các trường tạo video');
   }
 }
 
 function validateReferenceLimits(model: FalModelDefinition, images: string[], videos: string[], audio: string[]): void {
   const { constraints } = model;
   if (images.length > (constraints.maxImageReferences ?? 0)) {
-    throw new Error(`${model.label} supports at most ${constraints.maxImageReferences ?? 0} image references`);
+    throw new Error(`${model.label} hỗ trợ tối đa ${constraints.maxImageReferences ?? 0} ảnh tham chiếu`);
   }
   if (videos.length > (constraints.maxVideoReferences ?? 0)) {
-    throw new Error(`${model.label} supports at most ${constraints.maxVideoReferences ?? 0} video references`);
+    throw new Error(`${model.label} hỗ trợ tối đa ${constraints.maxVideoReferences ?? 0} video tham chiếu`);
   }
   if (audio.length > (constraints.maxAudioReferences ?? 0)) {
-    throw new Error(`${model.label} supports at most ${constraints.maxAudioReferences ?? 0} audio references`);
+    throw new Error(`${model.label} hỗ trợ tối đa ${constraints.maxAudioReferences ?? 0} âm thanh tham chiếu`);
   }
   if (constraints.maxReferences !== undefined && images.length + videos.length + audio.length > constraints.maxReferences) {
-    throw new Error(`${model.label} supports at most ${constraints.maxReferences} reference files in total`);
+    throw new Error(`${model.label} hỗ trợ tổng cộng tối đa ${constraints.maxReferences} tệp tham chiếu`);
   }
 }
 
@@ -131,7 +131,7 @@ export function buildFalCatalogImageRequest(body: FalCatalogInput): FalRequest {
   const prompt = requirePrompt(body.prompt);
   rejectVideoFields(body);
   const imageUrls = requireUrls('imageUrls', body.imageUrls);
-  if (imageUrls.length && !model.endpoints.edit) throw new Error(`${model.label} does not support reference images`);
+  if (imageUrls.length && !model.endpoints.edit) throw new Error(`${model.label} không hỗ trợ ảnh tham chiếu`);
   validateReferenceLimits(model, imageUrls, [], []);
   const count = requireCount(model, body.count);
   const aspectRatio = requireChoice('aspect ratio', body.aspectRatio ?? model.defaults.aspectRatio ?? '1:1', model.constraints.aspectRatios);
@@ -186,18 +186,18 @@ export function buildFalCatalogImageRequest(body: FalCatalogInput): FalRequest {
       input: { prompt, image_size: imageSize, style: 'realistic_image', ...(imageUrls.length ? { image_url: imageUrls[0] } : {}) },
     };
   }
-  throw new Error(`Fal image adapter is missing for ${model.id}`);
+  throw new Error(`Thiếu adapter ảnh Fal cho ${model.id}`);
 }
 
 function resolveVideoOptions(model: FalModelDefinition, body: FalCatalogInput): {
   prompt: string; duration: number; resolution: string; aspectRatio: string;
   imageUrls: string[]; videoUrls: string[]; audioUrls: string[]; generateAudio: boolean | undefined;
 } {
-  if (body.count !== undefined) throw new Error('Fal video models do not accept an image count');
+  if (body.count !== undefined) throw new Error('Model video Fal không nhận số lượng ảnh');
   const prompt = requirePrompt(body.prompt);
   const duration = body.duration ?? model.defaults.duration ?? 5;
   if (!Number.isInteger(duration) || !model.constraints.durations?.includes(duration)) {
-    throw new Error(`${model.label} does not support duration ${duration}s; allowed: ${model.constraints.durations?.join(', ')}`);
+    throw new Error(`${model.label} không hỗ trợ thời lượng ${duration}s; giá trị cho phép: ${model.constraints.durations?.join(', ')}`);
   }
   const resolution = requireChoice('resolution', body.resolution ?? model.defaults.resolution ?? '720p', model.constraints.resolutions);
   const aspectRatio = requireChoice('aspect ratio', body.aspectRatio ?? model.defaults.aspectRatio ?? '16:9', model.constraints.aspectRatios);
@@ -208,23 +208,23 @@ function resolveVideoOptions(model: FalModelDefinition, body: FalCatalogInput): 
   requireOptionalUrl('lastFrame', body.lastFrame);
   validateReferenceLimits(model, imageUrls, videoUrls, audioUrls);
   if (body.firstFrame && (imageUrls.length || videoUrls.length || audioUrls.length)) {
-    throw new Error(`${model.label} cannot combine a first frame with reference inputs`);
+    throw new Error(`${model.label} không thể kết hợp first frame với các tệp tham chiếu`);
   }
-  if (body.lastFrame && !body.firstFrame) throw new Error(`${model.label} requires a first frame when a last frame is provided`);
-  if (body.firstFrame && !model.constraints.supportsFirstFrame) throw new Error(`${model.label} does not support a first frame`);
-  if (body.lastFrame && !model.constraints.supportsLastFrame) throw new Error(`${model.label} does not support a last frame`);
+  if (body.lastFrame && !body.firstFrame) throw new Error(`${model.label} yêu cầu first frame khi cung cấp last frame`);
+  if (body.firstFrame && !model.constraints.supportsFirstFrame) throw new Error(`${model.label} không hỗ trợ first frame`);
+  if (body.lastFrame && !model.constraints.supportsLastFrame) throw new Error(`${model.label} không hỗ trợ last frame`);
   if ((videoUrls.length || audioUrls.length || imageUrls.length) && !model.endpoints.reference) {
-    throw new Error(`${model.label} does not support these reference inputs`);
+    throw new Error(`${model.label} không hỗ trợ các tệp tham chiếu này`);
   }
   if (audioUrls.length && !imageUrls.length && !videoUrls.length && model.id === 'minimax-h3-max') {
-    throw new Error('MiniMax H3 Max audio references require an image or video reference');
+    throw new Error('Tham chiếu âm thanh MiniMax H3 Max yêu cầu tham chiếu hình ảnh hoặc video');
   }
   if (body.generateAudio !== undefined && typeof body.generateAudio !== 'boolean') {
-    throw new Error('generateAudio must be a boolean');
+    throw new Error('generateAudio phải là boolean');
   }
   const generateAudio = body.generateAudio ?? model.defaults.generateAudio;
   if (generateAudio !== undefined && !model.constraints.supportsAudio) {
-    throw new Error(`${model.label} does not expose audio generation control`);
+    throw new Error(`${model.label} không cung cấp tùy chọn điều khiển tạo âm thanh`);
   }
   return { prompt, duration, resolution, aspectRatio, imageUrls, videoUrls, audioUrls, generateAudio };
 }
@@ -318,5 +318,5 @@ export function buildFalCatalogVideoRequest(body: FalCatalogInput): FalRequest {
       },
     };
   }
-  throw new Error(`Fal video adapter is missing for ${model.id}`);
+  throw new Error(`Thiếu adapter video Fal cho ${model.id}`);
 }
