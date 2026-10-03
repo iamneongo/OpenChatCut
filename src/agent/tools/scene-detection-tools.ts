@@ -19,22 +19,22 @@ const prefixed = <T extends { id: string }>(items: readonly T[], value: unknown)
 function sourceFor(ctx: AgentContext, args: Args): { asset: MediaAsset | null; item: TimelineItem | null; src: string } | { error: string } {
   const state = ctx.getState();
   const item = prefixed(state.items, args.itemId);
-  if (args.itemId && !item) return { error: `timeline item not found: ${String(args.itemId)}` };
-  if (item && item.kind !== 'video' && item.kind !== 'gif') return { error: `item ${item.id} is ${item.kind}; scene detection requires video/gif` };
+  if (args.itemId && !item) return { error: `không tìm thấy item trên timeline: ${String(args.itemId)}` };
+  if (item && item.kind !== 'video' && item.kind !== 'gif') return { error: `item ${item.id} là ${item.kind}; phát hiện cảnh cần video/gif` };
   const asset = prefixed(ctx.getDoc().assets, args.assetId)
     ?? (item?.src ? ctx.getDoc().assets.find((candidate) => candidate.src === item.src) ?? null : null);
-  if (args.assetId && !asset) return { error: `media asset not found: ${String(args.assetId)}` };
-  if (asset && asset.kind !== 'video' && asset.kind !== 'gif') return { error: `asset ${asset.id} is ${asset.kind}; scene detection requires video/gif` };
+  if (args.assetId && !asset) return { error: `không tìm thấy media asset: ${String(args.assetId)}` };
+  if (asset && asset.kind !== 'video' && asset.kind !== 'gif') return { error: `asset ${asset.id} là ${asset.kind}; phát hiện cảnh cần video/gif` };
   const src = item?.src ?? asset?.src ?? '';
-  if (!src) return { error: 'itemId or assetId is required and must resolve to a source video' };
+  if (!src) return { error: 'itemId hoặc assetId là bắt buộc và phải trỏ tới video nguồn' };
   if (!src.startsWith('/media/uploads/')) {
-    return { error: 'scene detection requires a persisted local media source under /media/uploads; finish uploading or relink the asset first' };
+    return { error: 'phát hiện cảnh cần media cục bộ đã lưu dưới /media/uploads; hãy tải lên hoặc liên kết lại asset trước' };
   }
   return { asset, item, src };
 }
 
 export async function execSceneDetectionTool(name: string, args: Args, ctx: AgentContext): Promise<unknown> {
-  if (name !== 'detect_scenes') return { error: `unknown tool ${name}` };
+  if (name !== 'detect_scenes') return { error: `công cụ không xác định: ${name}` };
   const target = sourceFor(ctx, args);
   if ('error' in target) return target;
   const apply = (args.apply === 'markers' || args.apply === 'split' ? args.apply : 'report') as ApplyMode;
@@ -62,7 +62,7 @@ export async function execSceneDetectionTool(name: string, args: Args, ctx: Agen
     minSceneMs?: number;
     scenes?: SceneChange[];
   };
-  if (!response.ok) return { error: result.error ?? `scene detection failed (${response.status})` };
+  if (!response.ok) return { error: result.error ?? `phát hiện cảnh thất bại (${response.status})` };
   const scenes = result.scenes ?? [];
   const mapped = target.item ? mapScenesToItem(scenes, target.item, ctx.getState().fps) : [];
 

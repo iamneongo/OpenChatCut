@@ -61,7 +61,7 @@ function clearReframe(ctx: AgentContext, item: TimelineItem): void {
 }
 
 export async function execReframeTool(name: string, args: Args, ctx: AgentContext): Promise<unknown> {
-  if (name !== 'auto_reframe') return { error: `unknown tool ${name}` };
+  if (name !== 'auto_reframe') return { error: `công cụ không xác định: ${name}` };
 
   // —— Boundary verification: environment (pixel sampling requires a browser) ——
   if (typeof document === 'undefined' || typeof HTMLVideoElement === 'undefined') {

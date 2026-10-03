@@ -7,7 +7,7 @@ export { RUN_CODE_TOOL_SCHEMAS, RUN_CODE_TOOL_NAMES } from './schemas/run-code-t
 // Agent Skills container our relay can't reach.
 
 export async function execRunCodeTool(name: string, args: Record<string, unknown>): Promise<unknown> {
-  if (name !== 'run_code') return { error: `unknown tool ${name}` };
+  if (name !== 'run_code') return { error: `công cụ không xác định: ${name}` };
   try {
     const res = await fetch('/e2b/run', {
       method: 'POST',
@@ -15,7 +15,7 @@ export async function execRunCodeTool(name: string, args: Record<string, unknown
       body: JSON.stringify(args),
     });
     const data = (await res.json()) as Record<string, unknown>;
-    if (!res.ok) return { error: (data.error as string) ?? `e2b failed (${res.status})` };
+    if (!res.ok) return { error: (data.error as string) ?? `e2b thất bại (${res.status})` };
     return data;
   } catch (error) {
     return { error: error instanceof Error ? error.message : String(error) };

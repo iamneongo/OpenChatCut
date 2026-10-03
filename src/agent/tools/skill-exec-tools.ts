@@ -16,11 +16,11 @@ interface ExecResult {
 }
 
 export async function execRunSkillScriptTool(name: string, args: Record<string, unknown>, _ctx: AgentContext): Promise<unknown> {
-  if (name !== 'run_skill_script') return { error: `unknown tool ${name}` };
+  if (name !== 'run_skill_script') return { error: `công cụ không xác định: ${name}` };
   const skill = String(args.skill ?? '').trim();
   const command = String(args.command ?? '').trim();
-  if (!skill) return { error: 'skill is required (slug from load_skill)' };
-  if (!command) return { error: 'command is required, e.g. "bash scripts/check-deps.sh"' };
+  if (!skill) return { error: 'skill là bắt buộc (slug từ load_skill)' };
+  if (!command) return { error: 'command là bắt buộc, ví dụ "bash scripts/check-deps.sh"' };
   try {
     const res = await fetch(`/api/skills/${encodeURIComponent(skill)}/exec`, {
       method: 'POST',
@@ -31,7 +31,7 @@ export async function execRunSkillScriptTool(name: string, args: Record<string, 
       }),
     });
     const data = (await res.json().catch(() => null)) as ExecResult | null;
-    if (!data) return { error: `exec failed (HTTP ${res.status})` };
+    if (!data) return { error: `exec thất bại (HTTP ${res.status})` };
     if (data.error && data.ok !== true) return { error: data.error, stdout: data.stdout, stderr: data.stderr, exitCode: data.exitCode };
     return {
       ok: data.ok,

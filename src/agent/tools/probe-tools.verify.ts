@@ -88,9 +88,9 @@ try {
   assert.doesNotMatch(JSON.stringify(failed), /e2b|sandbox/i, 'a probe failure no longer blames the sandbox');
 
   const noFile = await execProbeTool('probe_media', { source: 'asset-mg' }, ctx) as Record<string, unknown>;
-  assert.match(String(noFile.error), /has no media file/);
+  assert.match(String(noFile.error), /không có media file/);
   const ambiguous = await execProbeTool('probe_media', { source: 'asset' }, ctx) as Record<string, unknown>;
-  assert.match(String(ambiguous.error), /no unique asset/);
+  assert.match(String(ambiguous.error), /không có asset \/ path \/ url duy nhất/);
 } finally {
   globalThis.fetch = originalFetch;
 }

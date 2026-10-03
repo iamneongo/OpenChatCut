@@ -51,6 +51,6 @@ export async function execScriptTool(name: string, args: Args, ctx: AgentContext
       }
     }
     default:
-      return { error: `unknown tool ${name}` };
+      return { error: `công cụ không xác định: ${name}` };
   }
 }

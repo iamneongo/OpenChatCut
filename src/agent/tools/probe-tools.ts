@@ -19,19 +19,19 @@ type ResolvedSource = { url: string } | { error: string };
 // through the SSRF-safe fetch itself).
 function resolveSource(ctx: AgentContext, raw: string): ResolvedSource {
   const s = raw.trim();
-  if (!s) return { error: 'source is required' };
+  if (!s) return { error: 'source là bắt buộc' };
   if (/^https?:\/\//.test(s) || s.startsWith('/media/')) return { url: s };
   const assets: MediaAsset[] = ctx.getDoc().assets ?? ctx.getState().assets ?? [];
   const exact = assets.find((a) => a.id === s);
   const hits = exact ? [exact] : assets.filter((a) => a.id.startsWith(s));
-  if (hits.length !== 1) return { error: `no unique asset / path / url for "${s}"` };
+  if (hits.length !== 1) return { error: `không có asset / path / url duy nhất cho "${s}"` };
   const src = hits[0]!.src;
-  if (!src) return { error: `asset ${hits[0]!.id} has no media file (e.g. motion-graphic without baked video)` };
+  if (!src) return { error: `asset ${hits[0]!.id} không có media file (ví dụ motion-graphic chưa có video kết xuất)` };
   return { url: src };
 }
 
 export async function execProbeTool(name: string, args: Args, ctx: AgentContext): Promise<unknown> {
-  if (name !== 'probe_media') return { error: `unknown tool ${name}` };
+  if (name !== 'probe_media') return { error: `công cụ không xác định: ${name}` };
   const resolved = resolveSource(ctx, String(args.source ?? ''));
   if ('error' in resolved) return resolved;
 
@@ -45,15 +45,15 @@ export async function execProbeTool(name: string, args: Args, ctx: AgentContext)
     data = (await res.json()) as Record<string, unknown>;
     if (!res.ok) {
       return {
-        error: typeof data.error === 'string' ? data.error : `probe failed (${res.status})`,
-        hint: 'finalize_uploaded_asset can still commit the upload with ingest defaults; it just will not start transcription.',
+        error: typeof data.error === 'string' ? data.error : `probe thất bại (${res.status})`,
+        hint: 'finalize_uploaded_asset vẫn có thể ghi nhận bản tải lên với giá trị mặc định; chỉ là sẽ không bắt đầu chép lời.',
       };
     }
   } catch (error) {
     return { error: error instanceof Error ? error.message : String(error) };
   }
   const probeJson = data.probe;
-  if (!probeJson || typeof probeJson !== 'object') return { error: 'ffprobe produced no JSON' };
+  if (!probeJson || typeof probeJson !== 'object') return { error: 'ffprobe không trả về JSON' };
   const probe = parseProbe(probeJson);
   return {
     ok: true,
