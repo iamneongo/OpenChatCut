@@ -191,15 +191,15 @@ export const TOOL_SCHEMAS: AgentToolSchema[] = [
   {
     name: 'ToolSearch',
     description: [
-      'Search the deferred agent-tool catalog by keyword and activate matching schemas.',
-      'Use this before an uncommon operation instead of guessing a tool name.',
-      'Results become callable on the next model step; essential tools are already active.',
+      'Tìm trong catalog tool agent đang trì hoãn theo từ khóa và kích hoạt các schema phù hợp.',
+      'Dùng tool này trước một thao tác ít gặp thay vì đoán tên tool.',
+      'Kết quả có thể gọi ở bước model tiếp theo; các tool thiết yếu đã được kích hoạt sẵn.',
     ].join(' '),
     input_schema: {
       type: 'object',
       properties: {
-        query: { type: 'string', description: 'Keyword(s), e.g. "export", "caption", "stock", "shader".' },
-        limit: { type: 'number', description: 'Max activated results (default 8, max 12).' },
+        query: { type: 'string', description: 'Từ khóa, ví dụ "export", "caption", "stock", "shader".' },
+        limit: { type: 'number', description: 'Số kết quả tối đa được kích hoạt (mặc định 8, tối đa 12).' },
       },
       required: ['query'],
     },
