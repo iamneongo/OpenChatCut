@@ -104,8 +104,8 @@ assert.ok(md.includes(`script-stamp:${stamp}`), 'stamp comment');
 {
   const d = makeDraft(doc(state));
   assert.throws(() => applyScript(d.getState, d.commands, md.replace(/script-stamp:\w+/, 'script-stamp:zzz')), /stale/, 'stale stamp rejected');
-  assert.throws(() => applyScript(d.getState, d.commands, md.replace('Keep this sentence.', 'Keep that sentence.')), /不匹配/, 'rewritten words rejected');
-  assert.throws(() => applyScript(d.getState, d.commands, md.replace('[s2] Keep', '[s2] Keep this sentence.\n[s2] Keep')), /重放|两次/, 'replay rejected');
+assert.throws(() => applyScript(d.getState, d.commands, md.replace('Keep this sentence.', 'Keep that sentence.')), /không khớp/, 'rewritten words rejected');
+  assert.throws(() => applyScript(d.getState, d.commands, md.replace('[s2] Keep', '[s2] Keep this sentence.\n[s2] Keep')), /phát lại|hai lần/, 'replay rejected');
   assert.strictEqual(d.takeActions().length, 0, 'failed applies dispatch nothing (atomic)');
 }
 
