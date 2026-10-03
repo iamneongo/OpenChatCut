@@ -212,7 +212,7 @@ export function saveServerRunChat(
     await kvSet(key, { ...chat, serverRunTurnIds: nextRunIds, sessionGeneration });
     const stored = await kvGet<unknown>(key);
     if (!serverRunTurnIds(stored).includes(runId)) {
-      throw new Error('Server run model history could not be persisted.');
+      throw new Error('không thể lưu lịch sử model của lượt chạy server.');
     }
     return true;
   });

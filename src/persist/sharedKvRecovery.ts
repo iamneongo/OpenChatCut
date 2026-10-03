@@ -21,7 +21,7 @@ function recoveryMeta(id: string, sourceId: string, index: unknown): Record<stri
     : undefined;
   const meta = isRecord(source) ? source : {};
   const { deletedAt: _deletedAt, ...retained } = meta;
-  return { ...retained, id, name: `[Recovered offline] ${meta.name ?? sourceId}`, updatedAt: Date.now() };
+  return { ...retained, id, name: `[Khôi phục ngoại tuyến] ${meta.name ?? sourceId}`, updatedAt: Date.now() };
 }
 
 async function preserveProject(
@@ -45,7 +45,7 @@ async function preserveProject(
   const indexed = Array.isArray(next.entries.projects)
     && next.entries.projects.some((entry: unknown) => isRecord(entry) && entry.id === id);
   if (!indexed || !sameStoredValue(next.entries[`project:${id}`], value)) {
-    throw new Error('离线恢复副本尚未保存，原始离线修改仍保留在本机');
+    throw new Error('bản sao khôi phục ngoại tuyến chưa được lưu, thay đổi ngoại tuyến gốc vẫn được giữ trên máy');
   }
   // Merge responses include only the index and keys explicitly read back.
   // Keep confirmations from earlier documents for this bootstrap's remaining keys.

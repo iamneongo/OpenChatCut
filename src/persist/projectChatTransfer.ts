@@ -35,7 +35,7 @@ export async function persistImportedChat(
   const stored = await loadChat(projectId);
   if (!stored || JSON.stringify({ ...stored, sessionGeneration: undefined })
     !== JSON.stringify({ ...chat, sessionGeneration: undefined })) {
-    throw new Error('Imported Agent-linked chat could not be persisted.');
+    throw new Error('không thể lưu chat được liên kết với Agent đã nhập.');
   }
 }
 

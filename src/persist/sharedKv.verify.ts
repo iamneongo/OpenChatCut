@@ -408,7 +408,7 @@ try {
     assert.deepEqual(await kvGet(recoveredKey), offlineDoc, 'loading migration does not rewrite the raw recovery');
     const index = await kvGet<Array<{ id: string; name: string }>>('projects');
     assert.ok(index?.some((meta) => meta.id === recoveredKey.slice('project:'.length)
-      && meta.name === '[Recovered offline] Original'), 'the dashboard exposes the recovery copy');
+      && meta.name === '[Khôi phục ngoại tuyến] Original'), 'the dashboard exposes the recovery copy');
     assert.equal(local.has(PENDING_KEYS_KEY), false, 'confirmed recoveries acknowledge pending keys');
     resetSharedKvMemory();
     await kvGet('projects');
