@@ -34,7 +34,7 @@ export function registerRenderStillRoute(server: ViteDevServer): void {
   // (backs view_timeline_frames: the agent renders stills to "see" its edits)
   server.middlewares.use('/render-still', async (req, res) => {
     if (req.method !== 'POST') {
-      sendError(res, 405, 'method not allowed — use POST');
+      sendError(res, 405, 'method không được phép — hãy dùng POST');
       return;
     }
     let cleanupRenderMedia: (() => Promise<void>) | undefined;
@@ -51,7 +51,7 @@ export function registerRenderStillRoute(server: ViteDevServer): void {
       requestAbort.controller.signal.throwIfAborted();
       const frames = body?.frames;
       if (!Array.isArray(frames) || !frames.length || !frames.every((frame) => typeof frame === 'number')) {
-        sendError(res, 400, 'frames must be a non-empty number[]');
+        sendError(res, 400, 'frames phải là number[] không rỗng');
         return;
       }
       let plan: ExportPlan;
@@ -122,7 +122,7 @@ export function registerRenderStillRoute(server: ViteDevServer): void {
 
 export function registerRenderClipRoute(server: ViteDevServer): void {
   server.middlewares.use('/render-clip', async (req, res) => {
-    if (req.method !== 'POST') { sendError(res, 405, 'method not allowed — use POST'); return; }
+    if (req.method !== 'POST') { sendError(res, 405, 'method không được phép — hãy dùng POST'); return; }
     let tmpOut: string | null = null;
     let bakeOut: string | null = null;
     let cleanupRenderMedia: (() => Promise<void>) | undefined;
@@ -132,7 +132,7 @@ export function registerRenderClipRoute(server: ViteDevServer): void {
       requestAbort.controller.signal.throwIfAborted();
       const state = body?.state;
       if (!state || typeof state !== 'object' || !('items' in state) || !Array.isArray(state.items)) {
-        sendError(res, 400, 'body must be { state, codec, mode }'); return;
+        sendError(res, 400, 'body phải là { state, codec, mode }'); return;
       }
       const codec = typeof body?.codec === 'string' && body.codec in CLIP_EXT ? body.codec : 'h264';
       const accepted = await acceptExportSubmission(

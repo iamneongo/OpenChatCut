@@ -65,7 +65,7 @@ try {
   assert.equal(await readFile(join(directory, 'clip.mp4'), 'utf8'), 'replacement');
   await assert.rejects(
     () => handleExportDestinationPut(request(`/${grant.grantId}/..%2Fevil.mp4`, 'bad'), response()),
-    /invalid export filename/,
+    /filename export không hợp lệ/,
   );
   const route = `/${grant.grantId}/clip.mp4`;
   const held = streamingRequest(route);
@@ -132,7 +132,7 @@ try {
       response(),
       () => null,
     ),
-    /export source is unavailable/,
+    /nguồn export không khả dụng/,
   );
   console.log('export destination server verification passed');
 } finally {

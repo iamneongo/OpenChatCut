@@ -66,7 +66,7 @@ function decodeSegment(value: string): string {
   try {
     return decodeURIComponent(value);
   } catch {
-    throw new ExportDestinationError(400, 'invalid export destination path encoding');
+    throw new ExportDestinationError(400, 'mã hóa đường dẫn điểm đến export không hợp lệ');
   }
 }
 
@@ -81,12 +81,12 @@ function parseRoute(url: string): { grantId: string; filename: string } {
   const path = url.split('?', 1)[0] ?? '';
   const parts = path.split('/');
   if (parts.length !== 3 || parts[0] !== '') {
-    throw new ExportDestinationError(400, 'expected an export grant and filename');
+    throw new ExportDestinationError(400, 'cần grant export và filename');
   }
   const grantId = decodeSegment(parts[1] ?? '');
   const filename = decodeSegment(parts[2] ?? '');
   if (!GRANT_ID.test(grantId)) throw new ExportDestinationError(404, 'không tìm thấy điểm đến export');
-  if (!validFilename(filename)) throw new ExportDestinationError(400, 'invalid export filename');
+  if (!validFilename(filename)) throw new ExportDestinationError(400, 'filename export không hợp lệ');
   return { grantId, filename };
 }
 
@@ -95,9 +95,9 @@ function requestLength(req: IncomingMessage): number | null {
   if (raw === undefined) return null;
   const parsed = Number(raw);
   if (!Number.isSafeInteger(parsed) || parsed < 0) {
-    throw new ExportDestinationError(400, 'invalid content length');
+    throw new ExportDestinationError(400, 'content length không hợp lệ');
   }
-  if (parsed > MAX_EXPORT_BYTES) throw new ExportDestinationError(413, 'export file is too large');
+  if (parsed > MAX_EXPORT_BYTES) throw new ExportDestinationError(413, 'tệp export quá lớn');
   return parsed;
 }
 
@@ -108,7 +108,7 @@ async function streamRequest(req: IncomingMessage, path: string): Promise<void> 
     transform(chunk: Buffer, _encoding, callback) {
       bytes += chunk.length;
       const error = bytes > MAX_EXPORT_BYTES
-        ? new ExportDestinationError(413, 'export file is too large')
+        ? new ExportDestinationError(413, 'tệp export quá lớn')
         : null;
       callback(error, chunk);
     },
@@ -126,11 +126,11 @@ function exportSource(
   if (raw === undefined) return null;
   const prefix = '/media/uploads/';
   if (Array.isArray(raw) || !raw.startsWith(prefix)) {
-    throw new ExportDestinationError(400, 'invalid export source', { targetPath: target });
+    throw new ExportDestinationError(400, 'nguồn export không hợp lệ', { targetPath: target });
   }
   const source = resolveSource(decodeSegment(raw.slice(prefix.length)));
   if (source) return source;
-  throw new ExportDestinationError(404, 'export source is unavailable', {
+  throw new ExportDestinationError(404, 'nguồn export không khả dụng', {
     code: 'export_source_read_failed', retryable: true, targetPath: target,
   });
 }
@@ -140,19 +140,19 @@ export async function handleExportDestinationPut(
   res: ServerResponse,
   resolveSource: (name: string) => string | null = resolveUploadFile,
 ): Promise<void> {
-  if (req.method !== 'PUT') throw new ExportDestinationError(405, 'method not allowed — use PUT');
+  if (req.method !== 'PUT') throw new ExportDestinationError(405, 'method không được phép — hãy dùng PUT');
   const { grantId, filename } = parseRoute(req.url ?? '/');
   const grant = resolveExportDirectoryGrant(grantId);
   if (!grant) throw new ExportDestinationError(404, 'không tìm thấy điểm đến export');
   const directory = resolve(grant.directory);
   const target = resolve(directory, filename);
-  if (dirname(target) !== directory) throw new ExportDestinationError(400, 'invalid export filename');
+  if (dirname(target) !== directory) throw new ExportDestinationError(400, 'filename export không hợp lệ');
   const source = exportSource(req, target, resolveSource);
   const releaseLease = acquireTargetLease(target);
   try {
     const info = await stat(directory).catch(() => null);
     if (!info?.isDirectory()) {
-      throw new ExportDestinationError(410, 'export destination is unavailable', {
+      throw new ExportDestinationError(410, 'điểm đến export không khả dụng', {
         code: 'export_destination_unavailable',
         retryable: true,
         targetPath: target,
@@ -163,7 +163,7 @@ export async function handleExportDestinationPut(
       if (source) {
         const sourceInfo = await stat(source);
         if (!sourceInfo.isFile()) throw new ExportDestinationError(404, 'export source is unavailable');
-        if (sourceInfo.size > MAX_EXPORT_BYTES) throw new ExportDestinationError(413, 'export file is too large');
+        if (sourceInfo.size > MAX_EXPORT_BYTES) throw new ExportDestinationError(413, 'tệp export quá lớn');
         await copyFile(source, temporary);
       } else {
         await streamRequest(req, temporary);
@@ -217,7 +217,7 @@ export function exportDestinationPlugin(): Plugin {
           if (res.writableEnded) return;
           const expected = error instanceof ExportDestinationError;
           if (!expected) server.config.logger.error(`[export-destination] ${error instanceof Error ? error.message : String(error)}`);
-          const message = expected ? error.message : 'failed to write export file';
+          const message = expected ? error.message : 'ghi tệp export thất bại';
           const failure = createExportFailure({
             stage: 'destination',
             code: expected ? error.code : 'export_destination_failed',

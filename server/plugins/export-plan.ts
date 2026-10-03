@@ -69,23 +69,23 @@ export function validateVideoParams(
   format: 'video' | 'audio',
 ): void {
   if (body?.resolution !== undefined) {
-    if (format !== 'video') throw new ExportRequestError('resolution applies to video exports only');
+    if (format !== 'video') throw new ExportRequestError('resolution chỉ áp dụng cho export video');
     if (typeof body.resolution !== 'string' || !Object.hasOwn(EXPORT_RESOLUTIONS, body.resolution)) {
-      throw new ExportRequestError('resolution must be 480p, 720p, 1080p, or 4k');
+      throw new ExportRequestError('resolution phải là 480p, 720p, 1080p hoặc 4k');
     }
   }
   if (body?.fps !== undefined) {
-    if (format !== 'video') throw new ExportRequestError('fps applies to video exports only');
+    if (format !== 'video') throw new ExportRequestError('fps chỉ áp dụng cho export video');
     if (typeof body.fps !== 'number' || !(EXPORT_FPS_OPTIONS as readonly number[]).includes(body.fps)) {
-      throw new ExportRequestError('fps must be 24, 25, 30, 50, or 60');
+      throw new ExportRequestError('fps phải là 24, 25, 30, 50 hoặc 60');
     }
   }
   if (body?.videoBitrate !== undefined) {
-    if (format !== 'video') throw new ExportRequestError('videoBitrate applies to video exports only');
+    if (format !== 'video') throw new ExportRequestError('videoBitrate chỉ áp dụng cho export video');
     if (!Number.isInteger(body.videoBitrate)
       || (body.videoBitrate as number) < MIN_VIDEO_BITRATE_BPS
       || (body.videoBitrate as number) > MAX_VIDEO_BITRATE_BPS) {
-      throw new ExportRequestError('videoBitrate must be an integer between 1000000 and 80000000 bps');
+      throw new ExportRequestError('videoBitrate phải là số nguyên từ 1000000 đến 80000000 bps');
     }
   }
 }
@@ -120,7 +120,7 @@ function currentTimelinesFrom(value: unknown): Timeline[] | null {
 export function planExport(body: ExportRequest | null): ExportPlan {
   const requestedState = body?.state;
   if (!isTimelineState(requestedState)) {
-    throw new ExportRequestError('body must be { state: TimelineState } with a valid items array');
+    throw new ExportRequestError('body phải là { state: TimelineState } với mảng items hợp lệ');
   }
   let state = requestedState;
   let project: ProjectDoc | undefined;
@@ -132,12 +132,12 @@ export function planExport(body: ExportRequest | null): ExportPlan {
     if (graphError) throw graphError;
     const migrated = runProjectMigrations(body.project);
     if (!migrated) {
-      throw new ExportRequestError('project must be a valid current or legacy ProjectDoc');
+      throw new ExportRequestError('project phải là ProjectDoc hiện tại hoặc legacy hợp lệ');
     }
     const migratedProject = migrated.doc;
     project = migratedProject;
     if (body.timelineId !== undefined && (typeof body.timelineId !== 'string' || !body.timelineId)) {
-      throw new ExportRequestError('timelineId must be a non-empty string');
+      throw new ExportRequestError('timelineId phải là chuỗi không rỗng');
     }
     const selectedTimelineId = body.timelineId ?? migratedProject.activeTimelineId;
     timelineId = selectedTimelineId;
@@ -147,27 +147,27 @@ export function planExport(body: ExportRequest | null): ExportPlan {
     state = root;
     nestedDuration = nestedPlan.durationInFrames;
   } else if (body?.timelineId !== undefined) {
-    throw new ExportRequestError('timelineId requires project');
+    throw new ExportRequestError('timelineId yêu cầu project');
   }
   const fps = state.fps;
-  if (!Number.isFinite(fps) || fps <= 0) throw new ExportRequestError('state.fps must be a positive number');
+  if (!Number.isFinite(fps) || fps <= 0) throw new ExportRequestError('state.fps phải là số dương');
   if (body?.format !== undefined && body.format !== 'video' && body.format !== 'audio') {
-    throw new ExportRequestError('format must be video or audio');
+    throw new ExportRequestError('format phải là video hoặc audio');
   }
   if (body?.codec !== undefined && !Object.hasOwn(EXPORT_MEDIA, body.codec)) {
-    throw new ExportRequestError('codec must be h264, vp8, prores, mp3, or wav');
+    throw new ExportRequestError('codec phải là h264, vp8, prores, mp3 hoặc wav');
   }
-  if (body?.name !== undefined && typeof body.name !== 'string') throw new ExportRequestError('name must be a string');
+  if (body?.name !== undefined && typeof body.name !== 'string') throw new ExportRequestError('name phải là chuỗi');
   if ([body?.startSeconds, body?.endSeconds].some((value) => value !== undefined && (typeof value !== 'number' || !Number.isFinite(value)))) {
-    throw new ExportRequestError('startSeconds and endSeconds must be finite numbers');
+    throw new ExportRequestError('startSeconds và endSeconds phải là số hữu hạn');
   }
   const format = body?.format ?? 'video';
   const codec = body?.codec ?? (format === 'audio' ? 'mp3' : 'h264');
   if ((format === 'audio') !== (codec === 'mp3' || codec === 'wav')) {
-    throw new ExportRequestError(`${format} export does not support codec=${codec}`);
+    throw new ExportRequestError(`export ${format} không hỗ trợ codec=${codec}`);
   }
   if (format === 'video' && codec === 'prores' && body?.videoBitrate !== undefined) {
-    throw new ExportRequestError('prores mezzanine export does not accept videoBitrate');
+    throw new ExportRequestError('export prores mezzanine không nhận videoBitrate');
   }
   validateVideoParams(body, format);
   const totalFrames = nestedDuration === undefined

@@ -71,14 +71,14 @@ assert.throws(
 
 validateVideoParams({ resolution: '4k', fps: 60, videoBitrate: 40_000_000 }, 'video');
 validateVideoParams(null, 'audio');
-assert.throws(() => validateVideoParams({ resolution: '720p' }, 'audio'), /video exports only/);
-assert.throws(() => validateVideoParams({ fps: 60 }, 'audio'), /video exports only/);
-assert.throws(() => validateVideoParams({ resolution: '8k' }, 'video'), /480p, 720p, 1080p, or 4k/);
-assert.throws(() => validateVideoParams({ resolution: 'constructor' }, 'video'), /480p, 720p, 1080p, or 4k/);
-assert.throws(() => validateVideoParams({ fps: 29.97 }, 'video'), /24, 25, 30, 50, or 60/);
-assert.throws(() => validateVideoParams({ videoBitrate: 12_000_000 }, 'audio'), /video exports only/);
-assert.throws(() => validateVideoParams({ videoBitrate: 999_999 }, 'video'), /between 1000000 and 80000000/);
-assert.throws(() => validateVideoParams({ videoBitrate: 12_500_000.5 }, 'video'), /integer/);
+assert.throws(() => validateVideoParams({ resolution: '720p' }, 'audio'), /chỉ áp dụng cho export video/);
+assert.throws(() => validateVideoParams({ fps: 60 }, 'audio'), /chỉ áp dụng cho export video/);
+assert.throws(() => validateVideoParams({ resolution: '8k' }, 'video'), /phải là 480p, 720p, 1080p hoặc 4k/);
+assert.throws(() => validateVideoParams({ resolution: 'constructor' }, 'video'), /phải là 480p, 720p, 1080p hoặc 4k/);
+assert.throws(() => validateVideoParams({ fps: 29.97 }, 'video'), /phải là 24, 25, 30, 50 hoặc 60/);
+assert.throws(() => validateVideoParams({ videoBitrate: 12_000_000 }, 'audio'), /chỉ áp dụng cho export video/);
+assert.throws(() => validateVideoParams({ videoBitrate: 999_999 }, 'video'), /từ 1000000 đến 80000000/);
+assert.throws(() => validateVideoParams({ videoBitrate: 12_500_000.5 }, 'video'), /phải là số nguyên/);
 
 const bitrateInput = { width: 1920, height: 1080, fps: 30, customMbps: 12 } as const;
 assert.equal(resolveVideoBitrateBps({ ...bitrateInput, mode: 'recommended' }), 10_000_000);
