@@ -14,7 +14,7 @@ const VIDEO_END_EPSILON_SECONDS = 0.01;
 
 export class SemanticMediaDecodeError extends Error {
   constructor() {
-    super('Unable to decode media for semantic indexing');
+    super('không thể giải mã media để lập chỉ mục ngữ nghĩa');
     this.name = 'SemanticMediaDecodeError';
   }
 }
@@ -52,7 +52,7 @@ function capturePixels(
   canvas.width = targetWidth;
   canvas.height = targetHeight;
   const context = canvas.getContext('2d', { willReadFrequently: true });
-  if (!context) throw new Error('Canvas is unavailable');
+  if (!context) throw new Error('Canvas không khả dụng');
   context.drawImage(source, 0, 0, targetWidth, targetHeight);
   const pixels = context.getImageData(0, 0, targetWidth, targetHeight);
   return { data: pixels.data, width: targetWidth, height: targetHeight, ...sample };

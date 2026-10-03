@@ -115,7 +115,7 @@ async function planCandidates(paths: readonly string[]): Promise<{
     } else if (info.isFile()) {
       candidates.push({ path: canonicalPath, name: basename(path), root: dirname(canonicalPath) });
     } else {
-      errors.push({ path, error: 'not a file or directory' });
+      errors.push({ path, error: 'không phải tệp hoặc thư mục' });
     }
   }
   return { candidates, errors };

@@ -274,7 +274,7 @@ export class ServerRunToolExecutor {
         session,
         toolCallId,
         request,
-        new Error('Browser durable storage could not save the active tool set.'),
+        new Error('bộ nhớ bền vững của trình duyệt không thể lưu bộ tool đang hoạt động.'),
         false,
       );
     }

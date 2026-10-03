@@ -264,7 +264,7 @@ export function buildCommands(dispatch: ProjectDispatch, getDoc: () => ProjectDo
       },
       addAsset: (asset: MediaAsset, durationFps = projectFps()) => dispatch({ type: 'addAsset', asset, durationFps }),
       addMediaItem: (asset, at) => {
-        if (!isTimelineMediaAssetKind(asset.kind)) throw new Error(`${asset.name} is not timeline media`);
+        if (!isTimelineMediaAssetKind(asset.kind)) throw new Error(`${asset.name} không phải media trên timeline`);
         const item = asset.kind === 'motion-graphic'
           ? {
               id: uid('item'),

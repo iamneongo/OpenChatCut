@@ -263,7 +263,7 @@ export function GlTransition({ type, direction, L, windowStart, outgoing, incomi
         const runtime = ensureRuntimeSlot(runtimeRef, () => createGlRuntime(canvas));
         const outgoingContext = staging.out.getContext('2d');
         const incomingContext = staging.in.getContext('2d');
-        if (!outgoingContext || !incomingContext) throw new Error('2d context unavailable');
+        if (!outgoingContext || !incomingContext) throw new Error('context 2D không khả dụng');
         const absoluteFrame = windowStart + frame;
         const outgoingOpacity = clipOpacityAt(outgoing, absoluteFrame - outgoing.startFrame);
         const incomingOpacity = clipOpacityAt(incoming, absoluteFrame - incoming.startFrame);

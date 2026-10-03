@@ -17,9 +17,9 @@ const content = `${JSON.stringify({
 if (process.argv.includes('--check')) {
   const current = await readFile(outputUrl, 'utf8').catch(() => '');
   if (normalizeToolCatalogText(current) !== content) {
-    throw new Error('Server tool catalog is stale. Run npm run generate:server-tool-catalog.');
+    throw new Error('danh mục tool server đã cũ. Hãy chạy npm run generate:server-tool-catalog.');
   }
-  console.log('server tool catalog is current');
+  console.log('danh mục tool server đã cập nhật');
 } else {
   await mkdir(fileURLToPath(new URL('.', outputUrl)), { recursive: true });
   await writeFile(outputUrl, content, 'utf8');

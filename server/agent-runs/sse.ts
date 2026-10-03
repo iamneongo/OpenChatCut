@@ -125,7 +125,7 @@ export function sseForRun(
       'Content-Type': 'application/json',
       'Retry-After': '1',
     });
-    res.end(JSON.stringify({ error: 'agent run event subscriber limit reached' }));
+    res.end(JSON.stringify({ error: 'đã đạt giới hạn subscriber sự kiện của lượt chạy Agent' }));
     return;
   }
   res.writeHead(200, {

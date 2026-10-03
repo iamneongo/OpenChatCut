@@ -172,7 +172,7 @@ function openDatabase(): Promise<IDBDatabase> {
     if (!request.result.objectStoreNames.contains(STORE_NAME)) request.result.createObjectStore(STORE_NAME, { keyPath: 'key' });
   };
   request.onsuccess = () => resolve(request.result);
-  request.onerror = () => reject(request.error ?? new Error('Unable to open music analysis cache'));
+  request.onerror = () => reject(request.error ?? new Error('không thể mở bộ nhớ đệm phân tích nhạc'));
   return promise;
 }
 
@@ -182,7 +182,7 @@ async function idbRead(key: string): Promise<unknown> {
     const { promise, resolve, reject } = promiseConstructor.withResolvers<unknown>();
     const request = database.transaction(STORE_NAME, 'readonly').objectStore(STORE_NAME).get(key);
     request.onsuccess = () => resolve(request.result as unknown);
-    request.onerror = () => reject(request.error ?? new Error('Unable to read music analysis cache'));
+    request.onerror = () => reject(request.error ?? new Error('không thể đọc bộ nhớ đệm phân tích nhạc'));
     return await promise;
   } finally {
     database.close();
@@ -196,8 +196,8 @@ async function idbWrite(value: StoredAnalysis): Promise<void> {
     const transaction = database.transaction(STORE_NAME, 'readwrite');
     transaction.objectStore(STORE_NAME).put(value);
     transaction.oncomplete = () => resolve(undefined);
-    transaction.onerror = () => reject(transaction.error ?? new Error('Unable to write music analysis cache'));
-    transaction.onabort = () => reject(transaction.error ?? new Error('Music analysis cache write aborted'));
+    transaction.onerror = () => reject(transaction.error ?? new Error('không thể ghi bộ nhớ đệm phân tích nhạc'));
+    transaction.onabort = () => reject(transaction.error ?? new Error('ghi bộ nhớ đệm phân tích nhạc đã bị hủy'));
     await promise;
   } finally {
     database.close();

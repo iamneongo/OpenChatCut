@@ -43,14 +43,14 @@ export async function obtainVadEvidence(
 ): Promise<VadEvidenceResult> {
   const cached = await loadVadEvidence(key);
   if (cached) return { status: 'ready', evidence: cached, cached: true };
-  if (!registeredRunner) return { status: 'unavailable', reason: 'VAD model is unavailable' };
+  if (!registeredRunner) return { status: 'unavailable', reason: 'model VAD không khả dụng' };
   try {
     const result = await registeredRunner(samples, sampleRate, key.threshold, signal);
     if (!Number.isFinite(result.confidence)
       || result.confidence < 0
       || result.confidence > 1
       || !Array.isArray(result.speechSpans)) {
-      return { status: 'failed', reason: 'VAD returned invalid evidence' };
+      return { status: 'failed', reason: 'VAD trả về dữ liệu bằng chứng không hợp lệ' };
     }
     const evidence: VadEvidence = {
       ...key,

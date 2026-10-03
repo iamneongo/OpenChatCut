@@ -141,13 +141,13 @@ class NativeClapWorkerAdapter {
 
   private handleProgress(value: unknown): void {
     if (!isDesktopInferenceProgress(value)) {
-      this.failActive(new Error('native CLAP returned invalid progress'));
+      this.failActive(new Error('CLAP native trả về tiến độ không hợp lệ'));
       return;
     }
     const id = this.active.get(value.requestId);
     if (id === undefined || value.progress === undefined || this.terminated) return;
     if (value.progress < 0 || value.progress > 1) {
-      this.failActive(new Error('native CLAP returned out-of-range progress'));
+      this.failActive(new Error('CLAP native trả về tiến độ ngoài phạm vi'));
       return;
     }
     this.post({ id, type: 'progress', progress: value.progress });

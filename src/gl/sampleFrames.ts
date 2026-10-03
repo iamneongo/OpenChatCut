@@ -71,7 +71,7 @@ function loadKind(kind: SampleFrameKind): Promise<HTMLCanvasElement> {
       canvas.height = SAMPLE_H;
       const ctx = canvas.getContext('2d');
       if (!ctx) {
-        reject(new Error('2d context unavailable for sample frame'));
+        reject(new Error('context 2D không khả dụng cho frame mẫu'));
         return;
       }
       ctx.fillStyle = '#111';
@@ -80,7 +80,7 @@ function loadKind(kind: SampleFrameKind): Promise<HTMLCanvasElement> {
       if (generations[kind] === generation) rememberCanvas(kind, canvas);
       resolve(canvas);
     };
-    img.onerror = () => reject(new Error(`failed to load ${SRC[kind]}`));
+    img.onerror = () => reject(new Error(`không thể tải ${SRC[kind]}`));
     img.src = SRC[kind];
   });
   let settled: Promise<HTMLCanvasElement>;

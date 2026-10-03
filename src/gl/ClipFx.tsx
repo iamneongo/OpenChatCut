@@ -186,7 +186,7 @@ export function ClipFx({ item, fit, width, height, frameOffset = 0, onPreviewSta
       try {
         const runtime = ensureRuntimeSlot(runtimeRef, () => createGlRuntime(canvas));
         const ctx = staging.getContext('2d');
-        if (!ctx) throw new Error('2d context unavailable');
+        if (!ctx) throw new Error('context 2D không khả dụng');
         if (!decodedVideo && imageRef.current) drawFit(ctx, imageRef.current, fit);
         const shaderFrame = buildEffectShaderFrame(
           active.map(({ fx, def }) => ({ def, overrides: fx.overrides })),
