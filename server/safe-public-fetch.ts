@@ -80,7 +80,7 @@ export class PublicConnectTimeoutError extends Error {
   readonly timeoutMs: number;
 
   constructor(host: string, address: string, timeoutMs: number) {
-    super(`connect to ${host} (${address}) timed out after ${timeoutMs}ms`);
+    super(`kết nối tới ${host} (${address}) hết thời gian chờ sau ${timeoutMs}ms`);
     this.name = 'PublicConnectTimeoutError';
     this.host = host;
     this.address = address;
@@ -332,7 +332,7 @@ const defaultTransport: PublicUrlTransport = async (request) => {
     const status = incoming.statusCode ?? 502;
     if (status < 200 || status > 599) {
       incoming.destroy();
-      reject(new Error(`unsupported upstream HTTP status ${status}`));
+      reject(new Error(`mã HTTP upstream không được hỗ trợ: ${status}`));
       return;
     }
     const responseHeaders = new Headers();

@@ -35,10 +35,10 @@ export function throwIfNormalizationAborted(signal?: AbortSignal): void {
 
 function validateAdmissionLimits(concurrency: number, maxQueued: number): void {
   if (!Number.isInteger(concurrency) || concurrency < 1) {
-    throw new RangeError('normalize concurrency must be a positive integer');
+    throw new RangeError('số tác vụ normalize đồng thời phải là số nguyên dương');
   }
   if (!Number.isInteger(maxQueued) || maxQueued < 0) {
-    throw new RangeError('normalize queue limit must be a non-negative integer');
+    throw new RangeError('giới hạn hàng đợi normalize phải là số nguyên không âm');
   }
 }
 

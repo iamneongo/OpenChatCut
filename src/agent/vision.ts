@@ -31,7 +31,7 @@ const VISION_MAX_OUTPUT_TOKENS = 1024;
 const DESCRIBE_CONCURRENCY = 4;
 
 const IMAGE_OMITTED_FALLBACK =
-  'Visual attachment omitted: the vision model could not describe it.';
+  'Đã bỏ qua tệp đính kèm hình ảnh: model thị giác không thể mô tả tệp này.';
 
 interface ImagePayload {
   base64: string;

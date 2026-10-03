@@ -82,7 +82,7 @@ async function createNormalizePlan(options: NormalizeMediaFileOptions): Promise<
     meta = await probeVideo(options.inputPath, options.signal);
   } catch (error) {
     throw new NormalizeMediaProbeError(
-      `video compatibility check failed: ${error instanceof Error ? error.message : String(error)}`,
+      `kiểm tra khả năng tương thích video thất bại: ${error instanceof Error ? error.message : String(error)}`,
       { cause: error },
     );
   }

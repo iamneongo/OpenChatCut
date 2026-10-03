@@ -147,7 +147,7 @@ async function readBody(req: IncomingMessage): Promise<unknown> {
   for await (const chunk of req) {
     const buffer = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk);
     bytes += buffer.length;
-    if (bytes > MAX_BODY_BYTES) throw new Error('extension pack is too large');
+    if (bytes > MAX_BODY_BYTES) throw new Error('pack extension quá lớn');
     chunks.push(buffer);
   }
   return JSON.parse(Buffer.concat(chunks).toString('utf8') || '{}') as unknown;

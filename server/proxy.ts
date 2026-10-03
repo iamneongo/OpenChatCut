@@ -111,7 +111,7 @@ export function proxyMiddleware(route: ProxyRoute): Middleware {
     upstream.on('error', (err) => {
       if (!res.headersSent) {
         res.writeHead(502, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ error: `upstream request failed: ${err.message}` }));
+        res.end(JSON.stringify({ error: `yêu cầu upstream thất bại: ${err.message}` }));
       } else if (!res.writableEnded) {
         res.end();
       }

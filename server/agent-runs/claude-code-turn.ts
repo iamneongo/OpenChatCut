@@ -250,7 +250,7 @@ export async function executeServerClaudeCodeTurn(
           argsDigest: digestToolArgs((args ?? {}) as Record<string, unknown>),
           ...(event.success
             ? { result: compactToolResultForModel(event.result) }
-            : { error: 'Claude Code tool call failed.' }),
+            : { error: 'Lời gọi tool Claude Code thất bại.' }),
         });
         break;
       }
@@ -356,7 +356,7 @@ function withTimeout(promise: Promise<void>, timeoutMs: number, onTimeout: () =>
       // Stop the work, do not just stop waiting for it: a timed-out turn must
       // not leave the CLI holding a live MCP token and editing the project.
       onTimeout();
-      reject(new Error(`Claude Code turn timed out after ${Math.round(timeoutMs / 1000)}s.`));
+      reject(new Error(`Lượt Claude Code hết thời gian chờ sau ${Math.round(timeoutMs / 1000)} giây.`));
     }, timeoutMs);
     promise.then(
       () => { clearTimeout(timer); resolve(); },

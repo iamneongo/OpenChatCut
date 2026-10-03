@@ -288,7 +288,7 @@ export async function executeServerCodexTurn(
 function withTimeout(promise: Promise<void>, timeoutMs: number): Promise<void> {
   return new Promise<void>((resolve, reject) => {
     const timer = setTimeout(() => {
-      reject(new Error(`Codex turn timed out after ${Math.round(timeoutMs / 1000)}s.`));
+      reject(new Error(`Lượt Codex hết thời gian chờ sau ${Math.round(timeoutMs / 1000)} giây.`));
     }, timeoutMs);
     promise.then(
       () => { clearTimeout(timer); resolve(); },

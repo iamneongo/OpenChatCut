@@ -148,7 +148,7 @@ export async function importAgentPaths(
         imported.push(result.prepared.file);
         knownHashes.add(result.prepared.file.contentHash);
       } else if (result.status === 'retry') {
-        errors.push({ path: candidate.path, error: 'import failed and can be retried' });
+        errors.push({ path: candidate.path, error: 'nhập tệp thất bại và có thể thử lại' });
       } else if (result.status === 'unsupported') {
         unsupportedFiles.push(candidate.name);
       } else {

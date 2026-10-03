@@ -46,7 +46,7 @@ function formatBytes(bytes: number): string {
 
 export class UploadTooLargeError extends Error {
   constructor(max: number) {
-    super(`file too large (max ${formatBytes(max)})`);
+    super(`tệp quá lớn (tối đa ${formatBytes(max)})`);
     this.name = 'UploadTooLargeError';
   }
 }

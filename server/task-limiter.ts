@@ -13,7 +13,7 @@ export class TaskLimiter {
 
   constructor(limit: number) {
     if (!Number.isInteger(limit) || limit < 1) {
-      throw new RangeError('task limiter limit must be a positive integer');
+      throw new RangeError('giới hạn task limiter phải là số nguyên dương');
     }
     this.limit = limit;
   }

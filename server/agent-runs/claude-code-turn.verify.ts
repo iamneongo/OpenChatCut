@@ -276,7 +276,7 @@ function sequence(events: readonly ClaudeCodeTurnStreamEvent[]): ServerClaudeCod
   await flushRunPersistence(run);
   const result = run.events.find((event) => event.type === 'tool-result');
   const resultData = result!.data as { error?: string };
-  assert.equal(resultData.error, 'Claude Code tool call failed.');
+  assert.equal(resultData.error, 'Lời gọi tool Claude Code thất bại.');
   assert.ok(outcome.messages.some((message) => String(message.content).includes('success=false')),
     'failure is persisted in the tool history');
 }

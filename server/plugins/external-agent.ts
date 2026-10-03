@@ -143,7 +143,7 @@ export function externalAgentPlugin(): Plugin {
         }
         void handleMcpRequest(req, res, requestBaseUrl(req)).catch((error) => {
           server.config.logger.error(`[external-mcp] ${error instanceof Error ? error.message : String(error)}`);
-          if (!res.headersSent) sendBridgeJson(res, 500, { error: 'MCP request failed' });
+          if (!res.headersSent) sendBridgeJson(res, 500, { error: 'Yêu cầu MCP thất bại' });
         });
       });
     },

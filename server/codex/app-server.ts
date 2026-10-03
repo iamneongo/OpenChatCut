@@ -93,7 +93,7 @@ export class CodexTimeoutError extends Error {
   readonly method: string;
 
   constructor(method: string) {
-    super(`Codex app-server timed out during ${method}.`);
+    super(`Codex app-server hết thời gian chờ khi thực hiện ${method}.`);
     this.name = 'CodexTimeoutError';
     this.method = method;
   }
@@ -306,7 +306,7 @@ export class CodexAppServerClient {
     try {
       this.routeMessage(JSON.parse(line));
     } catch {
-      this.resetProcess(child, new CodexProcessError('Codex app-server sent an invalid response.'));
+      this.resetProcess(child, new CodexProcessError('Codex app-server trả về phản hồi không hợp lệ.'));
     }
   }
 
@@ -366,7 +366,7 @@ export class CodexAppServerClient {
       try {
         if (handler(request)) return;
       } catch {
-        request.reject(-32603, 'OpenChatCut could not handle this request.');
+        request.reject(-32603, 'OpenChatCut không thể xử lý yêu cầu này.');
         return;
       }
     }

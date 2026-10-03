@@ -89,7 +89,7 @@ function failedOutcome(
 } {
   const message = redactTextForAgentRuntime(
     error instanceof Error ? error.message : String(error),
-  ).slice(0, 1_200) || 'External editor call failed.';
+  ).slice(0, 1_200) || 'Lời gọi editor bên ngoài thất bại.';
   if (error instanceof ExternalEditSessionOutcomeError) {
     return { outcome: error.outcome, message };
   }

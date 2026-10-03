@@ -107,7 +107,7 @@ export function registerToolRequest(
     request.status = 'cancelled';
     releaseToolRequest(request);
     void dependencies.mirrorTool(run, request, 'cancelled');
-    reject(new Error(`Agent tool request timed out: ${toolName}.`));
+    reject(new Error(`Yêu cầu tool Agent hết thời gian chờ: ${toolName}.`));
   }, timeoutMs);
   run.toolRequests.set(toolCallId, request);
   void dependencies.mirrorTool(run, request, 'pending');

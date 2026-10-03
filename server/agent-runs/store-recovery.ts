@@ -50,7 +50,7 @@ function serverEvents(record: AgentRunRecord): ServerRunEvent[] {
   }).sort((a, b) => a.id - b.id);
 }
 
-const INTERRUPTED_TOOL_ERROR = 'The agent run was interrupted before this tool returned a result.';
+const INTERRUPTED_TOOL_ERROR = 'Lượt chạy Agent bị gián đoạn trước khi tool trả về kết quả.';
 
 /**
  * Recovered runs carry tool-request events whose results never arrived (the
