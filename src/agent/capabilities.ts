@@ -106,7 +106,7 @@ const CAP_PROVIDERS: Partial<Record<CapabilityKey, ProviderRow[]>> = {
   ],
   transcription: [
     { label: 'AssemblyAI', arg: 'assemblyai', argKey: 'provider', need: [['ASSEMBLYAI_API_KEY']] },
-    { label: 'Local Whisper', arg: 'local', argKey: 'provider', need: [[]] },
+    { label: 'Whisper cục bộ', arg: 'local', argKey: 'provider', need: [[]] },
     { label: 'OpenAI', arg: 'openai', argKey: 'provider', need: [['OPENAI_API_KEY']] },
     { label: 'Mistral Voxtral', arg: 'mistral', argKey: 'provider', need: [['LLM_MISTRAL_API_KEY']] },
     { label: 'Deepgram', arg: 'deepgram', argKey: 'provider', need: [['DEEPGRAM_API_KEY']] },
