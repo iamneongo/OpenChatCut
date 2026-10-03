@@ -86,12 +86,12 @@ for (const value of [
 ]) {
   assert.throws(
     () => resolveRuntimeProfile({ [DEV_PROFILE_ID_ENV]: value }, { homeDir, cwd }),
-    /lowercase UUID v4/,
+    /UUID v4 chữ thường/,
   );
 }
 assert.throws(
   () => resolveRuntimeProfile({ OPENCHATCUT_DEV_PROFILE_ROOT: isolatedRoot }, { homeDir, cwd }),
-  /Unsupported isolated development profile variable/,
+  /profile phát triển cô lập không được hỗ trợ/,
 );
 
 // ── User-chosen storage root ─────────────────────────────────────────────────
@@ -130,7 +130,7 @@ try {
   // the user never chose, which is exactly what this setting exists to prevent.
   assert.throws(
     () => resolveRuntimeProfile({ [DATA_DIR_ENV]: 'relative/saves' }, { homeDir: dataDirHome, cwd }),
-    /must be an absolute path/,
+    /phải là đường dẫn tuyệt đối/,
   );
 
   // With no environment variable, the pointer file recorded by the settings UI is used,

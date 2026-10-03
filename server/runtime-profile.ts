@@ -84,11 +84,11 @@ function unsupportedProfileEnv(env: RuntimeProfileEnv): string | undefined {
 
 function configuredProfileId(env: RuntimeProfileEnv): string | null {
   const unsupported = unsupportedProfileEnv(env);
-  if (unsupported) throw new Error(`Unsupported isolated development profile variable: ${unsupported}`);
+  if (unsupported) throw new Error(`biến môi trường profile phát triển cô lập không được hỗ trợ: ${unsupported}`);
   if (!Object.hasOwn(env, DEV_PROFILE_ID_ENV)) return null;
   const value = env[DEV_PROFILE_ID_ENV];
   if (typeof value !== 'string' || value !== value.trim() || !UUID_V4.test(value)) {
-    throw new Error(`${DEV_PROFILE_ID_ENV} must be a lowercase UUID v4`);
+    throw new Error(`${DEV_PROFILE_ID_ENV} phải là UUID v4 chữ thường`);
   }
   return value;
 }
@@ -115,7 +115,7 @@ function configuredDataDir(
   if (!raw) return isolated ? null : readDataDirPointer(home);
   const expanded = raw === '~' ? home : raw.replace(/^~(?=\/)/, home);
   if (!isAbsolute(expanded)) {
-    throw new Error(`${DATA_DIR_ENV} must be an absolute path (got: ${raw})`);
+    throw new Error(`${DATA_DIR_ENV} phải là đường dẫn tuyệt đối (nhận được: ${raw})`);
   }
   return resolve(expanded);
 }
