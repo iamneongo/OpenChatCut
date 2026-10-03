@@ -86,7 +86,7 @@ function resolveTranscriptSegments(state: TimelineState, spec: string, trackFilt
 /** create opts from a raw object (single arg or one batch entry). */
 function createOpts(o: Args, state: TimelineState): { fromFrame: number; opts: Parameters<AgentContext['commands']['addMarker']>[1] } | { error: string } {
   const scope = o.scope === 'item' ? 'item' : 'project';
-  if (scope === 'item' && !str(o.itemId)) return { error: 'scope "item" requires itemId' };
+  if (scope === 'item' && !str(o.itemId)) return { error: 'scope "item" cần có itemId' };
   let fromFrame = num(o.fromFrame);
   let durationFrames = num(o.durationFrames);
   let note = str(o.note);
@@ -102,7 +102,7 @@ function createOpts(o: Args, state: TimelineState): { fromFrame: number; opts: P
       note = prefix ? `${prefix}: ${derived.note}` : derived.note;
     }
   }
-  if (fromFrame === undefined) return { error: 'create requires fromFrame (or transcriptSegments to derive it from the Active Script)' };
+  if (fromFrame === undefined) return { error: 'create cần có fromFrame (hoặc transcriptSegments để suy ra từ Active Script)' };
   return { fromFrame, opts: { note, color: color(o.color), durationFrames, scope, itemId: str(o.itemId) } };
 }
 
@@ -119,7 +119,7 @@ function updatePatch(o: Args): Partial<Marker> {
 const summarize = (m: Marker) => ({ id: m.id, scope: m.scope, itemId: m.itemId ?? null, fromFrame: m.fromFrame, durationFrames: m.durationFrames, note: m.note, color: m.color });
 
 export function execMarkersTool(name: string, args: Args, ctx: AgentContext): unknown {
-  if (name !== 'manage_markers') return { error: `unknown tool ${name}` };
+  if (name !== 'manage_markers') return { error: `Công cụ không xác định: ${name}` };
   let target: Timeline;
   try {
     target = resolveTimeline(ctx, str(args.timelineId));
@@ -158,8 +158,8 @@ export function execMarkersTool(name: string, args: Args, ctx: AgentContext): un
       const updated: string[] = [];
       for (const raw of batch) {
         const id = str(raw.markerId) ?? str(raw.id);
-        if (!id) return { error: 'update requires markerId' };
-        if (!markers.some((m) => m.id === id)) return { error: `no marker ${id}` };
+        if (!id) return { error: 'update cần có markerId' };
+        if (!markers.some((m) => m.id === id)) return { error: `Không tìm thấy marker ${id}` };
         draft.commands.updateMarker(id, updatePatch(raw));
         updated.push(id);
       }
@@ -169,14 +169,14 @@ export function execMarkersTool(name: string, args: Args, ctx: AgentContext): un
 
     case 'delete': {
       const id = str(args.markerId);
-      if (!id) return { error: 'delete requires markerId' };
-      if (!markers.some((m) => m.id === id)) return { error: `no marker ${id}` };
+      if (!id) return { error: 'delete cần có markerId' };
+      if (!markers.some((m) => m.id === id)) return { error: `Không tìm thấy marker ${id}` };
       draft.commands.removeMarker(id);
       commit();
       return { ok: true, timeline, deleted: id };
     }
 
     default:
-      return { error: `unknown action "${args.action}"; use list|create|update|delete` };
+      return { error: `Action không xác định "${args.action}"; dùng list|create|update|delete` };
   }
 }

@@ -134,7 +134,7 @@ async function createMotionGraphic(args: Args, ctx: AgentContext): Promise<unkno
     ok: true, status: 'succeeded', jobId: `mg_${asset.id}`, assetId: asset.id,
     name: asset.name, kind: asset.kind, durationInFrames: asset.durationInFrames,
     width: asset.width, height: asset.height,
-    note: 'Motion graphic asset is in the media pool only (submit_* contract). Place with edit_item adds:[{type:"motion-graphic",assetId:"<this assetId>",trackId?,fromFrame?}]. For catalog templates use library:motion-graphic:<templateId> or add_motion_graphic instead.',
+    note: 'Asset motion graphic hiện chỉ nằm trong kho media (contract submit_*). Đặt bằng edit_item với adds:[{type:"motion-graphic",assetId:"<this assetId>",trackId?,fromFrame?}]. Với template trong catalog, dùng library:motion-graphic:<templateId> hoặc add_motion_graphic.',
   };
 }
 
@@ -153,5 +153,5 @@ export async function execCoreTool(
     return execTemplateCatalog(name, args, ctx);
   }
   if (name === 'submit_motion_graphic' || name === 'create_motion_graphic') return createMotionGraphic(args, ctx);
-  return { error: `unknown tool ${name}` };
+  return { error: `Công cụ không xác định: ${name}` };
 }
