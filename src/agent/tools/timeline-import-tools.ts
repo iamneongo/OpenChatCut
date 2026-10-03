@@ -33,8 +33,8 @@ export async function parseTimelineImport(
   fallback: TimelineState,
   options: TimelineImportOptions = {},
 ): Promise<ParseResult> {
-  if (!content.trim()) return { ok: false, error: 'content is required' };
-  if (content.length > MAX_CONTENT_CHARS) return { ok: false, error: `content exceeds ${MAX_CONTENT_CHARS} characters` };
+  if (!content.trim()) return { ok: false, error: 'content là bắt buộc' };
+  if (content.length > MAX_CONTENT_CHARS) return { ok: false, error: `content vượt quá ${MAX_CONTENT_CHARS} ký tự` };
   const Parser = format === 'fcpxml' ? await xmlParser() : null;
   try {
     return Parser
@@ -43,7 +43,7 @@ export async function parseTimelineImport(
   } catch (error) {
     // e.g. a pathologically nested document exhausting the stack.
     const message = error instanceof Error ? error.message : String(error);
-    return { ok: false, error: `could not read the ${Parser ? 'FCPXML' : 'EDL'}: ${message}` };
+    return { ok: false, error: `không thể đọc ${Parser ? 'FCPXML' : 'EDL'}: ${message}` };
   }
 }
 
@@ -59,9 +59,9 @@ export async function execTimelineImportTool(
   args: Record<string, unknown>,
   ctx: AgentContext,
 ): Promise<Record<string, unknown>> {
-  if (name !== 'import_timeline') return { error: `unknown tool ${name}` };
+  if (name !== 'import_timeline') return { error: `công cụ không xác định: ${name}` };
   const format = args.format === 'fcpxml' || args.format === 'edl' ? args.format : null;
-  if (!format) return { error: 'format must be fcpxml or edl' };
+  if (!format) return { error: 'format phải là fcpxml hoặc edl' };
   const options = importOptions(args);
   const parsed = await parseTimelineImport(
     format,
@@ -79,10 +79,10 @@ export async function execTimelineImportTool(
   const { fps, sourceFps } = parsed.timeline;
   if (sourceFps !== fps) {
     const rate = (value: number) => Number(value.toFixed(3));
-    report.warnings.unshift(`the ${rate(sourceFps)} fps ${format === 'fcpxml' ? 'sequence' : 'list'} was converted to the project frame rate (${rate(fps)} fps); cut points are rounded to the nearest frame`);
+    report.warnings.unshift(`${format === 'fcpxml' ? 'sequence' : 'danh sách'} ${rate(sourceFps)} fps đã được chuyển sang tốc độ khung hình dự án (${rate(fps)} fps); các điểm cắt được làm tròn tới frame gần nhất`);
   }
   if (format === 'fcpxml' && (options.fps !== undefined || options.startTimecode !== undefined)) {
-    report.warnings.unshift('fps and startTimecode apply to EDL only; the FCPXML sequence format and tcStart were used');
+    report.warnings.unshift('fps và startTimecode chỉ áp dụng cho EDL; đã dùng format và tcStart của sequence FCPXML');
   }
   const draft = makeDraft(ctx.getDoc());
   const importedName = typeof args.name === 'string' && args.name.trim() ? args.name.trim() : parsed.timeline.name;

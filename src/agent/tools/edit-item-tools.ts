@@ -24,7 +24,7 @@ export async function execEditItemTool(
   args: Args,
   ctx: AgentContext,
 ): Promise<unknown> {
-  if (name !== 'edit_item') return { error: `unknown tool ${name}` };
+  if (name !== 'edit_item') return { error: `công cụ không xác định: ${name}` };
   const ripple = args.ripple === true;
   return executeAtomicEditBatch<EditItemDraft>(args, {
     createDraft: () => {

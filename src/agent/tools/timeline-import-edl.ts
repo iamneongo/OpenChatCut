@@ -147,7 +147,7 @@ interface Clock {
 
 function clockFor(scanned: Scan, fallbackFps: number, options: TimelineImportOptions): Clock | string {
   const requested = options.fps ?? fallbackFps;
-  if (!(requested > 0)) return 'fps must be a positive number';
+  if (!(requested > 0)) return 'fps phải là số dương';
   const tokens = scanned.events.flatMap((event) => event.lines.flatMap((line) => line.times));
   const dropFrame = scanned.headerDrop || tokens.some((token) => token.includes(';'));
   const nominal = Math.round(requested);
@@ -171,7 +171,7 @@ function clockFor(scanned: Scan, fallbackFps: number, options: TimelineImportOpt
 function recordOrigin(scanned: Scan, clock: Clock, options: TimelineImportOptions): number | string {
   if (options.startTimecode !== undefined) {
     const frames = clock.frames(options.startTimecode.trim(), scanned.headerDrop);
-    return frames ?? `invalid startTimecode "${options.startTimecode}"`;
+    return frames ?? `startTimecode không hợp lệ: "${options.startTimecode}"`;
   }
   const recordIns = scanned.events.flatMap((event) => event.lines)
     .map((line) => clock.frames(line.times[2], scanned.headerDrop))
@@ -211,18 +211,18 @@ function lineToClips(event: EdlEvent, index: number, ctx: EventContext): ParsedC
     return [];
   };
   if (sourceIn === null || sourceOut === null || recordIn === null || recordOut === null) {
-    return skip(`timecode does not exist at ${Number(toNumber(clock.fps).toFixed(3))} fps; pass the list's frame rate as fps`);
+    return skip(`timecode không tồn tại ở ${Number(toNumber(clock.fps).toFixed(3))} fps; hãy truyền tốc độ khung hình của list bằng fps`);
   }
   if (incoming && line.transition !== 'C') {
-    report.skipped.push({ element: `event ${line.number}`, name, at, reason: `${line.transition.startsWith('W') ? 'wipe' : line.transition === 'D' ? 'dissolve' : 'key'} transition is not imported; the clips meet with a cut` });
+    report.skipped.push({ element: `event ${line.number}`, name, at, reason: `không nhập transition ${line.transition.startsWith('W') ? 'wipe' : line.transition === 'D' ? 'dissolve' : 'key'}; các clip sẽ gặp nhau bằng một cut` });
   }
   if (BLACK_REELS.has(line.reel.toUpperCase()) || recordOut === recordIn) return [];
-  if (line.reel.toUpperCase() === 'BARS') return skip('bars are not imported');
-  if (recordOut < recordIn) return skip('record out precedes record in');
+  if (line.reel.toUpperCase() === 'BARS') return skip('không nhập bars');
+  if (recordOut < recordIn) return skip('record out đứng trước record in');
   const channels = channelsOf(line.channels);
-  if (!channels) return skip(`unknown channel "${line.channels}"`);
+  if (!channels) return skip(`channel không xác định "${line.channels}"`);
   if (event.speed !== undefined && event.speed <= 0) {
-    return skip(event.speed === 0 ? 'freeze frames are not imported' : 'reverse motion is not imported');
+    return skip(event.speed === 0 ? 'không nhập freeze frame' : 'không nhập chuyển động đảo chiều');
   }
   const rate = event.speed !== undefined ? event.speed / clock.nominal : 1;
   const file = incoming ? event.toFile ?? (fromBlack ? event.fromFile : undefined) : event.fromFile;
@@ -235,12 +235,12 @@ function lineToClips(event: EdlEvent, index: number, ctx: EventContext): ParsedC
     return [];
   }
   const asset = resolved;
-  if (!isTimelineAsset(asset)) return skip(`${asset.name} is not timeline media`);
+  if (!isTimelineAsset(asset)) return skip(`${asset.name} không phải media dùng được trên timeline`);
   let start = recordIn - ctx.origin;
   let duration = recordOut - recordIn;
   let source = sourceIn;
   if (start < 0) {
-    if (start + duration <= 0) return skip('lies before the start timecode');
+    if (start + duration <= 0) return skip('nằm trước start timecode');
     source += Math.round(-start * rate);
     duration += start;
     start = 0;
@@ -249,7 +249,7 @@ function lineToClips(event: EdlEvent, index: number, ctx: EventContext): ParsedC
   const onProject = (frames: number) => toFrames(fromFrames(frames, clock.fps), ctx.projectFps);
   const startFrame = onProject(start);
   const durationInFrames = onProject(start + duration) - startFrame;
-  if (durationInFrames <= 0) return skip('shorter than one frame');
+  if (durationInFrames <= 0) return skip('ngắn hơn một frame');
   if (event.speed === undefined && sourceOut - sourceIn !== recordOut - recordIn) {
     report.warnings.push(`event ${line.number} "${name}" at ${at}: source and record durations differ; the record duration was used`);
   }
@@ -276,7 +276,7 @@ function lineToClips(event: EdlEvent, index: number, ctx: EventContext): ParsedC
   };
   const clips: ParsedClip[] = [];
   const videoUsable = channels.video !== null && asset.kind !== 'audio';
-  if (channels.video !== null && !videoUsable) skip(`video channel references audio-only ${asset.name}`);
+  if (channels.video !== null && !videoUsable) skip(`channel video tham chiếu audio-only ${asset.name}`);
   if (videoUsable) clips.push({ ...base, family: 'video', lane: channels.video! });
   if (channels.audio.length && !videoUsable) {
     if (asset.kind === 'audio' || asset.kind === 'video') {
@@ -287,7 +287,7 @@ function lineToClips(event: EdlEvent, index: number, ctx: EventContext): ParsedC
         ...(asset.kind === 'video' ? { audioOfVideo: true } : {}),
       });
     } else {
-      skip(`audio channel references ${asset.kind} ${asset.name}`);
+      skip(`channel audio tham chiếu ${asset.kind} ${asset.name}`);
     }
   }
   return clips;
@@ -306,7 +306,7 @@ export function parseEdl(
   const origin = recordOrigin(scanned, clock, options);
   if (typeof origin === 'string') return { ok: false, error: origin };
   const report = newReport();
-  for (const line of scanned.unreadable) report.skipped.push({ element: 'line', name: line, reason: 'not a CMX 3600 event' });
+  for (const line of scanned.unreadable) report.skipped.push({ element: 'line', name: line, reason: 'không phải event CMX 3600' });
   const unresolved = new Map<string, UnresolvedReference>();
   const ctx: EventContext = {
     pool,
@@ -324,7 +324,7 @@ export function parseEdl(
   for (const event of scanned.events.filter((candidate) => candidate.split)) {
     report.warnings.push(`event ${event.lines[0]!.number}: the SPLIT audio/video delay is not applied`);
   }
-  if (unresolved.size) return { ok: false, error: 'EDL media references are unresolved', unresolved: [...unresolved.values()] };
+  if (unresolved.size) return { ok: false, error: 'Các tham chiếu media trong EDL chưa được phân giải', unresolved: [...unresolved.values()] };
   const reconciled = reconcileClips(clips, report);
   if (!reconciled.length) return { ok: false, error: 'EDL has no importable events', skipped: report.skipped };
   return {

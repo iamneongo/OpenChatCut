@@ -19,7 +19,7 @@ export function resolveTimeline(ctx: AgentContext, timelineId?: string): Timelin
 
   const query = timelineId.trim();
   const hit = doc.timelines.find((timeline) => timeline.id === query || timeline.id.startsWith(query));
-  if (!hit) throw new Error(`timeline not found: ${timelineId}`);
+  if (!hit) throw new Error(`không tìm thấy timeline: ${timelineId}`);
   return hit;
 }
 

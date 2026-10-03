@@ -157,14 +157,14 @@ export function buildFollowupWidget(fields: RawField[], prompt: string, options:
 }
 
 export function execFollowupTool(name: string, args: Args, _ctx: AgentContext): unknown {
-  if (name !== 'ask_followup_questions') return { error: `unknown tool ${name}` };
+  if (name !== 'ask_followup_questions') return { error: `công cụ không xác định: ${name}` };
   const fields = Array.isArray(args.fields) ? (args.fields as RawField[]) : [];
-  if (!fields.length) return { error: 'ask_followup_questions requires a non-empty fields array' };
+  if (!fields.length) return { error: 'ask_followup_questions cần mảng fields không rỗng' };
   const text = buildFollowupWidget(fields.slice(0, 12), String(args.prompt ?? '').trim(), {
     title: stringValue(args.title),
     submitLabel: stringValue(args.submitLabel),
     messagePrefix: stringValue(args.messagePrefix),
   });
-  if (!text.includes('<widget')) return { error: 'no renderable fields (each needs a label; choice fields also need options)' };
-  return { __followup: text, note: 'Follow-up form shown to the user. Wait for their reply — it will arrive as their next message.' };
+  if (!text.includes('<widget')) return { error: 'không có trường nào có thể render (mỗi trường cần label; trường lựa chọn cũng cần options)' };
+  return { __followup: text, note: 'Biểu mẫu hỏi thêm đã hiển thị cho người dùng. Hãy chờ phản hồi tiếp theo của họ.' };
 }

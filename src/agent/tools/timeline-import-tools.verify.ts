@@ -65,7 +65,7 @@ const fcpxml = `<?xml version="1.0" encoding="UTF-8"?>
   assert.equal(imported.fps, 30);
   assert.equal(result.fps, 30);
   assert.deepEqual(result.warnings, [
-    'the 25 fps sequence was converted to the project frame rate (30 fps); cut points are rounded to the nearest frame',
+    'sequence 25 fps đã được chuyển sang tốc độ khung hình dự án (30 fps); các điểm cắt được làm tròn tới frame gần nhất',
   ]);
   assert.equal(imported.width, 1920);
   assert.equal(imported.items.length, 1);
@@ -244,8 +244,8 @@ FCM: DROP FRAME
   }, ctx);
   assert.equal(result.ok, true);
   assert.equal(result.fps, 30);
-  assert.match((result.warnings as string[])[0] ?? '', /apply to EDL only/);
-  assert.match((result.warnings as string[])[1] ?? '', /^the 25 fps sequence was converted/, 'read at the sequence format, not the fps argument');
+  assert.match((result.warnings as string[])[0] ?? '', /chỉ áp dụng cho EDL/);
+  assert.match((result.warnings as string[])[1] ?? '', /^sequence 25 fps đã được chuyển/, 'read at the sequence format, not the fps argument');
 }
 
 // ── Malformed input fails as a result, never as an exception ──

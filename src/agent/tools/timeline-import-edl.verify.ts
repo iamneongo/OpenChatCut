@@ -96,7 +96,7 @@ FCM: NON-DROP FRAME
   ], { fps: 25 });
   // Read at the fps argument, placed at the 30 fps project's rate (#184).
   assert.equal(timeline.fps, 30, 'the imported timeline runs at the project rate');
-  assert.equal((result.warnings as string[])[0], 'the 25 fps list was converted to the project frame rate (30 fps); cut points are rounded to the nearest frame');
+  assert.equal((result.warnings as string[])[0], 'danh sách 25 fps đã được chuyển sang tốc độ khung hình dự án (30 fps); các điểm cắt được làm tròn tới frame gần nhất');
   assert.deepEqual(items, [
     // AA on one audio file is one clip, not two.
     { asset: 'score', track: 'Imported A1', start: 60, duration: 240, srcIn: 0 },
@@ -105,7 +105,7 @@ FCM: NON-DROP FRAME
     // The dissolve's incoming clip starts at the transition; TO CLIP NAME names it.
     { asset: 'broll', track: 'Imported V1', start: 180, duration: 120, srcIn: 600 },
   ]);
-  assert.deepEqual(skippedOf(result), ['event 005@01:00:06:00: dissolve transition is not imported; the clips meet with a cut']);
+  assert.deepEqual(skippedOf(result), ['event 005@01:00:06:00: không nhập transition dissolve; các clip sẽ gặp nhau bằng một cut']);
   assert.ok((result.warnings as string[]).some((warning) => /2 audio component\(s\) of video files were merged/.test(warning)));
 }
 
@@ -199,7 +199,7 @@ FCM: NON-DROP FRAME
     content: '001  AX  V  C  00:00:01:24 00:00:02:00 01:00:00:00 01:00:00:01\n* FROM CLIP NAME: take_1.mov\n',
   }, ctx);
   assert.equal(wrongRate.ok, false);
-  assert.match(skippedOf(wrongRate).join('\n'), /event 001@01:00:00:00: timecode does not exist at 24 fps; pass the list's frame rate as fps/);
+  assert.match(skippedOf(wrongRate).join('\n'), /event 001@01:00:00:00: timecode không tồn tại ở 24 fps; hãy truyền tốc độ khung hình của list bằng fps/);
 }
 
 // ── Speed (M2), unknown lines and invalid rates are reported, not guessed ──
@@ -218,8 +218,8 @@ M2   AX       000.0                00:00:20:00
   const { result, items } = await importEdl(edl, [{ id: 'take1', name: 'take_1.mov', kind: 'video', seconds: 60 }], { fps: 25 }, 25);
   assert.deepEqual(items, [{ asset: 'take1', track: 'Imported V1', start: 0, duration: 50, srcIn: 250, rate: 2 }]);
   assert.deepEqual(skippedOf(result), [
-    'event 002@01:00:02:00: freeze frames are not imported',
-    'event 003@01:00:03:00: unknown channel "VX"',
+    'event 002@01:00:02:00: không nhập freeze frame',
+    'event 003@01:00:03:00: channel không xác định "VX"',
   ]);
   const { draft } = context([]);
   const invalid = await parseTimelineImport('edl', '001  AX  V  C  00:00:00;00 00:00:01;00 01:00:00;00 01:00:01;00', [], draft.getState(), { fps: 25 });
@@ -242,7 +242,7 @@ FCM: NON-DROP FRAME
   const missing = await parseTimelineImport('edl', edl, draft.getDoc().assets, draft.getState(), { fps: 25 });
   assert.deepEqual(missing, {
     ok: false,
-    error: 'EDL media references are unresolved',
+    error: 'Các tham chiếu media trong EDL chưa được phân giải',
     unresolved: [{ reference: 'event 002: pickup.mov', reason: 'no matching media-pool asset' }],
   });
   assert.equal(draft.getDoc(), before, 'an unresolved list changes nothing');
@@ -251,7 +251,7 @@ FCM: NON-DROP FRAME
     { asset: 'take1', track: 'Imported V1', start: 0, duration: 100, srcIn: 125 },
     { asset: 'pickup', track: 'Imported V1', start: 100, duration: 25, srcIn: 0 },
   ]);
-  assert.deepEqual(skippedOf(result), ['event 001@01:00:00:00: dissolve transition is not imported; the clips meet with a cut']);
+  assert.deepEqual(skippedOf(result), ['event 001@01:00:00:00: không nhập transition dissolve; các clip sẽ gặp nhau bằng một cut']);
 }
 
 console.log('timeline-import-edl.verify: all assertions passed');

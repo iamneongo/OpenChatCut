@@ -76,7 +76,7 @@ const failedBatch = execMarkersTool('manage_markers', {
   timelineId: target.id,
   markers: [{ fromFrame: 20, note: 'would be partial' }, { note: 'missing position' }],
 }, ctx) as { error: string };
-assert.match(failedBatch.error, /requires fromFrame/);
+  assert.match(failedBatch.error, /cần có fromFrame/);
 assert.equal(draft.getDoc().timelines[1]?.markers?.length, 2, 'failed marker batches must not partially apply');
 
 execMarkersTool('manage_markers', {
@@ -93,7 +93,7 @@ for (const result of [
   await execFramesTool('view_timeline_frames', { frames: [0], timelineId: 'missing' }, ctx),
   await execMgVideoTool('export_motion_graphic_prores', { itemId: 'target_clip', timelineId: 'missing' }, ctx),
 ]) {
-  assert.match((result as { error: string }).error, /timeline not found: missing/);
+  assert.match((result as { error: string }).error, /không tìm thấy timeline: missing/);
 }
 
 const originalFetch = globalThis.fetch;

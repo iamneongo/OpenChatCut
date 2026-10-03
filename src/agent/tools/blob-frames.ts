@@ -29,7 +29,7 @@ function loadVideo(src: string): Promise<HTMLVideoElement> {
     v.playsInline = true;
     v.preload = 'auto';
     v.crossOrigin = 'anonymous';
-    const onErr = () => reject(new Error('video load failed'));
+    const onErr = () => reject(new Error('tải video thất bại'));
     v.addEventListener('error', onErr, { once: true });
     v.addEventListener('loadedmetadata', () => resolve(v), { once: true });
     v.src = src;
@@ -44,7 +44,7 @@ function seekTo(v: HTMLVideoElement, timeSec: number): Promise<void> {
     };
     const onErr = () => {
       v.removeEventListener('error', onErr);
-      reject(new Error('seek failed'));
+      reject(new Error('seek thất bại'));
     };
     v.addEventListener('seeked', onSeek, { once: true });
     v.addEventListener('error', onErr, { once: true });
