@@ -136,7 +136,7 @@ interface FindOpts { query: string; fuzzy: boolean; includeWords: boolean; limit
 
 function parseFindOpts(args: Args): FindOpts | { error: string } {
   const query = String(args.query ?? '').trim();
-  if (!query) return { error: 'query is required' };
+  if (!query) return { error: 'bắt buộc phải có query' };
   const rawLimit = typeof args.limit === 'number' && Number.isFinite(args.limit) ? Math.floor(args.limit) : DEFAULT_LIMIT;
   return {
     query,

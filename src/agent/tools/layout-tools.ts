@@ -21,7 +21,7 @@ interface Assignment {
 }
 
 function parseAssignments(raw: unknown, slots: Record<string, unknown>): Assignment[] | { error: string } {
-  if (!Array.isArray(raw) || raw.length === 0) return { error: 'assignments must be a non-empty array' };
+  if (!Array.isArray(raw) || raw.length === 0) return { error: 'assignments phải là mảng không rỗng' };
   const out: Assignment[] = [];
   const seenSlots = new Set<string>();
   const seenItems = new Set<string>();
@@ -29,7 +29,7 @@ function parseAssignments(raw: unknown, slots: Record<string, unknown>): Assignm
     const slot = typeof (entry as Args)?.slot === 'string' ? String((entry as Args).slot) : '';
     const itemId = typeof (entry as Args)?.itemId === 'string' ? String((entry as Args).itemId) : '';
     if (!slot || !itemId) return { error: 'each assignment needs { slot, itemId }' };
-    if (!(slot in slots)) return { error: `unknown slot "${slot}" — valid slots: ${Object.keys(slots).join(', ')}` };
+    if (!(slot in slots)) return { error: `slot không được nhận diện "${slot}" — các slot hợp lệ: ${Object.keys(slots).join(', ')}` };
     if (seenSlots.has(slot)) return { error: `slot "${slot}" assigned twice` };
     if (seenItems.has(itemId)) return { error: `item "${itemId}" assigned to two slots` };
     seenSlots.add(slot);
@@ -61,7 +61,7 @@ export function execLayoutTool(name: string, args: Args, ctx: AgentContext): unk
   const items = new Map(state.items.map((it) => [it.id, it] as const));
   for (const { itemId } of assignments) {
     const item = items.get(itemId);
-    if (!item) return { error: `item "${itemId}" not found on the active timeline` };
+    if (!item) return { error: `không tìm thấy item "${itemId}" trên timeline đang hoạt động` };
     if (!PLACEABLE_KINDS.has(item.kind)) {
       return { error: `item "${itemId}" is ${item.kind} — apply_layout places full-canvas visual clips (video/image/gif/svg) only` };
     }

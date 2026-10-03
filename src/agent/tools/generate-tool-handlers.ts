@@ -253,7 +253,7 @@ const submitVideoHandler: Handler = async (args, ctx) => {
 async function trackProgressHandler(args: GenerateArgs, ctx: AgentContext): Promise<unknown> {
   if (args.target !== 'generation') return { error: 'this local track_progress implementation currently supports target=generation only' };
   const action = args.action as 'params' | 'status' | 'wait' | 'resume';
-  if (!['params', 'status', 'wait', 'resume'].includes(action)) return { error: 'action must be params, status, wait, or resume' };
+  if (!['params', 'status', 'wait', 'resume'].includes(action)) return { error: 'action phải là params, status, wait hoặc resume' };
   const jobIds = String(args.jobIds ?? '').split(',').map((id) => id.trim()).filter(Boolean);
   const result = await trackGenerationProgress({
     action,
@@ -355,12 +355,12 @@ async function submitExportHandler(args: GenerateArgs, ctx: AgentContext): Promi
   if (format === 'subtitles') return exportSubtitles(args, target.state);
   if (format === 'audio' || format === 'video') return exportMedia(args, target, format);
   if (format === 'xml') return exportXml(args, target.state);
-  return { error: 'format must be video, audio, subtitles, or xml' };
+  return { error: 'format phải là video, audio, subtitles hoặc xml' };
 }
 
 async function rerunGenerationHandler(args: GenerateArgs, ctx: AgentContext): Promise<unknown> {
   const projectId = ctx.getProjectId?.();
-  if (!projectId) return { error: 'rerun_generation requires a persisted project id' };
+  if (!projectId) return { error: 'rerun_generation yêu cầu ID của project đã lưu' };
   const resolution = await resolveTrackedJobForProject(projectId, String(args.jobId ?? ''));
   if (!resolution.ok) return {
     error: resolution.message,
@@ -370,7 +370,7 @@ async function rerunGenerationHandler(args: GenerateArgs, ctx: AgentContext): Pr
   const original = resolution.job;
   if (original.submitArgsVersion !== 1 || !original.submitArgs || !original.toolName) {
     return {
-      error: `generation operation ${original.operationId} is a legacy summary-only snapshot and cannot be rerun safely`,
+      error: `operation generation ${original.operationId} chỉ là snapshot tóm tắt legacy và không thể rerun an toàn`,
       code: 'legacy_summary',
     };
   }
@@ -385,7 +385,7 @@ async function rerunGenerationHandler(args: GenerateArgs, ctx: AgentContext): Pr
       ? await submitMusicHandler(rerunArgs, ctx)
       : original.toolName === 'submit_sound'
         ? await submitSoundHandler(rerunArgs, ctx)
-      : { error: `generation operation ${original.operationId} uses unsupported rerun tool ${original.toolName}` };
+      : { error: `operation generation ${original.operationId} dùng tool rerun không được hỗ trợ ${original.toolName}` };
   return result && typeof result === 'object' && !Array.isArray(result)
     ? { ...(result as Record<string, unknown>), rerunOf: original.operationId }
     : result;

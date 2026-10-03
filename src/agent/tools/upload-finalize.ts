@@ -314,7 +314,7 @@ async function prepareClaimedFinalize(
     throw new Error(`assetType không khớp với receipt upload đáng tin cậy (${input.type})`);
   }
   const kind = mapUploadKind(input.type);
-  if (!kind) throw new Error(`unsupported type ${input.type}`);
+  if (!kind) throw new Error(`type không được hỗ trợ ${input.type}`);
   const fps = ctx.getState().fps || 30;
   const durationInFrames = durationForFinalize(args, kind, input.type, fps);
   if (durationInFrames === null) throw new Error('durationInSeconds là bắt buộc cho audio/video/gif');

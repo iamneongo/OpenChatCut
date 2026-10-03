@@ -62,7 +62,7 @@ function resultBudgetError(resultBudgetChars: number): PluginSkillLoadResult | n
   return Number.isSafeInteger(resultBudgetChars) && resultBudgetChars >= 1
     && resultBudgetChars <= MAX_SKILL_RESULT_CHARS
     ? null
-    : { error: `result budget must be 1-${MAX_SKILL_RESULT_CHARS} UTF-16 characters.` };
+    : { error: `result budget phải từ 1-${MAX_SKILL_RESULT_CHARS} ký tự UTF-16.` };
 }
 
 function validatedSkillSource(
@@ -102,7 +102,7 @@ function parseSkillRequest(rawArgs: Record<string, unknown>): SkillRequest {
     if (!Array.isArray(args.files) || args.files.length < 1
       || args.files.length > MAX_REQUESTED_FILES
       || args.files.some((file) => typeof file !== 'string' || !isSafeRelativePath(file))) {
-      return { error: `files must contain 1-${MAX_REQUESTED_FILES} safe relative paths.` };
+      return { error: `files phải chứa từ 1-${MAX_REQUESTED_FILES} đường dẫn tương đối an toàn.` };
     }
     const files = orderedPaths(args.files);
     return new Set(files).size === files.length
@@ -111,13 +111,13 @@ function parseSkillRequest(rawArgs: Record<string, unknown>): SkillRequest {
   }
   if (args.file === undefined) return { kind: 'initial' };
   if (typeof args.file !== 'string' || !isSafeRelativePath(args.file)) {
-    return { error: 'file must be a safe relative skill path.' };
+      return { error: 'file phải là đường dẫn skill tương đối an toàn.' };
   }
   const offset = args.offset ?? 0;
   const limit = args.limit ?? DEFAULT_PAGE_CHARS;
   if (!Number.isSafeInteger(offset) || Number(offset) < 0
     || !Number.isSafeInteger(limit) || Number(limit) < 1 || Number(limit) > MAX_PAGE_CHARS) {
-    return { error: `offset must be a non-negative integer and limit must be 1-${MAX_PAGE_CHARS}.` };
+      return { error: `offset phải là số nguyên không âm và limit phải từ 1-${MAX_PAGE_CHARS}.` };
   }
   return { kind: 'page', file: args.file, offset: Number(offset), limit: Number(limit) };
 }
@@ -162,10 +162,10 @@ function unknownFileResult(
   availableFiles: readonly string[],
   resultBudgetChars = MAX_SKILL_RESULT_CHARS,
 ): PluginSkillLoadResult {
-  const result = { error: `Unknown skill file: ${path}`, availableFiles };
+  const result = { error: `không tìm thấy tệp skill: ${path}`, availableFiles };
   return JSON.stringify(result).length <= resultBudgetChars
     ? result
-    : { error: `Unknown skill file: ${path}` };
+    : { error: `không tìm thấy tệp skill: ${path}` };
 }
 
 function sourceDependencies(source: SkillToolSource, available: readonly string[]): string[] {
@@ -240,7 +240,7 @@ function pageRequestError(
 ): { readonly error: string } | undefined {
   if (!Number.isSafeInteger(offset) || offset < 0 || offset > text.length
     || !Number.isSafeInteger(limit) || limit < 1 || limit > MAX_PAGE_CHARS) {
-    return { error: `offset must be 0-${text.length} and limit must be 1-${MAX_PAGE_CHARS}.` };
+    return { error: `offset phải từ 0-${text.length} và limit phải từ 1-${MAX_PAGE_CHARS}.` };
   }
   if (offset > 0 && offset < text.length
     && isHighSurrogate(text.charCodeAt(offset - 1))
@@ -396,7 +396,7 @@ export function execPluginSkillTool(
 ): PluginSkillLoadResult {
   if (name !== 'load_skill') return { error: `tool không được nhận diện: ${name}` };
   const slug = typeof args.name === 'string' ? args.name.trim() : '';
-  if (!slug) return { error: 'name must be a non-empty skill id.' };
+  if (!slug) return { error: 'name phải là skill id không rỗng.' };
   const source = builtInSource(slug) ?? creativeSource(slug);
   if (!source) {
     const creativeModes = allCreativeSkills()

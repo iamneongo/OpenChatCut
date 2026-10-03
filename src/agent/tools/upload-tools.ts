@@ -25,7 +25,7 @@ export async function execUploadTool(name: string, args: Args, ctx: AgentContext
 
 function execRequestDownload(args: Args, ctx: AgentContext): unknown {
   const q = String(args.assetId ?? '').trim();
-  if (!q) return { error: 'assetId is required' };
+  if (!q) return { error: 'bắt buộc phải có assetId' };
   if (args.variant != null && args.variant !== 'source') {
     return { error: 'only variant "source" is supported' };
   }

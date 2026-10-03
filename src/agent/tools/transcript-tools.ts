@@ -92,7 +92,7 @@ function resolveAfterWordIndex(
   }
   if (typeof args.afterText === 'string' && args.afterText.trim()) {
     const m = findPhrase(it.transcript!, args.afterText);
-    if (!m) return { error: `afterText not found: ${args.afterText}` };
+    if (!m) return { error: `không tìm thấy afterText: ${args.afterText}` };
     // gap is immediately before the first word of the match
     if (m.start <= 0) return { error: 'afterText matches the start of the transcript; no gap before it' };
     return { afterWordIndex: m.start };
@@ -220,7 +220,7 @@ async function manageTranscript(args: Args, ctx: AgentContext, track: TrackId, a
       const findStr = args.find;
       wordIndex = it.transcript.findIndex((w) => w.text === findStr);
       if (wordIndex < 0) { const target = normalize(findStr); wordIndex = it.transcript.findIndex((w) => normalize(w.text) === target); }
-      if (wordIndex < 0) return { error: `word not found: ${findStr}` };
+      if (wordIndex < 0) return { error: `không tìm thấy word: ${findStr}` };
     } else return { error: 'provide wordIndex or find to locate the word' };
     const word = it.transcript[wordIndex];
     if (!word) return { error: `wordIndex ${wordIndex} out of range (0..${it.transcript.length - 1})` };
@@ -439,7 +439,7 @@ export async function execTranscriptTool(name: string, args: Args, ctx: AgentCon
       }
       if (action === 'cap') {
         if (typeof args.maxSeconds !== 'number' || !Number.isFinite(args.maxSeconds) || args.maxSeconds < 0) {
-          return { error: 'cap requires maxSeconds ≥ 0 (e.g. 0.2)' };
+          return { error: 'cap yêu cầu maxSeconds ≥ 0 (ví dụ 0.2)' };
         }
         const maxMs = Math.round(args.maxSeconds * 1000);
         ctx.commands.setGapCap(it.id, afterWordIndex, maxMs);
@@ -459,7 +459,7 @@ export async function execTranscriptTool(name: string, args: Args, ctx: AgentCon
       const it = trackClip(ctx, track, true);
       if (!hasOperationalTranscript(it)) return { error: `Chưa có transcript hiện tại trên ${alias}; hãy gọi transcribe_track trước` };
       const m = findPhrase(it.transcript, String(args.query ?? ''));
-      if (!m) return { deleted: false, query: args.query, note: 'phrase not found' };
+      if (!m) return { deleted: false, query: args.query, note: 'không tìm thấy phrase' };
       const idxs = Array.from({ length: m.count }, (_, k) => m.start + k);
       const text = it.transcript.slice(m.start, m.start + m.count).map((w) => w.text).join(' ');
       ctx.commands.deleteWords(it.id, idxs);
