@@ -76,7 +76,7 @@ export function upgradePhaseOne(
   const records = collectAuxiliaryRecords(profile, summary);
   if (summary.quarantined !== 0) {
     throw new Error(
-      `SQLite migration refused to upgrade with ${summary.quarantined} unreadable legacy record(s)`,
+      `migration SQLite từ chối nâng cấp vì có ${summary.quarantined} record legacy không đọc được`,
     );
   }
   const select = db.prepare('SELECT 1 FROM kv WHERE k = ?');

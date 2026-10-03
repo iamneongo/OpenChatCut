@@ -197,7 +197,7 @@ export async function verifyCfcMigrationChecks({
     phase: 2,
     keys: { 'project:cfc-stale': sha256(Buffer.from(migrationValue, 'utf8')) },
   }));
-  await assert.rejects(runStorageMigration(), /candidate source hash mismatch/);
+  await assert.rejects(runStorageMigration(), /hash candidate source không khớp/);
   resetSqliteStoreForTests();
   let refused = new DatabaseSync(sqlitePath);
   const refusedRow = refused.prepare('SELECT v FROM kv WHERE k = ?')
@@ -219,7 +219,7 @@ export async function verifyCfcMigrationChecks({
     phase: 2,
     keys: { 'project:cfc-stale': sha256(Buffer.from(migrationValue, 'utf8')) },
   }));
-  await assert.rejects(runStorageMigration(), /candidate receipt from another profile/);
+  await assert.rejects(runStorageMigration(), /candidate receipt từ profile khác/);
   resetSqliteStoreForTests();
   writeFileSync(importReceiptPath(profile), JSON.stringify({
     source: profile.projectStore.directory,
@@ -229,7 +229,7 @@ export async function verifyCfcMigrationChecks({
     keys: { 'project:cfc-stale': sha256(Buffer.from(migrationValue, 'utf8')) },
     unexpected: true,
   }));
-  await assert.rejects(runStorageMigration(), /malformed cfc candidate receipt/);
+  await assert.rejects(runStorageMigration(), /cfc candidate receipt không đúng định dạng/);
   resetSqliteStoreForTests();
   refused = new DatabaseSync(sqlitePath);
   const invalidCandidateRow = refused.prepare('SELECT v FROM kv WHERE k = ?')

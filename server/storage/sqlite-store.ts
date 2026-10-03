@@ -136,7 +136,7 @@ async function migrateUnderLease(): Promise<ImportSummary> {
     const summary = ensureJsonImported(db, runtimeProfile(), databaseHadKvTableAtOpen);
     const receipt = synchronizeImportReceiptSidecar(db, runtimeProfile());
     if (!receipt || receipt.phase < RECEIPT_PHASE) {
-      throw new Error('SQLite migration completed without a phase-2 authoritative receipt');
+      throw new Error('migration SQLite đã hoàn tất nhưng thiếu receipt chính tắc phase-2');
     }
     processPhase = 'complete';
     return summary;
@@ -208,12 +208,12 @@ export interface CleanupResult {
  * authoritative receipt. Files created or changed after migration are retained.
  */
 export function cleanupLegacyJson(): CleanupResult {
-  if (!sqliteStoreEnabled()) throw new Error('migration not completed');
+  if (!sqliteStoreEnabled()) throw new Error('migration chưa hoàn tất');
   const receipt = authoritativeReceipt();
-  if (!receipt) throw new Error('authoritative migration receipt missing');
+  if (!receipt) throw new Error('thiếu receipt migration chính tắc');
   const profile = runtimeProfile();
   if (receipt.source !== profile.projectStore.directory) {
-    throw new Error('migration receipt belongs to a different runtime profile');
+    throw new Error('receipt migration thuộc runtime profile khác');
   }
 
   let removed = 0;

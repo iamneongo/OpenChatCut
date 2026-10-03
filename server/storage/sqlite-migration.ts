@@ -213,15 +213,15 @@ function readValidatedLegacyCandidate(profile: RuntimeProfile): ValidatedLegacyC
     raw = readFileSync(importReceiptPath(profile), 'utf8');
   } catch (error) {
     if ((error as NodeJS.ErrnoException).code === 'ENOENT') return null;
-    throw new Error('SQLite migration refused an unreadable candidate receipt');
+    throw new Error('migration SQLite từ chối candidate receipt không đọc được');
   }
   // A modern sidecar remains an inspection copy and cannot activate SQLite.
   // It may legitimately predate an interrupted first authoritative import.
   if (parseReceipt(raw)) return null;
   const legacy = parseLegacySidecarReceipt(raw);
-  if (!legacy) throw new Error('SQLite migration refused a malformed cfc candidate receipt');
+  if (!legacy) throw new Error('migration SQLite từ chối cfc candidate receipt không đúng định dạng');
   if (legacy.source !== profile.projectStore.directory) {
-    throw new Error('SQLite migration refused a candidate receipt from another profile');
+    throw new Error('migration SQLite từ chối candidate receipt từ profile khác');
   }
 
   const sources: Record<string, ImportReceiptSource> = {};
@@ -233,10 +233,10 @@ function readValidatedLegacyCandidate(profile: RuntimeProfile): ValidatedLegacyC
         bytes = readFileSync(source.path);
         JSON.parse(bytes.toString('utf8'));
       } catch {
-        throw new Error(`SQLite migration refused unreadable candidate source ${source.path}`);
+        throw new Error(`migration SQLite từ chối candidate source không đọc được ${source.path}`);
       }
       if (sha256(bytes) !== hash) {
-        throw new Error(`SQLite migration refused candidate source hash mismatch for ${source.path}`);
+      throw new Error(`migration SQLite từ chối vì hash candidate source không khớp: ${source.path}`);
       }
     }
     sources[key] = source;
@@ -342,7 +342,7 @@ function collectLegacyRecords(profile: RuntimeProfile, summary: ImportSummary): 
 function refuseQuarantined(summary: ImportSummary, action: string): void {
   if (summary.quarantined === 0) return;
   throw new Error(
-    `SQLite migration refused to ${action} with ${summary.quarantined} unreadable legacy record(s)`,
+    `migration SQLite từ chối ${action} vì có ${summary.quarantined} record legacy không đọc được`,
   );
 }
 
@@ -353,7 +353,7 @@ function refuseUnmatchedRows(db: DatabaseSync, records: LegacyRecord[]): void {
   const unmatched = existingRows.filter((row) => !liveKeys.has(row.k));
   if (unmatched.length === 0) return;
   throw new Error(
-    `SQLite migration refused to activate with ${unmatched.length} target row(s) absent from authoritative legacy storage`,
+    `migration SQLite từ chối kích hoạt vì có ${unmatched.length} row đích không có trong kho legacy chính tắc`,
   );
 }
 
@@ -363,7 +363,7 @@ function importLegacySnapshot(
   summary: ImportSummary,
 ): void {
   const records = collectLegacyRecords(profile, summary);
-  refuseQuarantined(summary, 'activate');
+  refuseQuarantined(summary, 'kích hoạt');
   refuseUnmatchedRows(db, records);
   const select = db.prepare('SELECT v FROM kv WHERE k = ?');
   const upsert = db.prepare(

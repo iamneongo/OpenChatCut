@@ -140,13 +140,13 @@ async function main(): Promise<void> {
     }));
     assert.equal(sqliteStoreEnabled(), false,
       'only the SQLite completion row may switch backend authority');
-    assert.throws(() => cleanupLegacyJson(), /migration not completed/);
+    assert.throws(() => cleanupLegacyJson(), /migration chưa hoàn tất/);
     assert.equal(existsSync(customJobsPath), true,
       'configured legacy ledger must survive before confirmed import');
 
     const unreadableSource = join(profile.projectStore.directory, 'chat%3Abroken.json');
     writeFileSync(unreadableSource, '{not-json');
-    await assert.rejects(runStorageMigration(), /refused to activate/);
+    await assert.rejects(runStorageMigration(), /từ chối kích hoạt/);
     assert.equal(sqliteStoreEnabled(), false,
       'a partial source failure must keep the legacy backend authoritative');
     assert.equal(existsSync(customJobsPath), true,
@@ -155,7 +155,7 @@ async function main(): Promise<void> {
 
     await assert.rejects(
       runStorageMigration(),
-      /target row\(s\) absent from authoritative legacy storage/,
+      /row đích không có trong kho legacy chính tắc/,
     );
     assert.equal(sqliteStoreEnabled(), false,
       'a partial row deleted from legacy must block activation instead of resurfacing');
