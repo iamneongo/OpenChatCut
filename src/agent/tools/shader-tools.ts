@@ -241,10 +241,10 @@ export function deriveShaderName(prompt: string): string {
 /** Verify and normalize the core parameters of submit_shader. Pure functions, testable; error messages are agent-oriented.*/
 export function normalizeShaderArgs(args: Args): { kind: 'effect' | 'transition'; prompt: string; name: string } | { error: string } {
   if (args.type !== 'effect' && args.type !== 'transition') {
-    return { error: 'type is required: "effect" (per-clip look) or "transition" (clip-to-clip)' };
+    return { error: 'type là bắt buộc: "effect" (hiệu ứng trên từng clip) hoặc "transition" (chuyển cảnh giữa hai clip)' };
   }
   const prompt = String(args.prompt ?? args.description ?? '').trim(); // description = legacy alias of prompt
-  if (!prompt) return { error: 'prompt is required — one concrete sentence describing the shader' };
+  if (!prompt) return { error: 'prompt là bắt buộc — một câu cụ thể mô tả shader' };
   const name = String(args.name ?? '').trim() || deriveShaderName(prompt);
   return { kind: args.type, prompt, name };
 }
@@ -286,21 +286,21 @@ export async function resolveShaderRefs(
     const asset = assets.find((a) => a.id === id) ?? assets.find((a) => a.id.startsWith(id));
     if (asset) {
       if (asset.kind === 'image' || asset.kind === 'gif') { refs.imageAssets.push(asset); continue; }
-      return { error: `reference asset "${asset.name}" is ${asset.kind} — only IMAGE assets (visual inspiration) or effect/transition ids (code style reference) can be referenced` };
+      return { error: `asset tham chiếu "${asset.name}" là ${asset.kind} — chỉ được tham chiếu asset IMAGE (làm cảm hứng hình ảnh) hoặc id effect/transition (làm mẫu phong cách mã)` };
     }
     const tr = getCustomTransition(id);
     if (tr) { codeRefs.push({ id: tr.id, kind: 'transition', label: tr.label, frag: tr.frag }); continue; }
     const fx = await lookupFxRef(id);
     if (fx) { codeRefs.push(fx); continue; }
-    return { error: `reference asset not found: "${id}" — pass a project asset id/short prefix, or an effect/transition id` };
+    return { error: `không tìm thấy asset tham chiếu: "${id}" — hãy truyền id asset dự án/tiền tố ngắn, hoặc id effect/transition` };
   }
   if (codeRefs.length > 1) {
-    return { error: `at most ONE effect/transition reference per submit (got ${codeRefs.length}: ${codeRefs.map((c) => c.id).join(', ')})` };
+    return { error: `mỗi lần submit chỉ được tối đa MỘT tham chiếu effect/transition (đã nhận ${codeRefs.length}: ${codeRefs.map((c) => c.id).join(', ')})` };
   }
   const code = codeRefs[0];
   if (code) {
     if (code.kind !== type) {
-      return { error: `reference kind mismatch: "${code.id}" is a ${code.kind} but type=${type} — the code reference's kind must match type` };
+      return { error: `kind của tham chiếu không khớp: "${code.id}" là ${code.kind} nhưng type=${type} — kind của tham chiếu mã phải khớp với type` };
     }
     refs.codeRef = code;
   }
@@ -320,25 +320,25 @@ interface AgentImagePart {
 
 async function imageBlocksOf(assets: MediaAsset[]): Promise<AgentImagePart[] | { error: string }> {
   if (!assets.length) return [];
-  if (typeof document === 'undefined') return { error: 'image references need the browser runtime (asset bytes are fetched from the dev server)' };
+  if (typeof document === 'undefined') return { error: 'tham chiếu ảnh cần runtime trình duyệt (byte của asset được lấy từ dev server)' };
   const blocks: AgentImagePart[] = [];
   for (const asset of assets) {
     try {
       const res = await fetch(asset.src);
-      if (!res.ok) return { error: `failed to read reference image "${asset.name}" (${res.status})` };
+      if (!res.ok) return { error: `đọc ảnh tham chiếu "${asset.name}" thất bại (${res.status})` };
       const fromHeader = res.headers.get('content-type')?.split(';')[0]?.trim().toLowerCase();
       const ext = asset.src.split('?')[0]!.split('#')[0]!.split('.').pop()?.toLowerCase() ?? '';
       const mediaType = (Object.values(IMAGE_MEDIA_TYPES) as string[]).includes(fromHeader ?? '')
         ? (fromHeader as AgentImagePart['mediaType'])
         : IMAGE_MEDIA_TYPES[ext];
-      if (!mediaType) return { error: `reference image "${asset.name}" has an unsupported format (need jpeg/png/gif/webp)` };
+      if (!mediaType) return { error: `ảnh tham chiếu "${asset.name}" có định dạng không hỗ trợ (cần jpeg/png/gif/webp)` };
       const bytes = new Uint8Array(await res.arrayBuffer());
       let bin = '';
       const CHUNK = 0x8000;
       for (let i = 0; i < bytes.length; i += CHUNK) bin += String.fromCharCode(...bytes.subarray(i, i + CHUNK));
       blocks.push({ type: 'file', data: { type: 'data', data: btoa(bin) }, mediaType });
     } catch (e) {
-      return { error: `failed to read reference image "${asset.name}": ${e instanceof Error ? e.message : String(e)}` };
+      return { error: `đọc ảnh tham chiếu "${asset.name}" thất bại: ${e instanceof Error ? e.message : String(e)}` };
     }
   }
   return blocks;
@@ -346,7 +346,7 @@ async function imageBlocksOf(assets: MediaAsset[]): Promise<AgentImagePart[] | {
 
 /** Execute submit_shader (registration is global, the product is applied by subsequent edits according to effectId/transitionId). */
 export async function execShaderTool(name: string, args: Args, ctx: AgentContext): Promise<unknown> {
-  if (name !== 'submit_shader') return { error: `unknown tool ${name}` };
+  if (name !== 'submit_shader') return { error: `công cụ không xác định: ${name}` };
   const normalized = normalizeShaderArgs(args);
   if ('error' in normalized) return normalized;
   const { kind, prompt, name: displayName } = normalized;
@@ -377,15 +377,15 @@ export async function execShaderTool(name: string, args: Args, ctx: AgentContext
       messages: [{ role: 'user', content: imageBlocks.length ? [...imageBlocks, { type: 'text', text: userText }] : userText }],
     });
   } catch (e) {
-    return { error: `shader generation failed: ${e instanceof Error ? e.message : String(e)}` };
+    return { error: `tạo shader thất bại: ${e instanceof Error ? e.message : String(e)}` };
   }
 
   const glsl = stripCodeFences(text);
   const staticErr = kind === 'transition' ? validateTransitionShaderSource(glsl) : validateShaderSource(glsl);
-  if (staticErr) return { error: `generated shader rejected: ${staticErr}`, glsl };
+  if (staticErr) return { error: `shader được tạo bị từ chối: ${staticErr}`, glsl };
 
   const compileErr = compileCheck(glsl); // Real compilation on the browser side; return null and skip when node/no WebGL2 is used
-  if (compileErr) return { error: `shader compile failed: ${compileErr}`, glsl };
+  if (compileErr) return { error: `biên dịch shader thất bại: ${compileErr}`, glsl };
 
   if (kind === 'transition') {
     // The transition registry is a pure module (no.frag) → static import is sufficient, and tsx is also safe.
@@ -393,7 +393,7 @@ export async function execShaderTool(name: string, args: Args, ctx: AgentContext
     try {
       registerCustomTransition(tdef);
     } catch (e) {
-      return { error: `transition registration failed: ${e instanceof Error ? e.message : String(e)}`, glsl };
+      return { error: `đăng ký transition thất bại: ${e instanceof Error ? e.message : String(e)}`, glsl };
     }
     return {
       ok: true,
@@ -412,7 +412,7 @@ export async function execShaderTool(name: string, args: Args, ctx: AgentContext
     const { registerCustomFx } = await import('../../gl/fx/effects');
     registerCustomFx(def);
   } catch (e) {
-    return { error: `shader registration failed: ${e instanceof Error ? e.message : String(e)}`, glsl };
+    return { error: `đăng ký shader thất bại: ${e instanceof Error ? e.message : String(e)}`, glsl };
   }
   return {
     ok: true,

@@ -94,7 +94,7 @@ export async function execReadProjectTool(
   args: Args,
   ctx: AgentContext,
 ): Promise<unknown> {
-  if (name !== 'read_project') return { error: `unknown tool ${name}` };
+  if (name !== 'read_project') return { error: `công cụ không xác định: ${name}` };
 
   let timeline: Timeline;
   try {
@@ -121,7 +121,7 @@ export async function execReadProjectTool(
       // also match alias loosely
       const ids = timelineTrackIds(state);
       trackIdFilter = ids.find((id) => trackAlias(state, id) === trackFilter || id === trackFilter) ?? null;
-      if (!trackIdFilter) return { error: `track not found: ${trackFilter}` };
+      if (!trackIdFilter) return { error: `không tìm thấy track: ${trackFilter}` };
     }
   }
 

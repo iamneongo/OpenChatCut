@@ -46,11 +46,11 @@ function parseXml(content: string, Parser: XmlParserConstructor): { document?: X
     }).parseFromString(content, 'application/xml');
     const detail = errors[0] ?? parserErrorText(document);
     if (detail || document.documentElement?.tagName !== 'fcpxml') {
-      return { error: `invalid FCPXML${detail ? `: ${detail}` : ''}` };
+      return { error: `FCPXML không hợp lệ${detail ? `: ${detail}` : ''}` };
     }
     return { document };
   } catch (error) {
-    return { error: `invalid FCPXML: ${error instanceof Error ? error.message : String(error)}` };
+    return { error: `FCPXML không hợp lệ: ${error instanceof Error ? error.message : String(error)}` };
   }
 }
 
@@ -125,7 +125,7 @@ function readResources(document: XmlDocument): FcpxResources {
 function chooseSequence(document: XmlDocument, report: ImportReport): { sequence: XmlElement; project?: XmlElement } | null {
   const projects = elements(document, 'project').filter((project) => firstChild(project, 'sequence'));
   if (projects.length > 1) {
-    report.warnings.push(`the document has ${projects.length} projects; imported the first ("${attr(projects[0]!, 'name')}")`);
+    report.warnings.push(`tài liệu có ${projects.length} project; đã nhập project đầu tiên ("${attr(projects[0]!, 'name')}")`);
   }
   if (projects[0]) return { sequence: firstChild(projects[0], 'sequence')!, project: projects[0] };
   const sequence = elements(document, 'sequence')[0];
@@ -184,18 +184,18 @@ function leafToClip(leaf: FcpxLeaf, ctx: ClipContext): ParsedClip | null {
   const asset = resolved;
   let start = leaf.window.start;
   const end = leaf.window.end;
-  if (!isTimelineAsset(asset)) return skipLeaf(`${asset.name} is not timeline media`, start);
+  if (!isTimelineAsset(asset)) return skipLeaf(`${asset.name} không phải media dùng được trên timeline`, start);
   const family = leafFamily(leaf, asset);
   if (asset.kind === 'audio' && (family === 'video' || leaf.srcEnable === 'video')) {
-    return skipLeaf(`video component references audio-only ${asset.name}`, start);
+    return skipLeaf(`thành phần video đang tham chiếu audio-only ${asset.name}`, start);
   }
   if (family === 'audio' && asset.kind !== 'audio' && asset.kind !== 'video') {
-    return skipLeaf(`audio component references ${asset.kind} ${asset.name}`, start);
+    return skipLeaf(`thành phần audio đang tham chiếu ${asset.kind} ${asset.name}`, start);
   }
-  if (cmp(end, ZERO) <= 0) return skipLeaf('lies entirely before the sequence start', start);
+  if (cmp(end, ZERO) <= 0) return skipLeaf('nằm hoàn toàn trước điểm bắt đầu sequence', start);
   const notes = [...leaf.notes];
   if (cmp(start, ZERO) < 0) {
-    notes.push('trimmed at the sequence start');
+    notes.push('đã cắt tại điểm bắt đầu sequence');
     start = ZERO;
   }
   const rate = div(ONE, leaf.media.b);
@@ -218,13 +218,13 @@ function leafToClip(leaf: FcpxLeaf, ctx: ClipContext): ParsedClip | null {
     // The clip begins before its media's first frame: start the clip where the media does.
     start = add(start, div(sub(ZERO, inPoint), rate));
     inPoint = ZERO;
-    notes.push('starts before its media and was trimmed to the first media frame');
-    if (cmp(start, end) >= 0) return skipLeaf('lies entirely before its media', leaf.window.start);
+    notes.push('bắt đầu trước media và đã được cắt về frame media đầu tiên');
+    if (cmp(start, end) >= 0) return skipLeaf('nằm hoàn toàn trước media của nó', leaf.window.start);
   }
   // Sequence time lands on the project's frames, whatever rate the sequence has.
   const startFrame = toFrames(start, ctx.projectFps);
   const durationInFrames = toFrames(end, ctx.projectFps) - startFrame;
-  if (durationInFrames <= 0) return skipLeaf('shorter than one frame', start);
+  if (durationInFrames <= 0) return skipLeaf('ngắn hơn một frame', start);
   const still = isStillAsset(asset);
   const from = { element: leaf.element, name: leaf.name, at: ctx.label(start) };
   const speed = playbackRate(rate, still, notes);
@@ -252,25 +252,25 @@ export function parseFcpxml(
 ): ParseResult {
   if (/<!ENTITY/i.test(content)) return { ok: false, error: 'FCPXML entity declarations are rejected' };
   const parsedXml = parseXml(content, Parser);
-  if (!parsedXml.document) return { ok: false, error: parsedXml.error ?? 'invalid FCPXML' };
+  if (!parsedXml.document) return { ok: false, error: parsedXml.error ?? 'FCPXML không hợp lệ' };
   const report = newReport();
   const chosen = chooseSequence(parsedXml.document, report);
-  if (!chosen) return { ok: false, error: 'FCPXML has no sequence' };
+  if (!chosen) return { ok: false, error: 'FCPXML không có sequence' };
   const { sequence, project } = chosen;
   const resources = readResources(parsedXml.document);
   const format = elements(parsedXml.document, 'format').find((candidate) => attr(candidate, 'id') === attr(sequence, 'format'));
   const projectFps = rateFromNumber(fallback.fps);
   const fps = resources.frameRate(attr(sequence, 'format')) ?? projectFps;
   const tcStart = parseTime(attr(sequence, 'tcStart') || '0s');
-  if (!tcStart) return { ok: false, error: `invalid FCPXML sequence tcStart "${attr(sequence, 'tcStart')}"` };
+  if (!tcStart) return { ok: false, error: `tcStart của sequence FCPXML không hợp lệ: "${attr(sequence, 'tcStart')}"` };
   const nominal = Math.max(1, Math.round(toNumber(fps)));
   const dropFrame = attr(sequence, 'tcFormat') === 'DF' && dropFramesPerMinute(nominal) !== null;
   const label = (seconds: Rational) => framesToLabel(toFrames(add(tcStart, seconds), fps), nominal, dropFrame);
   const env: WalkEnv = { resources, report, leaves: [], label, counters: { hidden: 0, budget: WALK_BUDGET } };
   walkSequence(sequence, tcStart, fps, env);
-  if (env.counters.budget < 0) report.warnings.push(`stopped after ${WALK_BUDGET} story elements; the rest was not imported`);
+  if (env.counters.budget < 0) report.warnings.push(`đã dừng sau ${WALK_BUDGET} phần tử; phần còn lại không được nhập`);
   if (env.counters.hidden) {
-    report.warnings.push(`${env.counters.hidden} clip(s) outside their compound, sync or parent clip's visible range were omitted, as in the source NLE`);
+    report.warnings.push(`${env.counters.hidden} clip nằm ngoài vùng hiển thị của compound, sync hoặc clip cha đã bị bỏ qua, giống như trong NLE nguồn`);
   }
   const unresolved = new Map<string, UnresolvedReference>();
   const context: ClipContext = {
@@ -279,11 +279,11 @@ export function parseFcpxml(
   const clips = env.leaves.map((leaf) => leafToClip(leaf, context)).filter((clip): clip is ParsedClip => !!clip);
   report.warnings.push(...context.sourceNotes.warnings());
   if (unresolved.size) {
-    return { ok: false, error: 'FCPXML media references are unresolved', unresolved: [...unresolved.values()] };
+    return { ok: false, error: 'Các tham chiếu media trong FCPXML chưa được phân giải', unresolved: [...unresolved.values()] };
   }
   const reconciled = reconcileClips(clips, report);
   if (!reconciled.length) {
-    return { ok: false, error: 'FCPXML sequence has no importable clips', skipped: report.skipped };
+    return { ok: false, error: 'Sequence FCPXML không có clip nào có thể nhập', skipped: report.skipped };
   }
   return {
     ok: true,

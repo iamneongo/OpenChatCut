@@ -376,7 +376,7 @@ const mediaRep = (file: string) => `<media-rep kind="original-media" src="file:/
     <sequence format="r0" tcStart="0s"><spine><title ref="t" offset="0s" duration="2s" name="Only a title"/></spine></sequence>`), [], draft.getState());
   assert.equal(parsed.ok, false);
   if (!parsed.ok) {
-    assert.equal(parsed.error, 'FCPXML sequence has no importable clips');
+    assert.equal(parsed.error, 'Sequence FCPXML không có clip nào có thể nhập');
     assert.equal(parsed.skipped?.[0]?.reason, 'titles are not imported');
   }
 }

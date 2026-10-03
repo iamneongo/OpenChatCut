@@ -193,7 +193,7 @@ assert.notStrictEqual(buildCustomTransitionDef('x', VALID_TR).id, buildCustomTra
 
   // >1 code reference → clear error
   const twoCode = await resolveShaderRefs(['custom:tr-a', 'custom:tr-b'], 'transition', ctx) as { error?: string };
-  assert.ok(twoCode.error?.includes('ONE'), 'two code references rejected');
+  assert.ok(twoCode.error?.includes('MỘT'), 'two code references rejected');
 
   // video pool asset is neither image nor shader → clear error
   const wrongKind = await resolveShaderRefs(['vid_1'], 'effect', ctx) as { error?: string };
@@ -201,13 +201,13 @@ assert.notStrictEqual(buildCustomTransitionDef('x', VALID_TR).id, buildCustomTra
 
   // unknown id → clear error
   const missingRef = await resolveShaderRefs(['ghost'], 'effect', ctx) as { error?: string };
-  assert.ok(missingRef.error?.includes('not found'), 'unknown reference id rejected');
+  assert.ok(missingRef.error?.includes('không tìm thấy'), 'unknown reference id rejected');
 
   // execShaderTool short-circuits on ref violations BEFORE any LLM call (no network under node)
   const execErr = await execShaderTool('submit_shader', { type: 'effect', prompt: 'glow', referenceAssetIds: ['custom:tr-a'] }, ctx) as { error?: string };
   assert.ok(execErr.error?.includes('kind'), 'exec validates references before generation');
   const execMissing = await execShaderTool('submit_shader', { type: 'effect', prompt: 'glow', referenceAssetIds: ['ghost'] }, ctx) as { error?: string };
-  assert.ok(execMissing.error?.includes('not found'), 'exec rejects unknown reference before generation');
+  assert.ok(execMissing.error?.includes('không tìm thấy'), 'exec rejects unknown reference before generation');
   const execNoType = await execShaderTool('submit_shader', { prompt: 'glow' }, ctx) as { error?: string };
   assert.ok(execNoType.error?.includes('type'), 'exec enforces required type');
   __resetCustomTransitions();

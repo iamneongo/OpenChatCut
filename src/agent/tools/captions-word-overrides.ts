@@ -18,20 +18,20 @@ export interface DisplayTextResult {
 
 function resolveTarget(entry: RawOverride, indices: number[], refs: string[]): WordTarget | string {
   if (entry.wordRef !== undefined) {
-    if (typeof entry.wordRef !== 'string' || !entry.wordRef.trim()) return 'invalid wordRef';
+    if (typeof entry.wordRef !== 'string' || !entry.wordRef.trim()) return 'wordRef không hợp lệ';
     const matches = refs.flatMap((ref, position) => ref === entry.wordRef ? [position] : []);
-    if (!matches.length) return `unknown or stale wordRef ${JSON.stringify(entry.wordRef)}`;
-    if (matches.length > 1) return `ambiguous wordRef ${JSON.stringify(entry.wordRef)}`;
+    if (!matches.length) return `wordRef không xác định hoặc đã cũ: ${JSON.stringify(entry.wordRef)}`;
+    if (matches.length > 1) return `wordRef bị trùng: ${JSON.stringify(entry.wordRef)}`;
     const position = matches[0]!;
     return { index: indices[position]!, wordRef: refs[position]! };
   }
   const wordIndex = entry.wordIndex;
   if (typeof wordIndex !== 'number' || !Number.isInteger(wordIndex) || wordIndex < 0) {
-    return `invalid wordIndex ${JSON.stringify(wordIndex)}`;
+    return `wordIndex không hợp lệ: ${JSON.stringify(wordIndex)}`;
   }
   const matches = indices.flatMap((index, position) => index === wordIndex ? [position] : []);
-  if (!matches.length) return `unknown or unavailable wordIndex ${wordIndex}`;
-  if (matches.length > 1) return `ambiguous wordIndex ${wordIndex}; use wordRef`;
+  if (!matches.length) return `wordIndex không xác định hoặc không khả dụng: ${wordIndex}`;
+  if (matches.length > 1) return `wordIndex bị trùng: ${wordIndex}; hãy dùng wordRef`;
   return { index: wordIndex, wordRef: refs[matches[0]!]! };
 }
 
@@ -56,16 +56,16 @@ export function applyDisplayTextEntries(
   const errors: string[] = [];
   const ignored: string[] = [];
   for (const value of raw) {
-    if (!value || typeof value !== 'object') { errors.push('non-object entry'); continue; }
+    if (!value || typeof value !== 'object') { errors.push('mục nhập không phải object'); continue; }
     const entry = value as RawOverride;
     if (entry.key !== undefined && entry.wordIndex === undefined && entry.wordRef === undefined) {
-      ignored.push('key (use wordRef from read_captions)'); continue;
+      ignored.push('key (hãy dùng wordRef từ read_captions)'); continue;
     }
     if ('keepWithPrevious' in entry) ignored.push('keepWithPrevious');
     const target = resolveTarget(entry, indices, refs);
     if (typeof target === 'string') { errors.push(target); continue; }
     if (stableOverrideKeys(next, target.wordRef).length > 1) {
-      errors.push(`ambiguous stored overrides for wordRef ${JSON.stringify(target.wordRef)}`); continue;
+      errors.push(`override đã lưu bị trùng cho wordRef ${JSON.stringify(target.wordRef)}`); continue;
     }
     if (entry.clear === true) {
       next = clearCaptionWordOverride(next, target.index, target.wordRef); continue;

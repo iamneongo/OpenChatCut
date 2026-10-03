@@ -183,7 +183,7 @@ const ambiguous = applyDisplayTextEntries(
   items,
   30,
 );
-assert.match(ambiguous.errors[0]!, /ambiguous wordRef/);
+assert.match(ambiguous.errors[0]!, /wordRef bị trùng/);
 
 const legacy = applyWordOverrides(initialWords, resolveCaptionWordIndices(captions, items, 30), { 0: { text: 'legacy' } }, initialRefs);
 assert.equal(legacy.words[0]?.text, 'legacy', 'old numeric-only ProjectDoc overrides still render');
@@ -193,6 +193,6 @@ const stale = await execCaptionsTool('edit_captions', {
   json: { overrides: [{ wordRef: 'cw1.stale.999', text: 'bad' }] },
 }, ctx) as { ok: boolean; errors: string[] };
 assert.equal(stale.ok, false);
-assert.match(stale.errors[0]!, /unknown or stale wordRef/);
+assert.match(stale.errors[0]!, /wordRef không xác định hoặc đã cũ/);
 
 console.log('captions stable refs check passed');

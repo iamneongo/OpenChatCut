@@ -263,7 +263,7 @@ FCM: DROP FRAME
   };
   try {
     const partial = await parseTimelineImport('fcpxml', fcpxml, draft.getDoc().assets, draft.getState());
-    assert.deepEqual(partial, { ok: false, error: 'invalid FCPXML: error on line 2 at column 12: Opening and ending tag mismatch' });
+    assert.deepEqual(partial, { ok: false, error: 'FCPXML không hợp lệ: error on line 2 at column 12: Opening and ending tag mismatch' });
   } finally {
     if (browserParser === undefined) delete globals.DOMParser;
     else globals.DOMParser = browserParser;

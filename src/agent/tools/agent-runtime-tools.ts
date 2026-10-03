@@ -11,12 +11,12 @@ type Args = Record<string, unknown>;
 function integerArg(value: unknown, fallback: number, min: number, max: number): number {
   if (value === undefined) return fallback;
   if (!Number.isInteger(value) || (value as number) < min || (value as number) > max) {
-    throw new Error(`Expected an integer from ${min} to ${max}.`);
+    throw new Error(`Cần một số nguyên từ ${min} đến ${max}.`);
   }
   return value as number;
 }
 function decodePointerToken(token: string): string {
-  if (/~(?![01])/u.test(token)) throw new Error('Invalid JSON Pointer escape.');
+  if (/~(?![01])/u.test(token)) throw new Error('Escape JSON Pointer không hợp lệ.');
   return token.replaceAll('~1', '/').replaceAll('~0', '~');
 }
 function selectPointer(value: unknown, pointer: string): unknown {
@@ -26,14 +26,14 @@ function selectPointer(value: unknown, pointer: string): unknown {
     const token = decodePointerToken(raw);
     if (Array.isArray(current)) {
       if (!/^(?:0|[1-9]\d*)$/.test(token) || Number(token) >= current.length) {
-        throw new Error(`JSON Pointer array index is invalid: ${token}`);
+        throw new Error(`Index mảng JSON Pointer không hợp lệ: ${token}`);
       }
       current = current[Number(token)];
     } else if (current && typeof current === 'object'
         && Object.prototype.hasOwnProperty.call(current, token)) {
       current = (current as Record<string, unknown>)[token];
     } else {
-      throw new Error(`JSON Pointer target does not exist: ${pointer}`);
+      throw new Error(`Đích JSON Pointer không tồn tại: ${pointer}`);
     }
   }
   return current;
@@ -82,26 +82,26 @@ export async function execAgentRuntimeTool(
   args: Args,
   ctx: AgentContext,
 ): Promise<unknown> {
-  if (name !== 'read_agent_artifact') throw new Error(`Unknown Agent runtime tool: ${name}`);
+  if (name !== 'read_agent_artifact') throw new Error(`Công cụ runtime của agent không xác định: ${name}`);
   const artifactId = typeof args.artifactId === 'string' ? args.artifactId : '';
-  if (!ARTIFACT_ID.test(artifactId)) throw new Error('Invalid artifactId.');
+  if (!ARTIFACT_ID.test(artifactId)) throw new Error('artifactId không hợp lệ.');
   const pointer = args.pointer === undefined ? '' : args.pointer;
   if (typeof pointer !== 'string' || pointer.length > 1024 || !POINTER.test(pointer)) {
-    throw new Error('Invalid JSON Pointer.');
+    throw new Error('JSON Pointer không hợp lệ.');
   }
   const offset = integerArg(args.offset, 0, 0, 8_388_608);
   const requestedLimit = integerArg(args.limit, DEFAULT_LIMIT, 1, MAX_RESPONSE_CHARS);
   const projectId = ctx.getProjectId?.();
-  if (!projectId) throw new Error('read_agent_artifact requires a persisted current project.');
+  if (!projectId) throw new Error('read_agent_artifact cần một dự án hiện tại đã được lưu.');
   const artifact = await loadAgentArtifact(projectId, artifactId);
-  if (!artifact) throw new Error(`Agent artifact not found: ${artifactId}`);
+  if (!artifact) throw new Error(`Không tìm thấy artifact của agent: ${artifactId}`);
   let selected = artifact.body;
   if (pointer) {
     const pointed = JSON.stringify(selectPointer(JSON.parse(artifact.body), pointer));
-    if (pointed === undefined) throw new Error(`JSON Pointer target does not exist: ${pointer}`);
+    if (pointed === undefined) throw new Error(`Đích JSON Pointer không tồn tại: ${pointer}`);
     selected = pointed;
   }
-  if (offset > selected.length) throw new Error('Artifact offset exceeds totalChars.');
+  if (offset > selected.length) throw new Error('offset của artifact vượt quá totalChars.');
   const base = {
     artifactId, pointer, offset, totalChars: selected.length,
     bodySha256: artifact.bodySha256, redacted: artifact.redacted,

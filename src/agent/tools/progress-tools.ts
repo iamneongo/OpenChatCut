@@ -5,7 +5,7 @@ export async function execProgressTool(
   args: Record<string, unknown>,
   ctx: AgentContext,
 ): Promise<unknown> {
-  if (name !== 'track_progress') return { error: `unknown tool ${name}` };
+  if (name !== 'track_progress') return { error: `công cụ không xác định: ${name}` };
   // Target-selected literal imports keep every Vite chunk discoverable while
   // loading only the executor needed by this progress request.
   if (args.target === 'transcription') {

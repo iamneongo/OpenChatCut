@@ -140,7 +140,7 @@ assert.equal(draft.getState().captions?.wordOverrides?.[1], undefined);
 const w3 = await execCaptionsTool('edit_captions', { action: 'display_text', json: { overrides: [{ wordIndex: 99, hidden: true }] } }, ctx) as { ok: boolean; overrides: number; errors?: string[] };
 assert.equal(w3.ok, false, 'out-of-range entry surfaces an error');
 assert.equal(w3.overrides, 2, 'out-of-range entry ignored, count unchanged');
-assert.ok(w3.errors?.some((e) => e.includes('unavailable') || e.includes('out of range')));
+assert.ok(w3.errors?.some((e) => e.includes('không khả dụng') || e.includes('không hợp lệ')));
 
 // 回归(审计 B1):text:null 清一个从未 override 过的词 = no-op,不许抛 TypeError
 const wNull = await execCaptionsTool('edit_captions', { action: 'display_text', json: { overrides: [{ wordIndex: 3, text: null }] } }, ctx) as { ok: boolean };
