@@ -260,6 +260,8 @@ export default {
   '重新链接文件失败': 'Failed to relink files',
   '链接所选音视频': 'Link selected audio & video',
   '闭合缝隙': 'Close gaps',
+  '微移所选片段': 'Nudge selected clips',
+  '粘贴片段效果': 'Paste clip effects',
   '转场菜单': 'Transition menu',
   '{n} 秒': '{n}s',
   '删除转场': 'Remove transition',

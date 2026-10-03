@@ -13,6 +13,7 @@ import type { EditorCommands } from '../../editor/store';
 import type { AtomicAction } from '../../editor/store';
 import { sourceWindowForTimelineRange } from '../../editor/sourceLimit';
 import { hasOperationalTranscript } from '../../transcript/types';
+import { useT } from '../../i18n/locale';
 import type { FxClip } from './ClipContextMenu';
 import type { TimelineShortcutApi, ItemClipboard } from '../../shortcuts/timelineApi';
 import type { EditMode } from './timelineUtil';
@@ -39,6 +40,7 @@ interface ShortcutDeps {
 }
 
 export function useTimelineShortcuts(deps: ShortcutDeps): { zoneIn: number | null; zoneOut: number | null } {
+  const t = useT();
   const {
     shortcutApiRef, state, commands, playerRef, playheadRef, total,
     seekFrame, paintPlayhead, setEditMode, setSnapping, fitToView, zoomBy,
@@ -111,7 +113,7 @@ export function useTimelineShortcuts(deps: ShortcutDeps): { zoneIn: number | nul
           if (!it || state.tracks?.[it.track]?.locked) continue;
           actions.push({ type: 'move' as const, id, startFrame: Math.max(0, it.startFrame + delta) });
         }
-        commands.batch(actions, '微移所选片段');
+        commands.batch(actions, t('微移所选片段'));
       },
       trimSelectedToPlayhead: (side) => {
         const id = state.selectedId;
@@ -338,7 +340,7 @@ export function useTimelineShortcuts(deps: ShortcutDeps): { zoneIn: number | nul
             fadeOutFrames: fxClip.fadeOutFrames ?? 0,
           },
         ];
-        commands.batch(actions, '粘贴片段效果');
+        commands.batch(actions, t('粘贴片段效果'));
       },
       copyEffects: () => {
         const it = state.items.find((x) => x.id === state.selectedId);

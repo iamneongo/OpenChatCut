@@ -1095,6 +1095,8 @@ export const VI: Record<string, string> = {
   '重新链接文件失败': 'Liên kết lại tệp thất bại',
   '链接所选音视频': 'Liên kết video và âm thanh đã chọn',
   '闭合缝隙': 'Khép khoảng trống',
+  '微移所选片段': 'Dịch nhẹ các đoạn đã chọn',
+  '粘贴片段效果': 'Dán hiệu ứng cho đoạn',
   '转场菜单': 'Menu chuyển cảnh',
   '{n} 秒': '{n} giây',
   '删除转场': 'Xóa chuyển cảnh',
