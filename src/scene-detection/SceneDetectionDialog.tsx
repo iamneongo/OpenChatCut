@@ -48,7 +48,9 @@ export function SceneDetectionDialog({ state, commands, item, onClose }: SceneDe
       void getSceneDetectionJob(jobId).then((next) => {
         if (!disposed) setJob(next);
       }).catch((cause) => {
-        if (!disposed) setError(cause instanceof Error ? cause.message : String(cause));
+        if (!disposed) setError(t('失败:{error}', {
+          error: cause instanceof Error ? cause.message : String(cause),
+        }));
       });
     }, 300);
     return () => {
@@ -79,7 +81,9 @@ export function SceneDetectionDialog({ state, commands, item, onClose }: SceneDe
         maxScenes,
       }));
     } catch (cause) {
-      setError(cause instanceof Error ? cause.message : String(cause));
+      setError(t('失败:{error}', {
+        error: cause instanceof Error ? cause.message : String(cause),
+      }));
     }
   };
 
@@ -88,7 +92,9 @@ export function SceneDetectionDialog({ state, commands, item, onClose }: SceneDe
     try {
       setJob(await cancelSceneDetectionJob(job.id));
     } catch (cause) {
-      setError(cause instanceof Error ? cause.message : String(cause));
+      setError(t('失败:{error}', {
+        error: cause instanceof Error ? cause.message : String(cause),
+      }));
     }
   };
 

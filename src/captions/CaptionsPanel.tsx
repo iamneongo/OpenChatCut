@@ -52,6 +52,7 @@ function CaptionTrackBar({ options, track, onChange }: { options: Props['caption
 }
 
 function useCaptionTranslation(captions: CaptionsData | null, items: TimelineItem[], fps: number, onUpdate: (patch: Partial<CaptionsData>) => void) {
+  const t = useT();
   const [running, setRunning] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const run = async (lang: string) => {
@@ -65,7 +66,9 @@ function useCaptionTranslation(captions: CaptionsData | null, items: TimelineIte
         translationFingerprint: fingerprint,
       });
     } catch (cause) {
-      setError(cause instanceof Error ? cause.message : String(cause));
+      setError(t('失败:{error}', {
+        error: cause instanceof Error ? cause.message : String(cause),
+      }));
     } finally {
       setRunning(false);
     }

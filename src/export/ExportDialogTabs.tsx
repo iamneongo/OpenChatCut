@@ -253,13 +253,15 @@ function JianyingTab({ project, base }: { project: ProjectDoc; base: string }) {
       });
       const data = (await response.json().catch(() => null)) as (JianyingExportOutcome & { ok?: boolean; error?: string }) | null;
       if (!response.ok || !data?.ok) {
-        setError(data?.error ?? t('剪映草稿导出失败'));
+        setError(t('失败:{error}', { error: data?.error ?? t('剪映草稿导出失败') }));
         return;
       }
       saveJianYingDraftPreference({ store, customDir, draftName: draftName.trim() });
       setOutcome(data);
     } catch (reason) {
-      setError(reason instanceof Error ? reason.message : String(reason));
+      setError(t('失败:{error}', {
+        error: reason instanceof Error ? reason.message : String(reason),
+      }));
     } finally {
       setBusy(false);
     }

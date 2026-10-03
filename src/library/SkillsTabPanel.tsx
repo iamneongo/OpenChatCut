@@ -167,7 +167,9 @@ function SkillEditDialog({
       await saveCustomSkill({ ...skill, name: name.trim(), nameZh: name.trim(), summary: summary.trim() || name.trim(), body });
       onSaved();
     } catch (err) {
-      setError(err instanceof Error ? err.message : String(err));
+      setError(t('失败:{error}', {
+        error: err instanceof Error ? err.message : String(err),
+      }));
     } finally {
       setSaving(false);
     }
