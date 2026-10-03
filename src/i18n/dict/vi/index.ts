@@ -258,6 +258,7 @@ export const VI: Record<string, string> = {
   '原文（source）': 'Bản gốc',
   '双语第二行（可选）': 'Dòng song ngữ thứ hai (tùy chọn)',
   '翻译中…': 'Đang dịch…',
+  '翻译中...': 'Đang dịch...',
   '重新翻译': 'Dịch lại',
   '生成翻译': 'Tạo bản dịch',
   '文字颜色': 'Màu chữ',
