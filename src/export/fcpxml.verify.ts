@@ -26,6 +26,16 @@ const attr = (el: string, name: string): string => el.match(new RegExp(`${name}=
 const mediaRepSrc = (xml: string, kind: 'original-media' | 'proxy-media'): string | undefined => (
   xml.match(new RegExp(`<media-rep kind="${kind}" src="([^"]*)"`))?.[1]
 );
+// The fixture includes POSIX paths even when this check runs on Windows. Keep
+// those synthetic paths stable while still using Node's native conversion for
+// real drive-letter and UNC file URLs.
+const fileUrlPath = (src: string): string => {
+  const url = new URL(src);
+  if (process.platform === 'win32' && !url.hostname && !/^\/[A-Za-z]:\//.test(url.pathname)) {
+    return decodeURIComponent(url.pathname);
+  }
+  return fileURLToPath(url);
+};
 
 // Exact FCPXML times ("N/Ds") as bigint fractions.
 type Q = readonly [bigint, bigint];
@@ -290,7 +300,7 @@ function sourceFrameAt(xml: string, name: string, frame: number, fps: number): Q
   assert.equal((xml.match(/<media-rep [^>]*\/>/g) ?? []).length, 2, 'media-rep carries its location only in src');
   assert.deepEqual(fcpxmlDtdViolations(xml), [], 'original/proxy export validates against the FCPXML 1.10 DTD');
   assert.equal(
-    fileURLToPath(mediaRepSrc(xml, 'original-media')!),
+    fileUrlPath(mediaRepSrc(xml, 'original-media')!),
     originalFilePath,
     'percent-encoded Chinese src decodes back to the exact original path',
   );
@@ -345,7 +355,7 @@ function sourceFrameAt(xml: string, name: string, frame: number, fps: number): Q
     const xml = timelineToFcpxml(state, { mediaDir: '/Users/me/.openchatcut/media' });
     const src = mediaRepSrc(xml, 'original-media');
     assert.equal(src, expected, `${label}: UTF-8 percent-encoded per path segment`);
-    assert.equal(fileURLToPath(src!), originalFilePath, `${label}: src decodes back to the exact on-disk path`);
+    assert.equal(fileUrlPath(src!), originalFilePath, `${label}: src decodes back to the exact on-disk path`);
     assert.doesNotMatch(src!, /[^\x21-\x7e]/, `${label}: no raw space or non-ASCII byte reaches src`);
     assert.ok(!xml.includes('<pathurl'), `${label}: no <pathurl> element`);
     assert.deepEqual(fcpxmlDtdViolations(xml), [], `${label}: validates against the FCPXML 1.10 DTD`);
@@ -409,7 +419,7 @@ function sourceFrameAt(xml: string, name: string, frame: number, fps: number): Q
     const asset = (id: string): string => xml.match(new RegExp(`<asset id="id-${id}"[\\s\\S]*?</asset>`))?.[0] ?? '';
     const pathOf = (id: string, kind: 'original-media' | 'proxy-media'): string | undefined => {
       const src = mediaRepSrc(asset(id), kind);
-      return src === undefined ? undefined : fileURLToPath(src);
+      return src === undefined ? undefined : fileUrlPath(src);
     };
     assert.equal(pathOf('cam', 'original-media'), await realpath(camera), 'directory-imported video links its camera original');
     assert.equal(pathOf('cam', 'proxy-media'), join(uploads, `${stem}.normalized.mp4`), 'the played transcode stays the proxy');
@@ -425,14 +435,14 @@ function sourceFrameAt(xml: string, name: string, frame: number, fps: number): Q
         `${name} is only a manifest: its <mediaDir> path must never be exported`);
     }
     for (const [, src] of xml.matchAll(/src="(file:\/\/[^"]*)"/g)) {
-      const path = fileURLToPath(src!);
+      const path = fileUrlPath(src!);
       assert.ok(path === movedCanonical || existsSync(path), `NLE can open ${path}`);
     }
     assert.deepEqual(fcpxmlDtdViolations(xml), [], 'reference export validates against the FCPXML 1.10 DTD');
 
     // Without the server lookup (preview build) the export still goes out on the mediaDir guess.
     const fallback = timelineToFcpxml(state, { mediaDir: uploads });
-    assert.equal(fileURLToPath(mediaRepSrc(fallback, 'original-media')!), join(uploads, `${stem}.normalized.mp4`));
+    assert.equal(fileUrlPath(mediaRepSrc(fallback, 'original-media')!), join(uploads, `${stem}.normalized.mp4`));
   } finally {
     await rm(root, { recursive: true, force: true });
   }
@@ -452,7 +462,7 @@ function sourceFrameAt(xml: string, name: string, frame: number, fps: number): Q
   const assetOf = (xml: string, id: string) => xml.match(new RegExp(`<asset id="id-${id}"[\\s\\S]*?</asset>`))?.[0] ?? '';
   const assetStart = (xml: string, id: string) => assetOf(xml, id).match(/<asset [^>]*start="([^"]*)"/)?.[1];
   const repKinds = (xml: string, id: string) => [...assetOf(xml, id).matchAll(/kind="([^"]*)" src="([^"]*)"/g)]
-    .map(([, kind, src]) => `${kind} ${fileURLToPath(src!)}`);
+    .map(([, kind, src]) => `${kind} ${fileUrlPath(src!)}`);
   const timeline = (fps: number, items: TimelineItem[], assets?: TimelineState['assets']): TimelineState => ({
     fps, width: 1920, height: 1080, selectedId: null, items, assets,
     tracks: { V1: { kind: 'video' }, V2: { kind: 'video' }, A1: { kind: 'audio' } }, trackOrder: ['V2', 'V1', 'A1'],
