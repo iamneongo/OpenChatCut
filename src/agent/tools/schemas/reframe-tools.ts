@@ -4,15 +4,15 @@ export const REFRAME_TOOL_SCHEMAS: AgentToolSchema[] = [
   {
     name: 'auto_reframe',
     description:
-      "Auto-reframe a video clip: sample its frames, detect the subject/focal point per interval, and write reframe keyframes (builtin:zoom __openchatcutReframeCurve) so the crop window follows the subject when the canvas aspect differs (e.g. 16:9→9:16). Clears the clip's existing reframe keyframes first, then re-detects. Browser-only (needs the actual video pixels); returns an error if run headless or if the target isn't a video with a source.",
+      "Tự động reframe clip video: lấy mẫu các frame, phát hiện chủ thể/điểm trọng tâm theo từng khoảng và ghi keyframe reframe (builtin:zoom __openchatcutReframeCurve) để cửa sổ crop bám theo chủ thể khi tỷ lệ canvas khác nhau (ví dụ 16:9→9:16). Xóa keyframe reframe hiện có của clip trước rồi phát hiện lại. Chỉ chạy trên trình duyệt (cần pixel video thực); trả lỗi nếu chạy headless hoặc target không phải video có source.",
     input_schema: {
       type: 'object',
       properties: {
-        itemId: { type: 'string', description: 'Target video clip id (prefix ok).' },
-        intervalFrames: { type: 'number', description: 'Sample the video every N frames (default 15, min 1). Smaller = more keyframes, slower.' },
-        sensitivity: { type: 'number', description: '0..1 focus sharpness: higher snaps the focal point harder to the strongest-detail region (default 0.5).' },
-        smooth: { type: 'number', description: '0..1 temporal EMA on focal path (default 0.45). Higher = less crop jitter; 0 = raw per-frame energy.' },
-        maxSamples: { type: 'number', description: 'Cap on seek samples for long clips (default 60).' },
+        itemId: { type: 'string', description: 'Id clip video đích (chấp nhận tiền tố).' },
+        intervalFrames: { type: 'number', description: 'Lấy mẫu video mỗi N frame (mặc định 15, tối thiểu 1). Nhỏ hơn = nhiều keyframe hơn, chậm hơn.' },
+        sensitivity: { type: 'number', description: 'Độ sắc nét tiêu điểm 0..1: cao hơn sẽ bám mạnh hơn vào vùng nhiều chi tiết nhất (mặc định 0.5).' },
+        smooth: { type: 'number', description: 'EMA theo thời gian 0..1 trên đường đi của tiêu điểm (mặc định 0.45). Cao hơn = crop ít rung hơn; 0 = năng lượng thô theo từng frame.' },
+        maxSamples: { type: 'number', description: 'Giới hạn số lần seek mẫu cho clip dài (mặc định 60).' },
       },
       required: ['itemId'],
     },

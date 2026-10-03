@@ -4,32 +4,32 @@ export const PROJECT_TOOL_SCHEMAS: AgentToolSchema[] = [
   {
     name: 'list_projects',
     description: [
-      'List OpenChatCut projects this browser owns (id, name, updatedAt, editorUrl), newest first.',
-      'Discovery only — does not retarget the editor. Call target_project before editing another project.',
-      'Pass includeDeleted=true to also list soft-deleted projects for restore_project.',
+      'Liệt kê các dự án OpenChatCut mà trình duyệt này sở hữu (id, name, updatedAt, editorUrl), mới nhất trước.',
+      'Chỉ khám phá — không chuyển editor sang dự án khác. Gọi target_project trước khi chỉnh sửa dự án khác.',
+      'Truyền includeDeleted=true để liệt kê cả dự án đã xóa mềm cho restore_project.',
     ].join(' '),
     input_schema: {
       type: 'object',
       properties: {
-        editorBaseUrl: { type: 'string', description: 'Origin for returned URLs; defaults to location.origin.' },
-        includeDeleted: { type: 'boolean', description: 'Include soft-deleted projects (default false).' },
+        editorBaseUrl: { type: 'string', description: 'Origin cho URL trả về; mặc định location.origin.' },
+        includeDeleted: { type: 'boolean', description: 'Bao gồm dự án đã xóa mềm (mặc định false).' },
       },
     },
   },
   {
     name: 'create_project',
     description: [
-      'Create a new empty project (one timeline, one video track) and return projectId + editorUrl.',
-      'Does not auto-open unless you call target_project with the returned id.',
+      'Tạo dự án rỗng mới (một timeline, một track video) và trả về projectId + editorUrl.',
+      'Không tự mở trừ khi gọi target_project với id được trả về.',
     ].join(' '),
     input_schema: {
       type: 'object',
       properties: {
-        name: { type: 'string', description: 'Display name (default: a localized new-project name).' },
+        name: { type: 'string', description: 'Tên hiển thị (mặc định: tên dự án mới đã bản địa hóa).' },
         description: { type: 'string' },
-        compositionWidth: { type: 'number', description: 'Default 1920.' },
-        compositionHeight: { type: 'number', description: 'Default 1080.' },
-        fps: { type: 'number', description: 'Default 30.' },
+        compositionWidth: { type: 'number', description: 'Mặc định 1920.' },
+        compositionHeight: { type: 'number', description: 'Mặc định 1080.' },
+        fps: { type: 'number', description: 'Mặc định 30.' },
         editorBaseUrl: { type: 'string' },
       },
     },
@@ -37,20 +37,20 @@ export const PROJECT_TOOL_SCHEMAS: AgentToolSchema[] = [
   {
     name: 'delete_project',
     description: [
-      'Soft-delete a project (same as dashboard delete). Hidden from list_projects; restore with restore_project.',
-      'Requires explicit projectId — never defaults to the current project.',
+      'Xóa mềm một dự án (giống thao tác xóa trên dashboard). Ẩn khỏi list_projects; khôi phục bằng restore_project.',
+      'Bắt buộc có projectId rõ ràng — không bao giờ mặc định dùng dự án hiện tại.',
     ].join(' '),
     input_schema: {
       type: 'object',
       properties: {
-        projectId: { type: 'string', description: 'Full project id from list_projects or editor URL.' },
+        projectId: { type: 'string', description: 'Id dự án đầy đủ từ list_projects hoặc URL editor.' },
       },
       required: ['projectId'],
     },
   },
   {
     name: 'restore_project',
-    description: 'Restore a soft-deleted project so it reappears in list_projects / dashboard.',
+    description: 'Khôi phục dự án đã xóa mềm để dự án xuất hiện lại trong list_projects / dashboard.',
     input_schema: {
       type: 'object',
       properties: {
@@ -63,15 +63,15 @@ export const PROJECT_TOOL_SCHEMAS: AgentToolSchema[] = [
   {
     name: 'duplicate_project',
     description: [
-      'Full-copy a project (timelines, assets, captions). Chat history is not copied.',
-      'activate=true (default) navigates the editor to the new copy when openProject is available.',
+      'Sao chép toàn bộ dự án (timeline, asset, caption). Lịch sử chat không được sao chép.',
+      'activate=true (mặc định) điều hướng editor tới bản sao mới khi openProject khả dụng.',
     ].join(' '),
     input_schema: {
       type: 'object',
       properties: {
-        projectId: { type: 'string', description: 'Source project id; defaults to current project.' },
-        name: { type: 'string', description: 'Copy display name; default "[Copy] <source>".' },
-        activate: { type: 'boolean', description: 'Open the copy in the editor (default true).' },
+        projectId: { type: 'string', description: 'Id dự án nguồn; mặc định dự án hiện tại.' },
+        name: { type: 'string', description: 'Tên hiển thị bản sao; mặc định "[Copy] <source>".' },
+        activate: { type: 'boolean', description: 'Mở bản sao trong editor (mặc định true).' },
         editorBaseUrl: { type: 'string' },
       },
     },
@@ -79,9 +79,9 @@ export const PROJECT_TOOL_SCHEMAS: AgentToolSchema[] = [
   {
     name: 'edit_project',
     description: [
-      'Update project-level settings or speakers. action=update: change name/description via json {"name"?, "description"?}.',
-      'action=speaker-update: project-wide rename/merge a speaker — {from:"A", to:"New name"} relabels every word of that speaker across all transcribed clips in the open project.',
-      'speaker-create/speaker-delete are unsupported here (no speaker roster — speakers are per-word diarization labels); use speaker-update to relabel, or manage_transcript fix per clip.',
+      'Cập nhật cài đặt cấp dự án hoặc người nói. action=update: đổi name/description qua json {"name"?, "description"?}.',
+      'action=speaker-update: đổi tên/gộp người nói trên toàn dự án — {from:"A", to:"Tên mới"} đổi nhãn mọi từ của người nói đó trên tất cả clip đã chuyển lời trong dự án đang mở.',
+      'speaker-create/speaker-delete không được hỗ trợ ở đây (không có danh sách speaker — speaker là nhãn diarization theo từng từ); dùng speaker-update để đổi nhãn, hoặc manage_transcript fix theo từng clip.',
     ].join(' '),
     input_schema: {
       type: 'object',
@@ -90,11 +90,11 @@ export const PROJECT_TOOL_SCHEMAS: AgentToolSchema[] = [
           type: 'string',
           enum: ['update', 'speaker-create', 'speaker-update', 'speaker-delete'],
         },
-        id: { type: 'string', description: 'Speaker ID (for speaker ops) — the existing diarization label to target (alias of from / json.id).' },
-        from: { type: 'string', description: 'speaker-update: existing speaker label to rename (e.g. "A").' },
-        to: { type: 'string', description: 'speaker-update: new speaker name.' },
-        json: { type: 'string', description: 'update: {name?, description?}. speaker-update also accepts {from,to} here.' },
-        projectId: { type: 'string', description: 'Defaults to current project (speaker-update needs the open project).' },
+        id: { type: 'string', description: 'ID speaker (cho speaker ops) — nhãn diarization hiện có cần tác động (alias của from / json.id).' },
+        from: { type: 'string', description: 'speaker-update: nhãn speaker hiện có cần đổi tên (ví dụ "A").' },
+        to: { type: 'string', description: 'speaker-update: tên speaker mới.' },
+        json: { type: 'string', description: 'update: {name?, description?}. speaker-update cũng nhận {from,to} ở đây.' },
+        projectId: { type: 'string', description: 'Mặc định dự án hiện tại (speaker-update cần dự án đang mở).' },
       },
       required: ['action'],
     },
@@ -102,13 +102,13 @@ export const PROJECT_TOOL_SCHEMAS: AgentToolSchema[] = [
   {
     name: 'target_project',
     description: [
-      'Bind the session to an existing project and open it in the editor (hash navigate).',
-      'Use after list_projects. Subsequent tools run against the newly opened project after reload.',
+      'Gắn session với một dự án hiện có và mở dự án đó trong editor (điều hướng bằng hash).',
+      'Dùng sau list_projects. Các tool tiếp theo sẽ chạy trên dự án mới mở sau khi reload.',
     ].join(' '),
     input_schema: {
       type: 'object',
       properties: {
-        projectId: { type: 'string', description: 'Project id or unique prefix from list_projects.' },
+        projectId: { type: 'string', description: 'Id dự án hoặc tiền tố duy nhất từ list_projects.' },
         editorBaseUrl: { type: 'string' },
       },
       required: ['projectId'],
@@ -117,8 +117,8 @@ export const PROJECT_TOOL_SCHEMAS: AgentToolSchema[] = [
   {
     name: 'get_editor_url',
     description: [
-      'Return the editor URL for the targeted or given projectId (origin + #/editor/<id>).',
-      'Never invent hostnames — uses location.origin or editorBaseUrl.',
+      'Trả về URL editor cho projectId mục tiêu hoặc được truyền (origin + #/editor/<id>).',
+      'Không bao giờ tự đoán hostname — dùng location.origin hoặc editorBaseUrl.',
     ].join(' '),
     input_schema: {
       type: 'object',

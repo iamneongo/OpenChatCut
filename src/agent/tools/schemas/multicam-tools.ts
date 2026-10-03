@@ -4,10 +4,10 @@ export const MULTICAM_TOOL_SCHEMAS: AgentToolSchema[] = [
   {
     name: 'multicam_sync',
     description: [
-      'Persistent multicam alignment. Prefers normalized source timecode, then capture clock, and falls back to',
-      'audio correlation per angle. Creates or updates a durable group with its reference/master, source snapshots,',
-      'offsets, confidence and sync evidence; all placements and metadata commit as one undoable state change.',
-      'Every selected angle must use the same playback rate; unify rates before retrying a rejected sync.',
+      'Đồng bộ multicam bền vững. Ưu tiên source timecode đã chuẩn hóa, sau đó capture clock, rồi fallback sang',
+      'tương quan audio theo từng góc máy. Tạo hoặc cập nhật group bền vững với reference/master, snapshot nguồn,',
+      'offset, độ tin cậy và bằng chứng đồng bộ; mọi placement và metadata được commit thành một thay đổi trạng thái có thể undo.',
+      'Mọi góc máy được chọn phải dùng cùng playback rate; hãy thống nhất rate trước khi thử lại sync bị từ chối.',
     ].join(' '),
     input_schema: {
       type: 'object',
@@ -15,19 +15,19 @@ export const MULTICAM_TOOL_SCHEMAS: AgentToolSchema[] = [
         itemIds: {
           type: 'array',
           items: { type: 'string' },
-          description: 'Timeline item ids for all angles (reference + followers). At least 2.',
+          description: 'Id item timeline cho mọi góc (reference + follower). Tối thiểu 2.',
         },
         referenceItemId: {
           type: 'string',
-          description: 'Optional reference angle id (must be in itemIds). Defaults to first video clip.',
+          description: 'Id góc reference tùy chọn (phải nằm trong itemIds). Mặc định là clip video đầu tiên.',
         },
         groupId: {
           type: 'string',
-          description: 'Existing multicam group id to update. Omit to create or discover one from the selected items.',
+          description: 'Id group multicam hiện có cần cập nhật. Bỏ qua để tạo hoặc tìm group từ các item đã chọn.',
         },
         masterItemId: {
           type: 'string',
-          description: 'Optional program/master angle item id. Defaults to referenceItemId.',
+          description: 'Id item góc program/master tùy chọn. Mặc định referenceItemId.',
         },
       },
       required: ['itemIds'],
@@ -36,30 +36,30 @@ export const MULTICAM_TOOL_SCHEMAS: AgentToolSchema[] = [
   {
     name: 'change_cam',
     description: [
-      'Persistent multicam range switch. Pass groupId + targetAngleId and [fromSeconds,toSeconds); the editor',
-      'uses the rippleless split/remove planner, restores source coverage when a prior decision removed that angle,',
-      'and saves a replaceable right-open angle decision. The complete result commits once; failures commit nothing.',
-      'Legacy itemIds + targetItemId remain accepted for a group created by multicam_sync.',
+      'Chuyển góc multicam theo khoảng một cách bền vững. Truyền groupId + targetAngleId và [fromSeconds,toSeconds); editor',
+      'dùng planner split/remove không ripple, khôi phục coverage nguồn khi quyết định trước đó đã loại góc đó,',
+      'và lưu quyết định góc mở bên phải có thể thay thế. Toàn bộ kết quả commit một lần; lỗi thì không commit gì.',
+      'Vẫn chấp nhận itemIds + targetItemId cũ cho group được tạo bởi multicam_sync.',
     ].join(' '),
     input_schema: {
       type: 'object',
       properties: {
         groupId: {
           type: 'string',
-          description: 'Persistent multicam group id. Preferred over itemIds.',
+          description: 'Id group multicam bền vững. Ưu tiên hơn itemIds.',
         },
         targetAngleId: {
           type: 'string',
-          description: 'Persistent angle id (or its original item id) to show.',
+          description: 'Id góc bền vững (hoặc id item gốc) cần hiển thị.',
         },
         itemIds: {
           type: 'array',
           items: { type: 'string' },
-          description: 'Legacy group lookup: current/original ids of angles previously passed to multicam_sync.',
+          description: 'Tra cứu group cũ: id hiện tại/gốc của các góc đã truyền trước đó vào multicam_sync.',
         },
-        targetItemId: { type: 'string', description: 'Legacy alias for targetAngleId.' },
-        fromSeconds: { type: 'number', description: 'Switch start, timeline seconds.' },
-        toSeconds: { type: 'number', description: 'Switch end (exclusive), timeline seconds. Default: end of target source.' },
+        targetItemId: { type: 'string', description: 'Alias cũ của targetAngleId.' },
+        fromSeconds: { type: 'number', description: 'Thời điểm bắt đầu chuyển, tính bằng giây trên timeline.' },
+        toSeconds: { type: 'number', description: 'Thời điểm kết thúc (không bao gồm), tính bằng giây trên timeline. Mặc định: cuối source đích.' },
       },
       required: ['fromSeconds'],
     },
@@ -67,16 +67,16 @@ export const MULTICAM_TOOL_SCHEMAS: AgentToolSchema[] = [
   {
     name: 'manage_link_group',
     description: [
-      'Create or remove persistent timeline edit relationships as one undoable change.',
-      'action=link couples A/V move, trim and remove; action=sync_lock preserves group timing through direct moves',
-      'and ripple edits; action=unlink removes the selected memberships. Pass 2+ itemIds for link/sync_lock.',
+      'Tạo hoặc xóa quan hệ chỉnh sửa timeline bền vững trong một thay đổi có thể undo.',
+      'action=link ghép thao tác move, trim và remove của A/V; action=sync_lock giữ timing group qua move trực tiếp',
+      'và chỉnh sửa ripple; action=unlink xóa các membership đã chọn. Truyền từ 2 itemId trở lên cho link/sync_lock.',
     ].join(' '),
     input_schema: {
       type: 'object',
       properties: {
         action: { type: 'string', enum: ['link', 'sync_lock', 'unlink'] },
         itemIds: { type: 'array', items: { type: 'string' } },
-        anchorItemId: { type: 'string', description: 'Optional anchor; defaults to the first resolved item.' },
+        anchorItemId: { type: 'string', description: 'Anchor tùy chọn; mặc định là item đã phân giải đầu tiên.' },
       },
       required: ['action', 'itemIds'],
     },

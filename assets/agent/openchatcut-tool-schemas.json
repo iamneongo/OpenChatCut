@@ -2936,29 +2936,29 @@
     },
     {
       "name": "auto_reframe",
-      "description": "Auto-reframe a video clip: sample its frames, detect the subject/focal point per interval, and write reframe keyframes (builtin:zoom __openchatcutReframeCurve) so the crop window follows the subject when the canvas aspect differs (e.g. 16:9→9:16). Clears the clip's existing reframe keyframes first, then re-detects. Browser-only (needs the actual video pixels); returns an error if run headless or if the target isn't a video with a source.",
+      "description": "Tự động reframe clip video: lấy mẫu các frame, phát hiện chủ thể/điểm trọng tâm theo từng khoảng và ghi keyframe reframe (builtin:zoom __openchatcutReframeCurve) để cửa sổ crop bám theo chủ thể khi tỷ lệ canvas khác nhau (ví dụ 16:9→9:16). Xóa keyframe reframe hiện có của clip trước rồi phát hiện lại. Chỉ chạy trên trình duyệt (cần pixel video thực); trả lỗi nếu chạy headless hoặc target không phải video có source.",
       "input_schema": {
         "type": "object",
         "properties": {
           "itemId": {
             "type": "string",
-            "description": "Target video clip id (prefix ok)."
+            "description": "Id clip video đích (chấp nhận tiền tố)."
           },
           "intervalFrames": {
             "type": "number",
-            "description": "Sample the video every N frames (default 15, min 1). Smaller = more keyframes, slower."
+            "description": "Lấy mẫu video mỗi N frame (mặc định 15, tối thiểu 1). Nhỏ hơn = nhiều keyframe hơn, chậm hơn."
           },
           "sensitivity": {
             "type": "number",
-            "description": "0..1 focus sharpness: higher snaps the focal point harder to the strongest-detail region (default 0.5)."
+            "description": "Độ sắc nét tiêu điểm 0..1: cao hơn sẽ bám mạnh hơn vào vùng nhiều chi tiết nhất (mặc định 0.5)."
           },
           "smooth": {
             "type": "number",
-            "description": "0..1 temporal EMA on focal path (default 0.45). Higher = less crop jitter; 0 = raw per-frame energy."
+            "description": "EMA theo thời gian 0..1 trên đường đi của tiêu điểm (mặc định 0.45). Cao hơn = crop ít rung hơn; 0 = năng lượng thô theo từng frame."
           },
           "maxSamples": {
             "type": "number",
-            "description": "Cap on seek samples for long clips (default 60)."
+            "description": "Giới hạn số lần seek mẫu cho clip dài (mặc định 60)."
           }
         },
         "required": [
@@ -3967,45 +3967,45 @@
     },
     {
       "name": "list_projects",
-      "description": "List OpenChatCut projects this browser owns (id, name, updatedAt, editorUrl), newest first. Discovery only — does not retarget the editor. Call target_project before editing another project. Pass includeDeleted=true to also list soft-deleted projects for restore_project.",
+      "description": "Liệt kê các dự án OpenChatCut mà trình duyệt này sở hữu (id, name, updatedAt, editorUrl), mới nhất trước. Chỉ khám phá — không chuyển editor sang dự án khác. Gọi target_project trước khi chỉnh sửa dự án khác. Truyền includeDeleted=true để liệt kê cả dự án đã xóa mềm cho restore_project.",
       "input_schema": {
         "type": "object",
         "properties": {
           "editorBaseUrl": {
             "type": "string",
-            "description": "Origin for returned URLs; defaults to location.origin."
+            "description": "Origin cho URL trả về; mặc định location.origin."
           },
           "includeDeleted": {
             "type": "boolean",
-            "description": "Include soft-deleted projects (default false)."
+            "description": "Bao gồm dự án đã xóa mềm (mặc định false)."
           }
         }
       }
     },
     {
       "name": "create_project",
-      "description": "Create a new empty project (one timeline, one video track) and return projectId + editorUrl. Does not auto-open unless you call target_project with the returned id.",
+      "description": "Tạo dự án rỗng mới (một timeline, một track video) và trả về projectId + editorUrl. Không tự mở trừ khi gọi target_project với id được trả về.",
       "input_schema": {
         "type": "object",
         "properties": {
           "name": {
             "type": "string",
-            "description": "Display name (default: a localized new-project name)."
+            "description": "Tên hiển thị (mặc định: tên dự án mới đã bản địa hóa)."
           },
           "description": {
             "type": "string"
           },
           "compositionWidth": {
             "type": "number",
-            "description": "Default 1920."
+            "description": "Mặc định 1920."
           },
           "compositionHeight": {
             "type": "number",
-            "description": "Default 1080."
+            "description": "Mặc định 1080."
           },
           "fps": {
             "type": "number",
-            "description": "Default 30."
+            "description": "Mặc định 30."
           },
           "editorBaseUrl": {
             "type": "string"
@@ -4015,13 +4015,13 @@
     },
     {
       "name": "delete_project",
-      "description": "Soft-delete a project (same as dashboard delete). Hidden from list_projects; restore with restore_project. Requires explicit projectId — never defaults to the current project.",
+      "description": "Xóa mềm một dự án (giống thao tác xóa trên dashboard). Ẩn khỏi list_projects; khôi phục bằng restore_project. Bắt buộc có projectId rõ ràng — không bao giờ mặc định dùng dự án hiện tại.",
       "input_schema": {
         "type": "object",
         "properties": {
           "projectId": {
             "type": "string",
-            "description": "Full project id from list_projects or editor URL."
+            "description": "Id dự án đầy đủ từ list_projects hoặc URL editor."
           }
         },
         "required": [
@@ -4031,7 +4031,7 @@
     },
     {
       "name": "restore_project",
-      "description": "Restore a soft-deleted project so it reappears in list_projects / dashboard.",
+      "description": "Khôi phục dự án đã xóa mềm để dự án xuất hiện lại trong list_projects / dashboard.",
       "input_schema": {
         "type": "object",
         "properties": {
@@ -4049,21 +4049,21 @@
     },
     {
       "name": "duplicate_project",
-      "description": "Full-copy a project (timelines, assets, captions). Chat history is not copied. activate=true (default) navigates the editor to the new copy when openProject is available.",
+      "description": "Sao chép toàn bộ dự án (timeline, asset, caption). Lịch sử chat không được sao chép. activate=true (mặc định) điều hướng editor tới bản sao mới khi openProject khả dụng.",
       "input_schema": {
         "type": "object",
         "properties": {
           "projectId": {
             "type": "string",
-            "description": "Source project id; defaults to current project."
+            "description": "Id dự án nguồn; mặc định dự án hiện tại."
           },
           "name": {
             "type": "string",
-            "description": "Copy display name; default \"[Copy] <source>\"."
+            "description": "Tên hiển thị bản sao; mặc định \"[Copy] <source>\"."
           },
           "activate": {
             "type": "boolean",
-            "description": "Open the copy in the editor (default true)."
+            "description": "Mở bản sao trong editor (mặc định true)."
           },
           "editorBaseUrl": {
             "type": "string"
@@ -4073,7 +4073,7 @@
     },
     {
       "name": "edit_project",
-      "description": "Update project-level settings or speakers. action=update: change name/description via json {\"name\"?, \"description\"?}. action=speaker-update: project-wide rename/merge a speaker — {from:\"A\", to:\"New name\"} relabels every word of that speaker across all transcribed clips in the open project. speaker-create/speaker-delete are unsupported here (no speaker roster — speakers are per-word diarization labels); use speaker-update to relabel, or manage_transcript fix per clip.",
+      "description": "Cập nhật cài đặt cấp dự án hoặc người nói. action=update: đổi name/description qua json {\"name\"?, \"description\"?}. action=speaker-update: đổi tên/gộp người nói trên toàn dự án — {from:\"A\", to:\"Tên mới\"} đổi nhãn mọi từ của người nói đó trên tất cả clip đã chuyển lời trong dự án đang mở. speaker-create/speaker-delete không được hỗ trợ ở đây (không có danh sách speaker — speaker là nhãn diarization theo từng từ); dùng speaker-update để đổi nhãn, hoặc manage_transcript fix theo từng clip.",
       "input_schema": {
         "type": "object",
         "properties": {
@@ -4088,23 +4088,23 @@
           },
           "id": {
             "type": "string",
-            "description": "Speaker ID (for speaker ops) — the existing diarization label to target (alias of from / json.id)."
+            "description": "ID speaker (cho speaker ops) — nhãn diarization hiện có cần tác động (alias của from / json.id)."
           },
           "from": {
             "type": "string",
-            "description": "speaker-update: existing speaker label to rename (e.g. \"A\")."
+            "description": "speaker-update: nhãn speaker hiện có cần đổi tên (ví dụ \"A\")."
           },
           "to": {
             "type": "string",
-            "description": "speaker-update: new speaker name."
+            "description": "speaker-update: tên speaker mới."
           },
           "json": {
             "type": "string",
-            "description": "update: {name?, description?}. speaker-update also accepts {from,to} here."
+            "description": "update: {name?, description?}. speaker-update cũng nhận {from,to} ở đây."
           },
           "projectId": {
             "type": "string",
-            "description": "Defaults to current project (speaker-update needs the open project)."
+            "description": "Mặc định dự án hiện tại (speaker-update cần dự án đang mở)."
           }
         },
         "required": [
@@ -4114,13 +4114,13 @@
     },
     {
       "name": "target_project",
-      "description": "Bind the session to an existing project and open it in the editor (hash navigate). Use after list_projects. Subsequent tools run against the newly opened project after reload.",
+      "description": "Gắn session với một dự án hiện có và mở dự án đó trong editor (điều hướng bằng hash). Dùng sau list_projects. Các tool tiếp theo sẽ chạy trên dự án mới mở sau khi reload.",
       "input_schema": {
         "type": "object",
         "properties": {
           "projectId": {
             "type": "string",
-            "description": "Project id or unique prefix from list_projects."
+            "description": "Id dự án hoặc tiền tố duy nhất từ list_projects."
           },
           "editorBaseUrl": {
             "type": "string"
@@ -4133,7 +4133,7 @@
     },
     {
       "name": "get_editor_url",
-      "description": "Return the editor URL for the targeted or given projectId (origin + #/editor/<id>). Never invent hostnames — uses location.origin or editorBaseUrl.",
+      "description": "Trả về URL editor cho projectId mục tiêu hoặc được truyền (origin + #/editor/<id>). Không bao giờ tự đoán hostname — dùng location.origin hoặc editorBaseUrl.",
       "input_schema": {
         "type": "object",
         "properties": {
@@ -4589,7 +4589,7 @@
     },
     {
       "name": "multicam_sync",
-      "description": "Persistent multicam alignment. Prefers normalized source timecode, then capture clock, and falls back to audio correlation per angle. Creates or updates a durable group with its reference/master, source snapshots, offsets, confidence and sync evidence; all placements and metadata commit as one undoable state change. Every selected angle must use the same playback rate; unify rates before retrying a rejected sync.",
+      "description": "Đồng bộ multicam bền vững. Ưu tiên source timecode đã chuẩn hóa, sau đó capture clock, rồi fallback sang tương quan audio theo từng góc máy. Tạo hoặc cập nhật group bền vững với reference/master, snapshot nguồn, offset, độ tin cậy và bằng chứng đồng bộ; mọi placement và metadata được commit thành một thay đổi trạng thái có thể undo. Mọi góc máy được chọn phải dùng cùng playback rate; hãy thống nhất rate trước khi thử lại sync bị từ chối.",
       "input_schema": {
         "type": "object",
         "properties": {
@@ -4598,19 +4598,19 @@
             "items": {
               "type": "string"
             },
-            "description": "Timeline item ids for all angles (reference + followers). At least 2."
+            "description": "Id item timeline cho mọi góc (reference + follower). Tối thiểu 2."
           },
           "referenceItemId": {
             "type": "string",
-            "description": "Optional reference angle id (must be in itemIds). Defaults to first video clip."
+            "description": "Id góc reference tùy chọn (phải nằm trong itemIds). Mặc định là clip video đầu tiên."
           },
           "groupId": {
             "type": "string",
-            "description": "Existing multicam group id to update. Omit to create or discover one from the selected items."
+            "description": "Id group multicam hiện có cần cập nhật. Bỏ qua để tạo hoặc tìm group từ các item đã chọn."
           },
           "masterItemId": {
             "type": "string",
-            "description": "Optional program/master angle item id. Defaults to referenceItemId."
+            "description": "Id item góc program/master tùy chọn. Mặc định referenceItemId."
           }
         },
         "required": [
@@ -4620,36 +4620,36 @@
     },
     {
       "name": "change_cam",
-      "description": "Persistent multicam range switch. Pass groupId + targetAngleId and [fromSeconds,toSeconds); the editor uses the rippleless split/remove planner, restores source coverage when a prior decision removed that angle, and saves a replaceable right-open angle decision. The complete result commits once; failures commit nothing. Legacy itemIds + targetItemId remain accepted for a group created by multicam_sync.",
+      "description": "Chuyển góc multicam theo khoảng một cách bền vững. Truyền groupId + targetAngleId và [fromSeconds,toSeconds); editor dùng planner split/remove không ripple, khôi phục coverage nguồn khi quyết định trước đó đã loại góc đó, và lưu quyết định góc mở bên phải có thể thay thế. Toàn bộ kết quả commit một lần; lỗi thì không commit gì. Vẫn chấp nhận itemIds + targetItemId cũ cho group được tạo bởi multicam_sync.",
       "input_schema": {
         "type": "object",
         "properties": {
           "groupId": {
             "type": "string",
-            "description": "Persistent multicam group id. Preferred over itemIds."
+            "description": "Id group multicam bền vững. Ưu tiên hơn itemIds."
           },
           "targetAngleId": {
             "type": "string",
-            "description": "Persistent angle id (or its original item id) to show."
+            "description": "Id góc bền vững (hoặc id item gốc) cần hiển thị."
           },
           "itemIds": {
             "type": "array",
             "items": {
               "type": "string"
             },
-            "description": "Legacy group lookup: current/original ids of angles previously passed to multicam_sync."
+            "description": "Tra cứu group cũ: id hiện tại/gốc của các góc đã truyền trước đó vào multicam_sync."
           },
           "targetItemId": {
             "type": "string",
-            "description": "Legacy alias for targetAngleId."
+            "description": "Alias cũ của targetAngleId."
           },
           "fromSeconds": {
             "type": "number",
-            "description": "Switch start, timeline seconds."
+            "description": "Thời điểm bắt đầu chuyển, tính bằng giây trên timeline."
           },
           "toSeconds": {
             "type": "number",
-            "description": "Switch end (exclusive), timeline seconds. Default: end of target source."
+            "description": "Thời điểm kết thúc (không bao gồm), tính bằng giây trên timeline. Mặc định: cuối source đích."
           }
         },
         "required": [
@@ -4659,7 +4659,7 @@
     },
     {
       "name": "manage_link_group",
-      "description": "Create or remove persistent timeline edit relationships as one undoable change. action=link couples A/V move, trim and remove; action=sync_lock preserves group timing through direct moves and ripple edits; action=unlink removes the selected memberships. Pass 2+ itemIds for link/sync_lock.",
+      "description": "Tạo hoặc xóa quan hệ chỉnh sửa timeline bền vững trong một thay đổi có thể undo. action=link ghép thao tác move, trim và remove của A/V; action=sync_lock giữ timing group qua move trực tiếp và chỉnh sửa ripple; action=unlink xóa các membership đã chọn. Truyền từ 2 itemId trở lên cho link/sync_lock.",
       "input_schema": {
         "type": "object",
         "properties": {
@@ -4679,7 +4679,7 @@
           },
           "anchorItemId": {
             "type": "string",
-            "description": "Optional anchor; defaults to the first resolved item."
+            "description": "Anchor tùy chọn; mặc định là item đã phân giải đầu tiên."
           }
         },
         "required": [
