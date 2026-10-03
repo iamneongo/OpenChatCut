@@ -36,16 +36,16 @@ async function resolveExportSrc(args: Args): Promise<ResolvedExport | { error: s
   const direct = typeof args.src === 'string' ? args.src.trim() : '';
   if (direct) return direct.startsWith('/media/uploads/')
     ? { src: direct }
-    : { error: 'src must be a completed export under /media/uploads/' };
+    : { error: 'src phải là bản xuất đã hoàn tất trong /media/uploads/' };
 
   const renderId = typeof args.renderId === 'string' ? args.renderId.trim() : '';
-  if (!renderId) return { error: 'renderId or src is required' };
+  if (!renderId) return { error: 'cần có renderId hoặc src' };
   const job = await fetchRenderJob(renderId);
   if (!('ok' in job)) return job;
   if (job.status !== 'completed') {
-    return { error: `render job ${job.renderId} is ${job.status}; wait for completion before QA` };
+    return { error: `tác vụ render ${job.renderId} đang ở trạng thái ${job.status}; hãy chờ hoàn tất trước khi kiểm tra` };
   }
-  if (!job.downloadUrl) return { error: `render job ${job.renderId} has no output path` };
+  if (!job.downloadUrl) return { error: `tác vụ render ${job.renderId} không có đường dẫn đầu ra` };
   return {
     src: job.downloadUrl,
     expected: {
@@ -83,7 +83,7 @@ async function verifyExport(args: Args, ctx: AgentContext): Promise<unknown> {
     });
     const result = (await response.json().catch(() => null)) as ExportQaResponse | null;
     if (!response.ok || !result?.report) {
-      return { error: result?.error ?? `export QA failed (${response.status})` };
+      return { error: result?.error ?? `kiểm tra bản xuất thất bại (${response.status})` };
     }
 
     const report = mergeExportQaIssues(result.report, captionLayoutQaIssues(state));
@@ -100,11 +100,11 @@ async function verifyExport(args: Args, ctx: AgentContext): Promise<unknown> {
       evidenceSamples: evidence?.samples ?? [],
       ...(evidence?.base64 ? { __images: [{ frame: 0, base64: evidence.base64 }] } : {}),
       note: evidence?.base64
-        ? 'Cut evidence is a two-column sheet: each row shows the frame immediately before and after one edit boundary.'
-        : 'No adjacent edit boundaries were available for visual evidence; stream-level QA still completed.',
+        ? 'Minh chứng tại điểm cắt là bảng hai cột: mỗi hàng hiển thị khung hình ngay trước và sau một ranh giới chỉnh sửa.'
+        : 'Không có ranh giới chỉnh sửa liền kề để tạo minh chứng hình ảnh; kiểm tra ở cấp luồng vẫn đã hoàn tất.',
       next: merged.ok && merged.summary.warnings === 0
-        ? 'Export passed automated QA.'
-        : 'Inspect every issue and evidence row. Fix confirmed problems, export again, and rerun verify_export. Stop after three attempts and report any remaining issue to the user.',
+        ? 'Bản xuất đã vượt qua kiểm tra tự động.'
+        : 'Kiểm tra từng vấn đề và từng hàng minh chứng. Sửa các lỗi đã xác nhận, xuất lại rồi chạy verify_export lần nữa. Dừng sau ba lần thử và báo cáo vấn đề còn lại cho người dùng.',
     };
   } catch (error) {
     return { error: error instanceof Error ? error.message : String(error) };
@@ -112,6 +112,6 @@ async function verifyExport(args: Args, ctx: AgentContext): Promise<unknown> {
 }
 
 export async function execExportQaTool(name: string, args: Args, ctx: AgentContext): Promise<unknown> {
-  if (name !== 'verify_export') return { error: `export QA tool not implemented: ${name}` };
+  if (name !== 'verify_export') return { error: `Công cụ kiểm tra bản xuất chưa được triển khai: ${name}` };
   return await maybeDescribeFramesResult(await verifyExport(args, ctx), 'qa-evidence');
 }

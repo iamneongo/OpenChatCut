@@ -27,32 +27,32 @@ function resolveTargets(state: TimelineState, refs: string[]): { targets: Timeli
     if (hits.length === 1) {
       const item = hits[0]!;
       if (!isAutoGradeTarget(item, state)) {
-        missing.push(`${ref} (not eligible: need unlocked video/image/gif under /media/uploads)`);
+        missing.push(`${ref} (không đủ điều kiện: cần video/image/gif đã mở khóa trong /media/uploads)`);
       } else {
         targets.push(item);
       }
     } else if (hits.length === 0) {
       missing.push(ref);
     } else {
-      missing.push(`${ref} (ambiguous: ${hits.slice(0, 4).map((h) => h.id).join(',')})`);
+      missing.push(`${ref} (không xác định được duy nhất: ${hits.slice(0, 4).map((h) => h.id).join(',')})`);
     }
   }
   return { targets, missing };
 }
 
 export async function execAutoGradeTool(name: string, args: Args, ctx: AgentContext): Promise<unknown> {
-  if (name !== 'auto_grade') return { error: `unknown tool ${name}` };
+  if (name !== 'auto_grade') return { error: `Công cụ không xác định: ${name}` };
   const action = String(args.action ?? '');
   if (action !== 'analyze' && action !== 'apply') {
-    return { error: 'action must be analyze or apply' };
+    return { error: 'action phải là analyze hoặc apply' };
   }
   const state = ctx.getState();
   const { targets, missing } = resolveTargets(state, parseItemRefs(args.itemIds));
   if (!targets.length) {
     return {
       error: missing.length
-        ? `no eligible clips; issues: ${missing.join('; ')}`
-        : 'no eligible clips — need unlocked video/image/gif with /media/uploads src (import media first)',
+        ? `không có clip đủ điều kiện; vấn đề: ${missing.join('; ')}`
+        : 'không có clip đủ điều kiện — cần video/image/gif đã mở khóa với src /media/uploads (hãy nhập media trước)',
       missing,
     };
   }
@@ -99,7 +99,7 @@ export async function execAutoGradeTool(name: string, args: Args, ctx: AgentCont
 
   if (!recommendations.length) {
     return {
-      error: 'auto grade analysis failed for all targets',
+      error: 'Phân tích chỉnh màu tự động thất bại cho mọi mục tiêu',
       failures,
       missing,
     };
@@ -114,7 +114,7 @@ export async function execAutoGradeTool(name: string, args: Args, ctx: AgentCont
       failedCount: failures.length,
       failures: failures.length ? failures : undefined,
       missing: missing.length ? missing : undefined,
-      note: 'Preview only — call auto_grade action=apply to write filters (or edit_item updates with filters).',
+      note: 'Chỉ xem trước — gọi auto_grade action=apply để ghi bộ lọc (hoặc dùng edit_item để cập nhật filters).',
     };
   }
 
@@ -124,7 +124,7 @@ export async function execAutoGradeTool(name: string, args: Args, ctx: AgentCont
       id: row.itemId,
       patch: row.filters,
     })),
-    'Apply automatic color correction',
+    'Áp dụng chỉnh màu tự động',
   );
 
   return {
@@ -141,6 +141,6 @@ export async function execAutoGradeTool(name: string, args: Args, ctx: AgentCont
     failedCount: failures.length,
     failures: failures.length ? failures : undefined,
     missing: missing.length ? missing : undefined,
-    note: 'Filters committed as one undo step. Verify with inspect_color or view_timeline_frames.',
+    note: 'Các bộ lọc đã được ghi thành một bước hoàn tác. Kiểm tra bằng inspect_color hoặc view_timeline_frames.',
   };
 }

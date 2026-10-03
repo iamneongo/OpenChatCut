@@ -111,9 +111,9 @@ export async function browseLocalMediaResult(
   args: Record<string, unknown>,
   api: LocalMediaBrowseApi,
 ): Promise<Record<string, unknown>> {
-  if (name !== 'browse_local_media') return { error: `unknown tool ${name}` };
-  if (!isAgentLocalMediaRequest(args)) return { error: 'invalid local media browse request' };
-  if (!api.browseLocalMedia) return { error: 'browse_local_media is available in the desktop app only' };
+  if (name !== 'browse_local_media') return { error: `Công cụ không xác định: ${name}` };
+  if (!isAgentLocalMediaRequest(args)) return { error: 'Yêu cầu duyệt media cục bộ không hợp lệ' };
+  if (!api.browseLocalMedia) return { error: 'browse_local_media chỉ khả dụng trong ứng dụng desktop' };
   try {
     return { ok: true, ...await api.browseLocalMedia(args) };
   } catch (error) {
@@ -126,15 +126,15 @@ export async function execAgentPathImportTool(
   args: Record<string, unknown>,
   ctx: AgentContext,
 ): Promise<Record<string, unknown>> {
-  if (!AGENT_PATH_IMPORT_TOOL_NAMES.has(name)) return { error: `unknown tool ${name}` };
+  if (!AGENT_PATH_IMPORT_TOOL_NAMES.has(name)) return { error: `Công cụ không xác định: ${name}` };
   if (name === 'browse_local_media') {
     return browseLocalMediaResult(name, args, desktopApi() ?? {});
   }
   const api = desktopApi();
   if (!api?.importAgentPaths) {
     return {
-      error: 'local media imports are available in the desktop app only; '
-        + 'use the media pool upload UI or watched folders in the browser',
+      error: 'Nhập media cục bộ chỉ khả dụng trong ứng dụng desktop; '
+        + 'hãy dùng giao diện tải lên của kho tư liệu hoặc thư mục theo dõi trong trình duyệt',
     };
   }
   return importLocalPaths(name, args, ctx, api);
@@ -152,12 +152,12 @@ export async function importLocalPaths(
   ctx: AgentContext,
   api: PathImportApi,
 ): Promise<Record<string, unknown>> {
-  if (!AGENT_PATH_IMPORT_TOOL_NAMES.has(name)) return { error: `unknown tool ${name}` };
+  if (!AGENT_PATH_IMPORT_TOOL_NAMES.has(name)) return { error: `Công cụ không xác định: ${name}` };
   const rawPath = typeof args.path === 'string' ? args.path.trim() : '';
   const paths = name === 'import_assets' ? args.paths : [rawPath];
   if (!Array.isArray(paths) || paths.length === 0 || paths.length > 100
     || !paths.every((path): path is string => typeof path === 'string' && path.trim().length > 0)) {
-    return { error: 'path is required; provide one non-empty path or 1-100 paths for import_assets' };
+    return { error: 'Cần có path; hãy cung cấp một đường dẫn không rỗng hoặc 1–100 đường dẫn cho import_assets' };
   }
   return importPathsIntoProject(paths, api, ctx);
 }
@@ -168,7 +168,7 @@ async function importPathsIntoProject(
   ctx: AgentContext,
 ): Promise<Record<string, unknown>> {
   const projectId = ctx.getProjectId?.();
-  if (!projectId) return { error: 'no open project; open a project before importing local paths' };
+  if (!projectId) return { error: 'Chưa mở dự án; hãy mở dự án trước khi nhập đường dẫn cục bộ' };
   const state = ctx.getState();
   const knownHashes = ctx.getDoc().assets
     .map((asset) => asset.sourceContentHash)
@@ -192,7 +192,7 @@ async function importPathsIntoProject(
     state.fps,
   )));
   if (ctx.getProjectId?.() !== projectId) {
-    return { error: 'active project changed during local import; retry in the intended project' };
+    return { error: 'Dự án đang hoạt động đã thay đổi trong lúc nhập; hãy thử lại trong đúng dự án' };
   }
   for (const asset of assets) ctx.commands.addAsset(asset);
   return {
