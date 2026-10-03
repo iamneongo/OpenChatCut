@@ -61,7 +61,7 @@ function readBody(req: IncomingMessage, limit: number): Promise<Buffer> {
   const declared = Number(req.headers['content-length']);
   if (Number.isFinite(declared) && declared > limit) {
     req.resume();
-    reject(new HttpError(413, 'request body too large'));
+    reject(new HttpError(413, 'body yêu cầu quá lớn'));
     return promise;
   }
   const chunks: Buffer[] = [];
@@ -77,7 +77,7 @@ function readBody(req: IncomingMessage, limit: number): Promise<Buffer> {
     const buffer = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk);
     size += buffer.length;
     if (size > limit) {
-      fail(new HttpError(413, 'request body too large'));
+      fail(new HttpError(413, 'body yêu cầu quá lớn'));
       return;
     }
     chunks.push(buffer);

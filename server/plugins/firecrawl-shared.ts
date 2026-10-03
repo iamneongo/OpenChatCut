@@ -46,7 +46,7 @@ export function readJsonBody(req: IncomingMessage): Promise<unknown> {
     req.on('data', (c: Buffer) => {
       size += c.length;
       if (size > MAX_BODY) {
-        reject(new Error('request body too large'));
+        reject(new Error('body yêu cầu quá lớn'));
         req.destroy();
         return;
       }

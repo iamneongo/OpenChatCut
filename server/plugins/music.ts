@@ -29,7 +29,7 @@ async function readJson(req: IncomingMessage): Promise<MusicRequest> {
   for await (const chunk of req) {
     const bytes = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk);
     total += bytes.length;
-    if (total > 1_000_000) throw new Error('request body too large');
+    if (total > 1_000_000) throw new Error('body yêu cầu quá lớn');
     chunks.push(bytes);
   }
   return JSON.parse(Buffer.concat(chunks).toString('utf8')) as MusicRequest;

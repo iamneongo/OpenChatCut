@@ -45,7 +45,7 @@ export async function minimaxMusicUrl(options: MusicOptions, input: ValidMusicRe
   if (!response.ok) throw new Error(await musicProviderError(response));
   const result = await response.json() as MinimaxMusicResponse;
   if (result.base_resp && result.base_resp.status_code !== 0) {
-    throw new Error(result.base_resp.status_msg || `MiniMax music failed (${result.base_resp.status_code})`);
+    throw new Error(result.base_resp.status_msg || `tạo nhạc MiniMax thất bại (${result.base_resp.status_code})`);
   }
   if (!result.data?.audio) throw new Error('MiniMax returned no audio');
   return result.data.audio;

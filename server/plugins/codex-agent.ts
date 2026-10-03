@@ -62,7 +62,7 @@ function readBody(req: IncomingMessage, limit: number): Promise<Buffer> {
   const declared = Number(req.headers['content-length']);
   if (Number.isFinite(declared) && declared > limit) {
     req.resume();
-    reject(new HttpError(413, 'request body too large'));
+    reject(new HttpError(413, 'body yêu cầu quá lớn'));
     return promise;
   }
   const chunks: Buffer[] = [];
@@ -78,7 +78,7 @@ function readBody(req: IncomingMessage, limit: number): Promise<Buffer> {
     const buffer = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk);
     size += buffer.length;
     if (size > limit) {
-      fail(new HttpError(413, 'request body too large'));
+      fail(new HttpError(413, 'body yêu cầu quá lớn'));
       return;
     }
     chunks.push(buffer);
@@ -113,7 +113,7 @@ function unsupportedMessage(): string {
 function unavailableMessage(installation: CodexInstallation): string {
   if (!installation.installed) return 'OpenAI Codex CLI is not installed.';
   if (!installation.supported) return unsupportedMessage();
-  return 'Codex app-server is unavailable.';
+  return 'Codex app-server không khả dụng.';
 }
 
 async function requireClient(): Promise<{ installation: CodexInstallation; client: CodexAppServerClient }> {
@@ -177,7 +177,7 @@ async function codexStatus(): Promise<CodexAgentStatus> {
       version: installation.version,
       account: null,
       loginPending: activeClient?.loginPending ?? false,
-      error: 'Codex app-server is unavailable. Restart OpenChatCut and try again.',
+      error: 'Codex app-server không khả dụng. Hãy khởi động lại OpenChatCut và thử lại.',
     };
   }
 }
@@ -438,7 +438,7 @@ function handleFailure(res: ServerResponse, error: unknown): void {
   }
   if (error instanceof HttpError) sendJson(res, error.status, { error: error.message });
   else if (error instanceof CodexProcessError || error instanceof CodexRpcError || error instanceof CodexTimeoutError) {
-    sendJson(res, 503, { error: 'Codex app-server is unavailable. Try again.' });
+    sendJson(res, 503, { error: 'Codex app-server không khả dụng. Hãy thử lại.' });
   } else sendJson(res, 500, { error: 'request Codex thất bại.' });
 }
 

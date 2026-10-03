@@ -100,7 +100,7 @@ export class CodexTimeoutError extends Error {
 }
 
 export class CodexProcessError extends Error {
-  constructor(message = 'Codex app-server is unavailable.') {
+  constructor(message = 'Codex app-server không khả dụng.') {
     super(message);
     this.name = 'CodexProcessError';
   }

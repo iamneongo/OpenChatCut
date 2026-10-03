@@ -40,7 +40,7 @@ async function awaitChoices(baseUrl: string, apiKey: string, initial: MurekaTask
       if (!task.choices?.length) throw new Error('Mureka thành công nhưng không có lựa chọn audio');
       return task;
     }
-    if (task.status && TERMINAL_FAILURES.has(task.status)) throw new Error(task.failed_reason || `Mureka generation ${task.status}`);
+    if (task.status && TERMINAL_FAILURES.has(task.status)) throw new Error(task.failed_reason || `tạo nội dung Mureka ${task.status}`);
     await wait(2_000);
     task = await fetchTask(`${baseUrl}/v1/${queryKind}/query/${encodeURIComponent(initial.id)}`, apiKey);
   }

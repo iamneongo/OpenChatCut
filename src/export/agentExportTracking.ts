@@ -138,7 +138,7 @@ async function promoteCompletedExport(
   const promoted = (await response.json().catch(() => null)) as PromotedResult | { error?: string } | null;
   if (!response.ok || !promoted || !('path' in promoted) || !('assetId' in promoted)) {
     const message = promoted && 'error' in promoted ? promoted.error : undefined;
-    throw new Error(message ?? `export media promotion failed (${response.status})`);
+    throw new Error(message ?? `đưa media export lên kho thất bại (${response.status})`);
   }
   promotedResults.set(submission.renderId, promoted);
   return promoted;
@@ -191,7 +191,7 @@ async function monitorAgentExport(
     const completed = await pollExport({ setProgress: setters.setProgress, t }, submission.renderId, signal);
     if (submission.saveToMediaPool) {
       try {
-        if (!target) throw new Error('media pool target unavailable');
+        if (!target) throw new Error('đích media pool không khả dụng');
         const promoted = await promoteCompletedExport(submission);
         while (
           readStoredServerRun(submission.projectId)

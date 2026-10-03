@@ -223,11 +223,11 @@ export async function downloadModelFile(
         // through to the next source instead of failing the whole download.
         const size = (await stat(tmpPath)).size;
         if (expectedBytes !== undefined ? size !== expectedBytes : size <= 0 || size > MAX_CACHE_FILE_BYTES) {
-          throw new Error(`model download produced an invalid file (${size} bytes)`);
+          throw new Error(`tải model tạo ra tệp không hợp lệ (${size} byte)`);
         }
         if (expectedSha256 && expectedBytes
           && !await fileMatchesIntegrity(tmpPath, { sizeBytes: expectedBytes, sha256: expectedSha256 })) {
-          throw new Error('model download failed integrity verification');
+          throw new Error('tải model không vượt qua kiểm tra toàn vẹn');
         }
         lastError = undefined;
         break;
@@ -318,7 +318,7 @@ export async function handleHfProxyRequest(
   }
   const target = parseTarget(req.url ?? '');
   if (!target) {
-    sendJson(res, 400, { error: 'invalid or unavailable catalog model path' });
+    sendJson(res, 400, { error: 'đường dẫn model trong catalog không hợp lệ hoặc không khả dụng' });
     return;
   }
   const file = await resolveInstalled(target);

@@ -36,11 +36,11 @@ export type ProbeSource =
 /** Map the tool's `source` onto something ffprobe may open; an error when it is not ours to read. */
 export function resolveProbeSource(source: string): ProbeSource {
   const trimmed = source.trim();
-  if (!trimmed) return { error: 'source is required' };
+  if (!trimmed) return { error: 'bắt buộc phải có source' };
   if (/^https?:\/\//i.test(trimmed)) return { kind: 'remote', url: trimmed };
   if (trimmed.startsWith(UPLOAD_PREFIX)) {
     const name = trimmed.slice(UPLOAD_PREFIX.length);
-    if (!isSafeUploadName(name)) return { error: `illegal local path ${trimmed}` };
+    if (!isSafeUploadName(name)) return { error: `đường dẫn cục bộ không hợp lệ ${trimmed}` };
     const path = resolveUploadFile(name);
     return path ? { kind: 'local', path } : { error: `không tìm thấy media cục bộ: ${name}` };
   }
@@ -48,7 +48,7 @@ export function resolveProbeSource(source: string): ProbeSource {
     const path = resolveProductAsset(trimmed);
     return path ? { kind: 'local', path } : { error: `không tìm thấy đường dẫn cục bộ: ${trimmed}` };
   }
-  return { error: `unsupported source ${trimmed}: expected a /media/… path or a public http(s) URL` };
+  return { error: `source không được hỗ trợ ${trimmed}: cần đường dẫn /media/… hoặc URL http(s) công khai` };
 }
 
 function runFfprobe(path: string): Promise<string> {
@@ -90,7 +90,7 @@ export async function probeMediaFile(path: string): Promise<Record<string, unkno
 async function downloadBounded(url: string, path: string): Promise<void> {
   const signal = AbortSignal.timeout(REMOTE_TIMEOUT_MS);
   const response = await safePublicFetch(url, { signal });
-  if (!response.ok) throw new Error(`fetch ${url} failed (${response.status})`);
+  if (!response.ok) throw new Error(`fetch ${url} thất bại (${response.status})`);
   if (!response.body) throw new Error(`fetch ${url} returned no body`);
   let total = 0;
   const cap = new Transform({

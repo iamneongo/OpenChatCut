@@ -99,7 +99,7 @@ function stageNameFromPath(req: IncomingMessage): string | null {
 async function handleStage(req: IncomingMessage, res: ServerResponse): Promise<void> {
   if (req.method === 'POST') {
     const extension = stageExtension(req);
-    if (!extension) { sendJson(res, 400, { error: 'name must end in .mp4 or .webm' }); return; }
+    if (!extension) { sendJson(res, 400, { error: 'name phải kết thúc bằng .mp4 hoặc .webm' }); return; }
     const length = Number(req.headers['content-length']);
     if (Number.isFinite(length) && length > MAX_STAGE_BYTES) {
       sendJson(res, 413, { error: 'staged export exceeds 64 GiB limit' }); return;

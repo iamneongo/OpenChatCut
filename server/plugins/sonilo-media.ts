@@ -147,7 +147,7 @@ export async function submitSoniloVideoTask(
   prompt?: string,
 ): Promise<string> {
   const { file, name } = localVideoUpload(uploadPath);
-  if (!(await stat(file)).size) throw new Error('Sonilo source video is empty');
+  if (!(await stat(file)).size) throw new Error('video nguồn Sonilo rỗng');
   const form = new FormData();
   form.append('file', await openAsBlob(file, { type: mimeFor(file) }), name);
   form.append('mode', 'async');
@@ -217,7 +217,7 @@ export async function saveSoniloAudioResponse(
   sourceUrl: string,
 ): Promise<{ path: string; durationSeconds: number }> {
   if (!response.ok) throw new Error(await soniloProviderError(response));
-  if (!response.body) throw new Error('Sonilo returned empty audio');
+  if (!response.body) throw new Error('Sonilo trả về audio rỗng');
   const ext = audioExtFor(sourceUrl, response.headers.get('content-type'));
   const dir = uploadDir();
   await mkdir(dir, { recursive: true });
@@ -229,7 +229,7 @@ export async function saveSoniloAudioResponse(
       Readable.fromWeb(response.body as WebReadableStream),
       createWriteStream(partial, { flags: 'wx' }),
     );
-    if (!(await stat(partial)).size) throw new Error('Sonilo returned empty audio');
+    if (!(await stat(partial)).size) throw new Error('Sonilo trả về audio rỗng');
     const durationSeconds = await probeMediaDurationSeconds(partial);
     await rename(partial, file);
     return { path: `/media/uploads/${filename}`, durationSeconds };

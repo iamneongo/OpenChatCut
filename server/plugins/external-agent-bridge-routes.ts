@@ -156,7 +156,7 @@ async function registerBridgeEditor(
     return;
   }
   if (claimed.status !== 'claimed') {
-    sendBridgeJson(res, 409, { error: 'project is already owned or its ownership record is invalid' });
+    sendBridgeJson(res, 409, { error: 'project đã được sở hữu hoặc bản ghi sở hữu không hợp lệ' });
     return;
   }
   const issuedCapability = operations.registerEditor(
@@ -288,7 +288,7 @@ async function settleBridgeCall(
   }
   sendBridgeJson(res, settled ? 200 : 404, settled
     ? { ok: true }
-    : { error: 'editor call is unavailable' });
+    : { error: 'lời gọi editor không khả dụng' });
 }
 
 async function handleBridgeReceipt(req: IncomingMessage, res: ServerResponse): Promise<void> {
@@ -314,14 +314,14 @@ async function handleBridgeReceipt(req: IncomingMessage, res: ServerResponse): P
     const committed = commitUploadReceipt(body.receipt, body.projectId, body.claimId);
     sendBridgeJson(res, committed ? 200 : 409, committed
       ? { ok: true, state: 'committed' }
-      : { error: 'upload receipt claim is invalid, expired, or no longer current' });
+      : { error: 'claim receipt upload không hợp lệ, đã hết hạn hoặc không còn hiện hành' });
     return;
   }
   if (body.action === 'abort') {
     const aborted = abortUploadReceipt(body.receipt, body.projectId, body.claimId);
     sendBridgeJson(res, aborted ? 200 : 409, aborted
       ? { ok: true, state: 'available' }
-      : { error: 'upload receipt claim is invalid, expired, or no longer current' });
+      : { error: 'claim receipt upload không hợp lệ, đã hết hạn hoặc không còn hiện hành' });
     return;
   }
   sendBridgeJson(res, 400, { error: 'action receipt upload phải là claim, commit hoặc abort' });

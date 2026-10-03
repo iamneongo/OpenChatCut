@@ -33,11 +33,11 @@ function run(command: string, args: string[]): Promise<void> {
 }
 
 // ── source resolution: only our own files and public URLs ──
-assert.deepEqual(resolveProbeSource(''), { error: 'source is required' });
+assert.deepEqual(resolveProbeSource(''), { error: 'bắt buộc phải có source' });
 assert.deepEqual(resolveProbeSource('  https://example.com/a.mp4 '), { kind: 'remote', url: 'https://example.com/a.mp4' });
-assert.match((resolveProbeSource('/media/uploads/../../etc/passwd') as { error: string }).error, /illegal local path/);
+assert.match((resolveProbeSource('/media/uploads/../../etc/passwd') as { error: string }).error, /đường dẫn cục bộ không hợp lệ/);
 assert.match((resolveProbeSource('/media/uploads/missing.mp4') as { error: string }).error, /không tìm thấy/);
-assert.match((resolveProbeSource('file:///etc/passwd') as { error: string }).error, /unsupported source/);
+assert.match((resolveProbeSource('file:///etc/passwd') as { error: string }).error, /source không được hỗ trợ/);
 assert.match((resolveProbeSource('/etc/passwd') as { error: string }).error, /không tìm thấy/, 'absolute paths only resolve inside the product assets dir');
 
 // ── fixtures: an audio-only file, a silent clip, and a file that is not media ──
@@ -111,7 +111,7 @@ try {
 
     const traversal = await post({ source: '/media/uploads/../../etc/passwd' });
     assert.equal(traversal.status, 400);
-    assert.match(String(traversal.json.error), /illegal local path/);
+    assert.match(String(traversal.json.error), /đường dẫn cục bộ không hợp lệ/);
 
     const unreadable = await post({ source: '/media/uploads/garbage.bin' });
     assert.equal(unreadable.status, 400);
@@ -123,7 +123,7 @@ try {
 
     const empty = await post({});
     assert.equal(empty.status, 400);
-    assert.match(String(empty.json.error), /source is required/);
+    assert.match(String(empty.json.error), /bắt buộc phải có source/);
 
     const get = await fetch(endpoint);
     assert.equal(get.status, 405);

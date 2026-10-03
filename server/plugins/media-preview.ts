@@ -25,7 +25,7 @@ function sendJson(res: ServerResponse, status: number, body: unknown): void {
 function requireEditorRead(req: IncomingMessage, res: ServerResponse): boolean {
   if (editorCredentialAuthorized(req, false)) return true;
   req.resume();
-  sendJson(res, 403, { error: 'local editor request required' });
+  sendJson(res, 403, { error: 'bắt buộc phải có yêu cầu từ editor cục bộ' });
   return false;
 }
 function uploadNameFromSrc(src: string): string | null {

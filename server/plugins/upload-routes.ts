@@ -232,7 +232,7 @@ function requireEditorMutation(req: IncomingMessage, res: ServerResponse): boole
 function requireEditorRead(req: IncomingMessage, res: ServerResponse): boolean {
   if (editorCredentialAuthorized(req, false)) return true;
   req.resume();
-  sendError(res, 403, 'local editor request required');
+  sendError(res, 403, 'bắt buộc phải có yêu cầu từ editor cục bộ');
   return false;
 }
 

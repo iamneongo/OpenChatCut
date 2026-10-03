@@ -45,7 +45,7 @@ export interface StartSceneDetectionOptions {
 
 async function readJobResponse(response: Response): Promise<SceneDetectionJobSnapshot> {
   const body = (await response.json().catch(() => ({}))) as SceneDetectionJobSnapshot & { error?: string };
-  if (!response.ok) throw new Error(body.error ?? `scene detection request failed (${response.status})`);
+  if (!response.ok) throw new Error(body.error ?? `yêu cầu nhận diện cảnh thất bại (${response.status})`);
   return body;
 }
 

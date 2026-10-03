@@ -26,9 +26,9 @@ export async function mediaDataUrl(path: string): Promise<string> {
 
 function localMedia(path: string): { file: string; name: string } {
   const clean = path.split(/[?#]/, 1)[0];
-  if (!clean.startsWith('/media/uploads/')) throw new Error(`provider reference must be a project upload: ${path}`);
+  if (!clean.startsWith('/media/uploads/')) throw new Error(`tham chiếu provider phải là media đã tải lên dự án: ${path}`);
   const name = clean.slice('/media/uploads/'.length);
-  if (!isSafeUploadName(name)) throw new Error('invalid project media path');
+  if (!isSafeUploadName(name)) throw new Error('đường dẫn media dự án không hợp lệ');
   const file = resolveUploadFile(name);
   if (!file) throw new Error(`không tìm thấy media project: ${name}`);
   return { file, name };
