@@ -38,7 +38,9 @@ export function IsolateVoiceControl({
         else showAppToast(t('人声隔离已应用'));
       })
       .catch((e: unknown) => {
-        const msg = e instanceof Error ? e.message : String(e);
+        const msg = t('失败:{error}', {
+          error: e instanceof Error ? e.message : String(e),
+        });
         setErr(msg);
         showAppToast(msg, { error: true });
       })

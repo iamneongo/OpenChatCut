@@ -75,7 +75,9 @@ export function CaptionStyleMenu({ state, commands, trackId, pos, error, onError
       onError(null);
       setNameDraft(null);
     } catch (e) {
-      onError(e instanceof Error ? e.message : t('保存样式失败'));
+      onError(t('失败:{error}', {
+        error: e instanceof Error ? e.message : t('保存样式失败'),
+      }));
     }
   };
   const removePreset = async (id: string) => {
@@ -83,7 +85,9 @@ export function CaptionStyleMenu({ state, commands, trackId, pos, error, onError
       await deleteCaptionPreset(id);
       setPresets(await listCaptionPresets());
     } catch (e) {
-      onError(e instanceof Error ? e.message : t('删除样式失败'));
+      onError(t('失败:{error}', {
+        error: e instanceof Error ? e.message : t('删除样式失败'),
+      }));
     }
   };
   const applyPreset = (preset: CaptionPreset) => {
@@ -114,7 +118,9 @@ export function CaptionStyleMenu({ state, commands, trackId, pos, error, onError
       else commands.setCaptions({ ...captions, ...patch }, trackId);
       onClose();
     } catch (err) {
-      onError(err instanceof Error ? err.message : t('字幕翻译失败'));
+      onError(t('失败:{error}', {
+        error: err instanceof Error ? err.message : t('字幕翻译失败'),
+      }));
     } finally { setBusy(false); }
   };
 

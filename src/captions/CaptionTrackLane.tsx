@@ -270,7 +270,9 @@ export function CaptionTrackLane({
       closeMenu();
     } catch (cause) {
       setMenuBusy(false);
-      setMenuError(cause instanceof Error ? cause.message : t('字幕翻译失败'));
+      setMenuError(t('失败:{error}', {
+        error: cause instanceof Error ? cause.message : t('字幕翻译失败'),
+      }));
     }
   };
   return (

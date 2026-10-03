@@ -85,7 +85,9 @@ export function applyLibraryToClip({ state, commands, notice, getState, getAsset
         showAppToast(t('人声隔离已应用'));
       })
       .catch((err: unknown) => {
-        const msg = err instanceof Error ? err.message : t('人声隔离失败');
+        const msg = t('失败:{error}', {
+          error: err instanceof Error ? err.message : t('人声隔离失败'),
+        });
         showAppToast(msg, { error: true });
         notice(msg);
       });
