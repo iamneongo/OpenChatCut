@@ -11,11 +11,11 @@ export interface MintedUploadHandoff {
 
 function trustedEditorOrigin(): string {
   const origin = globalThis.location?.origin;
-  if (typeof origin !== 'string') throw new Error('editor origin is unavailable');
+  if (typeof origin !== 'string') throw new Error('không có origin của editor');
   const parsed = new URL(origin);
   if ((parsed.protocol !== 'http:' && parsed.protocol !== 'https:')
     || parsed.origin !== origin || parsed.username || parsed.password) {
-    throw new Error('editor origin is invalid');
+    throw new Error('origin của editor không hợp lệ');
   }
   return origin;
 }
@@ -31,14 +31,14 @@ function parseMintResponse(
   },
 ): MintedUploadHandoff {
   if (!value || typeof value !== 'object' || Array.isArray(value)) {
-    throw new Error('upload handoff mint returned an invalid response');
+    throw new Error('tạo bàn giao upload trả về phản hồi không hợp lệ');
   }
   const candidate = value as Partial<MintedUploadHandoff>;
   if (typeof candidate.uploadUrl !== 'string' || !Number.isSafeInteger(candidate.expiresAt)
     || candidate.expiresAt! <= Date.now() || !Number.isSafeInteger(candidate.expiresInSeconds)
     || candidate.expiresInSeconds! <= 0 || !Array.isArray(candidate.allowedMethods)
     || candidate.allowedMethods.length !== 1 || candidate.allowedMethods[0] !== METHOD) {
-    throw new Error('upload handoff mint returned an invalid response');
+    throw new Error('tạo bàn giao upload trả về phản hồi không hợp lệ');
   }
   const url = new URL(candidate.uploadUrl, 'http://localhost');
   if (!candidate.uploadUrl.startsWith('/upload?') || url.pathname !== '/upload'
@@ -71,7 +71,7 @@ export async function mintUploadHandoff(
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body),
   });
-  if (!response.ok) throw new Error(`upload handoff mint failed: HTTP ${response.status}`);
+  if (!response.ok) throw new Error(`tạo bàn giao upload thất bại: HTTP ${response.status}`);
   return parseMintResponse(
     await response.json(),
     { sessionId, assetId, assetType, filename, projectId },

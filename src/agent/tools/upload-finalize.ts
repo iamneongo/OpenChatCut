@@ -182,7 +182,7 @@ async function normalizeVideoSrc(src: string): Promise<{
       normalized?: boolean; durationSeconds?: number; error?: string;
     };
     if (!response.ok) throw new Error(data.error || `HTTP ${response.status}`);
-    if (!data.path?.startsWith('/media/uploads/')) throw new Error('server returned no media path');
+    if (!data.path?.startsWith('/media/uploads/')) throw new Error('server không trả về path media');
     return {
       src: data.path,
       width: typeof data.width === 'number' ? data.width : undefined,
@@ -317,17 +317,17 @@ async function prepareClaimedFinalize(
   if (!kind) throw new Error(`unsupported type ${input.type}`);
   const fps = ctx.getState().fps || 30;
   const durationInFrames = durationForFinalize(args, kind, input.type, fps);
-  if (durationInFrames === null) throw new Error('durationInSeconds is required for audio/video/gif');
+  if (durationInFrames === null) throw new Error('durationInSeconds là bắt buộc cho audio/video/gif');
   const source = await finalizedSource(input, args, kind, fps, durationInFrames);
   const expectedRevision = createMediaSourceRevision({
     src: input.readUrl, sourceContentHash: input.sourceContentHash,
   });
   if (source.sourceRevision !== expectedRevision) {
-    throw new Error('content-derived source revision changed during finalize');
+    throw new Error('revision source theo nội dung đã thay đổi trong lúc finalize');
   }
   const claimExpiresAt = await renewFinalizeClaim(input);
   if (claimExpiresAt === null) {
-    throw new Error('upload receipt claim expired or was superseded before asset commit');
+  throw new Error('claim receipt upload đã hết hạn hoặc bị thay thế trước khi commit asset');
   }
   const renewedInput = { ...input, claimExpiresAt };
   const offersTranscription = kind === 'audio'

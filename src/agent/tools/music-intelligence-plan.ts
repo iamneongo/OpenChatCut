@@ -431,7 +431,7 @@ function imageTrack(state: TimelineState, requested?: string): string {
     return track;
   }
   const track = resolveTrackId(state, 'V1', 'video') ?? defaultTrackId(state, 'video');
-  if (!track) throw new Error('no video track for photo placement — create one with edit_track first');
+  if (!track) throw new Error('không có track video để đặt ảnh — hãy tạo một track bằng edit_track trước');
   return track;
 }
 
@@ -445,7 +445,7 @@ export function buildMusicImagePlacementPlan(
 ): BuiltImagePlan {
   const range = planRange(musicItem, options);
   const images = selectedImageAssets(assets, options);
-  if (!images.length) throw new Error('no image assets available for photo placement');
+  if (!images.length) throw new Error('không có asset image để đặt ảnh');
   const timing = chooseTiming(analysis, musicItem, state, options, range);
   const mapped = mapSourcePoints(timingPoints(analysis, timing), musicItem, state.fps)
     .filter((frame) => frame > range.fromFrame && frame < range.toFrame);
