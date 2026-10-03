@@ -81,7 +81,7 @@ function parseJsonArray(text: string): unknown {
   const cleaned = text.replace(/^\s*```[a-zA-Z]*\s*\n?/, '').replace(/\n?```\s*$/, '').trim();
   const start = cleaned.indexOf('[');
   const end = cleaned.lastIndexOf(']');
-  if (start < 0 || end <= start) throw new Error('Output của model không chứa mảng JSON');
+  if (start < 0 || end <= start) throw new Error('Kết quả của mô hình không chứa mảng JSON');
   return JSON.parse(cleaned.slice(start, end + 1));
 }
 

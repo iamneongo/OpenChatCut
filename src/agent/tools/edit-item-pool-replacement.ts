@@ -89,7 +89,7 @@ export function validatePoolAssetReplacement(
   }
   if (asset.kind === 'audio' && hasOperationalTranscript(asset)
     && (sourceStart !== undefined || startAlias !== undefined || sourceDuration !== undefined)) {
-    return { error: 'không hỗ trợ cửa sổ frame nguồn thô cho asset audio có transcript hoạt động' };
+    return { error: 'không hỗ trợ cửa sổ khung nguồn thô cho tư liệu âm thanh có bản chép lời đang hoạt động' };
   }
   const srcInFrame = asset.kind === 'video' || asset.kind === 'audio'
     ? sourceStart ?? startAlias ?? 0

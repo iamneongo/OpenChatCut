@@ -72,10 +72,10 @@ async function requestUploadSlot(
   if (!projectId) return { error: 'cần project đã lưu để chuyển giao upload bên ngoài' };
   const requestedAssetId = typeof args.assetId === 'string' ? args.assetId.trim() : '';
   const existing = requestedAssetId ? findUploadAsset(ctx, requestedAssetId) : null;
-  if (requestedAssetId && !existing) return { error: `không tìm thấy asset: ${requestedAssetId}` };
+  if (requestedAssetId && !existing) return { error: `không tìm thấy tư liệu: ${requestedAssetId}` };
   const kind = mapUploadKind(args.assetType);
   if (existing && kind !== existing.kind) {
-    return { error: `asset ${existing.id} là ${existing.kind}, không phải ${kind}` };
+    return { error: `tư liệu ${existing.id} là ${existing.kind}, không phải ${kind}` };
   }
   const assetId = existing?.id ?? newId();
   const uploadName = `${assetId}.${sessionId}${mediaType.extension}`;

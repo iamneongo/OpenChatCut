@@ -25,16 +25,16 @@ export async function execUploadTool(name: string, args: Args, ctx: AgentContext
 
 function execRequestDownload(args: Args, ctx: AgentContext): unknown {
   const q = String(args.assetId ?? '').trim();
-  if (!q) return { error: 'bắt buộc phải có assetId' };
+  if (!q) return { error: 'bắt buộc phải có mã tư liệu (assetId)' };
   if (args.variant != null && args.variant !== 'source') {
-    return { error: 'only variant "source" is supported' };
+    return { error: 'chỉ hỗ trợ biến thể "source"' };
   }
   const asset = findAsset(ctx, q);
-  if (!asset) return { error: `không tìm thấy asset: ${q}` };
+  if (!asset) return { error: `không tìm thấy tư liệu: ${q}` };
   if (!asset.src) {
     return {
-      error: 'asset has no source media file (e.g. motion-graphic without baked video)',
-      hint: 'Export MG via export_motion_graphic_prores or convert_motion_graphic_to_video first.',
+      error: 'tư liệu không có tệp media nguồn (ví dụ motion graphic chưa có video kết xuất)',
+      hint: 'Trước hết hãy xuất MG bằng export_motion_graphic_prores hoặc chuyển motion graphic thành video bằng convert_motion_graphic_to_video.',
     };
   }
 
