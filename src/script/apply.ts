@@ -206,10 +206,10 @@ export function applyScript(getState: () => TimelineState, commands: Cmds, md: s
       const plan = planSegRows(items.get(itemId)!, canonRows, parsedSegByItem.get(itemId) ?? []);
       if (plan.removeWhole) {
         removeIds.push(itemId);
-        removed.push(`${plan.item.name}（整段口播）`);
+        removed.push(`${plan.item.name} (toàn bộ lời nói)`);
       } else {
-        if (plan.toDelete.length) changes.push(`${plan.item.name}: 删 ${plan.toDelete.length} 词`);
-        if (plan.toRestore.length) changes.push(`${plan.item.name}: 恢复 ${plan.toRestore.length} 词`);
+        if (plan.toDelete.length) changes.push(`${plan.item.name}: xóa ${plan.toDelete.length} từ`);
+        if (plan.toRestore.length) changes.push(`${plan.item.name}: khôi phục ${plan.toRestore.length} từ`);
         wordPlans.push(plan);
       }
     }
@@ -251,7 +251,7 @@ export function applyScript(getState: () => TimelineState, commands: Cmds, md: s
       orderedIds.push(tok.id);
       if (live.startFrame !== cursor) {
         starts[tok.id] = cursor;
-        changes.push(`${live.name}: 移到 ${cursor}f`);
+        changes.push(`${live.name}: chuyển đến ${cursor}f`);
       }
       cursor += live.durationInFrames;
     }
