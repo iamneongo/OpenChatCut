@@ -2638,7 +2638,7 @@ export const VI: Record<string, string> = {
   '很短的滚鼓提示，适合答案揭晓、排名公布、转折前的小悬念，也适合转场或者有重点要强调、信息要弹出。': 'Tín hiệu trống dồn rất ngắn, phù hợp tạo hồi hộp trước khi công bố đáp án/xếp hạng/cú chuyển, hoặc nhấn chuyển cảnh và thông tin bật lên.',
   '经典低频 boom 冲击声，适合震惊、反转、夸张表情、重点字幕或画面突然停顿。': 'Âm va đập trầm kinh điển, phù hợp khoảnh khắc sốc, đảo chiều, biểu cảm cường điệu, phụ đề nhấn mạnh hoặc hình ảnh dừng đột ngột.',
   '用于情绪烘托的雷声，不作为环境氛围长音使用。适合震惊反应、坏消息或悬念段落。': 'Tiếng sấm dùng để nâng cảm xúc, không dùng làm âm nền môi trường kéo dài. Phù hợp phản ứng sốc, tin xấu hoặc đoạn hồi hộp.',
-  '偏动漫/综艺的正向 wow 反应声，适合物品展示、人物亮相、隆重登场、揭幕或发现亮点的惊喜时刻。': 'Âm phản ứng ngạc nhiên tích cực phong cách anime/chương trình, phù hợp khoảnh khắc bất ngờ khi giới thiệu vật phẩm/nhân vật, ra mắt, mở màn hoặc phát hiện điểm nổi bật.',
+  '偏动漫/综艺的正向 wow 反应声，适合物品展示、人物亮相、隆重登场、揭幕或发现亮点的惊喜时刻。': 'Âm phản ứng ngạc nhiên tích cực phong cách hoạt hình Nhật Bản/chương trình, phù hợp khoảnh khắc bất ngờ khi giới thiệu vật phẩm/nhân vật, ra mắt, mở màn hoặc phát hiện điểm nổi bật.',
   '乌鸦飞过式冷场音效，适合尴尬沉默、笑话失败、没人回应的综艺反应。': 'Âm thanh khoảng lặng kiểu quạ bay qua, phù hợp im lặng ngượng ngùng, trò đùa thất bại hoặc phản ứng chương trình khi không ai đáp lại.',
   '情景剧/综艺笑声音效，适合包袱落点、搞笑片段、夸张反应后补充笑果。': 'Tiếng cười kịch tình huống/chương trình, phù hợp thêm hiệu ứng hài sau câu đùa, đoạn vui hoặc phản ứng cường điệu.',
   '极短气泡 pop，适合 MG 卡片、贴纸、提示气泡或小组件弹出。': 'Âm bong bóng nổ cực ngắn, phù hợp thẻ MG, nhãn dán, bong bóng gợi ý hoặc tiện ích bật lên.',
