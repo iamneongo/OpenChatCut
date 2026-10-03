@@ -4059,7 +4059,7 @@
           },
           "name": {
             "type": "string",
-            "description": "Tên hiển thị bản sao; mặc định \"[Copy] <source>\"."
+            "description": "Tên hiển thị bản sao; mặc định \"[Bản sao] <source>\"."
           },
           "activate": {
             "type": "boolean",

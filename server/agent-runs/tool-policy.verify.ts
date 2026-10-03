@@ -32,7 +32,7 @@ assert.throws(
 );
 assert.throws(
   () => resolveServerRunToolCatalog([first, first], false),
-  /Duplicate server run tool schema/,
+  /Schema tool của lượt chạy server bị trùng/,
 );
 assert.throws(
   () => resolveServerRunToolCatalog([{ name: 'unknown_tool', input_schema: {} }], false),
