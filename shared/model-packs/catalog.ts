@@ -20,6 +20,7 @@ export interface ModelPackFile {
 export interface ModelPackDefinition {
   readonly id: ModelPackId;
   readonly label: string;
+  readonly labelVi?: string;
   readonly description: string;
   readonly modelId: string;
   readonly revision: string;
@@ -54,7 +55,7 @@ const GIB = 1024 * 1024 * 1024;
 export const MODEL_PACKS = [
   {
     id: 'rhythm-lite',
-    label: '节奏分析轻量包',
+    label: '节奏分析轻量包', labelVi: 'Gói nhẹ phân tích nhịp điệu',
     description: '本地分析节拍、下拍、速度、拍号与节拍能量。',
     modelId: 'musetric/beat-this-onnx',
     revision: '4e971bd43753023e1bf961c34a0cb74985cfcb88',
@@ -82,7 +83,7 @@ export const MODEL_PACKS = [
   },
   {
     id: 'music-semantics-lite',
-    label: '音乐语义轻量包',
+    label: '音乐语义轻量包', labelVi: 'Gói nhẹ ngữ nghĩa âm nhạc',
     description: '在本机生成音乐语义向量，用于检索与相似度匹配。',
     modelId: 'Xenova/clap-htsat-unfused',
     revision: 'c28f2883575e590e04d3146ff0713c2448d691ba',
@@ -110,7 +111,7 @@ export const MODEL_PACKS = [
   },
   {
     id: 'visual-semantics-lite',
-    label: '画面语义轻量包',
+    label: '画面语义轻量包', labelVi: 'Gói nhẹ ngữ nghĩa hình ảnh',
     description: '在本机生成画面与中文文本向量，用于语义检索和重复镜头检测。',
     modelId: 'Xenova/chinese-clip-vit-base-patch16',
     revision: 'f26904860903e70e050b8f48255e5f48401816e9',
@@ -162,12 +163,12 @@ export function modelPackDefinition(id: string): ModelPackDefinition | undefined
   return MODEL_PACKS.find((pack) => pack.id === id);
 }
 
-const MUSIC_PACK_PAGE = { zh: '节拍与音乐分析', en: 'Beat and music analysis' } as const;
+const MUSIC_PACK_PAGE = { zh: '节拍与音乐分析', en: 'Beat and music analysis', vi: 'Nhịp và phân tích âm nhạc' } as const;
 /** The 设置 → 本地模型 page whose buttons install each pack. */
-const PACK_SETTINGS_PAGES = new Map<string, { readonly zh: string; readonly en: string }>([
+const PACK_SETTINGS_PAGES = new Map<string, { readonly zh: string; readonly en: string; readonly vi: string }>([
   ['rhythm-lite', MUSIC_PACK_PAGE],
   ['music-semantics-lite', MUSIC_PACK_PAGE],
-  ['visual-semantics-lite', { zh: '画面语义搜索', en: 'Visual semantic search' }],
+  ['visual-semantics-lite', { zh: '画面语义搜索', en: 'Visual semantic search', vi: 'Tìm kiếm ngữ nghĩa hình ảnh' }],
 ]);
 
 /**
@@ -176,15 +177,22 @@ const PACK_SETTINGS_PAGES = new Map<string, { readonly zh: string; readonly en: 
  * the page that has the install buttons; it used to send users to
  * 设置 → 转写 → 本地模型, which has none (#126).
  */
-export function modelPackInstallGuidance(packs: readonly { id: string }[]): string {
+export function modelPackInstallGuidance(packs: readonly { id: string }[], locale: 'zh' | 'en' | 'vi' = 'zh'): string {
   const names = packs.map((pack) => {
     const def = MODEL_PACKS.find((entry) => entry.id === pack.id);
     return def ? `${def.label}（${def.id}）` : pack.id;
   }).join('、');
   const pages = packs.flatMap((pack) => PACK_SETTINGS_PAGES.get(pack.id) ?? []);
-  const page = (language: 'zh' | 'en'): string => {
+  const page = (language: 'zh' | 'en' | 'vi'): string => {
     const titles = [...new Set(pages.map((entry) => entry[language]))];
     return titles.length > 0 ? ` → ${titles.join(' / ')}` : '';
   };
+  if (locale === 'vi') {
+    const namesVi = packs.map((pack) => {
+      const def = MODEL_PACKS.find((entry) => (entry.id as string) === pack.id) as ModelPackDefinition | undefined;
+      return def ? `${def.labelVi ?? def.label} (${def.id})` : pack.id;
+    }).join(', ');
+    return `Vào Cài đặt → Mô hình cục bộ${page('vi')} để tải: ${namesVi} (Mô hình cục bộ${page('en')}: ${packs.map((pack) => pack.id).join(', ')})`;
+  }
   return `请到 设置 → 本地模型${page('zh')} 下载：${names}（Settings → Local models${page('en')}: ${packs.map((pack) => pack.id).join(', ')}）`;
 }

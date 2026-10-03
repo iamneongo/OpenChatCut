@@ -17,6 +17,7 @@ import {
 } from '../../audio/intelligence/store';
 import { enqueueMusicAnalysis, musicAnalysisStatus } from '../../audio/intelligence/jobs';
 import { fetchModelPackCatalog, modelPackInstallGuidance } from '../../../shared/model-packs';
+import { getLocale } from '../../i18n/locale';
 
 const MAX_INSPECT_BEATS = 48;
 const MAX_INSPECT_DOWNBEATS = 24;
@@ -157,7 +158,7 @@ export async function unavailableAnalysis(asset: MediaAsset): Promise<Record<str
       .map((entry) => ({ id: entry.id, status: entry.status }));
     if (missing.length) {
       return {
-        error: `music analysis is unavailable until the model pack(s) are installed. ${modelPackInstallGuidance(missing)}`,
+        error: `music analysis is unavailable until the model pack(s) are installed. ${modelPackInstallGuidance(missing, getLocale() === 'vi' ? 'vi' : getLocale() === 'en' ? 'en' : 'zh')}`,
         assetId: asset.id,
         modelPacks: missing,
         action: MISSING_MODEL_PACKS_ACTION,
