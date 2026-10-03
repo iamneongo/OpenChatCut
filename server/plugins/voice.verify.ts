@@ -52,27 +52,27 @@ assert.equal(parsed.subtitleUrl, 'https://example.com/subtitles.json');
 
 assert.throws(
   () => validateVoiceRequest({ provider: 'minimax', text: 'x', voiceId: 'a', volume: 11 }),
-  /greater than 0 and at most 10/,
+  /lớn hơn 0 và tối đa 10/,
 );
 assert.throws(
   () => validateVoiceRequest({ provider: 'minimax', text: 'x', voiceId: 'a', pitch: 13 }),
-  /pitch must be between -12 and 12/,
+  /pitch phải nằm trong khoảng -12 đến 12/,
 );
 assert.throws(
   () => validateVoiceRequest({ provider: 'minimax', text: 'x', voiceId: 'a', audioFormat: 'flac', bitrate: 128_000 }),
-  /bitrate applies to MP3 only/,
+  /bitrate MiniMax chỉ áp dụng cho MP3/,
 );
 assert.throws(
   () => validateVoiceRequest({ provider: 'minimax', text: 'x', voiceId: 'a', forceCbr: true }),
-  /forceCbr requires stream=true and audioFormat=mp3/,
+  /forceCbr MiniMax yêu cầu stream=true và audioFormat=mp3/,
 );
 assert.throws(
   () => validateVoiceRequest({ provider: 'minimax', text: 'x', voiceId: 'a', subtitleType: 'word' }),
-  /subtitleType requires subtitleEnable=true/,
+  /subtitleType yêu cầu subtitleEnable=true/,
 );
 assert.throws(
   () => validateVoiceRequest({ provider: 'minimax', text: 'x', voiceId: 'a', languageBoost: 'Klingon' as never }),
-  /unsupported MiniMax languageBoost/,
+  /languageBoost MiniMax không được hỗ trợ/,
 );
 const eleven = validateVoiceRequest({
   provider: 'elevenlabs', text: 'Hello', voiceId: 'peter', similarityBoost: 0.8,
@@ -85,15 +85,15 @@ assert.equal(eleven.outputFormat, 'wav_44100');
 assert.equal(eleven.seed, 42);
 assert.throws(
   () => validateVoiceRequest({ provider: 'elevenlabs', text: 'hi', voiceId: 'peter', outputFormat: 'wav' }),
-  /unsupported ElevenLabs outputFormat/,
+  /outputFormat ElevenLabs không được hỗ trợ/,
 );
 assert.throws(
   () => validateVoiceRequest({ provider: 'minimax', text: 'x', voiceId: 'a', emotion: 'calm', emotionScale: 2 }),
-  /MiniMax does not accept ElevenLabs\/Doubao-only/,
+  /MiniMax không nhận các tham số voice chỉ dành cho ElevenLabs\/Doubao/,
 );
 assert.throws(
   () => validateVoiceRequest({ provider: 'elevenlabs', text: 'hi', voiceId: 'peter', volume: 2 }),
-  /ElevenLabs does not accept/,
+  /ElevenLabs không nhận/,
 );
 
 const doubao = validateVoiceRequest({
@@ -111,25 +111,25 @@ assert.equal(inworld.provider, 'inworld');
 assert.equal(inworld.modelId, 'inworld-tts-2');
 assert.throws(
   () => validateVoiceRequest({ provider: 'inworld', text: 'x'.repeat(2_001), voiceId: 'Dennis' }),
-  /Inworld TTS text must be at most 2000 characters/,
+  /text Inworld TTS dài tối đa 2000 ký tự/,
 );
 assert.throws(
   () => validateVoiceRequest({ provider: 'inworld', text: 'hi', voiceId: 'Dennis', pitch: 1 }),
-  /Inworld only accepts text, voiceId, and modelId/,
+  /Inworld chỉ nhận text, voiceId và modelId/,
 );
 
 const fishAudio = validateVoiceRequest({ provider: 'fishaudio', text: 'Hello', voiceId: 'ref-123' });
 assert.equal(fishAudio.provider, 'fishaudio');
 assert.throws(
   () => validateVoiceRequest({ provider: 'fishaudio', text: 'hi', voiceId: 'ref-123', emotion: 'calm' }),
-  /Fish Audio only accepts text, voiceId, and modelId/,
+  /Fish Audio chỉ nhận text, voiceId và modelId/,
 );
 
 const speechify = validateVoiceRequest({ provider: 'speechify', text: 'Hello', voiceId: 'george', modelId: 'simba-english' });
 assert.equal(speechify.provider, 'speechify');
 assert.throws(
   () => validateVoiceRequest({ provider: 'speechify', text: 'hi', voiceId: 'george', volume: 2 }),
-  /Speechify only accepts text, voiceId, and modelId/,
+  /Speechify chỉ nhận text, voiceId và modelId/,
 );
 
 const aiOptions: VoiceOptions = {
