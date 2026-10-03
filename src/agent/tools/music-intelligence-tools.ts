@@ -93,7 +93,7 @@ export function staleMusicAnalysisResult(
 ): Record<string, unknown> | null {
   if (typeof supplied !== 'string' || supplied === current) return null;
   return {
-    error: `stale music analysisRef; call ${planToolName} again before editing`,
+    error: `analysisRef của phân tích nhạc đã cũ; hãy gọi lại ${planToolName} trước khi chỉnh sửa`,
     staleAnalysisRef: true,
     currentAnalysisRef: current,
   };
@@ -105,12 +105,12 @@ async function currentPlan(
   requireAnalysisRef = false,
 ): Promise<BuiltPlan | Record<string, unknown>> {
   const target = resolveMusicTarget({ itemId: args.itemId }, ctx);
-  if (!target.item) throw new Error('itemId is required for a music edit plan');
+  if (!target.item) throw new Error('Cần có itemId cho kế hoạch chỉnh sửa nhạc');
   const analysis = await loadMusicAnalysisForAsset(target.asset);
   if (!analysis) return await unavailableAnalysis(target.asset);
   const ref = musicAnalysisRef(analysis);
   if (requireAnalysisRef && typeof args.analysisRef !== 'string') {
-    return { error: 'analysisRef is required; call music_edit_plan before editing', missingAnalysisRef: true };
+    return { error: 'Cần có analysisRef; hãy gọi music_edit_plan trước khi chỉnh sửa', missingAnalysisRef: true };
   }
   const stale = staleMusicAnalysisResult(args.analysisRef, ref);
   if (stale) return stale;
@@ -123,12 +123,12 @@ async function currentImagePlan(
   requireAnalysisRef = false,
 ): Promise<BuiltImagePlan | Record<string, unknown>> {
   const target = resolveMusicTarget({ itemId: args.itemId }, ctx);
-  if (!target.item) throw new Error('itemId is required for a music image plan');
+  if (!target.item) throw new Error('Cần có itemId cho kế hoạch đặt hình theo nhạc');
   const analysis = await loadMusicAnalysisForAsset(target.asset);
   if (!analysis) return await unavailableAnalysis(target.asset);
   const ref = musicAnalysisRef(analysis);
   if (requireAnalysisRef && typeof args.analysisRef !== 'string') {
-    return { error: 'analysisRef is required; call music_image_plan before editing', missingAnalysisRef: true };
+    return { error: 'Cần có analysisRef; hãy gọi music_image_plan trước khi chỉnh sửa', missingAnalysisRef: true };
   }
   const stale = staleMusicAnalysisResult(args.analysisRef, ref, 'music_image_plan');
   if (stale) return stale;
@@ -213,8 +213,8 @@ async function syncCuts(args: Args, ctx: AgentContext): Promise<unknown> {
       changed: false,
       analysisRef: built.plan.analysisRef,
       reason: prepared.lockedIds.length
-        ? 'all planned target clips are on locked tracks; unlock them and retry'
-        : 'no planned cut falls inside an editable video clip',
+        ? 'Tất cả clip mục tiêu đều nằm trên track bị khóa; hãy mở khóa rồi thử lại'
+        : 'Không có điểm cắt nào nằm trong clip video có thể chỉnh sửa',
       lockedTargetIds: prepared.lockedIds.slice(0, MAX_MUSIC_PLAN_TARGETS),
     };
   }
@@ -237,7 +237,7 @@ async function syncImages(args: Args, ctx: AgentContext): Promise<unknown> {
   const prepared = buildMusicImagePlacementActions(built.plan, ctx.getState(), ctx.getDoc().assets);
   if (prepared.missingAssetIds.length) {
     return {
-      error: 'some planned image assets are no longer in the media pool; rebuild the music image plan',
+      error: 'Một số asset hình ảnh trong kế hoạch không còn trong kho media; hãy tạo lại kế hoạch hình theo nhạc',
       changed: false,
       missingAssetIds: prepared.missingAssetIds,
     };
@@ -247,13 +247,13 @@ async function syncImages(args: Args, ctx: AgentContext): Promise<unknown> {
       ok: true,
       changed: false,
       analysisRef: built.plan.analysisRef,
-      reason: `target video track ${built.plan.track} is locked; unlock it or choose another track`,
+      reason: `Track video mục tiêu ${built.plan.track} đang bị khóa; hãy mở khóa hoặc chọn track khác`,
       track: built.plan.track,
     };
   }
   if (prepared.conflictingItemIds.length) {
     return {
-      error: `target video track ${built.plan.track} is occupied in the requested range; choose an empty track`,
+      error: `Track video mục tiêu ${built.plan.track} đã có nội dung trong khoảng yêu cầu; hãy chọn track trống`,
       changed: false,
       track: built.plan.track,
       conflictingItemIds: prepared.conflictingItemIds.slice(0, MAX_MUSIC_PLAN_TARGETS),
@@ -264,7 +264,7 @@ async function syncImages(args: Args, ctx: AgentContext): Promise<unknown> {
       ok: true,
       changed: false,
       analysisRef: built.plan.analysisRef,
-      reason: 'no image placements were produced for the requested music range',
+      reason: 'Không tạo được vị trí hình ảnh nào cho khoảng nhạc yêu cầu',
     };
   }
   ctx.commands.batch(prepared.actions, 'Chèn hình ảnh theo nhịp nhạc');
@@ -294,7 +294,7 @@ export async function execMusicIntelligenceTool(name: string, args: Args, ctx: A
       return isBuiltImagePlan(built) ? imagePlanResponse(built) : built;
     }
     if (name === 'sync_images_to_music') return await syncImages(args, ctx);
-    return { error: `unknown tool ${name}` };
+    return { error: `Công cụ không xác định: ${name}` };
   } catch (error) {
     return { error: error instanceof Error ? error.message : String(error) };
   }

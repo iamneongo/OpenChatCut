@@ -97,8 +97,8 @@ function resolvePrefix<T extends { readonly id: string }>(
   if (exact) return exact;
   const matches = values.filter((value) => value.id.startsWith(query));
   if (matches.length === 1 && matches[0]) return matches[0];
-  if (matches.length > 1) throw new Error(`${label} id prefix ${displayQuery} is ambiguous`);
-  throw new Error(`no ${label} ${displayQuery}`);
+  if (matches.length > 1) throw new Error(`Tiền tố id ${displayQuery} của ${label} không xác định duy nhất`);
+  throw new Error(`Không tìm thấy ${label} ${displayQuery}`);
 }
 
 function resolveAssetForItem(item: TimelineItem, assets: readonly MediaAsset[]): MediaAsset {
@@ -110,28 +110,28 @@ function resolveAssetForItem(item: TimelineItem, assets: readonly MediaAsset[]):
     const bySource = assets.filter((asset) => asset.src === item.src);
     if (bySource.length === 1 && bySource[0]) return bySource[0];
   }
-  throw new Error(`clip ${item.id} is not linked to a unique media-pool asset; relink it before music analysis`);
+  throw new Error(`Clip ${item.id} không liên kết với duy nhất một asset trong kho media; hãy liên kết lại trước khi phân tích nhạc`);
 }
 
 export function resolveMusicTarget(args: Args, ctx: AgentContext): ResolvedMusicTarget {
   const assetQuery = typeof args.assetId === 'string' ? args.assetId.trim() : '';
   const itemQuery = typeof args.itemId === 'string' ? args.itemId.trim() : '';
-  if (assetQuery && itemQuery) throw new Error('pass assetId or itemId, not both');
+  if (assetQuery && itemQuery) throw new Error('Chỉ truyền assetId hoặc itemId, không truyền cả hai');
   if (itemQuery) {
     const item = resolvePrefix(ctx.getState().items, itemQuery, 'timeline item');
     if (item.kind !== 'audio' && item.kind !== 'video') {
-      throw new Error(`clip ${item.id} is ${item.kind}; music analysis requires an audio/video clip`);
+      throw new Error(`Clip ${item.id} là ${item.kind}; phân tích nhạc cần clip audio/video`);
     }
     return { item, asset: resolveAssetForItem(item, ctx.getDoc().assets) };
   }
   if (assetQuery) {
     const asset = resolvePrefix(ctx.getDoc().assets, assetQuery, 'media-pool asset');
     if (asset.kind !== 'audio' && asset.kind !== 'video') {
-      throw new Error(`asset ${asset.id} is ${asset.kind}; music analysis requires audio/video media`);
+      throw new Error(`Asset ${asset.id} là ${asset.kind}; phân tích nhạc cần media audio/video`);
     }
     return { asset };
   }
-  throw new Error('pass assetId (media pool) or itemId (timeline clip)');
+  throw new Error('Hãy truyền assetId (kho media) hoặc itemId (clip trên timeline)');
 }
 
 export const MISSING_MODEL_PACKS_ACTION = 'missing-model-packs' as const;
@@ -141,11 +141,11 @@ export const BEAT_FALLBACK_TOOL = 'detect_beats' as const;
 export async function unavailableAnalysis(asset: MediaAsset): Promise<Record<string, unknown>> {
   const status = musicAnalysisStatus(asset.id);
   if (status.state === 'queued') {
-    return { error: 'music analysis is queued; wait for it to finish, then call inspect_music again', assetId: asset.id };
+    return { error: 'Phân tích nhạc đang xếp hàng; hãy chờ hoàn tất rồi gọi lại inspect_music', assetId: asset.id };
   }
   if (status.state === 'running') {
     return {
-      error: `music analysis is running (${status.phase}, ${Math.round(status.progress * 100)}%); retry after it finishes`,
+      error: `Phân tích nhạc đang chạy (${status.phase}, ${Math.round(status.progress * 100)}%); hãy thử lại sau khi hoàn tất`,
       assetId: asset.id,
     };
   }
@@ -158,7 +158,7 @@ export async function unavailableAnalysis(asset: MediaAsset): Promise<Record<str
       .map((entry) => ({ id: entry.id, status: entry.status }));
     if (missing.length) {
       return {
-        error: `music analysis is unavailable until the model pack(s) are installed. ${modelPackInstallGuidance(missing, getLocale() === 'vi' ? 'vi' : getLocale() === 'en' ? 'en' : 'zh')}`,
+        error: `Phân tích nhạc chưa khả dụng cho đến khi cài các gói model. ${modelPackInstallGuidance(missing, getLocale() === 'vi' ? 'vi' : getLocale() === 'en' ? 'en' : 'zh')}`,
         assetId: asset.id,
         modelPacks: missing,
         action: MISSING_MODEL_PACKS_ACTION,
@@ -170,7 +170,7 @@ export async function unavailableAnalysis(asset: MediaAsset): Promise<Record<str
     // Catalog status is advisory here; cache absence remains the authoritative result.
   }
   return {
-    error: 'music has not been analyzed yet; call analyze_music for this asset, then retry',
+    error: 'Nhạc chưa được phân tích; hãy gọi analyze_music cho asset này rồi thử lại',
     assetId: asset.id,
     requiredModelPacks: required,
     action: MISSING_MODEL_PACKS_ACTION,
@@ -185,7 +185,7 @@ function finiteNumber(value: unknown): number | undefined {
 function inspectRange(args: Args, durationMs: number): { fromMs: number; toMs: number } {
   const fromMs = Math.max(0, Math.round(finiteNumber(args.fromMs) ?? 0));
   const toMs = Math.min(durationMs, Math.round(finiteNumber(args.toMs) ?? durationMs));
-  if (toMs <= fromMs) throw new Error('toMs must be greater than fromMs after clamping to the analyzed duration');
+  if (toMs <= fromMs) throw new Error('toMs phải lớn hơn fromMs sau khi giới hạn theo thời lượng đã phân tích');
   return { fromMs, toMs };
 }
 
@@ -293,10 +293,10 @@ export function normalizePlanOptions(args: Args): MusicPlanOptions {
   const timing = args.timing;
   const density = args.density;
   if (timing !== 'auto' && timing !== 'beat' && timing !== 'downbeat' && timing !== 'section') {
-    throw new Error('timing must be auto, beat, downbeat, or section');
+    throw new Error('timing phải là auto, beat, downbeat hoặc section');
   }
   if (density !== 'sparse' && density !== 'medium' && density !== 'dense') {
-    throw new Error('density must be sparse, medium, or dense');
+    throw new Error('density phải là sparse, medium hoặc dense');
   }
   const targetItemIds = Array.isArray(args.targetItemIds)
     ? args.targetItemIds.filter((value): value is string => typeof value === 'string' && value.trim() !== '')
@@ -322,7 +322,7 @@ function planRange(item: TimelineItem, options: MusicPlanOptions): MusicEditPlan
   const itemEnd = item.startFrame + item.durationInFrames;
   const fromFrame = Math.max(item.startFrame, Math.round(options.fromFrame ?? item.startFrame));
   const toFrame = Math.min(itemEnd, Math.round(options.toFrame ?? itemEnd));
-  if (toFrame <= fromFrame) throw new Error('requested timeline range does not overlap the BGM clip');
+  if (toFrame <= fromFrame) throw new Error('Khoảng timeline yêu cầu không giao với clip BGM');
   return { fromFrame, toFrame };
 }
 

@@ -78,7 +78,7 @@ function analysisWith(beatsMs: number[], downbeatsMs: number[] = beatsMs): Music
     assert.equal(optional.ok, true);
     assert.equal(optional.available, false);
     assert.equal(optional.reason, 'analysis-unavailable');
-    assert.match(optional.note ?? '', /Install rhythm-lite/);
+    assert.match(optional.note ?? '', /模型包/);
     assert.equal(isFailedToolResult(optional), false, 'optional unavailable analysis is a successful capability probe');
   } finally {
     globalThis.fetch = previousFetch;
@@ -161,14 +161,14 @@ function state(items: TimelineItem[], tracks: TimelineState['tracks'] = {}): Tim
 
 {
   assert.deepEqual(staleMusicAnalysisResult('old-ref', 'new-ref'), {
-    error: 'stale music analysisRef; call music_edit_plan again before editing',
+    error: 'analysisRef của phân tích nhạc đã cũ; hãy gọi lại music_edit_plan trước khi chỉnh sửa',
     staleAnalysisRef: true,
     currentAnalysisRef: 'new-ref',
   });
   assert.equal(staleMusicAnalysisResult('new-ref', 'new-ref'), null);
   assert.equal(staleMusicAnalysisResult(undefined, 'new-ref'), null);
   assert.deepEqual(staleMusicAnalysisResult('old-ref', 'new-ref', 'music_image_plan'), {
-    error: 'stale music analysisRef; call music_image_plan again before editing',
+    error: 'analysisRef của phân tích nhạc đã cũ; hãy gọi lại music_image_plan trước khi chỉnh sửa',
     staleAnalysisRef: true,
     currentAnalysisRef: 'new-ref',
   });
@@ -469,7 +469,7 @@ function state(items: TimelineItem[], tracks: TimelineState['tracks'] = {}): Tim
       itemId: 'music', timing: 'beat', density: 'dense',
     }, ctx) as { error?: string; requiredModelPacks?: string[] };
     assert.ok(result.error, 'a missing cache must reject the plan instead of starting analysis');
-    assert.ok(result.error!.includes('not been analyzed'), 'the error must point at the analyze_music entry point');
+    assert.ok(result.error!.includes('analyze_music'), 'the error must point at the analyze_music entry point');
     assert.deepEqual(result.requiredModelPacks, ['rhythm-lite', 'music-semantics-lite']);
   } finally {
     globalThis.fetch = previousFetch;
