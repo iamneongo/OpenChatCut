@@ -248,7 +248,7 @@ async function renderStills(
     });
     if (!res.ok) {
       const info = (await res.json().catch(() => null)) as { error?: string } | null;
-      return { error: info?.error ?? `render-still failed (${res.status})` };
+      return { error: info?.error ?? `render-still thất bại (${res.status})` };
     }
     const data = (await res.json()) as {
       frames: { frame: number; base64: string }[];

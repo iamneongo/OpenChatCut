@@ -151,11 +151,11 @@ assert.ok(validateGenericUpdate(state, { type: 'video', itemId: 'v1_abc', track:
 // ── unknown field + Did you mean ──
 {
   const err = String(validateGenericUpdate(state, { type: 'video', itemId: 'v1_abc', startFrane: 10 } as Record<string, unknown>).error ?? '');
-  assert.ok(err.includes('unknown field'), err);
-  assert.ok(err.includes('Did you mean') || err.includes('startFrame'), err);
+  assert.ok(err.includes('trường không xác định'), err);
+  assert.ok(err.includes('Có phải') || err.includes('startFrame'), err);
 }
 assert.equal(didYouMean('startFrane', ['startFrame', 'fromFrame']), 'startFrame');
-assert.ok(rejectUnknownFields({ name: 'x' }, { type: true, assetId: true })?.includes('unknown field'));
+assert.ok(rejectUnknownFields({ name: 'x' }, { type: true, assetId: true })?.includes('trường không xác định'));
 
 // ── generic delete: default vs ripple ──
 {
@@ -220,7 +220,7 @@ assert.ok(validateGenericAdd(state, pool, { type: 'video' }).error, 'missing ass
 // live: unknown field "name" on adds (pool media has no name field)
 {
   const err = String(validateGenericAdd(state, pool, { type: 'video', assetId: 'vid_broll01', name: 'My Clip' }).error ?? '');
-  assert.ok(err.includes('unknown field') && err.includes('name'), err);
+  assert.ok(err.includes('trường không xác định') && err.includes('name'), err);
 }
 // fromFrame alias on add
 assert.equal(validateGenericAdd(state, pool, { type: 'video', assetId: 'vid_broll01', fromFrame: 90 }).startFrame, 90);

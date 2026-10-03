@@ -47,7 +47,7 @@ async function doCurrent(ctx: AgentContext): Promise<unknown> {
 
 /** Switch/clear the creative mode (chat-level status, effective immediately, no undo; text is injected from the next message). */
 async function doActivate(args: Args, ctx: AgentContext): Promise<unknown> {
-  if (!ctx.setCreativeMode) return { error: 'this host cannot switch creative mode' };
+  if (!ctx.setCreativeMode) return { error: 'host này không thể chuyển chế độ sáng tác' };
   const id = strArg(args.skillId);
   if (!id) {
     ctx.setCreativeMode(null);
@@ -55,25 +55,25 @@ async function doActivate(args: Args, ctx: AgentContext): Promise<unknown> {
   }
   await refresh().catch(() => []);
   const s = findSkill(id);
-  if (!s) return { error: `no skill "${id}"; use list to see available ids` };
+  if (!s) return { error: `không có skill "${id}"; hãy dùng list để xem các id khả dụng` };
   ctx.setCreativeMode(id);
   return { ok: true, active: { ...brief(s), builtin: isBuiltin(id) }, note: 'Đã chuyển chế độ; tin nhắn tiếp theo sẽ tải nội dung skill khi cần.' };
 }
 
 async function doGet(args: Args): Promise<unknown> {
   const id = strArg(args.skillId);
-  if (!id) return { error: 'get requires "skillId"' };
+  if (!id) return { error: 'get cần "skillId"' };
   await refresh(); // Allow findSkill to parse custom ids
   const s = findSkill(id);
-  if (!s) return { error: `no skill "${id}"` };
+  if (!s) return { error: `không có skill "${id}"` };
   return { skill: { ...brief(s), body: s.body, builtin: isBuiltin(id) } };
 }
 
 async function doCreate(args: Args): Promise<unknown> {
   const name = strArg(args.name);
   const body = strArg(args.body);
-  if (!name) return { error: 'create requires a non-empty "name"' };
-  if (!body) return { error: 'create requires a non-empty "body"' };
+  if (!name) return { error: 'create cần "name" không rỗng' };
+  if (!body) return { error: 'create cần "body" không rỗng' };
   const id = `skill_${crypto.randomUUID()}`;
   const summary = strArg(args.summary) || name;
   const parsed = parseSkillFrontmatter(body);
@@ -102,10 +102,10 @@ async function doCreate(args: Args): Promise<unknown> {
 
 async function doUpdate(args: Args): Promise<unknown> {
   const id = strArg(args.skillId);
-  if (!id) return { error: 'update requires "skillId"' };
-  if (isBuiltin(id)) return { error: 'cannot edit a built-in skill; create a custom one instead' };
+  if (!id) return { error: 'update cần "skillId"' };
+  if (isBuiltin(id)) return { error: 'không thể sửa skill tích hợp; hãy tạo skill tùy chỉnh' };
   const existing = (await listCustomSkills()).find((s) => s.id === id);
-  if (!existing) return { error: `no custom skill "${id}"` };
+  if (!existing) return { error: `không có skill tùy chỉnh "${id}"` };
   const name = strArg(args.name);
   const body = strArg(args.body);
   const summary = strArg(args.summary);
@@ -132,10 +132,10 @@ async function doUpdate(args: Args): Promise<unknown> {
 
 async function doDelete(args: Args): Promise<unknown> {
   const id = strArg(args.skillId);
-  if (!id) return { error: 'delete requires "skillId"' };
-  if (isBuiltin(id)) return { error: 'cannot delete a built-in skill' };
+  if (!id) return { error: 'delete cần "skillId"' };
+  if (isBuiltin(id)) return { error: 'không thể xóa skill tích hợp' };
   const existing = (await listCustomSkills()).find((s) => s.id === id);
-  if (!existing) return { error: `no custom skill "${id}"` };
+  if (!existing) return { error: `không có skill tùy chỉnh "${id}"` };
   await deleteCustomSkill(id);
   await refresh();
   return { ok: true, deleted: id };
@@ -143,7 +143,7 @@ async function doDelete(args: Args): Promise<unknown> {
 
 // The skill library is global (not divided by project); the active state (creative mode) is the project-level chat state, which is read and written by ctx.
 export async function execSkillTool(name: string, args: Args, ctx: AgentContext): Promise<unknown> {
-  if (name !== 'manage_skill') return { error: `unknown tool ${name}` };
+  if (name !== 'manage_skill') return { error: `công cụ không xác định: ${name}` };
   switch (String(args.action ?? '')) {
     case 'list': return doList(ctx);
     case 'get': return doGet(args);
@@ -152,6 +152,6 @@ export async function execSkillTool(name: string, args: Args, ctx: AgentContext)
     case 'create': return doCreate(args);
     case 'update': return doUpdate(args);
     case 'delete': return doDelete(args);
-    default: return { error: `unknown action "${args.action}"; use list|get|current|activate|create|update|delete` };
+    default: return { error: `action không xác định "${args.action}"; dùng list|get|current|activate|create|update|delete` };
   }
 }

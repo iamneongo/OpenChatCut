@@ -98,7 +98,7 @@ for (const [bucket, type] of [
 ] as const) {
   assert.match(
     rejectSpecializedUnknownFields(bucket, type, { type, unknownField: true }) ?? '',
-    /unknown field "unknownField"/,
+    /trường không xác định "unknownField"/,
     `${bucket}/${type} must reject unknown fields`,
   );
 }
@@ -117,7 +117,7 @@ for (const result of [
   validateGenericUpdate(emptyState, { type: 'video', itemId: 'missing', unknownField: true }),
   validateGenericDelete(emptyState, { type: 'video', itemId: 'missing', unknownField: true }),
 ]) {
-  assert.match(String(result.error ?? ''), /unknown field "unknownField"/);
+  assert.match(String(result.error ?? ''), /trường không xác định "unknownField"/);
 }
 
 console.log('edit-item-batch.verify: sequential multi-effect draft, rollback, and unknown fields ok');

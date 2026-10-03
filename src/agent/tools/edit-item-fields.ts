@@ -176,16 +176,16 @@ export function rejectUnknownFields(
       && (key === 'volume' || CLIP_UPDATE_HINT_FIELDS.includes(key as typeof CLIP_UPDATE_HINT_FIELDS[number]))
     ) {
       return (
-        `unknown field "${key}" on effect update.\n\n`
-        + 'To change clip volume/timing/fades, use a generic update with the clip kind — not type:"effect".\n'
-        + 'Example: updates:[{type:"audio", itemId:"…", volume:0.3}] or type:"video" for a video clip.\n'
-        + 'Effect updates only accept: type, targetItemId, id, effectId, assetId, propertyOverrides.'
+        `trường không xác định "${key}" trong cập nhật effect.\n\n`
+        + 'Để đổi âm lượng/thời lượng/fade của clip, hãy dùng cập nhật generic với đúng kind của clip — không dùng type:"effect".\n'
+        + 'Ví dụ: updates:[{type:"audio", itemId:"…", volume:0.3}] hoặc type:"video" cho clip video.\n'
+        + 'Cập nhật effect chỉ nhận: type, targetItemId, id, effectId, assetId, propertyOverrides.'
       );
     }
     const hint = didYouMean(key, allowedList);
     return hint
-      ? `unknown field "${key}". Did you mean "${hint}"?\n\nUse only supported fields from the edit_item schema. If this was a spelling variant, retry with the exact field name from the tool description.`
-      : `unknown field "${key}".\n\nUse only supported fields from the edit_item schema. Supported: ${allowedList.join(', ')}.`;
+      ? `trường không xác định "${key}". Có phải bạn muốn dùng "${hint}"?\n\nChỉ dùng các trường được hỗ trợ trong schema edit_item. Nếu đây là biến thể chính tả, hãy thử lại bằng đúng tên trường trong mô tả tool.`
+      : `trường không xác định "${key}".\n\nChỉ dùng các trường được hỗ trợ trong schema edit_item. Các trường hợp lệ: ${allowedList.join(', ')}.`;
   }
   return null;
 }

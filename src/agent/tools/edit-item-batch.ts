@@ -93,7 +93,7 @@ export function executeAtomicEditBatch<Draft>(
     try {
       plan = callbacks.validate(draft, operation);
     } catch (error) {
-      const message = `${operation.bucket}[${operation.index}] validator failed: ${error instanceof Error ? error.message : String(error)}`;
+      const message = `${operation.bucket}[${operation.index}] kiểm tra thất bại: ${error instanceof Error ? error.message : String(error)}`;
       return failedBatch(plans, validateOnly, message);
     }
     if (plan.error) {
@@ -109,11 +109,11 @@ export function executeAtomicEditBatch<Draft>(
     try {
       result = callbacks.apply(draft, plan);
     } catch (error) {
-      const message = `${operation.bucket}[${operation.index}] apply failed: ${error instanceof Error ? error.message : String(error)}`;
+      const message = `${operation.bucket}[${operation.index}] áp dụng thất bại: ${error instanceof Error ? error.message : String(error)}`;
       return failedBatch(results, validateOnly, message);
     }
     if (result.error) {
-      const error = `${operation.bucket}[${operation.index}] apply failed: ${String(result.error)}`;
+      const error = `${operation.bucket}[${operation.index}] áp dụng thất bại: ${String(result.error)}`;
       return failedBatch([...results, { ...result, error }], validateOnly, error);
     }
     results.push(result);
@@ -132,7 +132,7 @@ export function executeAtomicEditBatch<Draft>(
   try {
     callbacks.publish(draft);
   } catch (error) {
-    const message = `final publish failed: ${error instanceof Error ? error.message : String(error)}`;
+    const message = `công bố cuối cùng thất bại: ${error instanceof Error ? error.message : String(error)}`;
     return failedBatch(results, false, message);
   }
   return {
