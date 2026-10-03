@@ -5,6 +5,8 @@ const overrides: Record<string, string> = {
 
   '当前版本号：{version}': 'Versione corrente: {version}',
   '检查更新': 'Controlla aggiornamenti',
+  '转写失败：{detail}': 'Trascrizione non riuscita: {detail}',
+  '模型包操作失败：{err}': 'Operazione sul pacchetto modello non riuscita: {err}',
   '检查中…': 'Controllo...',
   '设置 · API 密钥': 'Impostazioni · chiavi API',
   '关闭': 'Chiudi',

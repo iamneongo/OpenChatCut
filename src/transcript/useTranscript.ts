@@ -17,7 +17,7 @@ function transcriptErrorMessage(error: unknown): string {
       ? t('本地转写失败：模型未就绪或音频无法处理，请检查模型下载后重试')
       : t('无法连接转写服务，请检查网络和 AssemblyAI 配置后重试');
   }
-  return error instanceof Error ? error.message : String(error);
+  return t('转写失败：{detail}', { detail: error instanceof Error ? error.message : String(error) });
 }
 
 // Drives transcription against a same-origin media path.

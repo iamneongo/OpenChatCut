@@ -1101,6 +1101,8 @@ export const VI: Record<string, string> = {
   '安装更新失败，请重试': 'Cài đặt bản cập nhật thất bại, hãy thử lại',
   'Upstream did not return a valid release version': 'Nguồn phát hành không trả về phiên bản hợp lệ',
   'Upstream release check failed ({status})': 'Kiểm tra bản phát hành thất bại ({status})',
+  '转写失败：{detail}': 'Chép lời thất bại: {detail}',
+  '模型包操作失败：{err}': 'Thao tác với gói mô hình thất bại: {err}',
   '下载中 {percent}%': 'Đang tải {percent}%',
   '正在重启…': 'Đang khởi động lại…',
   '为避免覆盖已保存的内容，已停止打开该工程。数据仍保留在本机存储中，可稍后重试。': 'Đã dừng mở dự án để tránh ghi đè nội dung đã lưu. Dữ liệu vẫn được giữ trên máy và có thể thử lại sau.',

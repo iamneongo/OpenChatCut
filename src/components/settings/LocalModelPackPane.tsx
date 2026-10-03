@@ -112,7 +112,8 @@ interface PackCardProps {
 
 function PackCard({ pack, busy, error: actionError, install, remove, cancel }: PackCardProps) {
   const t = useT();
-  const error = actionError ?? pack.error ?? pack.task?.error;
+  const rawError = actionError ?? pack.error ?? pack.task?.error;
+  const error = rawError ? t('模型包操作失败：{err}', { err: rawError }) : null;
   return (
     <div style={cardStyle}>
       <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
