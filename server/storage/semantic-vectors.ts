@@ -81,7 +81,7 @@ export function resetSemanticVectorsForTests(): void {
 
 function requireConnection(): DatabaseSync {
   const db = openConnection();
-  if (!db) throw new Error('semantic vectors unavailable');
+  if (!db) throw new Error('semantic vector không khả dụng');
   return db;
 }
 
@@ -101,11 +101,11 @@ export function upsertSemanticVectors(
   assetId: string,
   samples: SemanticVectorSample[],
 ): { inserted: number } {
-  if (!validAssetId(scopeId) || !validAssetId(assetId)) throw new Error('invalid semantic vector scope/asset id');
-  if (!Array.isArray(samples) || samples.length > 512) throw new Error('invalid semantic vector batch');
+  if (!validAssetId(scopeId) || !validAssetId(assetId)) throw new Error('scope hoặc asset id của semantic vector không hợp lệ');
+  if (!Array.isArray(samples) || samples.length > 512) throw new Error('batch semantic vector không hợp lệ');
   for (const sample of samples) {
     if (!validAssetId(sample.assetId) || !validVector(sample.vector)) {
-      throw new Error('invalid semantic vector sample');
+      throw new Error('mẫu semantic vector không hợp lệ');
     }
   }
   const db = requireConnection();
@@ -143,7 +143,7 @@ export function searchSemanticVectors(
   queryVector: number[],
   limit: number,
 ): SemanticVectorHit[] {
-  if (!validAssetId(scopeId) || !validVector(queryVector)) throw new Error('invalid semantic search input');
+  if (!validAssetId(scopeId) || !validVector(queryVector)) throw new Error('đầu vào tìm kiếm semantic không hợp lệ');
   const bounded = Math.min(100, Math.max(1, Math.round(Number(limit) || 24)));
   const db = requireConnection();
   const rows = db.prepare(`SELECT asset_id, sample_time, source_revision, scene_id, scene_start, scene_end, distance
@@ -175,7 +175,7 @@ export function pruneSemanticVectors(
   validAssetIds: string[],
   validSourceRevisions?: ReadonlyMap<string, string>,
 ): PruneSemanticResult {
-  if (!validAssetId(scopeId)) throw new Error('invalid semantic vector scope id');
+  if (!validAssetId(scopeId)) throw new Error('scope id của semantic vector không hợp lệ');
   const db = requireConnection();
   const rows = db.prepare(`SELECT rowid, asset_id, source_revision, model_version
     FROM ${VEC_TABLE} WHERE scope_id = ?`).all(scopeId) as Array<{
@@ -208,6 +208,6 @@ export function pruneSemanticVectors(
 
 /** Remove every vector of a scope. */
 export function clearSemanticVectors(scopeId: string): void {
-  if (!validAssetId(scopeId)) throw new Error('invalid semantic vector scope id');
+  if (!validAssetId(scopeId)) throw new Error('scope id của semantic vector không hợp lệ');
   requireConnection().prepare(`DELETE FROM ${VEC_TABLE} WHERE scope_id = ?`).run(scopeId);
 }

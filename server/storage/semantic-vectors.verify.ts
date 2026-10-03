@@ -80,8 +80,8 @@ async function main(): Promise<void> {
     // ── input validation ──
     assert.throws(() => upsertSemanticVectors('project-a', 'asset-1', [
       { assetId: 'asset-1', sampleTime: 0, vector: [0.1] },
-    ]), /invalid semantic vector sample/, 'short vectors must be rejected');
-    assert.throws(() => searchSemanticVectors('bad scope!', vector(1), 10), /invalid semantic search/);
+    ]), /mẫu semantic vector không hợp lệ/, 'short vectors must be rejected');
+    assert.throws(() => searchSemanticVectors('bad scope!', vector(1), 10), /đầu vào tìm kiếm semantic không hợp lệ/);
 
     // ── clear ──
     clearSemanticVectors('project-a');
