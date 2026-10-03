@@ -152,7 +152,7 @@ async function validateMediaSignature(path: string, mime: string): Promise<boole
 }
 
 function mobilePage(locale: MobilePageLocale): string {
-  const copyLocale = locale === 'it' || locale === 'vi' ? 'en' : locale;
+  const copyLocale = locale === 'it' ? 'en' : locale;
   const copy = {
     en: {
       pageTitle: 'Upload from phone', title: 'Send media to OpenChatCut',
@@ -171,6 +171,12 @@ function mobilePage(locale: MobilePageLocale): string {
       hint: '选择手机里的视频、图片或音频。电脑和手机需连接同一局域网。',
       choose: '选择素材', multiple: '支持多选，页面保持打开直到全部完成',
       waiting: '等待上传', sent: '已发送', failed: '上传失败', interrupted: '网络中断',
+    },
+    vi: {
+      pageTitle: 'Tải tài nguyên từ điện thoại', title: 'Gửi tài nguyên đến OpenChatCut',
+      hint: 'Chọn video, hình ảnh hoặc audio trên điện thoại. Máy tính và điện thoại cần cùng mạng cục bộ.',
+      choose: 'Chọn tài nguyên', multiple: 'Có thể chọn nhiều tệp. Hãy giữ trang này mở đến khi tải xong tất cả.',
+      waiting: 'Đang chờ tải lên', sent: 'Đã gửi', failed: 'Tải lên thất bại', interrupted: 'Mạng bị gián đoạn',
     },
   }[copyLocale];
   const scriptCopy = JSON.stringify({ waiting: copy.waiting, sent: copy.sent, failed: copy.failed, interrupted: copy.interrupted });

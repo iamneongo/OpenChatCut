@@ -25,6 +25,7 @@ import {
   writeDataDirPointer,
 } from '../data-dir.ts';
 import { sqliteStoreEnabled } from '../storage/sqlite-store.ts';
+import { uiLocale } from '../ui-locale.ts';
 
 const ISOLATED_R2_SETTINGS = [
   'R2_ACCOUNT_ID',
@@ -118,7 +119,7 @@ async function applyDataDirChange(
   if (isIsolatedDevProfile(profile)) {
     throw new Error('storage directory cannot be changed while an isolated development profile is active');
   }
-  const checked = await checkDataDir(raw, defaultRootDir(profile));
+  const checked = await checkDataDir(raw, defaultRootDir(profile), uiLocale());
   if (!checked.ok) throw new Error(checked.error ?? 'invalid storage directory');
   const target = expandDataDir(raw);
   // Clearing the field is a relocation too: it sends the next launch back to the

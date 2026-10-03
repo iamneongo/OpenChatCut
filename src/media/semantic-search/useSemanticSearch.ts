@@ -11,6 +11,7 @@ import { rankSemanticMatches } from './vectorSearch';
 import { clearSemanticVectors, hybridSearchRemote, pruneSemanticVectors, readSemanticVectors, searchSemanticVectorsRemote } from './vectorStore';
 import { fetchModelPackCatalog, fetchModelPackTask, installModelPack } from '../../../shared/model-packs/client';
 import type { ModelPackId } from '../../../shared/model-packs/catalog';
+import { t } from '../../i18n/locale';
 import {
   MAX_SEMANTIC_QUERY_LENGTH,
   type DuplicateMatch, type HybridTextHit, type SemanticDevice, type SemanticMatch, type SemanticVectorRecord,
@@ -115,7 +116,7 @@ export function useSemanticSearch(scopeId: string, assets: MediaAsset[]) {
     } catch {
       setState((current) => ({
         ...current, pack: 'error', packProgress: 0,
-        error: '模型包下载失败，请到 设置 → 本地模型 重试',
+        error: t('模型包下载失败，请到 设置 → 本地模型 重试。'),
       }));
     }
   }, [enable, setState]);

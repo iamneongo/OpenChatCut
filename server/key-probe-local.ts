@@ -4,7 +4,7 @@ import { getKey } from './keystore.ts';
 import { checkDataDir, readDataDirPointer } from './data-dir.ts';
 import { DATA_DIR_ENV, defaultRootDir, runtimeProfile } from './runtime-profile.ts';
 import { networkMessage, type ProbeResult } from './key-probe-result.ts';
-import { localized } from './ui-locale.ts';
+import { localized, uiLocale } from './ui-locale.ts';
 
 export const PROBE_TIMEOUT_MS = 12_000;
 const PROXY_PROBE_URL = 'https://www.gstatic.com/generate_204';
@@ -24,7 +24,7 @@ export async function runDataDirProbe(overrides: Record<string, unknown>): Promi
     ? String(overrides[DATA_DIR_ENV] ?? '')
     : readDataDirPointer() ?? '';
   const started = Date.now();
-  const body = await checkDataDir(raw, defaultRootDir(profile));
+  const body = await checkDataDir(raw, defaultRootDir(profile), uiLocale());
   const latencyMs = Date.now() - started;
   return body.ok
     ? { ok: true, latencyMs, message: body.note ?? localized({ zh: '目录可写', en: 'Directory is writable', vi: 'Thư mục có thể ghi' }) }
