@@ -223,7 +223,7 @@ function registerDesktopHandlers(trustedOrigin: string): void {
     trustedDesktopHandler(trustedOrigin, createLocalMediaImportHandler(importLocalMedia)),
   );
   ipcMain.handle('openchatcut:transparent-mov-proxy', trustedDesktopHandler(trustedOrigin, async (_event, storedName: unknown) => {
-    if (typeof storedName !== 'string') throw new Error('invalid local media name');
+    if (typeof storedName !== 'string') throw new Error(localized({ zh: '本地素材名称无效', en: 'The local media name is invalid', vi: 'Tên tài nguyên cục bộ không hợp lệ' }));
     return createTransparentMovProxy(storedName);
   }));
   let transcriptWindow: BrowserWindow | null = null;
@@ -316,7 +316,7 @@ function registerDesktopHandlers(trustedOrigin: string): void {
       filename,
       (identity) => resolvePersistedExportDestination(exportStatePath, identity),
     );
-    if (!target) throw new Error('export destination is unavailable');
+    if (!target) throw new Error(localized({ zh: '导出位置不可用', en: 'The export destination is unavailable', vi: 'Vị trí xuất không khả dụng' }));
     if (target.candidate && existsSync(target.candidate)) {
       shell.showItemInFolder(target.candidate);
       return;
