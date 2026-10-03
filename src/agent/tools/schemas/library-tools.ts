@@ -8,20 +8,20 @@ export const LIBRARY_TOOL_SCHEMAS: AgentToolSchema[] = [
   {
     name: 'browse_library',
     description:
-      'Browse the OpenChatCut Library (not the user media pool). Categories match Library tabs: motion-graphics, luts, zoom, fx, audio-fx, sound-effects, transitions. Modes: (1) category only → group overview; (2) category+group or query → list of id/name/description; (3) id → full detail + edit_item usage. After discovery, place with edit_item (effect/transition/zoom/audio).',
+      'Duyệt thư viện OpenChatCut (không phải media pool của người dùng). Các category tương ứng với tab Library: motion-graphics, luts, zoom, fx, audio-fx, sound-effects, transitions. Cách dùng: (1) chỉ category → tổng quan nhóm; (2) category+group hoặc query → danh sách id/name/description; (3) id → chi tiết đầy đủ + hướng dẫn dùng edit_item. Sau khi tìm được asset, hãy đưa vào bằng edit_item (effect/transition/zoom/audio).',
     input_schema: {
       type: 'object',
       properties: {
         category: {
           type: 'string',
           enum: [...LIBRARY_CATEGORIES],
-          description: 'Optional Library tab filter.',
+          description: 'Bộ lọc tab Library tùy chọn.',
         },
-        group: { type: 'string', description: 'Optional group within category (e.g. template category, sound group name).' },
-        query: { type: 'string', description: 'Case-insensitive search over id/name/description/group. Returns a list.' },
-        id: { type: 'string', description: 'Exact library asset id for detail + usage guidance.' },
-        limit: { type: 'number', description: 'Max list results (default 30, max 50).' },
-        offset: { type: 'number', description: 'List offset (default 0).' },
+        group: { type: 'string', description: 'Nhóm tùy chọn trong category (ví dụ category template hoặc tên nhóm âm thanh).' },
+        query: { type: 'string', description: 'Tìm không phân biệt hoa thường trong id/name/description/group. Trả về danh sách.' },
+        id: { type: 'string', description: 'Id chính xác của asset thư viện để xem chi tiết + hướng dẫn sử dụng.' },
+        limit: { type: 'number', description: 'Số kết quả tối đa (mặc định 30, tối đa 50).' },
+        offset: { type: 'number', description: 'Vị trí bắt đầu danh sách (mặc định 0).' },
       },
     },
   },

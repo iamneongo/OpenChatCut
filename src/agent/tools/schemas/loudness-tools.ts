@@ -4,12 +4,12 @@ export const LOUDNESS_TOOL_SCHEMAS: AgentToolSchema[] = [
   {
     name: 'normalize_loudness',
     description:
-      'Normalize audio clip(s) to a target integrated loudness (LUFS) by analyzing each clip offline (WebAudio) and applying the computed gain as the clip volume. Defaults to -14 LUFS (streaming loudness standard). To normalize MANY/all clips, call this ONCE with NO itemId — a single call processes every audio clip on the active timeline and returns per-clip results ({itemId, measuredLufs, gain}). Do NOT call it once per clip. Pass itemId ONLY to normalize a single specific clip.',
+      'Chuẩn hóa clip âm thanh về độ lớn tích hợp mục tiêu (LUFS) bằng cách phân tích từng clip ngoại tuyến (WebAudio) và áp dụng gain tính được làm âm lượng clip. Mặc định là -14 LUFS (chuẩn độ lớn khi phát trực tuyến). Để chuẩn hóa NHIỀU/tất cả clip, gọi tool này MỘT LẦN và KHÔNG truyền itemId — một lần gọi sẽ xử lý mọi clip âm thanh trên timeline đang hoạt động và trả kết quả từng clip ({itemId, measuredLufs, gain}). KHÔNG gọi một lần cho từng clip. Chỉ truyền itemId khi muốn chuẩn hóa một clip cụ thể.',
     input_schema: {
       type: 'object',
       properties: {
-        target: { type: 'number', description: 'Target integrated loudness in LUFS (default -14).' },
-        itemId: { type: 'string', description: 'Normalize only this clip (prefix id ok). Omit to normalize all audio clips.' },
+        target: { type: 'number', description: 'Độ lớn tích hợp mục tiêu tính bằng LUFS (mặc định -14).' },
+        itemId: { type: 'string', description: 'Chỉ chuẩn hóa clip này (chấp nhận tiền tố id). Bỏ qua để chuẩn hóa mọi clip âm thanh.' },
       },
     },
   },

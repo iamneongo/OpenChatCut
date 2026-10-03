@@ -4,14 +4,14 @@ export const WATERMARK_TOOL_SCHEMAS: AgentToolSchema[] = [
   {
     name: 'update_watermark',
     description:
-      'Toggle and configure a text watermark overlay on the active timeline. The watermark is a single label pinned to one corner, rendered in the preview and burned into every export. Pass only the fields you want to change (they merge over the current watermark). Set enabled:false to hide it without losing the text. To make it visible, enable it AND give it non-empty text.',
+      'Bật/tắt và cấu hình watermark chữ trên timeline đang hoạt động. Watermark là một nhãn duy nhất được ghim vào một góc, hiển thị trong preview và được ghi vào mọi bản export. Chỉ truyền các trường muốn thay đổi (chúng sẽ gộp với watermark hiện tại). Đặt enabled:false để ẩn mà không mất text. Để hiển thị, hãy bật enabled VÀ truyền text không rỗng.',
     input_schema: {
       type: 'object',
       properties: {
-        enabled: { type: 'boolean', description: 'Show (true) or hide (false) the watermark.' },
-        text: { type: 'string', description: 'Watermark label text.' },
-        position: { type: 'string', enum: ['tl', 'tr', 'bl', 'br'], description: 'Corner: tl=top-left, tr=top-right, bl=bottom-left, br=bottom-right.' },
-        opacity: { type: 'number', minimum: 0, maximum: 1, description: 'Overlay opacity 0..1 (default 0.7).' },
+        enabled: { type: 'boolean', description: 'Hiện (true) hoặc ẩn (false) watermark.' },
+        text: { type: 'string', description: 'Nội dung nhãn watermark.' },
+        position: { type: 'string', enum: ['tl', 'tr', 'bl', 'br'], description: 'Góc: tl=trên trái, tr=trên phải, bl=dưới trái, br=dưới phải.' },
+        opacity: { type: 'number', minimum: 0, maximum: 1, description: 'Độ trong suốt overlay 0..1 (mặc định 0.7).' },
       },
     },
   },

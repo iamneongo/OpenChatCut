@@ -2316,7 +2316,7 @@
     },
     {
       "name": "browse_library",
-      "description": "Browse the OpenChatCut Library (not the user media pool). Categories match Library tabs: motion-graphics, luts, zoom, fx, audio-fx, sound-effects, transitions. Modes: (1) category only → group overview; (2) category+group or query → list of id/name/description; (3) id → full detail + edit_item usage. After discovery, place with edit_item (effect/transition/zoom/audio).",
+      "description": "Duyệt thư viện OpenChatCut (không phải media pool của người dùng). Các category tương ứng với tab Library: motion-graphics, luts, zoom, fx, audio-fx, sound-effects, transitions. Cách dùng: (1) chỉ category → tổng quan nhóm; (2) category+group hoặc query → danh sách id/name/description; (3) id → chi tiết đầy đủ + hướng dẫn dùng edit_item. Sau khi tìm được asset, hãy đưa vào bằng edit_item (effect/transition/zoom/audio).",
       "input_schema": {
         "type": "object",
         "properties": {
@@ -2331,27 +2331,27 @@
               "sound-effects",
               "transitions"
             ],
-            "description": "Optional Library tab filter."
+            "description": "Bộ lọc tab Library tùy chọn."
           },
           "group": {
             "type": "string",
-            "description": "Optional group within category (e.g. template category, sound group name)."
+            "description": "Nhóm tùy chọn trong category (ví dụ category template hoặc tên nhóm âm thanh)."
           },
           "query": {
             "type": "string",
-            "description": "Case-insensitive search over id/name/description/group. Returns a list."
+            "description": "Tìm không phân biệt hoa thường trong id/name/description/group. Trả về danh sách."
           },
           "id": {
             "type": "string",
-            "description": "Exact library asset id for detail + usage guidance."
+            "description": "Id chính xác của asset thư viện để xem chi tiết + hướng dẫn sử dụng."
           },
           "limit": {
             "type": "number",
-            "description": "Max list results (default 30, max 50)."
+            "description": "Số kết quả tối đa (mặc định 30, tối đa 50)."
           },
           "offset": {
             "type": "number",
-            "description": "List offset (default 0)."
+            "description": "Vị trí bắt đầu danh sách (mặc định 0)."
           }
         }
       }
@@ -3186,17 +3186,17 @@
     },
     {
       "name": "normalize_loudness",
-      "description": "Normalize audio clip(s) to a target integrated loudness (LUFS) by analyzing each clip offline (WebAudio) and applying the computed gain as the clip volume. Defaults to -14 LUFS (streaming loudness standard). To normalize MANY/all clips, call this ONCE with NO itemId — a single call processes every audio clip on the active timeline and returns per-clip results ({itemId, measuredLufs, gain}). Do NOT call it once per clip. Pass itemId ONLY to normalize a single specific clip.",
+      "description": "Chuẩn hóa clip âm thanh về độ lớn tích hợp mục tiêu (LUFS) bằng cách phân tích từng clip ngoại tuyến (WebAudio) và áp dụng gain tính được làm âm lượng clip. Mặc định là -14 LUFS (chuẩn độ lớn khi phát trực tuyến). Để chuẩn hóa NHIỀU/tất cả clip, gọi tool này MỘT LẦN và KHÔNG truyền itemId — một lần gọi sẽ xử lý mọi clip âm thanh trên timeline đang hoạt động và trả kết quả từng clip ({itemId, measuredLufs, gain}). KHÔNG gọi một lần cho từng clip. Chỉ truyền itemId khi muốn chuẩn hóa một clip cụ thể.",
       "input_schema": {
         "type": "object",
         "properties": {
           "target": {
             "type": "number",
-            "description": "Target integrated loudness in LUFS (default -14)."
+            "description": "Độ lớn tích hợp mục tiêu tính bằng LUFS (mặc định -14)."
           },
           "itemId": {
             "type": "string",
-            "description": "Normalize only this clip (prefix id ok). Omit to normalize all audio clips."
+            "description": "Chỉ chuẩn hóa clip này (chấp nhận tiền tố id). Bỏ qua để chuẩn hóa mọi clip âm thanh."
           }
         }
       }
@@ -3293,17 +3293,17 @@
     },
     {
       "name": "update_watermark",
-      "description": "Toggle and configure a text watermark overlay on the active timeline. The watermark is a single label pinned to one corner, rendered in the preview and burned into every export. Pass only the fields you want to change (they merge over the current watermark). Set enabled:false to hide it without losing the text. To make it visible, enable it AND give it non-empty text.",
+      "description": "Bật/tắt và cấu hình watermark chữ trên timeline đang hoạt động. Watermark là một nhãn duy nhất được ghim vào một góc, hiển thị trong preview và được ghi vào mọi bản export. Chỉ truyền các trường muốn thay đổi (chúng sẽ gộp với watermark hiện tại). Đặt enabled:false để ẩn mà không mất text. Để hiển thị, hãy bật enabled VÀ truyền text không rỗng.",
       "input_schema": {
         "type": "object",
         "properties": {
           "enabled": {
             "type": "boolean",
-            "description": "Show (true) or hide (false) the watermark."
+            "description": "Hiện (true) hoặc ẩn (false) watermark."
           },
           "text": {
             "type": "string",
-            "description": "Watermark label text."
+            "description": "Nội dung nhãn watermark."
           },
           "position": {
             "type": "string",
@@ -3313,13 +3313,13 @@
               "bl",
               "br"
             ],
-            "description": "Corner: tl=top-left, tr=top-right, bl=bottom-left, br=bottom-right."
+            "description": "Góc: tl=trên trái, tr=trên phải, bl=dưới trái, br=dưới phải."
           },
           "opacity": {
             "type": "number",
             "minimum": 0,
             "maximum": 1,
-            "description": "Overlay opacity 0..1 (default 0.7)."
+            "description": "Độ trong suốt overlay 0..1 (mặc định 0.7)."
           }
         }
       }
@@ -4907,7 +4907,7 @@
     },
     {
       "name": "auto_grade",
-      "description": "Technical auto color correction for imported pool media on the timeline (video/image/gif under /media/uploads). action=analyze measures brightness/contrast/saturation and returns recommended filters without writing. action=apply analyzes then writes setFilters on each target as one undo batch. Neutral cleanup only — not creative LUTs/looks (use browse_library + edit_item for those). Prefer inspect_color after apply to verify numbers. itemIds optional; omit to grade every eligible clip on the active timeline.",
+      "description": "Tự động hiệu chỉnh màu kỹ thuật cho media trong pool đã nhập vào timeline (video/image/gif dưới /media/uploads). action=analyze đo độ sáng/tương phản/bão hòa và trả về filter đề xuất mà không ghi thay đổi. action=apply phân tích rồi ghi setFilters lên từng mục tiêu trong một batch undo. Chỉ dọn màu trung tính — không phải LUT/look sáng tạo (dùng browse_library + edit_item cho các trường hợp đó). Nên dùng inspect_color sau apply để kiểm tra các chỉ số. itemIds là tùy chọn; bỏ qua để grade mọi clip đủ điều kiện trên timeline đang hoạt động.",
       "input_schema": {
         "type": "object",
         "properties": {
@@ -4917,11 +4917,11 @@
               "analyze",
               "apply"
             ],
-            "description": "analyze = preview recommendations only; apply = analyze + commit filters."
+            "description": "analyze = chỉ xem trước đề xuất; apply = phân tích + ghi filter."
           },
           "itemIds": {
             "type": "string",
-            "description": "Comma-separated clip ids/prefixes. Omit to target all eligible video/image/gif clips with /media/uploads sources."
+            "description": "Các id/tiền tố clip, phân tách bằng dấu phẩy. Bỏ qua để chọn mọi clip video/image/gif đủ điều kiện có source /media/uploads."
           }
         },
         "required": [
@@ -5764,7 +5764,7 @@
     },
     {
       "name": "browse_library",
-      "description": "Browse the OpenChatCut Library (not the user media pool). Categories match Library tabs: motion-graphics, luts, zoom, fx, audio-fx, sound-effects, transitions. Modes: (1) category only → group overview; (2) category+group or query → list of id/name/description; (3) id → full detail + edit_item usage. After discovery, place with edit_item (effect/transition/zoom/audio).",
+      "description": "Duyệt thư viện OpenChatCut (không phải media pool của người dùng). Các category tương ứng với tab Library: motion-graphics, luts, zoom, fx, audio-fx, sound-effects, transitions. Cách dùng: (1) chỉ category → tổng quan nhóm; (2) category+group hoặc query → danh sách id/name/description; (3) id → chi tiết đầy đủ + hướng dẫn dùng edit_item. Sau khi tìm được asset, hãy đưa vào bằng edit_item (effect/transition/zoom/audio).",
       "input_schema": {
         "type": "object",
         "properties": {
@@ -5779,27 +5779,27 @@
               "sound-effects",
               "transitions"
             ],
-            "description": "Optional Library tab filter."
+            "description": "Bộ lọc tab Library tùy chọn."
           },
           "group": {
             "type": "string",
-            "description": "Optional group within category (e.g. template category, sound group name)."
+            "description": "Nhóm tùy chọn trong category (ví dụ category template hoặc tên nhóm âm thanh)."
           },
           "query": {
             "type": "string",
-            "description": "Case-insensitive search over id/name/description/group. Returns a list."
+            "description": "Tìm không phân biệt hoa thường trong id/name/description/group. Trả về danh sách."
           },
           "id": {
             "type": "string",
-            "description": "Exact library asset id for detail + usage guidance."
+            "description": "Id chính xác của asset thư viện để xem chi tiết + hướng dẫn sử dụng."
           },
           "limit": {
             "type": "number",
-            "description": "Max list results (default 30, max 50)."
+            "description": "Số kết quả tối đa (mặc định 30, tối đa 50)."
           },
           "offset": {
             "type": "number",
-            "description": "List offset (default 0)."
+            "description": "Vị trí bắt đầu danh sách (mặc định 0)."
           }
         }
       }
