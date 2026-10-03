@@ -248,7 +248,7 @@ function runProbeProcess(args: readonly string[], signal?: AbortSignal): Promise
     child.kill('SIGKILL');
   };
   const timer = setTimeout(() => {
-    terminalError = new Error('directory media probe timed out');
+    terminalError = new Error('thăm dò media thư mục đã hết thời gian chờ');
     child.kill('SIGKILL');
   }, 30_000);
   child.stdout.on('data', (chunk: Buffer) => { stdout = `${stdout}${String(chunk)}`.slice(-1_000_000); });

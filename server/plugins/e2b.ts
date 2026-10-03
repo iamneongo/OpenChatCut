@@ -81,7 +81,7 @@ async function readJson(req: IncomingMessage): Promise<E2bRequest> {
   for await (const chunk of req) {
     const bytes = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk);
     total += bytes.length;
-    if (total > MAX_BODY) throw new Error('request body too large');
+    if (total > MAX_BODY) throw new Error('thân request quá lớn');
     chunks.push(bytes);
   }
   return JSON.parse(Buffer.concat(chunks).toString('utf8')) as E2bRequest;
@@ -118,10 +118,10 @@ export function e2bPlugin(options: E2bOptions): Plugin {
         if (req.method !== 'POST') { sendJson(res, 405, { error: 'method not allowed — use POST' }); return; }
         let sandbox: Sandbox | undefined;
         try {
-          if (!options.apiKey) throw new Error('e2b sandbox is not configured. Set E2B_API_KEY in .env.local.');
+          if (!options.apiKey) throw new Error('sandbox e2b chưa được cấu hình. Hãy đặt E2B_API_KEY trong .env.local.');
           const input = await readJson(req);
           const command = String(input.command ?? '').trim();
-          if (!command) throw new Error('command is required');
+          if (!command) throw new Error('command là bắt buộc');
 
           sandbox = await createSandbox(options, input.timeoutMs ?? 120_000);
           for (const file of input.files ?? []) {
@@ -160,12 +160,12 @@ export function e2bPlugin(options: E2bOptions): Plugin {
         if (req.method !== 'POST') { sendJson(res, 405, { error: 'method not allowed — use POST' }); return; }
         let sandbox: Sandbox | undefined;
         try {
-          if (!options.apiKey) throw new Error('e2b sandbox is not configured. Set E2B_API_KEY in .env.local.');
+          if (!options.apiKey) throw new Error('sandbox e2b chưa được cấu hình. Hãy đặt E2B_API_KEY trong .env.local.');
           const input = (await readJson(req)) as unknown as TranscodeRequest;
           const source = String(input.source ?? '').trim();
-          if (!source) throw new Error('source is required');
+          if (!source) throw new Error('source là bắt buộc');
           const bytes = await resolveE2bFileBytes({ path: 'in.media', url: source });
-          if (typeof bytes === 'string') throw new Error('source must be a media file (path or url), not inline text');
+          if (typeof bytes === 'string') throw new Error('source phải là tệp media (path hoặc URL), không phải văn bản inline');
 
           sandbox = await createSandbox(options, input.timeoutMs ?? 240_000);
           await sandbox.files.write('in.media', bytes);
@@ -180,7 +180,7 @@ export function e2bPlugin(options: E2bOptions): Plugin {
             throw new Error(`ffmpeg vp9-alpha failed (exit ${r.exitCode}): ${r.stderr.slice(-400)}`);
           }
           const webm = await sandbox.files.read('out.webm', { format: 'bytes' });
-          if (!webm || webm.byteLength === 0) throw new Error('transcode produced an empty file');
+          if (!webm || webm.byteLength === 0) throw new Error('transcode tạo ra tệp rỗng');
 
           const fname = `mgalpha_${Date.now().toString(36)}_${alphaSeq++}.webm`;
           const dir = uploadDir();

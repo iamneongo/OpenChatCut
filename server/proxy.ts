@@ -45,7 +45,7 @@ export function proxyMiddleware(route: ProxyRoute): Middleware {
     try {
       target = new URL(route.target(req));
       if (target.protocol !== 'http:' && target.protocol !== 'https:') {
-        throw new Error('unsupported proxy protocol');
+        throw new Error('giao thức proxy không được hỗ trợ');
       }
     } catch {
       res.writeHead(502, { 'Content-Type': 'application/json' });

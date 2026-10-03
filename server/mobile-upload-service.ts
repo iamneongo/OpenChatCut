@@ -229,7 +229,7 @@ export class MobileUploadService {
 
   async createSession(locale: MobilePageLocale = 'zh'): Promise<MobileUploadSessionSnapshot> {
     const addresses = this.options.addresses();
-    if (addresses.length === 0) throw new Error('no LAN IPv4 address available');
+  if (addresses.length === 0) throw new Error('không có địa chỉ IPv4 mạng LAN khả dụng');
     await this.ensureServer();
     const id = randomUUID();
     const token = randomBytes(24).toString('base64url');
@@ -281,7 +281,7 @@ export class MobileUploadService {
       server.once('error', reject);
       server.listen(0, this.options.bindHost, () => {
         const address = server.address();
-        if (!address || typeof address === 'string') { reject(new Error('mobile upload server failed to bind')); return; }
+        if (!address || typeof address === 'string') { reject(new Error('máy chủ upload di động không thể liên kết')); return; }
         this.server = server;
         this.port = address.port;
         resolve();

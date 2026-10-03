@@ -35,7 +35,7 @@ function readJson(req: IncomingMessage): Promise<unknown> {
     req.on('data', (chunk: Buffer) => {
       size += chunk.length;
       if (size > MAX_JSON) {
-        reject(new Error('body too large'));
+        reject(new Error('thân request quá lớn'));
         req.destroy();
         return;
       }
@@ -155,7 +155,7 @@ export async function analyzeColorInFile(file: string, options: AnalyzeColorOpti
   ], 30_000);
   const probe = JSON.parse(probeText) as ProbeResult;
   const stream = probe.streams?.[0];
-  if (!stream) throw new Error('media has no video stream');
+  if (!stream) throw new Error('media không có luồng video');
   const profile = createColorStreamProfile(stream);
   const sourceDuration = finiteNonNegative(stream.duration ?? probe.format?.duration, 0);
   const startSeconds = Math.min(sourceDuration || Number.MAX_SAFE_INTEGER, finiteNonNegative(options.startSeconds, 0));
@@ -177,7 +177,7 @@ export async function analyzeColorInFile(file: string, options: AnalyzeColorOpti
     '-frames:v', String(isStill ? 1 : SAMPLE_COUNT), '-an', '-f', 'null', '-',
   );
   const frames = parseSignalStats(await runCapture(ffmpegBin(), args));
-  if (!frames.length) throw new Error('ffmpeg signalstats returned no samples');
+  if (!frames.length) throw new Error('ffmpeg signalstats không trả về mẫu nào');
   return {
     ...analyzeSignalFrames(frames, profile),
     analyzedStartSeconds: startSeconds,

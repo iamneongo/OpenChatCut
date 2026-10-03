@@ -21,7 +21,7 @@ export function readJsonBody(req: IncomingMessage): Promise<unknown> {
     req.on('data', (chunk: Buffer) => {
       size += chunk.length;
       if (size > MAX_BODY_BYTES) {
-        reject(new Error('request body too large'));
+        reject(new Error('thân request quá lớn'));
         req.destroy();
         return;
       }
@@ -31,7 +31,7 @@ export function readJsonBody(req: IncomingMessage): Promise<unknown> {
       try {
         resolve(JSON.parse(Buffer.concat(chunks).toString('utf8')));
       } catch {
-        reject(new Error('invalid JSON body'));
+        reject(new Error('thân request chứa JSON không hợp lệ'));
       }
     });
     req.on('error', reject);
@@ -42,7 +42,7 @@ export function exportOperationId(body: ExportRequest | null): string | undefine
   if (body?.operationId === undefined) return undefined;
   if (typeof body.operationId !== 'string'
     || !/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(body.operationId)) {
-    throw new Error('export operationId must be a UUID');
+    throw new Error('operationId của export phải là UUID');
   }
   return body.operationId;
 }

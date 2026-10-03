@@ -61,7 +61,7 @@ function outsideRootsError(path: string, roots: readonly string[]): AgentPathImp
 }
 
 export async function resolveAgentMediaPath(path: string): Promise<string> {
-  if (!isAbsolute(path) || path.includes('\0')) throw new Error('path must be an absolute local path');
+  if (!isAbsolute(path) || path.includes('\0')) throw new Error('path phải là một đường dẫn cục bộ tuyệt đối');
   const configuredRoots = authorizedRoots();
   const roots = configuredRoots.length ? await canonicalRoots(configuredRoots) : [];
   if (configuredRoots.length && !pathAllowedByRoots(configuredRoots, path) && !pathAllowedByRoots(roots, path)) {

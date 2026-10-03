@@ -130,7 +130,7 @@ function runProbe(path: string): Promise<string> {
   child.once('close', (code) => {
     clearTimeout(timer);
     if (code !== 0) deferred.reject(new Error(`ffprobe exited ${code ?? 'on a signal'}`));
-    else if (size > MAX_PROBE_OUTPUT) deferred.reject(new Error('ffprobe output too large'));
+    else if (size > MAX_PROBE_OUTPUT) deferred.reject(new Error('đầu ra ffprobe quá lớn'));
     else deferred.resolve(Buffer.concat(chunks).toString('utf8'));
   });
   return deferred.promise;

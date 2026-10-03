@@ -49,7 +49,7 @@ export async function generateGrokVideo(
     if (!startedResponse.ok) throw new Error(await providerError(startedResponse));
     const started = await startedResponse.json() as { request_id?: unknown };
     taskId = String(started.request_id ?? '');
-    if (!taskId) throw new Error('grok-imagine-video did not return a request id');
+    if (!taskId) throw new Error('grok-imagine-video không trả về request id');
     await registerProviderTask('grok-imagine-video', taskId);
   }
   const deadline = Date.now() + 15 * 60_000;
@@ -62,11 +62,11 @@ export async function generateGrokVideo(
     const status = String(current.status ?? '');
     if (status === 'done') {
       const url = current.video?.url;
-      if (typeof url !== 'string' || !url) throw new Error('grok-imagine-video succeeded without a video URL');
+      if (typeof url !== 'string' || !url) throw new Error('grok-imagine-video thành công nhưng không có URL video');
       return url;
     }
     if (FAILURES.has(status)) throw new Error(`grok-imagine-video generation ${status}`);
     await wait(3_000);
   }
-  throw new Error('grok-imagine-video generation timed out');
+  throw new Error('tạo video grok-imagine-video đã hết thời gian chờ');
 }

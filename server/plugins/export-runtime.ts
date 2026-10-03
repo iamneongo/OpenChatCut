@@ -50,13 +50,13 @@ function errorCode(error: unknown): string | undefined {
 
 export function exportJobFilename(id: string, extension: string): string {
   if (!EXPORT_JOB_ID.test(id) || !EXPORT_JOB_EXTENSIONS.has(extension)) {
-    throw new Error('invalid export job filename');
+    throw new Error('tên tệp job export không hợp lệ');
   }
   return `${EXPORT_JOB_FILE_PREFIX}${id}.${extension}`;
 }
 
 export function assertNonEmptyExportBytes(size: number): void {
-  if (size <= 0) throw new Error('export renderer produced an empty file');
+  if (size <= 0) throw new Error('renderer export tạo ra tệp rỗng');
 }
 
 export function exportJobResultName(path: string, assetId: string): string | null {
@@ -81,7 +81,7 @@ export async function promoteExportResult<T extends PromotableExportResult>(
   directory: string,
 ): Promise<T> {
   const sourceName = exportJobResultName(result.path, result.assetId);
-  if (!sourceName) throw new Error('export result is not promotable');
+  if (!sourceName) throw new Error('kết quả export không thể phát hành');
   const publishedName = `openchatcut-derived-${result.assetId}${extname(sourceName).toLowerCase()}`;
   const source = join(directory, sourceName);
   const destination = join(directory, publishedName);
@@ -101,7 +101,7 @@ export async function promoteExportResult<T extends PromotableExportResult>(
     }
   }
   const publishedInfo = await stat(destination);
-  if (publishedInfo.size !== sourceInfo.size) throw new Error('promoted export size mismatch');
+  if (publishedInfo.size !== sourceInfo.size) throw new Error('kích thước export đã phát hành không khớp');
   return {
     ...result,
     path: `/media/uploads/${publishedName}`,
@@ -241,7 +241,7 @@ function runFfmpeg(args: string[], signal?: AbortSignal): Promise<void> {
       if (error) reject(error); else resolve();
     };
     const timer = setTimeout(() => {
-      timeoutError = new Error('ffmpeg fps retime timed out');
+      timeoutError = new Error('điều chỉnh lại fps bằng ffmpeg đã hết thời gian chờ');
       child.kill('SIGKILL');
     }, FFMPEG_TIMEOUT_MS);
     child.stderr?.on('data', (chunk: Buffer) => {
@@ -343,7 +343,7 @@ async function retimeH264(
       console.warn(`[export] ${encoder} failed during FPS conversion; falling back to libx264`);
     }
   }
-  throw lastError instanceof Error ? lastError : new Error('ffmpeg fps retime failed');
+  throw lastError instanceof Error ? lastError : new Error('điều chỉnh lại fps bằng ffmpeg thất bại');
 }
 
 export function finalH264EncoderOutcome(

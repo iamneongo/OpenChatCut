@@ -195,7 +195,7 @@ try {
   }], 'main must call importLocalMedia with the validated IPC arguments');
   await assert.rejects(
     mainHandler(undefined, 'relative/camera.mov', bridgeFile.name),
-    /absolute path/,
+    /đường dẫn tuyệt đối/,
     'main must reject relative source paths',
   );
   await assert.rejects(

@@ -227,10 +227,10 @@ export async function probeVideo(path: string, signal?: AbortSignal): Promise<Pr
   const streams = Array.isArray(data.streams) ? data.streams : [];
   const video = streams.find((s) => s.codec_type === 'video');
   const audio = streams.find((s) => s.codec_type === 'audio');
-  if (!video) throw new Error('no video stream');
+  if (!video) throw new Error('không có luồng video');
   const codedWidth = Number(video.width) || 0;
   const codedHeight = Number(video.height) || 0;
-  if (codedWidth <= 0 || codedHeight <= 0) throw new Error('video stream has invalid dimensions');
+  if (codedWidth <= 0 || codedHeight <= 0) throw new Error('luồng video có kích thước không hợp lệ');
   // Portrait footage is usually stored landscape-coded with a rotation
   // side-data/tag; swap so the asset aspect reflects the displayed frame.
   const dimensions = displayDimensions(codedWidth, codedHeight, rotationOf(video));
@@ -389,7 +389,7 @@ async function encodeTranscodedVideo(
       await unlink(outputPath).catch(() => {});
     }
   }
-  throw lastError instanceof Error ? lastError : new Error('media normalization failed');
+  throw lastError instanceof Error ? lastError : new Error('chuẩn hóa media thất bại');
 }
 
 export async function encodeNormalized(

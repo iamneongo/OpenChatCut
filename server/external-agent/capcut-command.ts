@@ -84,7 +84,7 @@ export function capcutLaunch(args: readonly string[], executable?: string, host:
   const [command, ...prefix] = capcutCommand(executable, host);
   const launch = codexCommand(command!, [...prefix, ...args], host.platform ?? process.platform);
   if (launch.windowsVerbatimArguments && args.some((arg) => /["\r\n]/.test(arg))) {
-    throw new Error('capcut-cli: a .cmd/.bat CAPCUT_CLI cannot take an argument with a quote or line break');
+    throw new Error('capcut-cli: CAPCUT_CLI dạng .cmd/.bat không thể nhận đối số có dấu ngoặc kép hoặc xuống dòng');
   }
   return launch;
 }

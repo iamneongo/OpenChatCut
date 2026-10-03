@@ -17,9 +17,9 @@ export interface ProviderImage {
 }
 
 export function localImageAssetPath(path: string): string {
-  if (!path.startsWith('/media/uploads/')) throw new Error('reference asset must be under /media/uploads/');
+  if (!path.startsWith('/media/uploads/')) throw new Error('asset tham chiếu phải nằm dưới /media/uploads/');
   const name = path.slice('/media/uploads/'.length);
-  if (!isSafeUploadName(name)) throw new Error('invalid reference asset path');
+  if (!isSafeUploadName(name)) throw new Error('đường dẫn asset tham chiếu không hợp lệ');
   const file = resolveUploadFile(name);
   if (!file) throw new Error(`reference asset not found: ${name}`);
   return file;
@@ -66,7 +66,7 @@ export async function callGeminiProvider(baseUrl: string, apiKey: string, model:
     });
     if (!response.ok) throw new Error(await imageProviderError(response));
     const result = await response.json() as { output_image?: { data?: string } };
-    if (!result.output_image?.data) throw new Error('Nano Banana returned no image');
+    if (!result.output_image?.data) throw new Error('Nano Banana không trả về ảnh');
     return { b64_json: result.output_image.data };
   }));
 }
@@ -82,7 +82,7 @@ async function minimaxSubjectUrl(path: string): Promise<string> {
   await putUploadFile(name, file, imageMimeType(file));
   const signed = await presignGetUpload(name, 3600);
   if (!signed) {
-    throw new Error('MiniMax reference images require configured R2 storage so the provider can fetch a temporary HTTPS URL');
+    throw new Error('ảnh tham chiếu MiniMax yêu cầu R2 storage đã cấu hình để provider lấy URL HTTPS tạm thời');
   }
   return signed.downloadUrl;
 }
@@ -126,7 +126,7 @@ export async function callMinimaxProvider(baseUrl: string, apiKey: string, model
     ...(result.data?.image_urls ?? []).map((url) => ({ url })),
     ...(result.data?.image_base64 ?? []).map((b64) => ({ b64_json: b64 })),
   ];
-  if (!images.length) throw new Error('MiniMax returned no images');
+  if (!images.length) throw new Error('MiniMax không trả về ảnh nào');
   return images;
 }
 
@@ -153,14 +153,14 @@ async function waveSpeedPollResult(baseUrl: string, apiKey: string, taskId: stri
     const status = result.data?.status ?? '';
     if (status === 'completed') {
       const url = result.data?.outputs?.[0];
-      if (!url) throw new Error('WaveSpeed completed without an output URL');
+      if (!url) throw new Error('WaveSpeed hoàn tất nhưng không có URL đầu ra');
       return url;
     }
     if (WAVESPEED_TERMINAL_FAILURES.has(status)) {
       throw new Error(result.data?.error || `WaveSpeed generation ${status}`);
     }
   }
-  throw new Error('WaveSpeed generation timed out');
+  throw new Error('tạo ảnh WaveSpeed đã hết thời gian chờ');
 }
 
 export async function callWaveSpeedProvider(baseUrl: string, apiKey: string, model: string, body: {
@@ -179,7 +179,7 @@ export async function callWaveSpeedProvider(baseUrl: string, apiKey: string, mod
     if (!response.ok) throw new Error(await waveSpeedError(response));
     const submitted = await response.json() as WaveSpeedResult;
     const taskId = submitted.data?.id;
-    if (!taskId) throw new Error('WaveSpeed did not return a task id');
+    if (!taskId) throw new Error('WaveSpeed không trả về task id');
     return { url: await waveSpeedPollResult(root, apiKey, taskId) };
   }));
 }
@@ -200,7 +200,7 @@ export async function callByteplusImageProvider(baseUrl: string, apiKey: string,
   });
   if (!response.ok) throw new Error(await imageProviderError(response));
   const result = await response.json() as { data?: ProviderImage[] };
-  if (!result.data?.length) throw new Error('BytePlus returned no images');
+  if (!result.data?.length) throw new Error('BytePlus không trả về ảnh nào');
   return result.data;
 }
 
@@ -224,6 +224,6 @@ export async function callGrokImageProvider(baseUrl: string, apiKey: string, mod
   });
   if (!response.ok) throw new Error(await imageProviderError(response));
   const result = await response.json() as { data?: ProviderImage[] };
-  if (!result.data?.length) throw new Error('grok-imagine returned no images');
+  if (!result.data?.length) throw new Error('grok-imagine không trả về ảnh nào');
   return result.data;
 }

@@ -47,7 +47,7 @@ export function createLocalMediaImportHandler(importMedia: LocalMediaImporter): 
   return async (_event, ...args) => {
     const [sourcePath, originalName] = args;
     if (typeof sourcePath !== 'string' || !isAbsolute(sourcePath)) {
-      throw new Error('local media source must be an absolute path');
+      throw new Error('nguồn media cục bộ phải là một đường dẫn tuyệt đối');
     }
     if (typeof originalName !== 'string' || !originalName || basename(originalName) !== originalName) {
       throw new Error('invalid local media filename');

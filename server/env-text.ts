@@ -54,7 +54,7 @@ export function decodePersistedEnvValue(value: string): string {
   try {
     return decodeURIComponent(value.slice(ENCODED_VALUE_PREFIX.length));
   } catch {
-    throw new Error('invalid encoded dotenv value');
+    throw new Error('giá trị dotenv đã mã hóa không hợp lệ');
   }
 }
 

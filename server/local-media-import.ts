@@ -111,17 +111,17 @@ export async function importLocalMedia(
   dependencies: LocalMediaImportDependencies = DEFAULT_LOCAL_MEDIA_IMPORT_DEPENDENCIES,
 ): Promise<LocalMediaImport> {
   const sourceInfo = await dependencies.stat(sourcePath);
-  if (!sourceInfo.isFile()) throw new Error('local media source must be a file');
+  if (!sourceInfo.isFile()) throw new Error('nguồn media cục bộ phải là một tệp');
   const extension = extname(originalName).toLowerCase();
   const storedName = `${randomUUID()}${extension}`;
   const directory = uploadDir();
   const contentHash = sourceInfo.size > LARGE_HASH_SKIP_BYTES
     ? ''
     : normalizeSha256Hash(await dependencies.hashFile(sourcePath));
-  if (contentHash !== '' && !contentHash) throw new Error('local media hash must be a SHA-256 hex digest');
+  if (contentHash !== '' && !contentHash) throw new Error('hash media cục bộ phải là digest hex SHA-256');
   const finalInfo = await dependencies.stat(sourcePath);
   if (!finalInfo.isFile() || finalInfo.size !== sourceInfo.size || finalInfo.mtimeMs !== sourceInfo.mtimeMs) {
-    throw new Error('local media source changed during import');
+    throw new Error('nguồn media cục bộ đã thay đổi trong lúc nhập');
   }
   await dependencies.registerReference(directory, storedName, sourcePath);
   return { src: `/media/uploads/${storedName}`, storedName, contentHash };

@@ -261,7 +261,7 @@ async function prepareCell(
  * Burns labels onto pixels when drawtext or PIL is available.
  */
 export async function tileContactSheet(cells: GridCell[], opts: TileOptions = {}): Promise<Buffer> {
-  if (!cells.length) throw new Error('tileContactSheet: no cells');
+  if (!cells.length) throw new Error('tileContactSheet: không có ô nào');
   // Even dimensions required for yuv420 / many ffmpeg paths.
   const cellWidth = Math.max(120, Math.min(640, opts.cellWidth ?? 320)) & ~1;
   const quality = Math.max(2, Math.min(12, opts.quality ?? 5));

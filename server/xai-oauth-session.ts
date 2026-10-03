@@ -193,7 +193,7 @@ export async function refreshTokens(session: XaiSession): Promise<XaiSession> {
   }
   const payload = (await response.json()) as Record<string, unknown>;
   const access = nonEmptyString(payload.access_token);
-  if (!access) throw new Error('refresh response missing access_token');
+  if (!access) throw new Error('phản hồi refresh thiếu access_token');
   const expiresIn = finitePositive(payload.expires_in) || DEFAULT_EXPIRES_SECONDS;
   const rotated = nonEmptyString(payload.refresh_token);
   return {

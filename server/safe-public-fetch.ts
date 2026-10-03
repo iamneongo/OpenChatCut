@@ -116,7 +116,7 @@ function createDeferred<Value>(): Deferred<Value> {
     resolve = resolvePromise;
     reject = rejectPromise;
   });
-  if (!resolve || !reject) throw new Error('Promise executor did not initialize synchronously');
+  if (!resolve || !reject) throw new Error('executor của Promise không khởi tạo đồng bộ');
   return { promise, resolve, reject };
 }
 
