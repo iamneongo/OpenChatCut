@@ -39,13 +39,13 @@ assert.equal(valid.backgroundFill, true);
 assert.equal(valid.backgroundFillStrength, 73);
 assert.match(String(validateGenericUpdate(state, {
   type: 'video', itemId: 'main', backgroundFill: 'true',
-}).error), /must be a boolean/);
+}).error), /phải là boolean/);
 assert.match(String(validateGenericUpdate(state, {
   type: 'video', itemId: 'main', backgroundFillStrength: 101,
-}).error), /0 to 100/);
+}).error), /0 đến 100/);
 assert.match(String(validateGenericUpdate(state, {
   type: 'video', itemId: 'main', backgroundFillStrength: 73.5,
-}).error), /integer/);
+}).error), /số nguyên/);
 const strengthOnly = validateGenericUpdate(state, {
   type: 'video', itemId: 'main', backgroundFillStrength: 87,
 });
@@ -53,7 +53,7 @@ assert.equal(strengthOnly.backgroundFill, true, 'selecting a percentage enables 
 assert.equal(strengthOnly.backgroundFillStrength, 87);
 assert.match(String(validateGenericUpdate(state, {
   type: 'video', itemId: 'overlay', backgroundFill: true,
-}).error), /bottom video track/);
+}).error), /track video dưới cùng/);
 assert.equal(validateGenericUpdate(state, {
   type: 'video', itemId: 'overlay', backgroundFill: false,
 }).backgroundFill, false, 'an invalid historical flag can still be cleared');

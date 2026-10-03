@@ -16,18 +16,18 @@ function sourceBound(
   const secondsRaw = entry[secondsKey];
   const millisecondsRaw = entry[millisecondsKey];
   if (secondsRaw !== undefined && millisecondsRaw !== undefined) {
-    return { error: `use either ${secondsKey} or ${millisecondsKey}, not both` };
+    return { error: `chỉ dùng ${secondsKey} hoặc ${millisecondsKey}, không dùng cả hai` };
   }
   const raw = secondsRaw ?? millisecondsRaw;
   if (raw === undefined) return {};
   const parsed = finiteNum(raw);
   if (parsed === undefined) {
-    return { error: `${secondsRaw !== undefined ? secondsKey : millisecondsKey} must be a finite number` };
+    return { error: `${secondsRaw !== undefined ? secondsKey : millisecondsKey} phải là số hữu hạn` };
   }
   const value = millisecondsRaw !== undefined ? parsed / 1000 : parsed;
   return value >= 0
     ? { value }
-    : { error: `${secondsRaw !== undefined ? secondsKey : millisecondsKey} must be non-negative` };
+    : { error: `${secondsRaw !== undefined ? secondsKey : millisecondsKey} không được âm` };
 }
 
 export function validateSourceFrameUpdate(
@@ -39,31 +39,31 @@ export function validateSourceFrameUpdate(
   const sourceDuration = finiteNum(entry.sourceDurationInFrames);
   const duration = finiteNum(entry.durationInFrames);
   if (entry.sourceStartFrame !== undefined && (sourceStart === undefined || sourceStart < 0)) {
-    return { error: 'sourceStartFrame must be a finite non-negative frame count' };
+    return { error: 'sourceStartFrame phải là số frame hữu hạn không âm' };
   }
   if (entry.srcInFrame !== undefined && srcInFrame === undefined) {
-    return { error: 'srcInFrame must be a finite number' };
+    return { error: 'srcInFrame phải là số hữu hạn' };
   }
   if (sourceStart !== undefined && srcInFrame !== undefined
     && Math.round(sourceStart) !== Math.round(srcInFrame)) {
-    return { error: 'srcInFrame and sourceStartFrame must match when both are provided' };
+    return { error: 'srcInFrame và sourceStartFrame phải khớp khi cùng được cung cấp' };
   }
   if (entry.sourceDurationInFrames !== undefined && (sourceDuration === undefined || sourceDuration <= 0)) {
-    return { error: 'sourceDurationInFrames must be a finite positive frame count' };
+    return { error: 'sourceDurationInFrames phải là số frame hữu hạn dương' };
   }
   if (entry.durationInFrames !== undefined && duration === undefined) {
-    return { error: 'durationInFrames must be a finite number' };
+    return { error: 'durationInFrames phải là số hữu hạn' };
   }
   if (sourceDuration !== undefined && duration !== undefined) {
-    return { error: 'use sourceDurationInFrames or durationInFrames, not both' };
+    return { error: 'chỉ dùng sourceDurationInFrames hoặc durationInFrames, không dùng cả hai' };
   }
   if ((sourceStart !== undefined || sourceDuration !== undefined)
     && item.kind !== 'video' && item.kind !== 'audio') {
-    return { error: `source frame windows only apply to video/audio clips (got ${item.kind})` };
+    return { error: `cửa sổ frame nguồn chỉ áp dụng cho clip video/audio (nhận ${item.kind})` };
   }
   if ((sourceStart !== undefined || sourceDuration !== undefined)
     && item.kind === 'audio' && hasOperationalTranscript(item)) {
-    return { error: 'raw source-frame windows are unsupported for audio with an operational transcript' };
+    return { error: 'không hỗ trợ cửa sổ frame nguồn thô cho audio có transcript hoạt động' };
   }
   const requestedStart = sourceStart ?? srcInFrame;
   return {
@@ -87,37 +87,37 @@ export function validateSourceWindow(
   const usesTimeWindow = entry.sourceStartSeconds !== undefined || entry.sourceEndSeconds !== undefined
     || entry.sourceStartMs !== undefined || entry.sourceEndMs !== undefined;
   if (usesFrameWindow && usesTimeWindow) {
-    return { error: 'use frame source windows or seconds/milliseconds source windows, not both' };
+    return { error: 'chỉ dùng cửa sổ frame nguồn hoặc cửa sổ giây/mili-giây, không dùng cả hai' };
   }
   if (usesFrameWindow) {
     const sourceStartFrame = frameStartRaw === undefined ? 0 : finiteNum(frameStartRaw);
     const sourceDurationInFrames = frameDurationRaw === undefined ? undefined : finiteNum(frameDurationRaw);
     if (sourceStartFrame === undefined || sourceStartFrame < 0) {
-      return { error: 'sourceStartFrame must be a finite non-negative frame count' };
+      return { error: 'sourceStartFrame phải là số frame hữu hạn không âm' };
     }
     if (sourceDurationInFrames !== undefined && sourceDurationInFrames <= 0) {
-      return { error: 'sourceDurationInFrames must be a finite positive frame count' };
+      return { error: 'sourceDurationInFrames phải là số frame hữu hạn dương' };
     }
     if (durationInFrames !== undefined || entry.srcInFrame !== undefined) {
-      return { error: 'do not combine source frame windows with durationInFrames/srcInFrame' };
+      return { error: 'không kết hợp cửa sổ frame nguồn với durationInFrames/srcInFrame' };
     }
     if (type !== 'video' && type !== 'audio') {
-      return { error: `source frame windows only apply to video/audio adds (got ${type})` };
+      return { error: `cửa sổ frame nguồn chỉ áp dụng cho adds video/audio (nhận ${type})` };
     }
     if (type === 'audio' && hasOperationalTranscript(asset)) {
-      return { error: 'raw source-frame windows are unsupported for audio with an operational transcript' };
+      return { error: 'không hỗ trợ cửa sổ frame nguồn thô cho audio có transcript hoạt động' };
     }
     const startFrameIn = Math.round(sourceStartFrame);
     const available = asset.durationInFrames > 0 ? asset.durationInFrames - startFrameIn : null;
     if (available !== null && available <= 0) {
-      return { error: `sourceStartFrame ${startFrameIn} is past the end of asset ${asset.id}` };
+      return { error: `sourceStartFrame ${startFrameIn} nằm sau cuối asset ${asset.id}` };
     }
     const sourceFrames = sourceDurationInFrames === undefined
       ? available
       : Math.round(sourceDurationInFrames);
-    if (sourceFrames === null) return { error: 'sourceDurationInFrames is required when the asset duration is unknown' };
+    if (sourceFrames === null) return { error: 'Cần có sourceDurationInFrames khi chưa biết thời lượng asset' };
     if (available !== null && sourceFrames > available) {
-      return { error: `source frame window exceeds asset ${asset.id} length ${asset.durationInFrames}` };
+      return { error: `Cửa sổ frame nguồn vượt quá độ dài ${asset.durationInFrames} của asset ${asset.id}` };
     }
     return {
       srcInFrame: startFrameIn,
@@ -134,39 +134,39 @@ export function validateSourceWindow(
   if (start.error || end.error) return { error: start.error ?? end.error };
   if (start.value === undefined && end.value === undefined) return null;
   if (type !== 'video' && type !== 'audio' && type !== 'gif') {
-    return { error: `source windows only apply to video/audio/gif adds (got ${type})` };
+    return { error: `cửa sổ nguồn chỉ áp dụng cho adds video/audio/gif (nhận ${type})` };
   }
   if (type === 'gif') {
     return {
-      error: 'GIF source windows are unsupported because GIF playback does not consume srcInFrame; convert the GIF to video for source trimming',
+      error: 'Không hỗ trợ cửa sổ nguồn cho GIF vì playback GIF không dùng srcInFrame; hãy chuyển GIF thành video để cắt nguồn',
     };
   }
   if (type === 'audio' && hasOperationalTranscript(asset)) {
     return {
       error: [
-        'raw-source windows are unsupported for audio with an operational transcript',
-        'transcript audio renders a packed edited stream, so raw timestamps cannot be represented safely by srcInFrame',
-        'add it without sourceStart/sourceEnd and edit the transcript stream, or use a non-transcribed audio source for raw-time trimming',
+        'Không hỗ trợ cửa sổ nguồn thô cho audio có transcript hoạt động',
+        'audio có transcript được kết xuất thành luồng đã chỉnh sửa, nên không thể biểu diễn an toàn timestamp thô bằng srcInFrame',
+        'hãy thêm audio mà không dùng sourceStart/sourceEnd rồi chỉnh luồng transcript, hoặc dùng audio không có transcript để cắt theo thời gian thô',
       ].join('; '),
     };
   }
   if (durationInFrames !== undefined || entry.srcInFrame !== undefined) {
-    return { error: 'do not combine source windows with durationInFrames/srcInFrame — the source window derives the trim and length' };
+    return { error: 'không kết hợp cửa sổ nguồn với durationInFrames/srcInFrame — cửa sổ nguồn tự xác định phần cắt và thời lượng' };
   }
   const assetFrames = asset.durationInFrames > 0 ? asset.durationInFrames : null;
   const startSec = start.value ?? 0;
   const startFrameIn = Math.round(startSec * fps);
   if (assetFrames !== null && startFrameIn >= assetFrames) {
-    return { error: `source start ${startSec}s is past the end of the asset (${(assetFrames / fps).toFixed(2)}s)` };
+    return { error: `source start ${startSec}s nằm sau cuối asset (${(assetFrames / fps).toFixed(2)}s)` };
   }
   const endSec = end.value ?? (assetFrames !== null ? assetFrames / fps : undefined);
-  if (endSec === undefined) return { error: 'a source end is required when the asset duration is unknown' };
+  if (endSec === undefined) return { error: 'Cần có source end khi chưa biết thời lượng asset' };
   if (endSec <= startSec) {
-    return { error: `source end ${endSec}s must be greater than source start ${startSec}s` };
+    return { error: `source end ${endSec}s phải lớn hơn source start ${startSec}s` };
   }
   const endFrameIn = Math.max(startFrameIn + 1, Math.round(endSec * fps));
   if (assetFrames !== null && endFrameIn > assetFrames) {
-    return { error: `source end ${endSec}s exceeds the asset length (${(assetFrames / fps).toFixed(2)}s)` };
+    return { error: `source end ${endSec}s vượt quá độ dài asset (${(assetFrames / fps).toFixed(2)}s)` };
   }
   return {
     srcInFrame: startFrameIn,

@@ -103,20 +103,20 @@ async function main(): Promise<void> {
     sourceEndSeconds: 3,
     durationInFrames: 60,
   });
-  assert.match(String(conflict.error), /do not combine/);
+  assert.match(String(conflict.error), /không kết hợp/);
 
   const overEnd = validateGenericAdd(state, assets, {
     type: 'video',
     assetId: 'asset-v',
     sourceStartSeconds: 40,
   });
-  assert.match(String(overEnd.error), /past the end/);
+  assert.match(String(overEnd.error), /nằm sau cuối/);
   const endPast = validateGenericAdd(state, assets, {
     type: 'video',
     assetId: 'asset-v',
     sourceEndSeconds: 99,
   });
-  assert.match(String(endPast.error), /exceeds the asset length/);
+  assert.match(String(endPast.error), /vượt quá độ dài asset/);
 
   const audioHit = validateGenericAdd(state, assets, {
     type: 'audio',
@@ -134,7 +134,7 @@ async function main(): Promise<void> {
   });
   assert.match(
     String(transcriptAudioWindow.error),
-    /operational transcript.*packed edited stream/,
+    /Không hỗ trợ cửa sổ nguồn thô.*luồng đã chỉnh sửa/,
     'raw-source timestamps must not be mistaken for edited-stream frames',
   );
   assert.equal('srcInFrame' in transcriptAudioWindow, false, 'rejected audio window must not expose a committable trim');
@@ -145,7 +145,7 @@ async function main(): Promise<void> {
     sourceStartMs: 1_000,
     sourceEndMs: 2_000,
   });
-  assert.match(String(gifWindow.error), /GIF source windows are unsupported.*does not consume srcInFrame/);
+  assert.match(String(gifWindow.error), /GIF.*không dùng srcInFrame/);
   assert.equal('srcInFrame' in gifWindow, false, 'rejected GIF window must not expose a committable trim');
 
 
