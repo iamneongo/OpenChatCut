@@ -127,7 +127,9 @@ function useSaveKeys(values: Values, onSaved: (next: KeyStatusResponse) => void)
       // launch, so saying "saved" alone would look like nothing happened.
       setMsg(body.restartRequired ? t('已保存 · 重启应用后新的工程存储目录才会生效') : savedMessage());
     } catch (err) {
-      setError(err instanceof Error ? err.message : String(err));
+      setError(t('保存失败：{message}', {
+        message: err instanceof Error ? err.message : String(err),
+      }));
     } finally {
       setSaving(false);
     }

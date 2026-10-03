@@ -138,7 +138,9 @@ function useSingleRelink(
       onRelinkAsset(id, relinkPatch(await importMedia(file, fps), fps));
       clearMissing(id);
     } catch (reason) {
-      setError(reason instanceof Error ? reason.message : String(reason));
+      setError(options.t('失败:{error}', {
+        error: reason instanceof Error ? reason.message : String(reason),
+      }));
     } finally {
       setBusy(false);
     }
@@ -167,7 +169,9 @@ function useBatchRelink(
       );
       setRelinkMessage(relinkResultMessage(result.relinked, result.unmatched, t));
     } catch (reason) {
-      setError(reason instanceof Error ? reason.message : String(reason));
+      setError(t('失败:{error}', {
+        error: reason instanceof Error ? reason.message : String(reason),
+      }));
     } finally {
       setRelinkBusy(false);
       if (directoryInputRef.current) directoryInputRef.current.value = '';

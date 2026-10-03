@@ -346,7 +346,7 @@ function useSemanticQueries(
     const query = text.trim();
     if (!query) return setState((current) => ({ ...current, matches: [] }));
     if (query.length > MAX_SEMANTIC_QUERY_LENGTH) {
-      setFailure(setState, new Error('Semantic query exceeds the local limit'));
+      setFailure(setState, new Error(t('语义搜索查询超过本地限制')));
       return;
     }
     setState((current) => ({ ...current, status: 'searching', matches: [], textHits: [], error: null }));
@@ -414,7 +414,7 @@ function useCancelSemantic(
 
 function setFailure(setState: StateSetter, reason: unknown): void {
   const error = reason instanceof Error ? reason.message : String(reason);
-  setState((current) => ({ ...current, status: 'error', error }));
+  setState((current) => ({ ...current, status: 'error', error: t('失败:{error}', { error }) }));
 }
 
 function semanticStaleResultError(): DOMException {

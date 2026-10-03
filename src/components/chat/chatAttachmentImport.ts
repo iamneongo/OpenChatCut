@@ -17,7 +17,7 @@ import {
 } from './chatAttachmentLifecycle';
 import type { RefItem } from './ChatComposer';
 
-type Translate = (key: string) => string;
+type Translate = (key: string, params?: Record<string, string | number>) => string;
 type UpdateInput = (update: (value: string) => string) => void;
 
 export type ChatMediaImporter = (
@@ -87,7 +87,9 @@ function acceptFailure(binding: AttachmentImportBinding, token: ChatAttachmentIm
       .replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     binding.updateInput((value) => value.replace(new RegExp(`${escaped}\\s?`, 'g'), '').trimStart());
   }
-  binding.setError(reason instanceof Error ? reason.message : binding.t('导入失败'));
+  binding.setError(binding.t('失败:{error}', {
+    error: reason instanceof Error ? reason.message : binding.t('导入失败'),
+  }));
 }
 
 async function importOne(binding: AttachmentImportBinding, file: File): Promise<void> {

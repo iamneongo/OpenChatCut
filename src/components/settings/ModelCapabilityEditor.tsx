@@ -98,7 +98,9 @@ export function ModelCapabilityEditor({
       onChange(next.length ? serializeModelCapabilityOverrides(next) : '');
       setError('');
     } catch (reason) {
-      setError(reason instanceof Error ? reason.message : String(reason));
+      setError(t('失败:{error}', {
+        error: reason instanceof Error ? reason.message : String(reason),
+      }));
     }
   };
   const booleanUpdate = (field: CapabilityBoolean) => (value: boolean) => update({
@@ -146,7 +148,7 @@ export function ModelCapabilityEditor({
           <BooleanOverride label="推理能力" resolved={resolved.supportsReasoning}
             onChange={booleanUpdate('supportsReasoning')} />
         </div>
-        {error && <div style={{ ...summaryStyle, color: theme.danger }}>{t(error)}</div>}
+        {error && <div style={{ ...summaryStyle, color: theme.danger }}>{error}</div>}
         <div style={summaryStyle}>{t('留空会使用内置模型目录；未知模型使用保守回退值。')}</div>
       </>}
     </section>

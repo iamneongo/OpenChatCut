@@ -59,10 +59,12 @@ export function SemanticModelPackPane() {
       };
       await poll();
     } catch (installError) {
-      setError(installError instanceof Error ? installError.message : String(installError));
+      setError(t('模型包操作失败：{err}', {
+        err: installError instanceof Error ? installError.message : String(installError),
+      }));
       setBusy(false);
     }
-  }, [probe]);
+  }, [probe, t]);
 
   const ready = status === 'installed';
   const absent = status === 'absent' || status === 'error';

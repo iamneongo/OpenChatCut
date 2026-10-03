@@ -10,6 +10,7 @@ const overrides: Record<string, string> = {
   '存储迁移失败：{error}': 'Migrazione dello spazio di archiviazione non riuscita: {error}',
   '任务失败：{error}': 'Attività non riuscita: {error}',
   '失败:{error}': 'Errore: {error}',
+  '保存失败：{message}': 'Salvataggio non riuscito: {message}',
   '检查中…': 'Controllo...',
   '设置 · API 密钥': 'Impostazioni · chiavi API',
   '关闭': 'Chiudi',
@@ -51,6 +52,7 @@ const overrides: Record<string, string> = {
   '本地转写': 'Trascrizione locale',
   '节拍与音乐分析': 'Analisi ritmo e musica',
   '画面语义搜索': 'Ricerca semantica immagini',
+  '语义搜索查询超过本地限制': 'La query di ricerca semantica supera il limite locale.',
 
   '对话与工具调用的核心，未配置无法对话。': 'Nucleo di chat e strumenti: senza configurazione la chat non funziona.',
   '统一配置服务端访问海外 API 使用的代理地址。': 'Configura il proxy usato dal server per accedere alle API esterne.',

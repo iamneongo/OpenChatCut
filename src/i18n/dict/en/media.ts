@@ -148,6 +148,7 @@ export default {
   '语义搜索': 'Semantic search',
   '本地语义搜索': 'Local semantic search',
   '语义搜索暂不可用，请重试。': 'Semantic search is unavailable. Please try again.',
+  '语义搜索查询超过本地限制': 'The semantic search query exceeds the local limit.',
   '素材不会上传': 'Media never leaves this device',
   '按画面内容搜索素材': 'Search by visual content',
   '首次启用会下载可选模型。索引和搜索都在本机完成，不影响未启用时的编辑器。': 'The optional model downloads on first use. Indexing and search stay on this device, and the editor is unaffected while disabled.',
