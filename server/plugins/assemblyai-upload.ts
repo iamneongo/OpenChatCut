@@ -134,7 +134,7 @@ export async function handleAssemblyAiUpload(
     const responseText = await response.text();
     if (!response.ok) {
       sendJson(res, 502, {
-        error: `AssemblyAI upload failed: HTTP ${response.status}`,
+        error: `tải lên AssemblyAI thất bại: HTTP ${response.status}`,
         detail: responseText.slice(0, 500),
       });
       return;

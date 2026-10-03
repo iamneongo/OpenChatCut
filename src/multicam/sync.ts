@@ -68,11 +68,11 @@ export function multicamPlacementFrame(reference: TimelineItem, offsetFrames: nu
 async function decodeMono(src: string): Promise<{ samples: Float32Array; sampleRate: number } | { error: string }> {
   try {
     const res = await fetch(src);
-    if (!res.ok) return { error: `fetch failed (${res.status})` };
+    if (!res.ok) return { error: `fetch thất bại (${res.status})` };
     const buf = await res.arrayBuffer();
     // OfflineAudioContext exists in browser; length is placeholder
     const Offline = (globalThis as unknown as { OfflineAudioContext?: typeof OfflineAudioContext }).OfflineAudioContext;
-    if (!Offline) return { error: 'OfflineAudioContext unavailable' };
+    if (!Offline) return { error: 'OfflineAudioContext không khả dụng' };
     const probe = new Offline(1, 1, 44100);
     const audio = await probe.decodeAudioData(buf.slice(0));
     const channels: Float32Array[] = [];

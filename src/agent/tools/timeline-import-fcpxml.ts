@@ -250,7 +250,7 @@ export function parseFcpxml(
   fallback: TimelineState,
   Parser: XmlParserConstructor,
 ): ParseResult {
-  if (/<!ENTITY/i.test(content)) return { ok: false, error: 'FCPXML entity declarations are rejected' };
+  if (/<!ENTITY/i.test(content)) return { ok: false, error: 'không chấp nhận khai báo entity trong FCPXML' };
   const parsedXml = parseXml(content, Parser);
   if (!parsedXml.document) return { ok: false, error: parsedXml.error ?? 'FCPXML không hợp lệ' };
   const report = newReport();

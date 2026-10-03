@@ -47,7 +47,7 @@ export async function execTranscriptionProgress(args: Args, ctx: AgentContext): 
   const action = args.action as 'params' | 'status' | 'wait';
   if (!['params', 'status', 'wait'].includes(action)) return { error: 'action phải là params, status hoặc wait' };
   const projectId = ctx.getProjectId?.();
-  if (!projectId) return { error: 'transcription progress requires a persisted project id' };
+  if (!projectId) return { error: 'tiến độ chép lời yêu cầu project id đã lưu' };
 
   const { ids, unresolved } = resolveAssetIds(ctx, args.assetIds ?? args.jobIds);
   if (ids.length === 0) {

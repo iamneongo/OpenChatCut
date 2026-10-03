@@ -367,7 +367,7 @@ export async function exportJianyingDraft(
   const resolved = videos.map((clip) => ({ clip, file: resolveMediaPath(clip.src) }));
   const missing = resolved.filter((entry) => !entry.file).map((entry) => entry.clip.src);
   if (missing.length > 0) {
-    return { ok: false, draftName: '', draftPath: '', addedVideos: 0, addedAudios: 0, captions: 0, warnings, error: `media files not found locally: ${missing.slice(0, 3).join(', ')}` };
+    return { ok: false, draftName: '', draftPath: '', addedVideos: 0, addedAudios: 0, captions: 0, warnings, error: `không tìm thấy tệp media cục bộ: ${missing.slice(0, 3).join(', ')}` };
   }
   const named = String(request.draftName || `OpenChatCut-${new Date().toISOString().slice(0, 16).replace(/[:T]/g, '')}`)
     .replace(/[\\/]/g, '')
@@ -377,14 +377,14 @@ export async function exportJianyingDraft(
   // keeps quotes and line breaks away from a .cmd CAPCUT_CLI's cmd.exe hop.
   const draftName = platform === 'win32' ? windowsFolderName(named) : named.slice(0, 60);
   if (!draftName) {
-    return { ok: false, draftName: '', draftPath: '', addedVideos: 0, addedAudios: 0, captions: 0, warnings, error: 'invalid draft name' };
+    return { ok: false, draftName: '', draftPath: '', addedVideos: 0, addedAudios: 0, captions: 0, warnings, error: 'tên draft không hợp lệ' };
   }
   const draftsDir = expandHomeDir(String(request.draftsDir || '').trim(), platform, home)
     || defaultDraftStore(request.store ?? 'capcut', platform, env, home);
   const storeFlags = ['--jianying', '--force-write', '--drafts', draftsDir];
   const created = await run(['init', draftName, ...storeFlags]) as { ok?: boolean; draft_path?: string; error?: string };
   if (!created?.ok || !created.draft_path) {
-    return { ok: false, draftName, draftPath: '', addedVideos: 0, addedAudios: 0, captions: 0, warnings, error: created?.error || 'capcut-cli init failed' };
+    return { ok: false, draftName, draftPath: '', addedVideos: 0, addedAudios: 0, captions: 0, warnings, error: created?.error || 'khởi tạo capcut-cli thất bại' };
   }
   const draftPath = created.draft_path;
   // One probe per file, however many clips cut it.

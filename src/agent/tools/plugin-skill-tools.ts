@@ -71,20 +71,20 @@ function validatedSkillSource(
   const available = orderedPaths(Object.keys(source.contents));
   const unsafe = available.find((path) => !isSafeRelativePath(path));
   if (unsafe) return { error: `Skill contains an unsafe file path: ${unsafe}` };
-  if (typeof source.contents['SKILL.md'] !== 'string') return { error: 'Skill is missing SKILL.md.' };
+  if (typeof source.contents['SKILL.md'] !== 'string') return { error: 'Skill đang thiếu SKILL.md.' };
   return { available };
 }
 
 function wholeRequestError(request: readonly string[] | undefined): PluginSkillLoadResult | null {
   if (request === undefined) return null;
   if (request.length < 1 || request.length > MAX_REQUESTED_FILES) {
-    return { error: `files must contain 1-${MAX_REQUESTED_FILES} paths.` };
+    return { error: `files phải chứa từ 1 đến ${MAX_REQUESTED_FILES} đường dẫn.` };
   }
   const unsafe = request.find((path) => !isSafeRelativePath(path));
   if (unsafe) return { error: `Unsafe skill file path: ${unsafe}` };
   return new Set(request).size === request.length
     ? null
-    : { error: 'files must not contain duplicates.' };
+    : { error: 'files không được chứa đường dẫn trùng lặp.' };
 }
 
 
@@ -107,7 +107,7 @@ function parseSkillRequest(rawArgs: Record<string, unknown>): SkillRequest {
     const files = orderedPaths(args.files);
     return new Set(files).size === files.length
       ? { kind: 'whole', files }
-      : { error: 'files must not contain duplicates.' };
+      : { error: 'files không được chứa đường dẫn trùng lặp.' };
   }
   if (args.file === undefined) return { kind: 'initial' };
   if (typeof args.file !== 'string' || !isSafeRelativePath(args.file)) {
@@ -245,7 +245,7 @@ function pageRequestError(
   if (offset > 0 && offset < text.length
     && isHighSurrogate(text.charCodeAt(offset - 1))
     && isLowSurrogate(text.charCodeAt(offset))) {
-    return { error: 'offset must not split a UTF-16 surrogate pair.' };
+    return { error: 'offset không được cắt giữa một cặp surrogate UTF-16.' };
   }
   return undefined;
 }
@@ -281,7 +281,7 @@ export function buildPagedSkillResult(
     && isLowSurrogate(text.charCodeAt(offset + 1)) ? offset + 2 : offset + 1;
   const requestedEnd = Math.min(text.length, offset + limit);
   if (minimumEnd > requestedEnd) {
-    return { error: 'limit must not split the first UTF-16 surrogate pair in a page.' };
+    return { error: 'limit không được cắt giữa cặp surrogate UTF-16 đầu tiên trong trang.' };
   }
   const best = largestPageEnd(
     source,

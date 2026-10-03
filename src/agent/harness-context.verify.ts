@@ -110,7 +110,7 @@ assert.deepEqual(
 assert.deepEqual(
   buildBoundedSkillResult(skillSource, ['references/missing.md']),
   {
-    error: 'Unknown skill file: references/missing.md',
+    error: 'không tìm thấy tệp skill: references/missing.md',
     availableFiles: ['SKILL.md', 'references/a.md', 'references/b.md'],
   },
 );
@@ -147,11 +147,11 @@ assert.equal(
 );
 assert.deepEqual(
   buildPagedSkillResult(pagedSource, 'references/huge.md', 1, 1),
-  { error: 'offset must not split a UTF-16 surrogate pair.' },
+  { error: 'offset không được cắt giữa một cặp surrogate UTF-16.' },
 );
 assert.deepEqual(
   buildPagedSkillResult(pagedSource, 'references/huge.md', 0, 1),
-  { error: 'limit must not split the first UTF-16 surrogate pair in a page.' },
+  { error: 'limit không được cắt giữa cặp surrogate UTF-16 đầu tiên trong trang.' },
 );
 const cjkRoot = '中文工作流🙂'.repeat(18_000);
 const cjkSkill = {

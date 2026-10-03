@@ -38,7 +38,7 @@ export async function execSceneDetectionTool(name: string, args: Args, ctx: Agen
   const target = sourceFor(ctx, args);
   if ('error' in target) return target;
   const apply = (args.apply === 'markers' || args.apply === 'split' ? args.apply : 'report') as ApplyMode;
-  if (apply !== 'report' && !target.item) return { error: `apply=${apply} requires itemId so source cuts can be mapped onto the timeline` };
+  if (apply !== 'report' && !target.item) return { error: `apply=${apply} yêu cầu itemId để ánh xạ các đoạn cắt nguồn lên timeline` };
   if (target.item && ctx.getState().tracks?.[target.item.track]?.locked && apply !== 'report') {
     return { error: `track containing ${target.item.id} is locked` };
   }

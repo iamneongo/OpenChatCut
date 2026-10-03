@@ -175,7 +175,7 @@ export function validateAgentToolInvocation(
     return { ok: false, error: `Tool is not active for this request: ${schema.name}`, issues: ['tool is not in the active catalog'] };
   }
   if (!args || typeof args !== 'object' || Array.isArray(args)) {
-    return { ok: false, error: `Invalid arguments for tool ${schema.name}`, issues: ['arguments must be an object'] };
+    return { ok: false, error: `Tham số cho tool ${schema.name} không hợp lệ`, issues: ['arguments phải là object'] };
   }
   const normalized = normalizeAgentToolInvocationArgs(schema.name, args);
   const validate = schemaValidator(active);

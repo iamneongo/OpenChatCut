@@ -149,7 +149,7 @@ async function inspectPack(
   for (const file of pack.files) {
     const actual = await sha256(join(packRoot(pack, cacheDir), file.path));
     if (actual !== file.sha256) {
-      const result = { installed: false, bytes: 0, error: `${file.path} failed SHA-256 verification` };
+      const result = { installed: false, bytes: 0, error: `${file.path} không vượt qua kiểm tra SHA-256` };
       inspections.set(key, { fingerprint, result });
       return result;
     }

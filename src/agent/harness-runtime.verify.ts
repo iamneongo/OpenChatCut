@@ -155,7 +155,7 @@ async function verifySkillBoundaryNormalization(): Promise<void> {
   assert.deepEqual(received.at(-1), { name: 's', file: 'SKILL.md', offset: 5_000 }, 'a real continuation keeps the page');
   const rejected = await run({ name: 's', files: 123 });
   assert.equal(rejected.success, false);
-  assert.match(String((rejected.result as { error?: string }).error ?? ''), /Invalid arguments for tool load_skill/);
+  assert.match(String((rejected.result as { error?: string }).error ?? ''), /Invalid arguments for tool load_skill|Tham số cho tool load_skill không hợp lệ/);
   assert.equal(received.length, 3, 'a genuine violation never reaches the executor');
 }
 

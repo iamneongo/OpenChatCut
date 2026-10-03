@@ -185,11 +185,11 @@ export function planPersistentCamSwitch(args: {
 }): PersistentCamSwitchPlan {
   const { state, fromFrame, toFrame, makeId } = args;
   const group = state.multicamGroups?.find((entry) => entry.id === args.groupId);
-  if (!group) return { error: `multicam group not found: ${args.groupId}` };
+  if (!group) return { error: `không tìm thấy nhóm multicam: ${args.groupId}` };
   const angle = group.angles.find((entry) => entry.id === args.angleId || entry.itemId === args.angleId);
-  if (!angle) return { error: `angle not found in group: ${args.angleId}` };
+  if (!angle) return { error: `không tìm thấy góc máy trong nhóm: ${args.angleId}` };
   if (!Number.isInteger(fromFrame) || !Number.isInteger(toFrame) || fromFrame < 0 || toFrame <= fromFrame) {
-    return { error: 'camera switch requires an integer [fromFrame,toFrame) range' };
+    return { error: 'chuyển camera yêu cầu khoảng số nguyên [fromFrame,toFrame)' };
   }
   const sourceEnd = angle.source.startFrame + angle.source.durationInFrames;
   if (fromFrame < angle.source.startFrame || toFrame > sourceEnd) {
@@ -215,18 +215,18 @@ export function planPersistentCamSwitch(args: {
     || otherItemIds.has(item.id));
   const removal = planCamSwitch(currentTargets, others, fromFrame, toFrame, makeId);
   const affectedTracks = plannedActionTracks(state, [...restore, ...removal.actions]);
-  if (!affectedTracks) return { error: 'failed to plan complete multicam switch actions' };
+  if (!affectedTracks) return { error: 'không thể lập kế hoạch đầy đủ cho thao tác chuyển multicam' };
   for (const item of groupItems) affectedTracks.add(item.track);
   if ([...affectedTracks].some((track) => state.tracks?.[track]?.locked)) {
     return { error: 'a multicam angle track is locked' };
   }
 
   const restored = applyPlannedActions(state, restore);
-  if (!restored) return { error: 'failed to apply planned multicam restoration' };
+  if (!restored) return { error: 'không thể áp dụng kế hoạch khôi phục multicam' };
   let working = restored;
   const restoredTargets = multicamItemsForAngle(working, group, angle);
   if (uncoveredRanges(restoredTargets, fromFrame, toFrame).length > 0) {
-    return { error: 'failed to restore complete target angle coverage' };
+    return { error: 'không thể khôi phục đầy đủ vùng phủ của góc máy đích' };
   }
 
   working = unlinkItems(
@@ -235,7 +235,7 @@ export function planPersistentCamSwitch(args: {
     'linked',
   );
   const removed = applyPlannedActions(working, removal.actions);
-  if (!removed) return { error: 'failed to apply planned multicam removal' };
+  if (!removed) return { error: 'không thể áp dụng kế hoạch xóa multicam' };
   working = removed;
 
   const selectedAfter = multicamItemsForAngle(working, group, angle);
