@@ -58,7 +58,7 @@ export default {
   '清晰鼠标点击声，适合按钮点击、选中、工具切换、教程演示里的操作反馈。': 'Âm nhấp chuột rõ, phù hợp phản hồi khi nhấp nút, chọn, chuyển công cụ hoặc thao tác trong video hướng dẫn.',
   '短促的新消息提醒声，适合消息弹出、状态更新、提示卡片出现。': 'Âm báo tin nhắn mới ngắn, phù hợp khi tin nhắn bật lên, trạng thái cập nhật hoặc thẻ nhắc xuất hiện.',
   'UI 弹窗/提醒感音效，适合弹出文字、弹出提示、消息卡片、轻量状态变化。': 'Hiệu ứng kiểu cửa sổ bật lên/nhắc nhở giao diện, phù hợp chữ, thông báo, thẻ tin nhắn bật lên hoặc thay đổi trạng thái nhẹ.',
-  '手机通知提示音，适合消息弹出、手机界面演示、社交应用通知。': 'Âm báo điện thoại, phù hợp tin nhắn bật lên, demo giao diện điện thoại hoặc thông báo ứng dụng xã hội.',
+  '手机通知提示音，适合消息弹出、手机界面演示、社交应用通知。': 'Âm báo điện thoại, phù hợp tin nhắn bật lên, minh họa giao diện điện thoại hoặc thông báo ứng dụng xã hội.',
   '发送消息的短提示音，适合卡片弹出、聊天发送、表单提交、任务完成等轻量确认反馈。': 'Âm báo ngắn khi gửi tin nhắn, phù hợp xác nhận nhẹ khi thẻ bật lên, gửi chat, gửi biểu mẫu hoặc hoàn thành tác vụ.',
   '视频来电铃声，适合电话/视频通话场景、消息未接、社交应用提示。': 'Nhạc chuông cuộc gọi video, phù hợp cảnh gọi điện/video, cuộc gọi nhỡ hoặc nhắc từ ứng dụng xã hội.',
   '唱片刮擦/急停感音效，适合突然打断、倒放倒带、时间回退或喜剧转场。': 'Hiệu ứng đĩa than xước/dừng gấp, phù hợp ngắt đột ngột, tua ngược, quay lại thời điểm trước hoặc chuyển cảnh hài.',
