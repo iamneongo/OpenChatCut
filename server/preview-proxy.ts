@@ -23,7 +23,7 @@ export interface PreviewSourceProbe {
 export interface PreviewProcessOutput { stdout: string; stderr: string }
 
 function abortError(): Error {
-  const error = new Error('derivative request cancelled');
+  const error = new Error('request tạo dẫn xuất đã bị hủy');
   error.name = 'AbortError';
   return error;
 }
@@ -59,9 +59,9 @@ export function runPreviewProcess(
       clearTimeout(timer);
       signal.removeEventListener('abort', abort);
       if (signal.aborted) reject(abortError());
-      else if (timedOut) reject(new Error(`${command} timed out`));
+      else if (timedOut) reject(new Error(`${command} đã hết thời gian chờ`));
       else if (code === 0) resolve({ stdout, stderr });
-      else reject(new Error(`${command} exit ${code}: ${stderr.slice(-500)}`));
+      else reject(new Error(`${command} thoát với mã ${code}: ${stderr.slice(-500)}`));
     });
   });
 }

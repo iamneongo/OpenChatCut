@@ -36,7 +36,7 @@ export function installDesktopUpdateIpc(
   });
   ipcMain.handle(DESKTOP_UPDATE_CHANNELS.check, async (event, source: unknown) => {
     assertTrustedDesktopSenderUrl(event.senderFrame?.url ?? '', trustedOrigin);
-    if (!isDesktopUpdateCheckSource(source)) throw new Error('invalid update check source');
+    if (!isDesktopUpdateCheckSource(source)) throw new Error('nguồn kiểm tra cập nhật không hợp lệ');
     return service.check(source);
   });
   ipcMain.handle(DESKTOP_UPDATE_CHANNELS.download, async (event) => {

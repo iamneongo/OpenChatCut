@@ -21,12 +21,12 @@ export function compositorPackageName(platform: NodeJS.Platform = process.platfo
   if (platform === 'win32') return '@remotion/compositor-win32-x64-msvc';
   if (platform === 'darwin') return `@remotion/compositor-darwin-${arch === 'arm64' ? 'arm64' : 'x64'}`;
   if (platform === 'linux') return `@remotion/compositor-linux-${arch === 'arm64' ? 'arm64' : 'x64'}-gnu`;
-  throw new Error(`no Remotion compositor for ${platform}/${arch}`);
+  throw new Error(`không có compositor Remotion cho ${platform}/${arch}`);
 }
 
 function compositorDirectory(platform: NodeJS.Platform): string {
   const pkg = require(compositorPackageName(platform)) as { dir?: unknown };
-  if (typeof pkg.dir !== 'string' || !pkg.dir) throw new Error(`Remotion compositor directory is missing for ${platform}`);
+  if (typeof pkg.dir !== 'string' || !pkg.dir) throw new Error(`thiếu thư mục compositor Remotion cho ${platform}`);
   return pkg.dir;
 }
 

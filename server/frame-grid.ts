@@ -36,7 +36,7 @@ function run(cmd: string, args: string[], timeoutMs = 120_000): Promise<void> {
     let stderr = '';
     const timer = setTimeout(() => {
       child.kill('SIGKILL');
-      reject(new Error(`${cmd} timed out`));
+      reject(new Error(`${cmd} đã hết thời gian chờ`));
     }, timeoutMs);
     child.stderr?.on('data', (c: Buffer) => {
       stderr += String(c);
@@ -49,7 +49,7 @@ function run(cmd: string, args: string[], timeoutMs = 120_000): Promise<void> {
     child.on('close', (code) => {
       clearTimeout(timer);
       if (code === 0) resolve();
-      else reject(new Error(`${cmd} exit ${code}: ${stderr.slice(-500)}`));
+      else reject(new Error(`${cmd} thoát với mã ${code}: ${stderr.slice(-500)}`));
     });
   });
 }
@@ -204,7 +204,7 @@ im.save(path_out, "JPEG", quality=88)
     child.on('error', reject);
     child.on('close', (code) => {
       if (code === 0) resolve();
-      else reject(new Error(`PIL stamp failed: ${err.slice(-300)}`));
+      else reject(new Error(`PIL đóng dấu thất bại: ${err.slice(-300)}`));
     });
   });
 }

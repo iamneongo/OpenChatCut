@@ -108,7 +108,7 @@ function run(
     child.kill('SIGKILL');
   };
   const timer = setTimeout(() => {
-    terminalError = new Error(`${cmd} timed out after ${Math.round(timeoutMs / 1000)}s`);
+    terminalError = new Error(`${cmd} đã hết thời gian chờ sau ${Math.round(timeoutMs / 1000)} giây`);
     child.kill('SIGKILL');
   }, timeoutMs);
   child.stdout?.on('data', (chunk: Buffer) => {
@@ -120,7 +120,7 @@ function run(
   child.once('error', (error) => finish(error));
   child.once('close', (code) => finish(terminalError ?? (code === 0
     ? undefined
-    : new Error(`${cmd} exit ${code}: ${stderr.slice(-600)}`))));
+    : new Error(`${cmd} thoát với mã ${code}: ${stderr.slice(-600)}`))));
   signal?.addEventListener('abort', onAbort, { once: true });
   if (signal?.aborted) onAbort();
   return deferred.promise;

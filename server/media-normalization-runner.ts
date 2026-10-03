@@ -176,7 +176,7 @@ async function publishNormalized(
   signal?: AbortSignal,
 ): Promise<string> {
   if (preserveInput) {
-    if (outputPath === inputPath) throw new Error('preserved normalization requires a separate output path');
+    if (outputPath === inputPath) throw new Error('chuẩn hóa bảo toàn yêu cầu output path riêng');
     await unlink(outputPath).catch(() => {});
     throwIfNormalizationAborted(signal);
     try {

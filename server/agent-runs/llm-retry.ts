@@ -125,7 +125,7 @@ export async function delayAbortable(ms: number, signal: AbortSignal): Promise<b
       }, ms);
       const onAbort = (): void => {
         clearTimeout(timer);
-        reject(new Error('aborted'));
+        reject(new Error('đã bị hủy'));
       };
       signal.addEventListener('abort', onAbort, { once: true });
     });
@@ -167,7 +167,7 @@ export async function runServerTurnWithRetry<T>(
     }
   }
   /* v8 ignore next -- the loop always returns or throws */
-  throw new Error('unreachable');
+  throw new Error('không thể chạy tới đây');
 }
 
 function parseRetryAfter(headers: Record<string, string> | undefined): number | undefined {

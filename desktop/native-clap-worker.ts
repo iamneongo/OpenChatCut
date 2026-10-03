@@ -155,7 +155,7 @@ async function ensureLoaded(requestId: string): Promise<DesktopInferenceBackend>
 
 function normalizedVector(values: ArrayLike<number>): number[] {
   if (values.length !== CLAP_INFERENCE_CONTRACT.embeddingDimension) {
-    throw new Error(`CLAP returned ${values.length} dimensions; expected ${CLAP_INFERENCE_CONTRACT.embeddingDimension}`);
+    throw new Error(`CLAP trả về ${values.length} chiều; dự kiến ${CLAP_INFERENCE_CONTRACT.embeddingDimension}`);
   }
   let squaredLength = 0;
   for (let index = 0; index < values.length; index += 1) {

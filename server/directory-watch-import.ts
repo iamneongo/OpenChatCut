@@ -263,7 +263,7 @@ function runProbeProcess(args: readonly string[], signal?: AbortSignal): Promise
     signal?.removeEventListener('abort', onAbort);
     if (terminalError) deferred.reject(terminalError);
     else if (code === 0) deferred.resolve(stdout);
-    else deferred.reject(new Error(`ffprobe failed (${code ?? closeSignal ?? 'unknown'}): ${stderr.slice(-500)}`));
+    else deferred.reject(new Error(`ffprobe thất bại (${code ?? closeSignal ?? 'không rõ'}): ${stderr.slice(-500)}`));
   });
   signal?.addEventListener('abort', onAbort, { once: true });
   if (signal?.aborted) onAbort();

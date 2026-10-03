@@ -41,7 +41,7 @@ export function resolveDesktopPageUrlDecision(
 
 export function assertTrustedDesktopSenderUrl(senderUrl: string, trustedOrigin: string): void {
   if (resolveDesktopPageUrlDecision(senderUrl, trustedOrigin, 'ipc').action !== 'allow') {
-    throw new Error('untrusted desktop IPC sender');
+    throw new Error('sender IPC desktop không đáng tin cậy');
   }
 }
 
@@ -55,13 +55,13 @@ export function resolveDesktopDevOrigin({
 
   const parsed = new URL(configured);
   if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
-    throw new Error('CC_DESKTOP_DEV_URL must use HTTP or HTTPS');
+    throw new Error('CC_DESKTOP_DEV_URL phải dùng HTTP hoặc HTTPS');
   }
   if (!isLoopbackHostname(parsed.hostname)) {
-    throw new Error('CC_DESKTOP_DEV_URL must use a loopback host');
+    throw new Error('CC_DESKTOP_DEV_URL phải dùng loopback host');
   }
   if (parsed.username || parsed.password) {
-    throw new Error('CC_DESKTOP_DEV_URL must not contain credentials');
+    throw new Error('CC_DESKTOP_DEV_URL không được chứa thông tin xác thực');
   }
   return parsed.origin;
 }

@@ -233,7 +233,7 @@ export async function setKeys(patch: Record<string, unknown>): Promise<void> {
     if (!SETTABLE.has(name)) continue; // whitelist
     const v = String(raw ?? "");
     if (/[\r\n]/.test(v))
-      throw new Error(`invalid value for ${name}: no newlines allowed`);
+      throw new Error(`giá trị của ${name} không hợp lệ: không được chứa ký tự xuống dòng`);
     clean.set(name, normalizeStoredValue(name, v));
   }
   if (clean.size === 0) return;

@@ -88,7 +88,7 @@ export class DirectoryWatchController {
       return result;
     } catch (error) {
       await this.removeAndStop(watchId, session).catch((stopError) => {
-        throw new AggregateError([error, stopError], 'directory watch failed to start');
+        throw new AggregateError([error, stopError], 'khởi động theo dõi thư mục thất bại');
       });
       if (!this.isCurrent(owner, projectId, generation)) return null;
       throw error;
@@ -136,7 +136,7 @@ export class DirectoryWatchController {
     for (const [watchId, watch] of this.retiredWatches) {
       if (watch.owner === owner) this.retiredWatches.delete(watchId);
     }
-    if (failures.length) throw new AggregateError(failures, 'failed to close owned directory watches');
+    if (failures.length) throw new AggregateError(failures, 'đóng các lượt theo dõi thư mục được sở hữu thất bại');
   }
 
   private createOwnedSession(
@@ -230,7 +230,7 @@ export class DirectoryWatchController {
       .filter((result): result is PromiseRejectedResult => result.status === 'rejected')
       .map((result) => result.reason);
     if (failures.length) {
-      throw new AggregateError(failures, 'failed to reconfigure directory watch');
+      throw new AggregateError(failures, 'cấu hình lại theo dõi thư mục thất bại');
     }
   }
 

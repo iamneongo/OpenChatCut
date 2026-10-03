@@ -23,7 +23,7 @@ export function pcmExtractionArgs(sourcePath: string, sampleRate: number): strin
 
 export function decodePcm(chunks: readonly Buffer[], totalBytes: number): Float32Array {
   if (totalBytes === 0 || totalBytes % Float32Array.BYTES_PER_ELEMENT !== 0) {
-    throw new Error('FFmpeg returned invalid PCM audio');
+    throw new Error('FFmpeg trả về audio PCM không hợp lệ');
   }
   const copy = new Uint8Array(totalBytes);
   let offset = 0;

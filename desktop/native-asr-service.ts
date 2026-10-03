@@ -229,7 +229,7 @@ export class NativeAsrService {
   ): Promise<NativeAsrServiceResponse> {
     if (this.disposed) throw new Error('service ASR native đã được giải phóng');
     if (!this.capabilities.asr.available) {
-      throw new Error(this.capabilities.asr.reason ?? 'native ASR is unavailable');
+      throw new Error(this.capabilities.asr.reason ?? 'ASR native không khả dụng');
     }
     if (this.inflight.has(request.requestId)) throw new Error('request id ASR native bị trùng');
     const abortController = new AbortController();
@@ -237,7 +237,7 @@ export class NativeAsrService {
     this.abortControllers.set(request.requestId, abortController);
     try {
       await raceWithAbort(this.ensureModelInstalled(request, abortController.signal), abortController.signal);
-      if (this.disposed) throw new Error('native ASR service is disposed');
+      if (this.disposed) throw new Error('service ASR native đã được giải phóng');
       throwIfAborted(abortController.signal);
       const workerRequest = 'sourcePath' in request
         ? { ...request, sourcePath: this.sourcePathResolver(request.sourcePath) }
@@ -371,7 +371,7 @@ export class NativeAsrService {
     }
     if (this.worker !== worker) return;
     this.worker = null;
-    this.rejectPending(new Error(`native ASR process exited with code ${code}`));
+    this.rejectPending(new Error(`process ASR native đã thoát với mã ${code}`));
   }
 
   private resetWorker(): void {

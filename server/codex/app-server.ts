@@ -312,7 +312,7 @@ export class CodexAppServerClient {
 
   private routeMessage(value: unknown): void {
     const message = record(value);
-    if (!message) throw new Error('invalid message');
+    if (!message) throw new Error('message không hợp lệ');
     if ((typeof message.id === 'number' || typeof message.id === 'string') && typeof message.method === 'string') {
       this.handleServerRequest(message.id, message.method, record(message.params) ?? {});
       return;
@@ -391,7 +391,7 @@ export class CodexAppServerClient {
 
   private rawRequest(method: string, params: unknown, options: RpcOptions): Promise<unknown> {
     if (!this.child) return Promise.reject(new CodexProcessError());
-    if (options.signal?.aborted) return Promise.reject(options.signal.reason ?? new Error('Request aborted.'));
+    if (options.signal?.aborted) return Promise.reject(options.signal.reason ?? new Error('request đã bị hủy.'));
     const id = this.nextRequestId++;
     const { promise, resolve, reject } = Promise.withResolvers<unknown>();
     const cleanupAbort = this.bindAbort(id, options.signal);
@@ -406,7 +406,7 @@ export class CodexAppServerClient {
     if (options.signal?.aborted) {
       this.rejectPending(id, options.signal.reason instanceof Error
         ? options.signal.reason
-        : new Error('Request aborted.'));
+        : new Error('request đã bị hủy.'));
       return promise;
     }
     if (!this.pending.has(id) || !this.writeMessage({ id, method, params })) {
@@ -418,7 +418,7 @@ export class CodexAppServerClient {
   private bindAbort(id: number, signal: AbortSignal | undefined): () => void {
     if (!signal) return () => {};
     const onAbort = () => {
-      this.rejectPending(id, signal.reason instanceof Error ? signal.reason : new Error('Request aborted.'));
+      this.rejectPending(id, signal.reason instanceof Error ? signal.reason : new Error('request đã bị hủy.'));
     };
     signal.addEventListener('abort', onAbort, { once: true });
     return () => signal.removeEventListener('abort', onAbort);

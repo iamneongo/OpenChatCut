@@ -12,7 +12,7 @@ reportDirectoryWatchError(new Error(`ENOENT: ${secretPath}`), {
   },
 });
 assert.deepEqual(warnings, [
-  'OPENCHATCUT_DIRECTORY_WATCH:directory watch operation failed',
+  'OPENCHATCUT_DIRECTORY_WATCH:thao tác theo dõi thư mục thất bại',
 ]);
 assert.equal(warnings.join('\n').includes(secretPath), false);
 
@@ -24,7 +24,7 @@ await assert.rejects(
     (error) => { reported = error instanceof Error ? error.message : String(error); },
   ),
   (error: unknown) => error instanceof Error
-    && error.message === 'unable to start directory watch'
+    && error.message === 'không thể khởi động theo dõi thư mục'
     && !error.message.includes(secretPath),
 );
 assert.equal(reported.includes(secretPath), true, 'internal reporting may receive the original error');
@@ -33,10 +33,10 @@ assert.equal(warnings.join('\n').includes(secretPath), false, 'warning output mu
 await assert.rejects(
   invokeDirectoryWatch(
     'start',
-    async () => { throw new Error('the media destination cannot overlap the import directory'); },
+    async () => { throw new Error('đích media không được chồng lấn với thư mục nhập'); },
     () => undefined,
   ),
-  /selected folder overlaps the media storage directory/,
+  /thư mục đã chọn chồng lấn với thư mục lưu media/,
 );
 
 await assert.rejects(
@@ -46,7 +46,7 @@ await assert.rejects(
     () => undefined,
   ),
   (error: unknown) => error instanceof Error
-    && error.message === 'selected folder is not readable'
+    && error.message === 'không thể đọc thư mục đã chọn'
     && !error.message.includes(secretPath),
 );
 

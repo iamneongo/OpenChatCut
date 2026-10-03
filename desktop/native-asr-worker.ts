@@ -142,7 +142,7 @@ function runWhisperCli(
       clearTimeout(timer);
       signal?.removeEventListener('abort', onAbort);
       if (code !== 0) {
-        reject(new Error(`whisper-cli failed (${code}): ${stderr.slice(-600)}`));
+        reject(new Error(`whisper-cli thất bại (${code}): ${stderr.slice(-600)}`));
         return;
       }
       resolve({ jsonPath: `${wavPath}.json`, stderr });
@@ -222,7 +222,7 @@ async function transcribeViaServer(
     body: form,
     signal,
   });
-  if (!response.ok) throw new Error(`whisper-server inference failed (${response.status})`);
+  if (!response.ok) throw new Error(`suy luận whisper-server thất bại (${response.status})`);
   const json = await response.json() as {
     segments?: readonly {
       text?: string;

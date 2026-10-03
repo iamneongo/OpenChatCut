@@ -129,7 +129,7 @@ async function invokeDesktopUpdate(
   ...args: unknown[]
 ): Promise<DesktopUpdateState> {
   const state: unknown = await ipcRenderer.invoke(channel, ...args);
-  if (!isDesktopUpdateState(state)) throw new Error('invalid desktop update state');
+  if (!isDesktopUpdateState(state)) throw new Error('trạng thái cập nhật desktop không hợp lệ');
   return state;
 }
 
@@ -152,7 +152,7 @@ const api: OpenChatCutDesktopApi = {
       DIRECTORY_IMPORT_CHANNELS.start, projectId, existingContentHashes,
     );
     if (value === null) return null;
-    if (!isDirectoryWatchStartResult(value)) throw new Error('invalid directory watch response');
+    if (!isDirectoryWatchStartResult(value)) throw new Error('phản hồi theo dõi thư mục không hợp lệ');
     return value;
   },
   activateImportDirectoryWatch: (watchId) =>
@@ -209,32 +209,32 @@ const api: OpenChatCutDesktopApi = {
       ipcRenderer.invoke(DESKTOP_INFERENCE_CHANNELS.setEnabled, enabled) as Promise<void>,
     getCapabilities: async () => {
       const value: unknown = await ipcRenderer.invoke(DESKTOP_INFERENCE_CHANNELS.capabilities);
-      if (!isDesktopInferenceCapabilities(value)) throw new Error('invalid desktop inference capabilities');
+      if (!isDesktopInferenceCapabilities(value)) throw new Error('khả năng suy luận desktop không hợp lệ');
       return value;
     },
     preloadAsr: async (request) => {
       const value: unknown = await ipcRenderer.invoke(DESKTOP_INFERENCE_CHANNELS.preloadAsr, request);
-      if (!isDesktopModelLoadResponse(value)) throw new Error('invalid desktop ASR preload response');
+      if (!isDesktopModelLoadResponse(value)) throw new Error('phản hồi preload ASR desktop không hợp lệ');
       return value;
     },
     transcribe: async (request) => {
       const value: unknown = await ipcRenderer.invoke(DESKTOP_INFERENCE_CHANNELS.transcribe, request);
-      if (!isDesktopAsrResponse(value)) throw new Error('invalid desktop ASR response');
+      if (!isDesktopAsrResponse(value)) throw new Error('phản hồi ASR desktop không hợp lệ');
       return value;
     },
     semantic: async (request) => {
       const value: unknown = await ipcRenderer.invoke(DESKTOP_INFERENCE_CHANNELS.semantic, request);
-      if (!isDesktopSemanticResponse(value)) throw new Error('invalid desktop semantic response');
+      if (!isDesktopSemanticResponse(value)) throw new Error('phản hồi semantic desktop không hợp lệ');
       return value;
     },
     clap: async (request) => {
       const value: unknown = await ipcRenderer.invoke(DESKTOP_INFERENCE_CHANNELS.clap, request);
-      if (!isDesktopClapResponse(value)) throw new Error('invalid desktop CLAP response');
+      if (!isDesktopClapResponse(value)) throw new Error('phản hồi CLAP desktop không hợp lệ');
       return value;
     },
     rhythm: async (request) => {
       const value: unknown = await ipcRenderer.invoke(DESKTOP_INFERENCE_CHANNELS.rhythm, request);
-      if (!isDesktopRhythmResponse(value)) throw new Error('invalid desktop rhythm response');
+      if (!isDesktopRhythmResponse(value)) throw new Error('phản hồi rhythm desktop không hợp lệ');
       return value;
     },
     cancel: (requestId) =>
