@@ -89,7 +89,7 @@ async function admitPendingRun(
   });
   await requestServerRunStart(projectId, stored.runId, capability);
   if (!patchStoredServerRun(projectId, { admissionPending: false })) {
-    throw new Error('Browser durable storage could not complete run admission.');
+    throw new Error('Bộ nhớ bền vững của trình duyệt không thể hoàn tất việc tiếp nhận lượt chạy.');
   }
 }
 

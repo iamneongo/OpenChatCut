@@ -87,7 +87,7 @@ async function restoreConcurrentProject(
   const latestDoc = state.ctxRef.current.getDoc();
   const restored = await persistence.saveDoc(projectId, latestDoc).catch(() => null);
   if (!restored?.saved) {
-    throw new Error('The newer live project could not be saved; proposal recovery remains pending.');
+    throw new Error('Không thể lưu dự án hiện tại mới hơn; việc khôi phục đề xuất vẫn đang chờ.');
   }
   await settleAndRecord(projectId, proposal, 'stale', persistence);
   state.setProposalStale(true);
@@ -159,7 +159,7 @@ async function persistSelectedProposal(
   await confirmOwnershipBeforeApply(true);
   await persistence.markApplying(projectId, proposal, result, operationCount);
   const saved = await persistence.saveDoc(projectId, result);
-  if (!saved.saved) throw new Error('project save failed');
+  if (!saved.saved) throw new Error('Lưu dự án thất bại');
   if (await restoreConcurrentProject(state, projectId, proposal, currentDoc, persistence)) {
     return false;
   }

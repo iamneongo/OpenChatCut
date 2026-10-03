@@ -119,9 +119,9 @@ async function storeBody(
   body: ServerRunDraftBaseBody | ServerRunDraftToolBody,
 ): Promise<void> {
   const sanitized = sanitizeJsonForArtifact(body);
-  if (!sanitized) throw new Error('Server run draft could not be sanitized.');
+  if (!sanitized) throw new Error('Bản nháp lượt chạy server không thể được làm sạch.');
   if (sanitized.storedBytes > MAX_ARTIFACT_BYTES) {
-    throw new Error('Server run draft exceeds the durable artifact limit.');
+    throw new Error('Bản nháp lượt chạy server vượt quá giới hạn artifact bền vững.');
   }
   const response = await fetch(`/api/agent-runs/${encodeURIComponent(runId)}/draft`, {
     method: 'POST',
@@ -151,7 +151,7 @@ async function storeBody(
       : response.status === 404
         ? 'the run no longer exists on the server'
         : `HTTP ${response.status}`;
-    throw new Error(`Server run draft could not be persisted (${hint}).`);
+    throw new Error(`Không thể lưu bản nháp lượt chạy server (${hint}).`);
   }
 }
 
@@ -196,7 +196,7 @@ export async function clearServerRunDraft(projectId: string, runId: string): Pro
       },
       body: JSON.stringify({ projectId }),
     });
-    if (!response.ok) throw new Error('draft clear rejected');
+    if (!response.ok) throw new Error('Yêu cầu xóa bản nháp bị từ chối');
   } catch {
     // Best-effort cleanup; stale drafts are pruned by retention on the next write.
   }
@@ -212,20 +212,20 @@ export async function loadServerRunDraft(projectId: string, runId: string): Prom
   let base: ServerRunDraftBaseBody | null = null;
   const tools = new Map<string, ServerRunDraftToolBody>();
   for (const artifact of records) {
-    if (!artifact) throw new Error('Server run draft artifact is unavailable.');
+    if (!artifact) throw new Error('Artifact bản nháp lượt chạy server không khả dụng.');
     let value: unknown;
-    try { value = JSON.parse(artifact.body); } catch { throw new Error('Server run draft artifact is invalid.'); }
+    try { value = JSON.parse(artifact.body); } catch { throw new Error('Artifact bản nháp lượt chạy server không hợp lệ.'); }
     const nextBase = parseBase(value);
     if (nextBase) {
-      if (base) throw new Error('Server run draft contains multiple base snapshots.');
+      if (base) throw new Error('Bản nháp lượt chạy server chứa nhiều snapshot cơ sở.');
       base = nextBase;
       continue;
     }
     const tool = parseTool(value);
-    if (!tool) throw new Error('Server run draft artifact is invalid.');
+    if (!tool) throw new Error('Artifact bản nháp lượt chạy server không hợp lệ.');
     const previous = tools.get(tool.toolCallId);
     if (previous && previous.argsDigest !== tool.argsDigest) {
-      throw new Error('Server run draft contains conflicting tool calls.');
+      throw new Error('Bản nháp lượt chạy server chứa các lệnh tool xung đột.');
     }
     tools.set(tool.toolCallId, tool);
   }

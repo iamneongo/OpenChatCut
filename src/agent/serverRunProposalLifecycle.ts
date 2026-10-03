@@ -256,7 +256,7 @@ async function persistToolAction(
 ): Promise<void> {
   const turn = ref.current.turn;
   if (!turn || turn.runId !== input.runId) {
-    throw new Error('Server run proposal state is unavailable.');
+    throw new Error('Trạng thái đề xuất của lượt chạy server không khả dụng.');
   }
   if (ref.current.seenToolCalls.has(input.toolCallId)) return;
   if (input.error === undefined && !isFailedToolResult(input.result) && input.actions.length) {
