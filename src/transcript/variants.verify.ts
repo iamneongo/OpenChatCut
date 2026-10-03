@@ -69,7 +69,7 @@ assert.strictEqual(built.lang, '日本語', 'lang trimmed');
 assert.strictEqual(built.label, '日本語', 'translation label defaults to lang');
 assert.deepStrictEqual(built.words, [{ i: 0, text: 'こんにちは' }], 'only the valid word entry survives');
 assert.ok(built.id.startsWith('var_'), 'variant gets an id');
-assert.throws(() => createVariant({ lang: '   ', kind: 'translation', words: [] }), /lang is required/);
+assert.throws(() => createVariant({ lang: '   ', kind: 'translation', words: [] }), /lang của variant là bắt buộc/);
 
 // ── 5) upsertVariant / findVariantByLang:不可变增改 + 按语言查找 ──
 const list0: TranscriptVariant[] = [];

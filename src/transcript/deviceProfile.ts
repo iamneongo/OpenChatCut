@@ -68,7 +68,7 @@ export function chooseAsrConfig(profile: DeviceProfile): AsrConfig {
     ? preferred
     : 'base';
   const model = asrModelEntry(tier);
-  if (!model) throw new Error(`Unsupported local ASR model tier: ${tier}`);
+  if (!model) throw new Error(`hạng model ASR cục bộ không được hỗ trợ: ${tier}`);
   // WebGPU is an explicit opt-in (settings → 本地模型 → WebGPU 加速) and only
   // applies to tiers whose catalog registers fp16/fp32 variants (medium and
   // large-v3-turbo have none: their fp32 encoders alone are 1.2GB and 2.5GB).

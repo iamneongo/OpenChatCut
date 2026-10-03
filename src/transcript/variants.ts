@@ -38,7 +38,7 @@ export function createVariant(opts: {
   id?: string;
 }): TranscriptVariant {
   const lang = opts.lang.trim();
-  if (!lang) throw new Error('variant lang is required');
+  if (!lang) throw new Error('lang của variant là bắt buộc');
   const words = opts.words.filter((w) => Number.isInteger(w.i) && w.i >= 0 && typeof w.text === 'string');
   return {
     id: opts.id ?? `var_${crypto.randomUUID()}`,
