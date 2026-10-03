@@ -148,6 +148,7 @@ export default {
   '语义搜索': 'Semantic search',
   '本地语义搜索': 'Local semantic search',
   '语义搜索暂不可用，请重试。': 'Semantic search is unavailable. Please try again.',
+  '无法预览素材': 'Unable to preview this asset',
   '语义搜索查询超过本地限制': 'The semantic search query exceeds the local limit.',
   '素材不会上传': 'Media never leaves this device',
   '按画面内容搜索素材': 'Search by visual content',

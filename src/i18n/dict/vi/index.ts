@@ -1854,6 +1854,7 @@ export const VI: Record<string, string> = {
   '语义搜索': 'Tìm kiếm ngữ nghĩa',
   '本地语义搜索': 'Tìm kiếm ngữ nghĩa cục bộ',
   '语义搜索暂不可用，请重试。': 'Tìm kiếm ngữ nghĩa tạm thời không khả dụng, hãy thử lại.',
+  '无法预览素材': 'Không thể xem trước tư liệu này',
   '语义搜索查询超过本地限制': 'Truy vấn tìm kiếm ngữ nghĩa vượt quá giới hạn cục bộ.',
   '素材不会上传': 'Tư liệu không được tải lên',
   '按画面内容搜索素材': 'Tìm tư liệu theo nội dung hình ảnh',

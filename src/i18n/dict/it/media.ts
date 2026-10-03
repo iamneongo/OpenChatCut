@@ -33,6 +33,7 @@ export default {
   '导出透明 MOV': 'Esporta MOV trasparente',
   '导出中…': 'Esportazione...',
   '素材导出失败：{message}': 'Esportazione media non riuscita: {message}',
+  '无法预览素材': 'Impossibile visualizzare l’anteprima del materiale',
   '导入文件夹…': 'Importa cartella...',
   '停止正在准备的监听文件夹「{dir}」': 'Interrompi la preparazione della cartella monitorata “{dir}”',
   '停止监听文件夹「{dir}」': 'Interrompi il monitoraggio della cartella “{dir}”',

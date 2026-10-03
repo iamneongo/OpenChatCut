@@ -92,6 +92,7 @@ function VideoPoster({ src, name }: { src?: string; name: string }) {
 }
 
 function AssetPreview({ asset, fps, active, onLoadError, onLoadSuccess }: AssetPreviewProps) {
+  const t = useT();
   const preview = usePreviewMediaSource(asset.kind === 'video' ? asset.src : undefined);
   if (asset.kind === 'image' || asset.kind === 'gif' || asset.kind === 'svg') {
     return <img src={asset.src} alt={asset.name} draggable={false} onError={() => onLoadError(asset.id)} onLoad={() => onLoadSuccess(asset.id)} />;
@@ -117,7 +118,7 @@ function AssetPreview({ asset, fps, active, onLoadError, onLoadSuccess }: AssetP
       <>
         {media}
         {preview.proxy.status === 'failed' && (
-          <span className="cc-asset-preview-failed" title={preview.proxy.error}>!</span>
+          <span className="cc-asset-preview-failed" title={t('失败:{error}', { error: preview.proxy.error ?? t('无法预览素材') })}>!</span>
         )}
       </>
     );
@@ -289,7 +290,7 @@ function AssetBadges(props: MediaAssetCardProps) {
           props.onOpenTranscript?.(asset.id);
         }}
       ><Icon name="check" size={14} strokeWidth={2.2} /></button>}
-      {asset.transcribeStatus === 'failed' && <span className="cc-asset-transcribe-status cc-asset-transcribe-failed" title={asset.transcribeError ?? t('转写失败')}>!</span>}
+      {asset.transcribeStatus === 'failed' && <span className="cc-asset-transcribe-status cc-asset-transcribe-failed" title={t('失败:{error}', { error: asset.transcribeError ?? t('转写失败') })}>!</span>}
     </>
   );
 }

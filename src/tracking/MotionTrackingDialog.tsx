@@ -20,7 +20,9 @@ const STABILIZE = '__stabilize__';
 const INITIAL_REGION: TrackingRegion = { x: 0.35, y: 0.3, width: 0.3, height: 0.4 };
 
 function errorLabel(error: unknown, t: ReturnType<typeof useT>): string {
-  if (!(error instanceof TrackingError)) return error instanceof Error ? error.message : String(error);
+  if (!(error instanceof TrackingError)) {
+    return t('失败:{error}', { error: error instanceof Error ? error.message : String(error) });
+  }
   return ({
     'load-failed': t('无法读取所选视频'),
     'seek-failed': t('读取视频帧超时'),
