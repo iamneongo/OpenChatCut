@@ -278,7 +278,7 @@ async function attemptCommit(input: CommitAttemptInput): Promise<OfflineProjectC
 }
 
 export async function loadOfflineStoredProject(projectId: string): Promise<OfflineStoredProject | null> {
-  if (!VALID_PROJECT_ID.test(projectId)) throw new Error('invalid project id');
+  if (!VALID_PROJECT_ID.test(projectId)) throw new Error('ID dự án không hợp lệ');
   const entry = await getStoredEntry(`project:${projectId}`);
   const doc = entry.found ? normalizedProject(entry.value) : null;
   return doc ? { projectId, doc, revision: revisionOf(doc) } : null;
@@ -297,25 +297,25 @@ export async function loadOfflineEditCheckpoint(
   projectId: string,
   expectedRevision: string,
 ): Promise<ExternalDraftCheckpoint | null> {
-  if (!VALID_PROJECT_ID.test(projectId)) throw new Error('invalid project id');
+  if (!VALID_PROJECT_ID.test(projectId)) throw new Error('ID dự án không hợp lệ');
   const entry = await getStoredEntry(`${CHECKPOINT_PREFIX}${projectId}`);
   if (!entry.found) return null;
   if (isRecord(entry.value) && typeof entry.value.version === 'number' && entry.value.version > 1) {
-    throw new Error(`offline edit checkpoint version ${entry.value.version} is not supported`);
+    throw new Error(`Phiên bản checkpoint chỉnh sửa ngoại tuyến ${entry.value.version} không được hỗ trợ`);
   }
   const checkpoint = normalizedCheckpoint(entry.value, expectedRevision);
   if (checkpoint) return checkpoint;
   if (isRecord(entry.value) && entry.value.version === 1
     && entry.value.baseRevision !== expectedRevision) return null;
-  throw new Error('offline edit checkpoint is corrupt');
+  throw new Error('Checkpoint chỉnh sửa ngoại tuyến bị hỏng');
 }
 
 export async function saveOfflineEditCheckpoint(
   input: OfflineCheckpointSaveInput,
 ): Promise<OfflineCheckpointSaveStatus> {
-  if (!VALID_PROJECT_ID.test(input.projectId)) throw new Error('invalid project id');
+  if (!VALID_PROJECT_ID.test(input.projectId)) throw new Error('ID dự án không hợp lệ');
   const checkpoint = normalizedCheckpoint(input.checkpoint, input.expectedRevision);
-  if (!checkpoint) throw new Error('invalid offline edit checkpoint');
+  if (!checkpoint) throw new Error('Checkpoint chỉnh sửa ngoại tuyến không hợp lệ');
   return withSerializedProjectStore(async (store) => {
     const project = await store.readEntry(`project:${input.projectId}`);
     const doc = project.found ? normalizedProject(project.value) : null;
@@ -330,13 +330,13 @@ export async function saveOfflineEditCheckpoint(
       if (isRecord(previous.value)
         && typeof previous.value.version === 'number'
         && previous.value.version > 1) {
-        throw new Error(`offline edit checkpoint version ${previous.value.version} is not supported`);
+        throw new Error(`Phiên bản checkpoint chỉnh sửa ngoại tuyến ${previous.value.version} không được hỗ trợ`);
       }
       if (!isRecord(previous.value)
         || previous.value.version !== 1
         || typeof previous.value.baseRevision !== 'string'
         || !normalizedCheckpoint(previous.value, previous.value.baseRevision)) {
-        throw new Error('offline edit checkpoint is corrupt');
+        throw new Error('Checkpoint chỉnh sửa ngoại tuyến bị hỏng');
       }
     }
     await store.writeEntry(key, checkpoint);
@@ -358,7 +358,7 @@ export async function deleteOfflineEditCheckpoint(
   sessionId: string,
   ownership: ProjectEditOwnershipClaim,
 ): Promise<void> {
-  if (!VALID_PROJECT_ID.test(projectId)) throw new Error('invalid project id');
+  if (!VALID_PROJECT_ID.test(projectId)) throw new Error('ID dự án không hợp lệ');
   await withSerializedProjectStore(async (store) => {
     const owned = await store.readEntry(projectEditOwnershipKey(projectId));
     if (!projectEditOwnershipMatches(owned.value, ownership)) return;
@@ -370,7 +370,7 @@ export async function deleteOfflineEditCheckpoint(
       || current.value.version !== 1
       || typeof current.value.baseRevision !== 'string'
       || !normalizedCheckpoint(current.value, current.value.baseRevision)) {
-      throw new Error('offline edit checkpoint is corrupt or unsupported');
+      throw new Error('Checkpoint chỉnh sửa ngoại tuyến bị hỏng hoặc không được hỗ trợ');
     }
     if (current.value.sessionId === sessionId) await store.removeEntry(key);
   });
@@ -379,9 +379,9 @@ export async function deleteOfflineEditCheckpoint(
 export async function commitOfflineStoredProject(
   input: OfflineProjectCommitInput,
 ): Promise<OfflineProjectCommitResult> {
-  if (!VALID_PROJECT_ID.test(input.projectId)) throw new Error('invalid project id');
+  if (!VALID_PROJECT_ID.test(input.projectId)) throw new Error('ID dự án không hợp lệ');
   const normalizedDoc = normalizedProject(input.doc);
-  if (!normalizedDoc) throw new Error('invalid edited project document');
+  if (!normalizedDoc) throw new Error('Tài liệu dự án đã chỉnh sửa không hợp lệ');
   for (let attempt = 0; attempt < MAX_METADATA_RETRIES; attempt += 1) {
     const metadata = await readCommitMetadata(input.projectId);
     const result = await attemptCommit({ ...input, normalizedDoc, metadata });

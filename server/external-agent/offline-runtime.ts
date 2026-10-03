@@ -174,7 +174,7 @@ export class OfflineExternalEditRuntime {
       this.failActiveSessions('stale');
       throw new ExternalEditorCallError(
         'stale',
-        `Project ${this.projectId} is now open in a browser editor. Start a new MCP session and use ${this.editorUrl}.`,
+        `Dự án ${this.projectId} hiện đang mở trong editor trình duyệt. Hãy bắt đầu phiên MCP mới và dùng ${this.editorUrl}.`,
       );
     }
     const renewed = await this.persistence.renewOwnership(this.ownership, this.expectedRevision);
@@ -182,7 +182,7 @@ export class OfflineExternalEditRuntime {
       this.failActiveSessions('stale');
       throw new ExternalEditorCallError(
         'stale',
-        `Stored project ${this.projectId} changed ownership or revision during the offline edit. Start a new MCP session.`,
+        `Quyền sở hữu hoặc revision của dự án ${this.projectId} đã thay đổi trong khi chỉnh sửa ngoại tuyến. Hãy bắt đầu phiên MCP mới.`,
       );
     }
     this.ownership = renewed.claim;
@@ -199,7 +199,7 @@ export class OfflineExternalEditRuntime {
     if (approvalMode !== 'auto') {
       throw new ExternalEditorCallError(
         'rejected',
-        `Offline editing requires approvalMode="auto". Open ${this.editorUrl} for manual approval.`,
+        `Chỉnh sửa ngoại tuyến yêu cầu approvalMode="auto". Mở ${this.editorUrl} để phê duyệt thủ công.`,
       );
     }
     const checkpoint = await this.persistence.loadCheckpoint?.(
@@ -225,7 +225,7 @@ export class OfflineExternalEditRuntime {
       this.publishSession(state, finishExternalEditSession(state.session, 'cancelled'));
       await this.runs.get(state.session.id)?.finalize(
         'aborted',
-        'Offline external edit session cancelled.',
+        'Đã hủy phiên chỉnh sửa ngoại tuyến.',
       );
     }
     return this.info(this.requireSession(state.session.id).session);
@@ -241,7 +241,7 @@ export class OfflineExternalEditRuntime {
     if (session.status !== 'drafting') {
       throw new ExternalEditorCallError(
         'rejected',
-        `Edit session ${session.id} is ${session.status}; editor tools require drafting status.`,
+        `Phiên chỉnh sửa ${session.id} đang ở trạng thái ${session.status}; các tool editor yêu cầu trạng thái drafting.`,
       );
     }
     const run = this.requireRun(session.id);
@@ -282,7 +282,7 @@ export class OfflineExternalEditRuntime {
   ): Promise<Record<string, unknown>> {
     const session = state.session;
     if (session.approvalMode !== 'auto') {
-      throw new ExternalEditorCallError('rejected', `Open ${this.editorUrl} to review a manual edit session.`);
+      throw new ExternalEditorCallError('rejected', `Mở ${this.editorUrl} để xem xét phiên chỉnh sửa thủ công.`);
     }
     const draftDoc = session.draft?.getDoc();
   if (!draftDoc) throw new Error(`Phiên chỉnh sửa ${session.id} đang ở trạng thái ${session.status}, không phải drafting.`);
