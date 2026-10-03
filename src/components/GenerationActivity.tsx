@@ -20,8 +20,16 @@ type Translate = ReturnType<typeof useT>;
 function operationSummary(job: TrackedJob, t: Translate): string {
   const args = job.submitArgs;
   if (!args) return job.params ? t('旧版参数摘要（不可安全重跑）') : t('参数快照不可用');
-  const fields = ['provider', 'model', 'mode', 'durationSeconds', 'resolution', 'ratio']
-    .flatMap((key) => args[key] === undefined ? [] : [`${key}=${String(args[key])}`]);
+  const fieldLabels: Record<string, string> = {
+    provider: '服务商',
+    model: '模型',
+    mode: '模式',
+    durationSeconds: '时长',
+    resolution: '分辨率',
+    ratio: '画幅比例',
+  };
+  const fields = Object.entries(fieldLabels)
+    .flatMap(([key, label]) => args[key] === undefined ? [] : [`${t(label)}: ${String(args[key])}`]);
   if (typeof args.prompt === 'string' && args.prompt.trim()) {
     const prompt = args.prompt.trim();
     fields.push(prompt.length > 100 ? `${prompt.slice(0, 97)}…` : prompt);
