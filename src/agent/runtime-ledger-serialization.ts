@@ -33,8 +33,8 @@ function canonicalValue(value: unknown, seen = new WeakSet<object>()): unknown {
 
 export async function digestAgentToolArgs(args: Record<string, unknown>): Promise<string> {
   let canonical: string | undefined;
-  try { canonical = JSON.stringify(canonicalValue(args)); } catch { throw new Error('tool_args_identity: arguments could not be canonicalized safely'); }
-  if (canonical === undefined) throw new Error('tool_args_identity: arguments could not be canonicalized safely');
+  try { canonical = JSON.stringify(canonicalValue(args)); } catch { throw new Error('tool_args_identity: không thể chuẩn hóa đối số một cách an toàn'); }
+  if (canonical === undefined) throw new Error('tool_args_identity: không thể chuẩn hóa đối số một cách an toàn');
   return sha256Text(canonical);
 }
 
@@ -60,7 +60,7 @@ export async function uniqueArtifactId(projectId: string): Promise<string> {
     const id = crypto.randomUUID().replaceAll('-', '').slice(0, 18);
     if (!await loadAgentArtifact(projectId, id)) return id;
   }
-  throw new Error('Unable to allocate a unique agent artifact id.');
+  throw new Error('Không thể cấp ID artifact Agent duy nhất.');
 }
 
 export function artifactRef(record: AgentArtifactRecord): AgentArtifactRef {
@@ -87,10 +87,10 @@ export async function archiveAgentToolResult(
   if (!input.forceArchive
       && (input.toolName === 'read_agent_artifact' || input.toolName === 'load_skill')) return null;
   const sanitized = sanitizeJsonForArtifact(input.result);
-  if (!sanitized) throw new Error('tool_result_archive: result could not be serialized safely');
+  if (!sanitized) throw new Error('tool_result_archive: không thể tuần tự hóa kết quả một cách an toàn');
   if (sanitized.originalChars <= TOOL_ARTIFACT_THRESHOLD) return null;
   if (sanitized.storedBytes > MAX_ARTIFACT_BYTES) {
-    throw new Error('tool_result_archive: result exceeds the per-artifact storage limit');
+    throw new Error('tool_result_archive: kết quả vượt quá giới hạn lưu trữ cho mỗi artifact');
   }
   const bodySha256 = await sha256Text(sanitized.body);
   const artifactId = await uniqueArtifactId(projectId);
@@ -103,7 +103,7 @@ export async function archiveAgentToolResult(
     body: sanitized.body,
   };
   if (!await storeAgentArtifact(record)) {
-    throw new Error('tool_result_archive: artifact storage is unavailable');
+    throw new Error('tool_result_archive: bộ nhớ artifact không khả dụng');
   }
   return artifactRef(record);
 }

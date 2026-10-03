@@ -205,7 +205,7 @@ export class AgentRunRecorder {
     if (lease) return;
     this.leaseOwned = false;
     this.stopLease();
-    throw new Error(`Agent run ownership lost: ${this.runId}`);
+    throw new Error(`Đã mất quyền sở hữu lượt chạy Agent: ${this.runId}`);
   }
   confirmOwnership(): Promise<void> {
     return this.serialize(async () => undefined);
@@ -216,7 +216,7 @@ export class AgentRunRecorder {
         const run = (await loadAgentRuntimeSidecar(this.projectId)).runs.find((item) => item.runId === this.runId);
         if (run && TERMINAL.has(run.status)) return work();
       }
-      if (!this.leaseOwned) throw new Error(`Agent run ownership lost: ${this.runId}`);
+      if (!this.leaseOwned) throw new Error(`Đã mất quyền sở hữu lượt chạy Agent: ${this.runId}`);
       await this.renewOwnership();
       return work();
     });
@@ -278,20 +278,20 @@ export class AgentRunRecorder {
       const [digest, summaryDigest] = await Promise.all([
         sha256Text(sourceText), sha256Text(summary),
       ]);
-      if (digest !== input.sourceDigest) throw new Error('context_integrity: checkpoint source digest mismatch');
+      if (digest !== input.sourceDigest) throw new Error('context_integrity: digest nguồn checkpoint không khớp');
       if (input.summaryDigest && summaryDigest !== input.summaryDigest) {
-        throw new Error('context_integrity: checkpoint summary digest mismatch');
+        throw new Error('context_integrity: digest bản tóm tắt checkpoint không khớp');
       }
       const artifactId = await uniqueArtifactId(this.projectId);
       const bodyBytes = new TextEncoder().encode(sourceText).byteLength;
-      if (bodyBytes > MAX_ARTIFACT_BYTES) throw new Error('context_integrity: checkpoint source exceeds artifact cap');
+      if (bodyBytes > MAX_ARTIFACT_BYTES) throw new Error('context_integrity: nguồn checkpoint vượt quá giới hạn artifact');
       const stored = await storeAgentArtifact({
         version: 1, artifactId, projectId: this.projectId, runId: this.runId,
         kind: 'checkpoint-source', bodySha256: digest, originalBytes: bodyBytes,
         originalChars: sourceText.length, createdAt: input.createdAt,
         redacted: sourceText !== input.sourceText, binaryOmitted: false, body: sourceText,
       });
-      if (!stored) throw new Error('context_integrity: checkpoint source could not be archived');
+      if (!stored) throw new Error('context_integrity: không thể lưu trữ nguồn checkpoint');
       const checkpointId = input.checkpointId ?? crypto.randomUUID();
       await addAgentCheckpoint({
         version: 1, checkpointId, projectId: this.projectId, runId: this.runId,
@@ -342,7 +342,7 @@ export class AgentRunRecorder {
     return this.serialize(async () => {
       const sidecar = await loadAgentRuntimeSidecar(this.projectId);
       const current = sidecar.approvals.find((item) => item.approvalId === approvalId);
-      if (!current || current.runId !== this.runId) throw new Error(`Agent approval not found: ${approvalId}`);
+      if (!current || current.runId !== this.runId) throw new Error(`Không tìm thấy phê duyệt Agent: ${approvalId}`);
       const next = { ...current, status: decision, decidedAt: Date.now() } satisfies AgentApprovalRecord;
       await upsertAgentApproval(next);
       await patchAgentRun(this.projectId, this.runId, { status: 'running' });
@@ -384,7 +384,7 @@ export class AgentRunRecorder {
       const type = `proposal_${status}` as const;
       const sidecar = await loadAgentRuntimeSidecar(this.projectId);
       const run = sidecar.runs.find((item) => item.runId === this.runId);
-      if (!run) throw new Error(`Agent run not found: ${this.runId}`);
+      if (!run) throw new Error(`Không tìm thấy lượt chạy Agent: ${this.runId}`);
       await patchAgentRun(this.projectId, this.runId, {
         proposalIds: [...new Set([...run.proposalIds, proposalId])],
       });
@@ -396,7 +396,7 @@ export class AgentRunRecorder {
       try {
         const current = await loadAgentRuntimeSidecar(this.projectId);
         const run = current.runs.find((item) => item.runId === this.runId);
-        if (!run) throw new Error(`Agent run not found: ${this.runId}`);
+        if (!run) throw new Error(`Không tìm thấy lượt chạy Agent: ${this.runId}`);
         if (TERMINAL.has(run.status)) return;
         const finalSummary = sanitizeText(summary);
         await patchAgentRun(this.projectId, this.runId, {
@@ -434,7 +434,7 @@ export async function startAgentRun(input: StartAgentRunInput): Promise<AgentRun
     true,
     now,
   );
-  if (!lease) throw new Error(`Agent run ownership could not be claimed: ${runId}`);
+  if (!lease) throw new Error(`Không thể giành quyền sở hữu lượt chạy Agent: ${runId}`);
   return new AgentRunRecorder(input.projectId, runId, lease.leaseToken);
 }
 export async function resumeAgentRun(

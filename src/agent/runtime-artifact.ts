@@ -127,7 +127,7 @@ function sanitizeValue(
     state.binaryOmitted = true;
     return BINARY_OMITTED;
   }
-  if (seen.has(value)) throw new Error('Artifact result is not JSON-serializable.');
+  if (seen.has(value)) throw new Error('Kết quả artifact không thể tuần tự hóa thành JSON.');
   seen.add(value);
   if (Array.isArray(value)) {
     const result = value.map((item) => sanitizeValue(item, state, seen));

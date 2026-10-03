@@ -155,7 +155,7 @@ async function verifyCheckpointAndRecovery(
   await assert.rejects(recorder.recordCheckpoint({
     summary: rawSummary, sourceText: rawSource, sourceDigest: await sha256Text(rawSource),
     sourceMessageCount: 4, createdAt: Date.now(),
-  }), /source digest mismatch/);
+  }), /digest nguồn checkpoint không khớp/);
   await recorder.recordApprovalRequested({
     toolCallId: 'pending-call', toolName: 'submit_render_job',
     argsDigest: await digestAgentToolArgs({ projectId }), operationId: 'op-1',
