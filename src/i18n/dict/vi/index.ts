@@ -1799,6 +1799,7 @@ export const VI: Record<string, string> = {
   '删除空文件夹「{name}」？': 'Xóa thư mục trống “{name}”?',
   '已选 {n}': 'Đã chọn {n}',
   '加到时间线：{name}': 'Thêm vào dòng thời gian: {name}',
+  '素材「{name}」已存在。覆盖会同步替换已在时间线中使用的该素材。': 'Tư liệu “{name}” đã tồn tại. Ghi đè sẽ đồng thời thay thế tư liệu này ở mọi vị trí đang dùng trên dòng thời gian.',
   '点击素材右上角“⋯”：图片、视频和音频可下载原文件，MG 可导出透明 MOV。': 'Nhấp “⋯” ở góc trên phải tư liệu: hình ảnh, video và âm thanh có thể tải tệp gốc; MG có thể xuất MOV trong suốt.',
   '素材导出失败：{message}': 'Xuất tư liệu thất bại: {message}',
   'MG 素材缺少动画代码': 'Tư liệu MG thiếu mã hiệu ứng chuyển động',

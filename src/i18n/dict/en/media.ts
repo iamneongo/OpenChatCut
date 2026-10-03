@@ -60,6 +60,7 @@ export default {
   '已选 {n}': 'Selected {n}',
   '加到时间线': 'Add to timeline',
   '加到时间线：{name}': 'Add to timeline: {name}',
+  '素材「{name}」已存在。覆盖会同步替换已在时间线中使用的该素材。': 'Media “{name}” already exists. Overwriting will also replace this media wherever it is used on the timeline.',
   '点击素材右上角“⋯”：图片、视频和音频可下载原文件，MG 可导出透明 MOV。': 'Open the top-right menu: download original image, video, and audio files, or export MG as a transparent MOV.',
   '下载原文件': 'Download original',
   '导出透明 MOV': 'Export transparent MOV',
