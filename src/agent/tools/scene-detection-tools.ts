@@ -70,7 +70,7 @@ export async function execSceneDetectionTool(name: string, args: Args, ctx: Agen
     const actions = apply === 'markers'
       ? sceneMarkerActions(target.item, mapped)
       : sceneSplitActions(target.item, mapped);
-    ctx.commands.batch(actions, apply === 'markers' ? 'Add scene markers' : 'Split clip at scene changes');
+    ctx.commands.batch(actions, apply === 'markers' ? 'Thêm marker cảnh' : 'Tách clip tại điểm đổi cảnh');
   }
 
   return {

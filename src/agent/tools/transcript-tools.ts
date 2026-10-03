@@ -372,7 +372,7 @@ export async function execTranscriptTool(name: string, args: Args, ctx: AgentCon
           actions.push({ type: 'deleteWords', id: it.id, idxs: fillers });
         }
       }
-      ctx.commands.batch(actions, 'Clean script');
+      ctx.commands.batch(actions, 'Làm sạch kịch bản');
       return {
         ok: true,
         track: alias,
@@ -401,7 +401,7 @@ export async function execTranscriptTool(name: string, args: Args, ctx: AgentCon
           name: it.name,
           gapCount: gaps.length,
           gaps,
-          usage: 'Pass afterWordIndex (or gapIndex / afterText) to edit_gap delete|cap|restore. Batch whole-track: clean_script.',
+          usage: 'Truyền afterWordIndex (hoặc gapIndex / afterText) cho edit_gap delete|cap|restore. Xử lý cả track: clean_script.',
         };
       }
 

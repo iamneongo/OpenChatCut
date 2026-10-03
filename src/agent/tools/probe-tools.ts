@@ -60,7 +60,7 @@ export async function execProbeTool(name: string, args: Args, ctx: AgentContext)
     source: resolved.url,
     ...probe,
     next: probe.hasAudioTrack
-      ? `Has audio → finalize_uploaded_asset with the upload response assetType, durationInSeconds, and hasAudioTrack=true${probe.fps ? `, fps=${probe.fps}` : ''}; then invoke transcribe_track if transcription is desired.`
-      : 'No audio track → finalize_uploaded_asset with the upload response assetType, durationInSeconds, and hasAudioTrack=false; no transcription will be started.',
+      ? `Có track âm thanh → gọi finalize_uploaded_asset với assetType, durationInSeconds và hasAudioTrack=true từ phản hồi tải lên${probe.fps ? `, fps=${probe.fps}` : ''}; sau đó gọi transcribe_track nếu cần chép lời.`
+      : 'Không có track âm thanh → gọi finalize_uploaded_asset với assetType, durationInSeconds và hasAudioTrack=false từ phản hồi tải lên; sẽ không bắt đầu chép lời.',
   };
 }

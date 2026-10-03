@@ -87,7 +87,7 @@ export async function execLibraryTool(name: string, args: Args, ctx: AgentContex
       mode: 'root',
       categories: counts,
       total: all.length,
-      usage: 'Pass category (and optional group/query) or id. Then edit_item to place.',
+      usage: 'Truyền category (có thể kèm group/query) hoặc id. Sau đó dùng edit_item để đặt vào timeline.',
     };
   }
 

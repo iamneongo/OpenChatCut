@@ -15,6 +15,7 @@ import { CUSTOM_FX, FX_EFFECTS, FX_IDS, LUT_EFFECTS, LUT_IDS } from '../../gl/fx
 import { listCustomTransitions } from '../../gl/customTransitions';
 import { listCustomZooms } from '../../editor/customZooms';
 import type { Tpl } from '../../types';
+import { localizedCatalogText } from '../../i18n/locale';
 import {
   AUDIO_FX_ISOLATE_DEFAULT,
   AUDIO_FX_ISOLATE_LIGHT,
@@ -69,16 +70,16 @@ export function parseZoomLibraryId(assetId: string): ZoomShape | null {
 }
 
 const ZOOM_DESC: Record<ZoomShape, string> = {
-  punch: 'Quick punch zoom — emphasis hit',
-  instant: 'Snap to magnified frame — no animation',
-  'slow-push': 'Gradual zoom across the entire clip',
-  hold: 'Ease in, hold at peak, ease back out',
-  'zoom-out': 'Start tight, pull back to 1×',
-  'ease-in': 'Cubic ease-in push toward peak',
-  bounce: 'Overshoot then settle (elastic)',
-  snap: 'Very fast snap-in to peak magnification',
-  pulse: 'Heartbeat pulse toward peak then ease back',
-  'whip-in': 'Aggressive front-loaded whip into zoom',
+  punch: 'Zoom đấm nhanh — nhấn mạnh điểm cần chú ý',
+  instant: 'Bật ngay đến khung hình phóng đại — không có hoạt ảnh',
+  'slow-push': 'Zoom dần trong toàn bộ đoạn clip',
+  hold: 'Tăng tốc mượt, giữ ở đỉnh rồi giảm mượt',
+  'zoom-out': 'Bắt đầu cận cảnh, kéo lùi về 1×',
+  'ease-in': 'Đẩy về đỉnh bằng đường cong cubic ease-in',
+  bounce: 'Vượt đỉnh rồi ổn định lại (đàn hồi)',
+  snap: 'Bật rất nhanh vào mức phóng đại tối đa',
+  pulse: 'Nhịp phóng đại như nhịp tim rồi giảm lại',
+  'whip-in': 'Lao mạnh từ đầu vào vùng zoom',
 };
 
 export function buildLibraryItems(templates: Tpl[]): LibraryItem[] {
@@ -132,7 +133,7 @@ export function buildLibraryItems(templates: Tpl[]): LibraryItem[] {
   // Open-box AI Voice Isolation implemented with local ffmpeg.
   items.push({
     id: AUDIO_FX_ISOLATE_DEFAULT,
-    name: 'Voice Isolation',
+    name: localizedCatalogText('Voice Isolation', '人声隔离', undefined, 'Tách giọng nói'),
     category: 'audio-fx',
     description: 'Khử ồn giọng nói mã nguồn mở (khử ồn phổ bằng ffmpeg). Gắn denoisedSrc; src của đoạn gốc không thay đổi.',
     group: 'voice',
@@ -140,7 +141,7 @@ export function buildLibraryItems(templates: Tpl[]): LibraryItem[] {
   });
   items.push({
     id: AUDIO_FX_ISOLATE_LIGHT,
-    name: 'Voice Isolation (Light)',
+    name: localizedCatalogText('Voice Isolation (Light)', '人声隔离（轻）', undefined, 'Tách giọng nói (nhẹ)'),
     category: 'audio-fx',
     description: 'Mức khử ồn nhẹ (strength≈35) cho micro vốn đã khá sạch.',
     group: 'voice',
@@ -148,7 +149,7 @@ export function buildLibraryItems(templates: Tpl[]): LibraryItem[] {
   });
   items.push({
     id: AUDIO_FX_ISOLATE_STRONG,
-    name: 'Voice Isolation (Strong)',
+    name: localizedCatalogText('Voice Isolation (Strong)', '人声隔离（强）', undefined, 'Tách giọng nói (mạnh)'),
     category: 'audio-fx',
     description: 'Khử ồn mạnh (strength≈90) cho phòng ồn hoặc lời thoại ngoài đường.',
     group: 'voice',
@@ -225,10 +226,10 @@ export function libraryOverview(items: LibraryItem[]) {
     total: items.length,
     groups: [...groups.values()].sort((a, b) => b.count - a.count),
     usage: {
-      category: 'Category returns a Library tab overview with group counts.',
-      categoryGroup: 'Category + group returns list results from one group.',
-      id: 'ID returns one item details + usage guidance for edit_item.',
-      query: 'Query returns list results across (or within) categories.',
+      category: 'Category trả về tổng quan tab Thư viện cùng số lượng theo nhóm.',
+      categoryGroup: 'Category + group trả về danh sách trong một nhóm.',
+      id: 'ID trả về chi tiết một mục cùng hướng dẫn dùng với edit_item.',
+      query: 'Query trả về danh sách trong hoặc giữa các category.',
     },
   };
 }
