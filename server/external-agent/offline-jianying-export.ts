@@ -17,7 +17,7 @@ export async function executeOfflineJianyingExport(
   args: Record<string, unknown>,
   ctx: AgentContext,
 ): Promise<unknown> {
-  if (name !== 'export_jianying_draft') return { error: `unknown tool ${name}` };
+  if (name !== 'export_jianying_draft') return { error: `tool không được nhận diện: ${name}` };
   const result = await exportJianyingDraft(jianyingExportBody(args, ctx));
   return jianyingExportOutcome(result as JianyingExportResponse, result.ok ? 200 : 400);
 }

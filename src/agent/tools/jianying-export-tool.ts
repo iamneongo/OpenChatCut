@@ -8,7 +8,7 @@ export const JIANYING_EXPORT_TOOL_NAME = 'export_jianying_draft';
 
 export const jianyingExportToolSchema: AgentToolSchema = {
   name: JIANYING_EXPORT_TOOL_NAME,
-  description: 'Export the current timeline as a CapCut/JianYing draft (via capcut-cli). The draft appears in the CapCut/JianYing project list; open it there to review and render. Only call this when the user explicitly confirms the export.',
+  description: 'Xuất timeline hiện tại thành bản nháp CapCut/JianYing (qua capcut-cli). Bản nháp sẽ xuất hiện trong danh sách project CapCut/JianYing; hãy mở tại đó để xem và render. Chỉ gọi khi người dùng đã xác nhận rõ việc export.',
   input_schema: {
     type: 'object',
     properties: {
