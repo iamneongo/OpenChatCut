@@ -271,6 +271,8 @@ export const VI: Record<string, string> = {
   '检查更新': 'Kiểm tra cập nhật',
   '检查中…': 'Đang kiểm tra…',
   '设置 · API 密钥': 'Cài đặt · Khóa API',
+  'API Key': 'Khóa API',
+  'API URL': 'URL API',
   '显示明文': 'Hiện giá trị',
   '第三方字体许可': 'Giấy phép phông chữ bên thứ ba',
   '保存中…': 'Đang lưu…',
