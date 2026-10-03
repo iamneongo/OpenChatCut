@@ -240,7 +240,7 @@ const VIDEO_STRATEGIES = { fal: falVideo, seedance2: seedanceVideo, kling: kling
 export function buildSubmitVideoArgs(args: GenerateArgs): SubmitVideoArgs {
   const model = args.model === undefined ? 'seedance2' : args.model;
   if (model !== 'seedance2' && model !== 'kling' && model !== 'hailuo' && model !== 'byteplus' && model !== 'grok-imagine-video' && model !== 'ofox' && model !== 'fal') {
-    throw new Error('Unsupported video model; select an available provider before submitting or rerunning.');
+    throw new Error('Model video không được hỗ trợ; hãy chọn provider khả dụng trước khi gửi hoặc chạy lại.');
   }
   return VIDEO_STRATEGIES[model](args);
 }

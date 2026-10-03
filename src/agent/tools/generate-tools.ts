@@ -233,14 +233,14 @@ export function canonicalGenerationArgs(value: unknown): string {
     }
     if (typeof current === 'bigint') return `bigint:${current}`;
     if (Array.isArray(current)) {
-      if (ancestors.has(current)) throw new Error('generation args cannot contain circular arrays');
+      if (ancestors.has(current)) throw new Error('tham số sinh nội dung không được chứa mảng vòng lặp');
       ancestors.add(current);
       const serialized = `array:[${current.map(visit).join(',')}]`;
       ancestors.delete(current);
       return serialized;
     }
     if (typeof current === 'object') {
-      if (ancestors.has(current)) throw new Error('generation args cannot contain circular objects');
+      if (ancestors.has(current)) throw new Error('tham số sinh nội dung không được chứa object vòng lặp');
       ancestors.add(current);
       const source = current as Record<string, unknown>;
       const serialized = `object:{${Object.keys(source).sort().map((key) => `${JSON.stringify(key)}:${visit(source[key])}`).join(',')}}`;

@@ -193,7 +193,7 @@ async function trackSubmission(
 function submissionOperationId(args: GenerateArgs): string {
   if (args.__rerunGeneration === true) return crypto.randomUUID();
   if (typeof args.__operationId === 'string' && args.__operationId.trim()) return args.__operationId;
-  throw new Error('generation submission requires a reserved operation id');
+  throw new Error('gửi yêu cầu sinh nội dung cần một operation id đã được giữ chỗ');
 }
 
 const submitMusicHandler: Handler = async (args, ctx) => {
@@ -305,7 +305,7 @@ async function exportSubtitles(args: GenerateArgs, state: TimelineState): Promis
 
 async function exportMedia(args: GenerateArgs, target: ExportTarget, format: 'audio' | 'video'): Promise<unknown> {
   const fps = typeof args.fps === 'number' ? args.fps : undefined;
-  if (fps != null && ![24, 25, 30, 50, 60].includes(fps)) throw new Error('fps must be one of 24, 25, 30, 50, 60');
+      if (fps != null && ![24, 25, 30, 50, 60].includes(fps)) throw new Error('fps phải là một trong các giá trị 24, 25, 30, 50, 60');
   const resolution = args.resolution === '480p' || args.resolution === '720p' || args.resolution === '1080p' ? args.resolution : undefined;
   const input: SubmitMediaExportArgs = {
     format, codec: args.codec as SubmitMediaExportArgs['codec'], name: typeof args.name === 'string' ? args.name : undefined,
