@@ -23,7 +23,7 @@ const asRecord = (value: unknown): Record<string, unknown> | null => (
 
 function parseTimestamp(value: unknown, label: string): number {
   if (typeof value !== 'number' || !Number.isFinite(value) || value < 0) {
-    throw new Error(`phản hồi transcription có ${label} không hợp lệ`);
+    throw new Error(`phản hồi chép lời có ${label} không hợp lệ`);
   }
   return value;
 }
@@ -31,16 +31,16 @@ function parseTimestamp(value: unknown, label: string): number {
 function parseWord(value: unknown): TranscriptWord {
   const word = asRecord(value);
   if (!word || typeof word.text !== 'string') {
-    throw new Error('phản hồi transcription có word không hợp lệ');
+    throw new Error('phản hồi chép lời có từ không hợp lệ');
   }
-  const start = parseTimestamp(word.start, 'word start');
-  const end = parseTimestamp(word.end, 'word end');
-  if (end < start) throw new Error('phản hồi transcription có timestamp của word bị đảo ngược');
+  const start = parseTimestamp(word.start, 'bắt đầu của từ');
+  const end = parseTimestamp(word.end, 'kết thúc của từ');
+  if (end < start) throw new Error('phản hồi chép lời có dấu thời gian của từ bị đảo ngược');
   if (word.id !== undefined && typeof word.id !== 'string') {
-    throw new Error('phản hồi transcription có id của word không hợp lệ');
+    throw new Error('phản hồi chép lời có mã của từ không hợp lệ');
   }
   if (word.speaker !== undefined && word.speaker !== null && typeof word.speaker !== 'string') {
-    throw new Error('phản hồi transcription có speaker của word không hợp lệ');
+    throw new Error('phản hồi chép lời có người nói của từ không hợp lệ');
   }
   return {
     ...(word.id === undefined ? {} : { id: word.id }),
@@ -54,12 +54,12 @@ function parseWord(value: unknown): TranscriptWord {
 function parseUtterance(value: unknown): TranscriptUtterance {
   const utterance = asRecord(value);
   if (!utterance || typeof utterance.speaker !== 'string' || typeof utterance.text !== 'string') {
-    throw new Error('phản hồi transcription có utterance không hợp lệ');
+    throw new Error('phản hồi chép lời có lượt nói không hợp lệ');
   }
-  const start = parseTimestamp(utterance.start, 'utterance start');
-  const end = parseTimestamp(utterance.end, 'utterance end');
+  const start = parseTimestamp(utterance.start, 'bắt đầu lượt nói');
+  const end = parseTimestamp(utterance.end, 'kết thúc lượt nói');
   if (end < start || !Array.isArray(utterance.words)) {
-    throw new Error('phản hồi transcription có khoảng utterance không hợp lệ');
+    throw new Error('phản hồi chép lời có khoảng lượt nói không hợp lệ');
   }
   return {
     speaker: utterance.speaker,
@@ -74,7 +74,7 @@ export function parseTranscriptResult(value: unknown): TranscriptResult {
   const result = asRecord(value);
   if (!result || typeof result.text !== 'string' || !Array.isArray(result.words)
     || !Array.isArray(result.utterances)) {
-    throw new Error('dịch vụ transcription trả về phản hồi không hợp lệ');
+    throw new Error('dịch vụ chép lời trả về phản hồi không hợp lệ');
   }
   return {
     text: result.text,
@@ -118,12 +118,12 @@ async function postTranscription(
   }
   const body = await response.text();
   if (!response.ok) {
-    throw new Error(`transcription thất bại: HTTP ${response.status}${body ? `: ${body.slice(0, 300)}` : ''}`);
+    throw new Error(`chép lời thất bại: HTTP ${response.status}${body ? `: ${body.slice(0, 300)}` : ''}`);
   }
   try {
     return parseTranscriptResult(JSON.parse(body) as unknown);
   } catch (error) {
-    if (error instanceof SyntaxError) throw new Error('dịch vụ transcription trả về JSON không hợp lệ');
+    if (error instanceof SyntaxError) throw new Error('dịch vụ chép lời trả về JSON không hợp lệ');
     throw error;
   }
 }

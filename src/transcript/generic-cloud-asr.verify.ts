@@ -93,7 +93,7 @@ try {
 
   assert.throws(
     () => parseTranscriptResult({ text: 'bad', words: [{ text: 'x', start: 10, end: 2 }], utterances: [] }),
-    /timestamp của word bị đảo ngược/,
+    /dấu thời gian của từ bị đảo ngược/,
   );
   assert.throws(
     () => parseTranscriptResult({ text: 'bad', words: [], utterances: 'not-an-array' }),

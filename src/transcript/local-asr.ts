@@ -106,7 +106,7 @@ export class LocalAsrClient {
       const timer = timeoutMs
         ? setTimeout(() => {
           this.pending.delete(id);
-          reject(new Error(`Local ASR ${request.type} hết thời gian chờ sau ${Math.round(timeoutMs / 1000)} giây`));
+          reject(new Error(`ASR cục bộ ${request.type} hết thời gian chờ sau ${Math.round(timeoutMs / 1000)} giây`));
         }, timeoutMs)
         : null;
       const settle = (fn: () => void): void => {

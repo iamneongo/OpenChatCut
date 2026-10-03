@@ -147,7 +147,7 @@ async function poll(
   const deadline = Date.now() + ASSEMBLYAI_POLL_DEADLINE_MS;
   for (;;) {
     if (Date.now() > deadline) {
-      throw new Error('đã hết thời gian chờ provider transcription; hãy thử lại');
+      throw new Error('đã hết thời gian chờ nhà cung cấp chép lời; hãy thử lại');
     }
     const r = await serviceFetch(`${BASE}/transcript/${id}`);
     if (!r.ok) throw new Error(`poll thất bại: HTTP ${r.status}`);
