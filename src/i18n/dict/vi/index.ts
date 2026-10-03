@@ -768,7 +768,7 @@ export const VI: Record<string, string> = {
   '摩卡': 'Mocha',
   '北极': 'Bắc Âu',
   '东京夜': 'Đêm Tokyo',
-  '拿铁(浅色)': 'Latte (sáng)',
+  '拿铁(浅色)': 'Cà phê sữa (sáng)',
   '键盘快捷键': 'Phím tắt',
   '点击快捷键可改绑': 'Nhấp vào phím tắt để gán lại',
   '全部重置': 'Đặt lại tất cả',
