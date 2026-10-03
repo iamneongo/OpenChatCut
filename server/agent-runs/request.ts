@@ -56,13 +56,13 @@ function jsonBytes(value: unknown): number {
 
 function validatedMessages(value: unknown): ValidatedCreateInput['messages'] {
   if (!Array.isArray(value) || value.length === 0 || value.length > MAX_MESSAGES) {
-    throw new Error(`messages must contain 1-${MAX_MESSAGES} items`);
+    throw new Error(`messages phải chứa từ 1 đến ${MAX_MESSAGES} mục`);
   }
   return value.map((raw) => {
-    if (!isJsonObject(raw)) throw new Error('invalid message');
+    if (!isJsonObject(raw)) throw new Error('message không hợp lệ');
     const content = typeof raw.content === 'string' ? raw.content : '';
     if (!content || content.length > MAX_MESSAGE_CHARS) {
-      throw new Error(`message content must be 1-${MAX_MESSAGE_CHARS} characters`);
+      throw new Error(`nội dung message phải dài từ 1 đến ${MAX_MESSAGE_CHARS} ký tự`);
     }
     return {
       role: raw.role === 'assistant' ? 'assistant' as const : 'user' as const,
@@ -90,25 +90,25 @@ export async function readJson(
 ): Promise<Record<string, unknown>> {
   const length = requestHeader(req, 'content-length');
   if (length && (!/^\d+$/.test(length) || Number(length) > maxBytes)) {
-    throw new Error('request body too large');
+    throw new Error('thân request quá lớn');
   }
   const chunks: Buffer[] = [];
   let total = 0;
   for await (const chunk of req) {
     const buffer = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk);
     total += buffer.length;
-    if (total > maxBytes) throw new Error('request body too large');
+    if (total > maxBytes) throw new Error('thân request quá lớn');
     chunks.push(buffer);
   }
   const parsed: unknown = JSON.parse(Buffer.concat(chunks).toString('utf8') || '{}');
-  if (!isJsonObject(parsed)) throw new Error('body must be a JSON object');
+  if (!isJsonObject(parsed)) throw new Error('thân request phải là một đối tượng JSON');
   return parsed;
 }
 
 export function requireProjectId(value: unknown): string {
   const projectId = typeof value === 'string' ? value.trim() : '';
   if (!/^[A-Za-z0-9_-]{1,160}$/.test(projectId)) {
-    throw new Error('valid projectId is required');
+    throw new Error('cần có projectId hợp lệ');
   }
   return projectId;
 }
@@ -117,14 +117,14 @@ function validatedRunIdentity(body: Record<string, unknown>): {
   capability: string;
 } {
   const runId = typeof body.runId === 'string' ? body.runId.trim() : '';
-  if (!RUN_ID.test(runId)) throw new Error('valid runId is required');
+  if (!RUN_ID.test(runId)) throw new Error('cần có runId hợp lệ');
   const capability = typeof body.capability === 'string' ? body.capability.trim() : '';
-  if (!RUN_CAPABILITY.test(capability)) throw new Error('valid run capability is required');
+  if (!RUN_CAPABILITY.test(capability)) throw new Error('cần có capability hợp lệ của lượt chạy');
   return { runId, capability };
 }
 function validatedCacheMode(value: unknown): AgentCacheMode {
   if (value !== 'short' && value !== 'long') {
-    throw new Error('cacheMode must be short or long');
+    throw new Error('cacheMode phải là short hoặc long');
   }
   return value;
 }
@@ -136,7 +136,7 @@ function validatedMaxOutputTokens(value: unknown): number {
     || value < 1
     || value > MAX_OUTPUT_TOKENS
   ) {
-    throw new Error(`maxOutputTokens must be an integer between 1 and ${MAX_OUTPUT_TOKENS}`);
+    throw new Error(`maxOutputTokens phải là số nguyên từ 1 đến ${MAX_OUTPUT_TOKENS}`);
   }
   return value;
 }
@@ -145,12 +145,12 @@ function validatedAcceptance(body: Record<string, unknown>): {
   maxAcceptanceIterations: number;
 } {
   if (body.autonomousAcceptance !== undefined && typeof body.autonomousAcceptance !== 'boolean') {
-    throw new Error('autonomousAcceptance must be a boolean');
+    throw new Error('autonomousAcceptance phải là boolean');
   }
   const value = body.maxAcceptanceIterations ?? DEFAULT_ACCEPTANCE_ITERATIONS;
   if (typeof value !== 'number' || !Number.isSafeInteger(value)
     || value < MIN_ACCEPTANCE_ITERATIONS || value > MAX_ACCEPTANCE_ITERATIONS) {
-    throw new Error(`maxAcceptanceIterations must be an integer between ${MIN_ACCEPTANCE_ITERATIONS} and ${MAX_ACCEPTANCE_ITERATIONS}`);
+    throw new Error(`maxAcceptanceIterations phải là số nguyên từ ${MIN_ACCEPTANCE_ITERATIONS} đến ${MAX_ACCEPTANCE_ITERATIONS}`);
   }
   return { autonomousAcceptance: body.autonomousAcceptance === true, maxAcceptanceIterations: value };
 }
@@ -160,7 +160,7 @@ function validatedOptionalIdentifier(
   maxChars: number,
 ): string {
   if (value === undefined || value === null) return '';
-  if (typeof value !== 'string') throw new Error(`${field} must be a string`);
+  if (typeof value !== 'string') throw new Error(`${field} phải là chuỗi`);
   const normalized = value.trim();
   if (!normalized) return '';
   const hasControlCharacter = [...normalized].some((character) => {
@@ -168,7 +168,7 @@ function validatedOptionalIdentifier(
     return code < 0x20 || (code >= 0x7f && code <= 0x9f);
   });
   if (normalized.length > maxChars || hasControlCharacter) {
-    throw new Error(`${field} must be 1-${maxChars} non-control characters`);
+    throw new Error(`${field} phải có từ 1 đến ${maxChars} ký tự không điều khiển`);
   }
   return normalized;
 }
@@ -189,15 +189,15 @@ export function validateCreateInput(body: Record<string, unknown>): ValidatedCre
   const tools = Array.isArray(body.tools) ? body.tools : [];
   const references = Array.isArray(body.references) ? body.references : [];
   if (references.length > MAX_REFERENCES || jsonBytes(references) > MAX_REFERENCE_BYTES) {
-    throw new Error('references exceed request limits');
+    throw new Error('references vượt quá giới hạn request');
   }
   const context = body.context;
   if (context !== undefined && jsonBytes(context) > MAX_CONTEXT_BYTES) {
-    throw new Error('context exceeds request limits');
+    throw new Error('context vượt quá giới hạn request');
   }
   const instructions = typeof body.systemPrompt === 'string' ? body.systemPrompt.trim() : '';
   if (instructions.length > MAX_SYSTEM_PROMPT_CHARS) {
-    throw new Error('system prompt exceeds request limits');
+    throw new Error('system prompt vượt quá giới hạn request');
   }
   return {
     projectId,

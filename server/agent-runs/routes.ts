@@ -238,7 +238,7 @@ function toolBinding(body: Record<string, unknown>) {
   const argsDigest = typeof body.argsDigest === 'string' ? body.argsDigest.trim() : '';
   const claimId = typeof body.claimId === 'string' ? body.claimId.trim() : '';
   if (!toolCallId || !argsDigest || !claimId) {
-    throw new Error('toolCallId, argsDigest, and claimId are required');
+    throw new Error('cần có toolCallId, argsDigest và claimId');
   }
   return { toolCallId, argsDigest, claimId };
 }
@@ -265,7 +265,7 @@ async function handleToolResult(req: IncomingMessage, res: ServerResponse, runId
   const error = typeof body.error === 'string' ? body.error : undefined;
   const hasError = Object.hasOwn(body, 'error');
   if (hasResult === hasError || (hasError && error === undefined)) {
-    throw new Error('provide exactly one of result or string error');
+    throw new Error('hãy cung cấp chính xác một trong result hoặc lỗi dạng chuỗi');
   }
   const outcome = settleToolResult(run, {
     ...binding,
@@ -456,7 +456,7 @@ function sendRouteError(res: ServerResponse, error: unknown): void {
     return;
   }
   const message = error instanceof Error ? error.message : String(error);
-  sendJson(res, message === 'request body too large' ? 413 : 400, { error: message });
+  sendJson(res, message === 'thân request quá lớn' ? 413 : 400, { error: message });
 }
 
 function mountedUrl(req: IncomingMessage): URL {

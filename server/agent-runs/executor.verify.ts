@@ -144,7 +144,7 @@ assert.throws(
 );
 assert.throws(
   () => validateCreateInput({ ...validRequest, capability: 'short' }),
-  /run capability/,
+  /capability hợp lệ/,
 );
 assert.throws(
   () => validateCreateInput({ ...validRequest, cacheMode: 'forever' }),
