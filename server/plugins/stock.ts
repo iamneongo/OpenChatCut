@@ -1,6 +1,7 @@
 import type { ServerResponse } from 'node:http';
 import type { Plugin } from 'vite';
 import { searchFirecrawl } from './stock-firecrawl.ts';
+import { localized } from '../ui-locale.ts';
 export { parseFirecrawlImages, parseFirecrawlVideos } from './stock-firecrawl.ts';
 
 export interface StockPluginOptions {
@@ -101,7 +102,7 @@ export function parseStockPlatforms(
   const platforms: StockPlatform[] = [];
   for (const token of tokens) {
     if (!ALL_PLATFORMS.includes(token as StockPlatform)) {
-      warnings.push(`不支持的素材平台“${token}”，已忽略`);
+      warnings.push(localized({ zh: `不支持的素材平台“${token}”，已忽略`, en: `Unsupported media platform “${token}”; ignored`, vi: `Nền tảng tài nguyên “${token}” không được hỗ trợ nên đã bỏ qua` }));
       continue;
     }
     const platform = token as StockPlatform;
@@ -134,7 +135,7 @@ export function buildStockSearchTargets(
       targets.push({ platform, kind: requestedKind });
       added = true;
     }
-    if (!added) warnings.push(`${platform} 不支持 ${kind} 素材，已跳过`);
+    if (!added) warnings.push(localized({ zh: `${platform} 不支持 ${kind} 素材，已跳过`, en: `${platform} does not support ${kind} media; skipped`, vi: `${platform} không hỗ trợ tài nguyên ${kind}; đã bỏ qua` }));
   }
   return { targets, warnings };
 }
@@ -319,8 +320,8 @@ async function searchFreesound(
 
 function addUnavailableWarning(warnings: string[], target: SearchTarget): void {
   const message = target.platform === 'freesound'
-    ? 'Freesound 未配置，无法搜索音频或音乐'
-    : `${target.platform} 未配置，已跳过 ${target.kind} 搜索`;
+    ? localized({ zh: 'Freesound 未配置，无法搜索音频或音乐', en: 'Freesound is not configured; audio or music cannot be searched', vi: 'Chưa cấu hình Freesound nên không thể tìm audio hoặc nhạc' })
+    : localized({ zh: `${target.platform} 未配置，已跳过 ${target.kind} 搜索`, en: `${target.platform} is not configured; skipped ${target.kind} search`, vi: `Chưa cấu hình ${target.platform}; đã bỏ qua tìm ${target.kind}` });
   if (!warnings.includes(message)) warnings.push(message);
 }
 
@@ -334,7 +335,7 @@ export async function searchStockMedia(
   const parsedPlatforms = parseStockPlatforms(request.platforms, kind);
   const planned = buildStockSearchTargets(kind, parsedPlatforms.platforms);
   const warnings = [...parsedPlatforms.warnings, ...planned.warnings];
-  if (request.orientation && !orientation) warnings.push(`不支持的方向“${request.orientation}”，已忽略方向筛选`);
+  if (request.orientation && !orientation) warnings.push(localized({ zh: `不支持的方向“${request.orientation}”，已忽略方向筛选`, en: `Unsupported orientation “${request.orientation}”; orientation filter ignored`, vi: `Hướng “${request.orientation}” không được hỗ trợ; đã bỏ qua bộ lọc hướng` }));
   const query = buildStockQuery(request.query, request.category);
   const limit = Math.min(MAX_LIMIT, Math.max(1, Number(request.limitPerPlatform) || DEFAULT_LIMIT));
   const jobs: SearchJob[] = [];
@@ -349,7 +350,7 @@ export async function searchStockMedia(
       });
     } else if (target.platform === 'pixabay' && options.pixabayApiKey) {
       if (orientation === 'square') {
-        const warning = 'Pixabay 官方接口不支持方形方向筛选，已保留其他筛选条件';
+        const warning = localized({ zh: 'Pixabay 官方接口不支持方形方向筛选，已保留其他筛选条件', en: 'Pixabay’s official API does not support square orientation filtering; other filters were kept', vi: 'API chính thức của Pixabay không hỗ trợ lọc hướng vuông; các bộ lọc khác vẫn được giữ lại' });
         if (!warnings.includes(warning)) warnings.push(warning);
       }
       jobs.push({
@@ -395,7 +396,7 @@ export async function searchStockMedia(
   const results: StockResult[] = [];
   settled.forEach((result, index) => {
     if (result.status === 'fulfilled') results.push(...result.value);
-    else warnings.push(`${jobs[index]!.label} 搜索失败：${result.reason instanceof Error ? result.reason.message : String(result.reason)}`);
+    else warnings.push(localized({ zh: `${jobs[index]!.label} 搜索失败：${result.reason instanceof Error ? result.reason.message : String(result.reason)}`, en: `${jobs[index]!.label} search failed: ${result.reason instanceof Error ? result.reason.message : String(result.reason)}`, vi: `Tìm kiếm ${jobs[index]!.label} thất bại: ${result.reason instanceof Error ? result.reason.message : String(result.reason)}` }));
   });
   const searchedPlatforms = [...new Set(jobs.flatMap((job) => job.platforms))];
   return {
@@ -438,7 +439,7 @@ export function stockSearchPlugin(options: StockPluginOptions): Plugin {
           sendJson(res, 200, {
             configured: true,
             results: [],
-            warnings: [`素材搜索暂时不可用：${message}`],
+            warnings: [localized({ zh: `素材搜索暂时不可用：${message}`, en: `Media search is temporarily unavailable: ${message}`, vi: `Tìm kiếm tài nguyên tạm thời không khả dụng: ${message}` })],
             searchedPlatforms: [],
           } satisfies StockSearchResponse);
         }

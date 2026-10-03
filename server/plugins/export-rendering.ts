@@ -21,6 +21,7 @@ import {
   retimeFps,
 } from './export-runtime.ts';
 import type { UpdateGenerationJob } from './generation-jobs.ts';
+import { localized } from '../ui-locale.ts';
 
 // @ts-expect-error — plain .mjs render pipeline has no .d.ts
 import * as remotionRender from '../../remotion/render.mjs';
@@ -119,7 +120,7 @@ export async function renderExportPlan(
       cleanupStatus,
       targetPath: filepath,
       message: oom
-        ? '导出时内存不足。请关闭其他程序、缩短导出范围或降低分辨率后重试；若仍失败，重启应用后再试。'
+        ? localized({ zh: '导出时内存不足。请关闭其他程序、缩短导出范围或降低分辨率后重试；若仍失败，重启应用后再试。', en: 'Export ran out of memory. Close other programs, shorten the export range, or lower the resolution and try again; if it still fails, restart the app.', vi: 'Xuất video bị thiếu bộ nhớ. Hãy đóng các chương trình khác, rút ngắn phạm vi xuất hoặc giảm độ phân giải rồi thử lại; nếu vẫn lỗi, hãy khởi động lại ứng dụng.' })
         : message,
     }));
   }

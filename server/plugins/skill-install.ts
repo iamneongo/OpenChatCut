@@ -18,6 +18,7 @@ import {
   isSkillPath, publishSkillFiles, stageCloneSkillFiles, stageSkillFile,
   validateSkillFiles, validateSkillPath, type SkillInstallFile,
 } from './skill-install-files.ts';
+import { localized } from '../ui-locale.ts';
 // Proxy-aware fetch: attaches the configured outbound proxy (keystore
 // PROXY_URL or HTTPS_PROXY/HTTP_PROXY env) via undici dispatcher.
 type FetchInit = Parameters<typeof fetch>[1] & { dispatcher?: unknown };
@@ -189,7 +190,7 @@ export function skillInstallPlugin(): Plugin {
         try {
           const body = await readJson(req);
           const result = await installGitHubSkill(body.repo, body.slug);
-          sendJson(res, 200, { ok: true, ...result, note: '技能已安装到用户技能目录，面板会自动展示。' });
+          sendJson(res, 200, { ok: true, ...result, note: localized({ zh: '技能已安装到用户技能目录，面板会自动展示。', en: 'The skill was installed in the user skills directory and will appear in the panel automatically.', vi: 'Đã cài kỹ năng vào thư mục kỹ năng người dùng; kỹ năng sẽ tự động xuất hiện trên bảng điều khiển.' }) });
         } catch (error) {
           const message = error instanceof Error ? error.message : String(error);
           server.config.logger.error(`[api/skills/install] ${message}`);
