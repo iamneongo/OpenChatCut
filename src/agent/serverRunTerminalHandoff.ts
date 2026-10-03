@@ -25,7 +25,7 @@ export class ServerRunTerminalHandoffs {
   ): ServerRunTerminalHandoff {
     const existing = this.get(runId);
     if (existing) return existing;
-    if (this.pending) throw new Error('Another server run terminal handoff is still pending.');
+    if (this.pending) throw new Error('Vẫn còn một bàn giao cuối lượt chạy server đang chờ xử lý.');
     const afterModelCommit = typeof resolution === 'object'
       ? resolution.afterModelCommit
       : undefined;

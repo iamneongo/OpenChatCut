@@ -38,7 +38,7 @@ export class FetchServerRunEventStream extends EventTarget implements ServerRunE
   constructor(input: ServerRunEventStreamInput) {
     super();
     if (!Number.isSafeInteger(input.after) || input.after < 0) {
-      throw new Error('Server run event cursor must be a non-negative safe integer.');
+      throw new Error('Con trỏ sự kiện lượt chạy server phải là số nguyên an toàn không âm.');
     }
     this.fetchImpl = input.fetch ?? fetch;
     this.capability = input.capability;
@@ -70,11 +70,11 @@ export class FetchServerRunEventStream extends EventTarget implements ServerRunE
       });
       if (this.closed) return;
       if (!response.ok || !response.body) {
-        throw new Error(`server run events failed: HTTP ${response.status}`);
+        throw new Error(`Lấy sự kiện lượt chạy server thất bại: HTTP ${response.status}`);
       }
       const contentType = response.headers.get('content-type')?.toLowerCase() ?? '';
       if (!contentType.startsWith('text/event-stream')) {
-        throw new Error('server run events returned an invalid content type');
+        throw new Error('Sự kiện lượt chạy server trả về loại nội dung không hợp lệ');
       }
       const opened = new Event('open');
       this.dispatchEvent(opened);

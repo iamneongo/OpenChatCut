@@ -415,7 +415,7 @@ export async function loadServerRunMetadata(
     },
   );
   if (!response.ok) {
-    throw new Error(`server run metadata failed: HTTP ${response.status}`);
+    throw new Error(`Lấy metadata lượt chạy server thất bại: HTTP ${response.status}`);
   }
   return response.json() as Promise<ServerRunMetadata>;
 }
@@ -433,7 +433,7 @@ export async function requestServerRunStart(
     },
     body: JSON.stringify({ projectId }),
   });
-  if (!response.ok) throw new Error(`server run start failed: HTTP ${response.status}`);
+  if (!response.ok) throw new Error(`Khởi động lượt chạy server thất bại: HTTP ${response.status}`);
 }
 
 export async function requestServerRunCancellation(
@@ -457,7 +457,7 @@ export async function requestServerRunCancellation(
   if (value.status !== 'completed'
     && value.status !== 'failed'
     && value.status !== 'cancelled') {
-    throw new Error('server run cancellation returned an invalid status');
+    throw new Error('Hủy lượt chạy server trả về trạng thái không hợp lệ');
   }
   return value.status;
 }

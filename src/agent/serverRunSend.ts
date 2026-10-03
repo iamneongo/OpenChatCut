@@ -178,7 +178,7 @@ function persistLocalServerRun(
   active: ActiveServerRun,
 ): void {
   if (!saveStoredServerRun(environment.projectId, active.storedCreation)) {
-    throw new Error('Browser durable storage is unavailable.');
+    throw new Error('Bộ nhớ bền vững của trình duyệt không khả dụng.');
   }
   environment.refs.runId.current = active.payload.runId;
   environment.refs.capability.current = active.payload.capability;
@@ -202,18 +202,18 @@ async function submitServerRun(active: ActiveServerRun): Promise<void> {
       const body = await response.json() as { error?: string };
       if (isDefiniteAdmissionRejection(response.status)) active.admission = 'rejected';
       throw new Error(body?.error
-        ? `agent run failed: HTTP ${response.status} (${body.error})`
-        : `agent run failed: HTTP ${response.status}`);
+        ? `Lượt chạy Agent thất bại: HTTP ${response.status} (${body.error})`
+        : `Lượt chạy Agent thất bại: HTTP ${response.status}`);
     } catch (e) {
       if (e instanceof Error && e.message.startsWith('agent run failed')) throw e;
       if (isDefiniteAdmissionRejection(response.status)) active.admission = 'rejected';
-      throw new Error(`agent run failed: HTTP ${response.status}`);
+      throw new Error(`Lượt chạy Agent thất bại: HTTP ${response.status}`);
     }
   }
   const value = await response.json() as CreatedServerRunResponse;
   if (value.id !== active.payload.runId
     || value.capability !== active.payload.capability) {
-    throw new Error('Server run identity did not match the submitted request.');
+    throw new Error('Danh tính lượt chạy server không khớp với yêu cầu đã gửi.');
   }
   active.admission = 'accepted';
 }
@@ -237,7 +237,7 @@ async function admitServerRun(
   throwIfAborted(abort.signal);
   if (!patchStoredServerRun(environment.projectId, {
     admissionPending: false,
-  })) throw new Error('Browser durable storage is unavailable.');
+  })) throw new Error('Bộ nhớ bền vững của trình duyệt không khả dụng.');
   throwIfAborted(abort.signal);
   const recovery = await options.onRunStart?.({
     runId: payload.runId,
