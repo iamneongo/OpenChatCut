@@ -405,7 +405,7 @@ export function videoGenerationPlugin(options: VideoOptions): Plugin {
     name: 'openchatcut-video-generation',
     configureServer(server) {
       server.middlewares.use('/generate/video', async (req, res) => {
-        if (req.method !== 'POST') { sendJson(res, 405, { error: 'method not allowed — use POST' }); return; }
+        if (req.method !== 'POST') { sendJson(res, 405, { error: 'method không được phép — hãy dùng POST' }); return; }
         try {
           const raw = await readJson(req);
           if (raw.model === 'fal' && !raw.falModel) raw.falModel = getKey('FAL_VIDEO_MODEL').trim() || undefined;

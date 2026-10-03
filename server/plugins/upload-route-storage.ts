@@ -50,7 +50,7 @@ async function handleDeleteUpload(req: IncomingMessage, res: ServerResponse): Pr
   try {
     const url = new URL(req.url ?? '/', 'http://localhost');
     const name = url.searchParams.get('name') ?? '';
-    if (!isSafeUploadName(name)) { sendError(res, 400, 'unsafe or missing name'); return; }
+    if (!isSafeUploadName(name)) { sendError(res, 400, 'tên không an toàn hoặc bị thiếu'); return; }
     const rollbackToken = url.searchParams.get('rollbackToken') ?? undefined;
     if (url.searchParams.has('rollbackToken') && !/^[A-Za-z0-9-]{1,128}$/.test(rollbackToken ?? '')) {
       sendError(res, 400, 'rollback token không hợp lệ');
@@ -117,7 +117,7 @@ function rejectDeclaredSize(req: IncomingMessage, res: ServerResponse, maxBytes:
     return true;
   }
   if (declared === 0) {
-    sendError(res, 400, 'empty body');
+    sendError(res, 400, 'body rỗng');
     req.resume();
     return true;
   }

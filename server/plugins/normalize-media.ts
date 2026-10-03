@@ -251,7 +251,7 @@ export function normalizeMediaPlugin(options: NormalizeMediaPluginOptions = {}):
     configureServer(server) {
       server.middlewares.use('/api/normalize-media', async (req, res) => {
         if (req.method !== 'POST') {
-          sendJson(res, 405, { error: 'method not allowed — use POST' });
+          sendJson(res, 405, { error: 'method không được phép — hãy dùng POST' });
           return;
         }
         try {

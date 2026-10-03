@@ -139,7 +139,7 @@ export function musicGenerationPlugin(options: MusicOptions): Plugin {
     name: 'openchatcut-music-generation',
     configureServer(server) {
       server.middlewares.use('/generate/music', async (req, res) => {
-        if (req.method !== 'POST') { sendJson(res, 405, { error: 'method not allowed — use POST' }); return; }
+        if (req.method !== 'POST') { sendJson(res, 405, { error: 'method không được phép — hãy dùng POST' }); return; }
         try {
           const raw = await readJson(req);
           const input = validateMusicRequest(raw);

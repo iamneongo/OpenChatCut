@@ -89,13 +89,13 @@ async function handleUploadWrite(
     if (handoff && bytes !== handoff.expectedBytes) {
       await unlink(partPath).catch(() => {});
       partPath = undefined;
-      sendError(res, 400, 'uploaded bytes do not match handoff');
+      sendError(res, 400, 'byte đã tải lên không khớp với handoff');
       return;
     }
     if (bytes === 0) {
       await unlink(partPath).catch(() => {});
       partPath = undefined;
-      sendError(res, 400, 'empty body');
+      sendError(res, 400, 'body rỗng');
       return;
     }
     await enqueueUploadMutation(name, async () => {
@@ -296,7 +296,7 @@ async function handleUpload(req: IncomingMessage, res: ServerResponse, logger: L
     );
     if (authorization.status !== 'accepted') {
       req.resume();
-      sendError(res, 401, 'invalid or expired upload handoff');
+    sendError(res, 401, 'upload handoff không hợp lệ hoặc đã hết hạn');
       return;
     }
     handoff = authorization.scope;
@@ -348,7 +348,7 @@ async function fetchRemoteImport(
   const contentType = response.headers.get('content-type');
   if (contentType?.split(';', 1)[0]?.trim().toLowerCase() === 'text/html') {
     await response.body?.cancel().catch(() => undefined);
-    sendError(res, 400, 'upstream returned HTML instead of media');
+    sendError(res, 400, 'dịch vụ upstream trả về HTML thay vì media');
     return null;
   }
   const declared = Number(response.headers.get('content-length') ?? '');
@@ -357,7 +357,7 @@ async function fetchRemoteImport(
     sendError(res, 413, new UploadTooLargeError(maxBytes).message);
     return null;
   }
-  if (!response.body) { sendError(res, 400, 'upstream empty body'); return null; }
+  if (!response.body) { sendError(res, 400, 'body upstream rỗng'); return null; }
   return { response, remote, nameHint, contentType };
 }
 async function saveRemoteImport(imported: RemoteImport, maxBytes: number, logger: Logger, res: ServerResponse) {
@@ -371,7 +371,7 @@ async function saveRemoteImport(imported: RemoteImport, maxBytes: number, logger
   const { bytes, contentHash } = await streamUploadToFile(body, partPath, maxBytes);
   if (bytes === 0) {
     await unlink(partPath).catch(() => {});
-    sendError(res, 400, 'upstream empty body'); return null;
+    sendError(res, 400, 'body upstream rỗng'); return null;
   }
   // Judge the bytes before anything (the pool, R2) can hold on to them: an error page
   // saved as .mp4 is a failure now, not a dead asset the agent discovers later.

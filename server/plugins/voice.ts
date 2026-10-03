@@ -41,7 +41,7 @@ export function voiceGenerationPlugin(options: VoiceOptions): Plugin {
     name: 'openchatcut-voice-generation',
     configureServer(server) {
       server.middlewares.use('/generate/voice', async (req, res) => {
-        if (req.method !== 'POST') { sendJson(res, 405, { error: 'method not allowed — use POST' }); return; }
+        if (req.method !== 'POST') { sendJson(res, 405, { error: 'method không được phép — hãy dùng POST' }); return; }
         try {
           const input = validateVoiceRequest(await readJson(req));
           if (isAiVoiceProvider(input.provider)) {

@@ -107,7 +107,7 @@ function truncateOutput(text: string): string {
 async function runInSkillDir(slug: string, body: ExecRequest): Promise<unknown> {
   const root = skillFilesRoot();
   const dir = skillDirFor(root, slug);
-  if (!dir) return { error: `invalid skill slug "${slug}"` };
+  if (!dir) return { error: `skill slug không hợp lệ "${slug}"` };
   try {
     await access(join(dir, 'SKILL.md'));
   } catch {

@@ -26,7 +26,7 @@ export function firecrawlPlugin(options: FirecrawlPluginOptions): Plugin {
 
       server.middlewares.use('/api/web-browser', async (req, res) => {
         if (req.method !== 'POST') {
-          sendJson(res, 405, { error: 'method not allowed — use POST' });
+          sendJson(res, 405, { error: 'method không được phép — hãy dùng POST' });
           return;
         }
         try {
@@ -42,7 +42,7 @@ export function firecrawlPlugin(options: FirecrawlPluginOptions): Plugin {
 
       server.middlewares.use('/api/firecrawl/search', async (req, res) => {
         if (req.method !== 'POST') {
-          sendJson(res, 405, { error: 'method not allowed — use POST' });
+          sendJson(res, 405, { error: 'method không được phép — hãy dùng POST' });
           return;
         }
         try {
@@ -58,7 +58,7 @@ export function firecrawlPlugin(options: FirecrawlPluginOptions): Plugin {
 
       server.middlewares.use('/api/firecrawl/map', async (req, res) => {
         if (req.method !== 'POST') {
-          sendJson(res, 405, { error: 'method not allowed — use POST' });
+          sendJson(res, 405, { error: 'method không được phép — hãy dùng POST' });
           return;
         }
         try {
@@ -74,7 +74,7 @@ export function firecrawlPlugin(options: FirecrawlPluginOptions): Plugin {
 
       server.middlewares.use('/api/firecrawl/crawl', async (req, res) => {
         if (req.method !== 'POST') {
-          sendJson(res, 405, { error: 'method not allowed — use POST' });
+          sendJson(res, 405, { error: 'method không được phép — hãy dùng POST' });
           return;
         }
         try {
@@ -90,7 +90,7 @@ export function firecrawlPlugin(options: FirecrawlPluginOptions): Plugin {
 
       server.middlewares.use('/api/firecrawl/batch', async (req, res) => {
         if (req.method !== 'POST') {
-          sendJson(res, 405, { error: 'method not allowed — use POST' });
+          sendJson(res, 405, { error: 'method không được phép — hãy dùng POST' });
           return;
         }
         try {

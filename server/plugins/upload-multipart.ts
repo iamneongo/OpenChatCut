@@ -220,7 +220,7 @@ export function uploadMultipartPlugin(): Plugin {
       server.middlewares.use('/upload/multipart/init', async (req, res) => {
         if (!requireEditorCredential(req, res)) return;
         if (req.method !== 'POST') {
-          sendError(res, 405, 'method not allowed — use POST');
+          sendError(res, 405, 'method không được phép — hãy dùng POST');
           return;
         }
         try {
@@ -235,19 +235,19 @@ export function uploadMultipartPlugin(): Plugin {
           const name = String(body.name ?? 'file');
           const size = Number(body.size);
           if (!Number.isFinite(size) || size <= 0) {
-            sendError(res, 400, 'size must be a positive number');
+            sendError(res, 400, 'size phải là số dương');
             return;
           }
           const max = maxUploadBytes();
           if (size > max) {
-            sendError(res, 413, `file too large (max ${Math.round(max / (1024 ** 3))}GB)`);
+            sendError(res, 413, `tệp quá lớn (tối đa ${Math.round(max / (1024 ** 3))}GB)`);
             return;
           }
           if (size > limits.maxBytes || usage.sessions + pendingSessions >= limits.maxSessions
             || usage.bytes > limits.maxBytes
             || pendingBytes > limits.maxBytes - usage.bytes
             || size > limits.maxBytes - usage.bytes - pendingBytes) {
-            sendError(res, 429, 'multipart storage capacity is currently in use');
+            sendError(res, 429, 'dung lượng lưu multipart hiện đang được sử dụng hết');
             return;
           }
           let partSize = Number(body.partSize) || DEFAULT_PART_SIZE;
@@ -292,7 +292,7 @@ export function uploadMultipartPlugin(): Plugin {
       server.middlewares.use('/upload/multipart/part', async (req, res) => {
         if (!requireEditorCredential(req, res)) return;
         if (req.method !== 'PUT' && req.method !== 'POST') {
-          sendError(res, 405, 'method not allowed — use PUT or POST');
+          sendError(res, 405, 'method không được phép — hãy dùng PUT hoặc POST');
           return;
         }
         let activeUploadId = '';
@@ -325,7 +325,7 @@ export function uploadMultipartPlugin(): Plugin {
           const bytes = await streamBodyToFile(req, tmp, expectedMax);
           if (bytes === 0) {
             await unlink(tmp).catch(() => {});
-            sendError(res, 400, 'empty part body');
+            sendError(res, 400, 'body của part rỗng');
             return;
           }
           await rename(tmp, dest);
@@ -343,7 +343,7 @@ export function uploadMultipartPlugin(): Plugin {
       server.middlewares.use('/upload/multipart/status', async (req, res) => {
         if (!requireEditorCredential(req, res)) return;
         if (req.method !== 'GET') {
-          sendError(res, 405, 'method not allowed — use GET');
+          sendError(res, 405, 'method không được phép — hãy dùng GET');
           return;
         }
         let activeUploadId = '';
@@ -380,7 +380,7 @@ export function uploadMultipartPlugin(): Plugin {
       server.middlewares.use('/upload/multipart/complete', async (req, res) => {
         if (!requireEditorCredential(req, res)) return;
         if (req.method !== 'POST') {
-          sendError(res, 405, 'method not allowed — use POST');
+          sendError(res, 405, 'method không được phép — hãy dùng POST');
           return;
         }
         let activeUploadId = '';
@@ -404,7 +404,7 @@ export function uploadMultipartPlugin(): Plugin {
             if (!existsSync(partPath(uploadId, p))) missing.push(p);
           }
           if (missing.length) {
-            sendError(res, 400, `missing parts: ${missing.slice(0, 20).join(',')}${missing.length > 20 ? '…' : ''}`);
+            sendError(res, 400, `thiếu part: ${missing.slice(0, 20).join(',')}${missing.length > 20 ? '…' : ''}`);
             return;
           }
           const dir = uploadDir();
@@ -419,7 +419,7 @@ export function uploadMultipartPlugin(): Plugin {
           const { bytes, contentHash } = await assembleHashedParts(partFiles, partOut);
           if (bytes === 0) {
             await unlink(partOut).catch(() => {});
-            sendError(res, 400, 'assembled empty file');
+            sendError(res, 400, 'tệp ghép cuối cùng rỗng');
             return;
           }
           if (Math.abs(bytes - meta.size) > Math.max(1024, meta.size * 0.01)) {

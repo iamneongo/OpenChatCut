@@ -163,7 +163,7 @@ export function projectStorePlugin(options: { http?: boolean } = {}): Plugin {
             const projectId = typeof body.projectId === 'string' ? body.projectId : undefined;
             const limit = typeof body.limit === 'number' ? body.limit : 20;
             if (!query) {
-              sendProjectStoreJson(res, 400, { error: 'query is required' });
+              sendProjectStoreJson(res, 400, { error: 'bắt buộc phải có query' });
               return;
             }
             sendProjectStoreJson(res, 200, {

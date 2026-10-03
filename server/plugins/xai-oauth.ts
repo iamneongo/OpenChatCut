@@ -56,7 +56,7 @@ export function xaiOauthPlugin(): Plugin {
           // Reads only report session shape (never token values); writes
           // require the same-origin loopback request shape as other pages.
           if (!trustedEditorRequest(req, write)) {
-            sendJson(res, 403, { error: 'untrusted editor request' });
+            sendJson(res, 403, { error: 'yêu cầu từ editor không đáng tin cậy' });
             return;
           }
           if (req.method === 'GET' && url.pathname === '/status') {
@@ -74,7 +74,7 @@ export function xaiOauthPlugin(): Plugin {
             sendJson(res, 200, xaiOauthStatus());
             return;
           }
-          sendJson(res, 405, { error: 'method not allowed' });
+          sendJson(res, 405, { error: 'method không được phép' });
         } catch (error) {
           if (!res.headersSent) sendJson(res, 400, { error: messageOf(error).slice(0, 240) });
         }

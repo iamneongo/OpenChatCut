@@ -96,7 +96,7 @@ async function downloadBounded(url: string, path: string): Promise<void> {
   const cap = new Transform({
     transform(chunk: Buffer, _encoding, callback) {
       total += chunk.length;
-      if (total > MAX_REMOTE_BYTES) callback(new Error(`remote file too large (over ${MAX_REMOTE_BYTES} bytes)`));
+      if (total > MAX_REMOTE_BYTES) callback(new Error(`tệp từ xa quá lớn (vượt quá ${MAX_REMOTE_BYTES} byte)`));
       else callback(null, chunk);
     },
   });
@@ -122,7 +122,7 @@ export function probeMediaPlugin(): Plugin {
     configureServer(server) {
       server.middlewares.use('/api/probe-media', async (req, res) => {
         if (req.method !== 'POST') {
-          sendJson(res, 405, { error: 'method not allowed — use POST' });
+          sendJson(res, 405, { error: 'method không được phép — hãy dùng POST' });
           return;
         }
         try {

@@ -193,7 +193,7 @@ export function settingsPlugin(): Plugin {
             sendJson(res, 200, settingsBody(dataDirChanged));
             return;
           }
-          sendJson(res, 405, { error: 'method not allowed — use GET or POST' });
+          sendJson(res, 405, { error: 'method không được phép — hãy dùng GET hoặc POST' });
         } catch (error) {
           const message = error instanceof Error ? error.message : String(error);
           server.config.logger.error(`[settings] ${message}`);  // message only — never a key value

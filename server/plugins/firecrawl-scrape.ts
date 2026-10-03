@@ -124,7 +124,7 @@ export async function handleSearch(
 ): Promise<void> {
   const query = String(body.query ?? '').trim();
   if (!query) {
-    sendJson(res, 400, { error: 'query is required' });
+    sendJson(res, 400, { error: 'bắt buộc phải có query' });
     return;
   }
   const limit = typeof body.limit === 'number'

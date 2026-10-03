@@ -161,12 +161,12 @@ async function handleSkillsRequest(
       const body = await readJsonBody(req);
       const payload = body.skill as Partial<CustomSkillPayload> | undefined;
       if (!payload || typeof payload.slug !== 'string' || typeof payload.body !== 'string') {
-        sendJson(res, 400, { error: 'PUT requires skill.slug and skill.body' });
+      sendJson(res, 400, { error: 'PUT yêu cầu skill.slug và skill.body' });
         return;
       }
       const path = await mirrorSkillFile(root, payload.slug, payload.body);
       if (!path) {
-        sendJson(res, 400, { error: `invalid skill slug "${payload.slug}"` });
+      sendJson(res, 400, { error: `skill slug không hợp lệ "${payload.slug}"` });
         return;
       }
       await kvUpsertBySlug({ ...payload, slug: payload.slug });
@@ -180,7 +180,7 @@ async function handleSkillsRequest(
       sendJson(res, 200, { ok: true });
       return;
     }
-    sendJson(res, 405, { error: 'method not allowed' });
+    sendJson(res, 405, { error: 'method không được phép' });
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
     server.config.logger.error(`[api/skills] ${message}`);

@@ -429,7 +429,7 @@ export function sceneDetectionPlugin(): Plugin {
           }
 
           if (pathname !== '/' || req.method !== 'POST') {
-            sendJson(res, 405, { error: 'unsupported scene detection route' });
+            sendJson(res, 405, { error: 'route nhận diện cảnh không được hỗ trợ' });
             return;
           }
 

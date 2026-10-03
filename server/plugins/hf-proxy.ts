@@ -313,7 +313,7 @@ export async function handleHfProxyRequest(
   resolveInstalled: (target: ProxyTarget) => Promise<InstalledModelFile | null> = openInstalledCatalogFile,
 ): Promise<void> {
   if (req.method !== 'GET' && req.method !== 'HEAD') {
-    sendJson(res, 405, { error: 'method not allowed — use GET or HEAD' });
+    sendJson(res, 405, { error: 'method không được phép — hãy dùng GET hoặc HEAD' });
     return;
   }
   const target = parseTarget(req.url ?? '');

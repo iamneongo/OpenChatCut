@@ -263,7 +263,7 @@ async function handleClaudeCodeRequest(req: IncomingMessage, res: ServerResponse
   if (path === '/models' && req.method === 'GET') return sendJson(res, 200, claudeCodeModels());
   if (path === '/turn' && req.method === 'POST') return streamTurn(req, res, await readJson(req));
   const known = ['/status', '/models', '/turn'];
-  if (known.includes(path)) throw new HttpError(405, 'method not allowed');
+  if (known.includes(path)) throw new HttpError(405, 'method không được phép');
   throw new HttpError(404, 'không tìm thấy');
 }
 

@@ -145,11 +145,11 @@ export function resourcePreviewPlugin(
         "/api/resource-preview/render",
         async (req, res) => {
           if (req.method !== "POST") {
-            sendError(res, 405, "method not allowed");
+            sendError(res, 405, "method không được phép");
             return;
           }
           if (!authorized(req, options.token)) {
-            sendError(res, 401, "invalid preview token");
+            sendError(res, 401, "preview token không hợp lệ");
             return;
           }
           try {

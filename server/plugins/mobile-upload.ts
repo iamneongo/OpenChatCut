@@ -22,13 +22,13 @@ function mobileUploadControlAuthorized(req: IncomingMessage, res: ServerResponse
   if (req.method === 'GET') {
     if (trustedEditorRequest(req, false)) return true;
     req.resume();
-    sendJson(res, 403, { error: 'untrusted editor request' });
+    sendJson(res, 403, { error: 'yêu cầu từ editor không đáng tin cậy' });
     return false;
   }
   if (req.method === 'POST' || req.method === 'DELETE') {
     if (editorCredentialAuthorized(req, true)) return true;
     req.resume();
-    sendJson(res, 401, { error: 'editor credential required' });
+    sendJson(res, 401, { error: 'bắt buộc phải có credential editor' });
     return false;
   }
   return true;
@@ -58,7 +58,7 @@ export async function handleMobileUploadControl(
       sendJson(res, snapshot ? 200 : 404, snapshot ?? { error: 'phiên không tồn tại hoặc đã hết hạn' });
       return;
     }
-    sendJson(res, 405, { error: 'method not allowed' });
+    sendJson(res, 405, { error: 'method không được phép' });
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
     const status = /no LAN IPv4/i.test(message) ? 503 : 500;

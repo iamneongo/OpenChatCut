@@ -228,7 +228,7 @@ export function exportQaPlugin(): Plugin {
     configureServer(server) {
       server.middlewares.use('/api/export-qa', async (req, res) => {
         if (req.method !== 'POST') {
-          sendJson(res, 405, { error: 'method not allowed — use POST' });
+          sendJson(res, 405, { error: 'method không được phép — hãy dùng POST' });
           return;
         }
         try {

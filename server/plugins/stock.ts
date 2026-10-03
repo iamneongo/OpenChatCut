@@ -414,14 +414,14 @@ export function stockSearchPlugin(options: StockPluginOptions): Plugin {
     configureServer(server) {
       server.middlewares.use('/api/stock-search', async (req, res) => {
         if (req.method !== 'GET') {
-          sendJson(res, 405, { error: 'method not allowed — use GET' });
+          sendJson(res, 405, { error: 'method không được phép — hãy dùng GET' });
           return;
         }
         try {
           const url = new URL(req.url ?? '', 'http://localhost');
           const query = (url.searchParams.get('query') ?? '').trim();
           if (!query) {
-            sendJson(res, 400, { error: 'query is required' });
+            sendJson(res, 400, { error: 'bắt buộc phải có query' });
             return;
           }
           const response = await searchStockMedia(options, {

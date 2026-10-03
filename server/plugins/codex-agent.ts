@@ -427,7 +427,7 @@ async function handleCodexRequest(req: IncomingMessage, res: ServerResponse): Pr
     return sendJson(res, 200, { ok: true });
   }
   const known = ['/status', '/models', '/login/start', '/login/cancel', '/logout', '/turn', '/tool-result'];
-  if (known.includes(path)) throw new HttpError(405, 'method not allowed');
+  if (known.includes(path)) throw new HttpError(405, 'method không được phép');
   throw new HttpError(404, 'không tìm thấy');
 }
 

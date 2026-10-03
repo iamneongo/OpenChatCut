@@ -129,7 +129,7 @@ async function handleHydrate(
   try {
     const body = JSON.parse((await readBody(req)).toString('utf8') || '{}') as { name?: string; path?: string };
     const name = hydrateName(body);
-    if (!isSafeUploadName(name)) { sendError(res, 400, 'unsafe or missing name'); return; }
+    if (!isSafeUploadName(name)) { sendError(res, 400, 'tên không an toàn hoặc bị thiếu'); return; }
     const resolved = await dependencies.resolveUpload(name);
     if (!resolved) {
       sendError(res, 404, r2Config()
@@ -155,7 +155,7 @@ async function handleHydrate(
 async function handlePresignGet(req: IncomingMessage, res: ServerResponse): Promise<void> {
   const url = new URL(req.url ?? '/', 'http://localhost');
   const name = (url.searchParams.get('name') ?? '').replace(/^.*\//, '');
-  if (!isSafeUploadName(name)) { sendError(res, 400, 'unsafe or missing name'); return; }
+  if (!isSafeUploadName(name)) { sendError(res, 400, 'tên không an toàn hoặc bị thiếu'); return; }
   if (!r2PresignEnabled()) {
     sendJson(res, 200, {
       mode: 'proxy', downloadUrl: `/media/uploads/${name}`,

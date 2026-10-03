@@ -302,7 +302,7 @@ async function handleCopilotRequest(req: IncomingMessage, res: ServerResponse): 
     return sendJson(res, 200, { ok: true });
   }
   const known = ['/status', '/models', '/turn', '/tool-result'];
-  if (known.includes(path)) throw new HttpError(405, 'method not allowed');
+  if (known.includes(path)) throw new HttpError(405, 'method không được phép');
   throw new HttpError(404, 'không tìm thấy');
 }
 
