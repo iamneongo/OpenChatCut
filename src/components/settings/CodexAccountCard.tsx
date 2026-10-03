@@ -30,6 +30,7 @@ function accountState(controller: CodexSettingsController): AccountState {
 export function CodexAccountCard({ controller }: {
   controller: CodexSettingsController;
 }) {
+  const t = useT();
   const state = accountState(controller);
   return (
     <section style={card} aria-live="polite">
@@ -38,9 +39,9 @@ export function CodexAccountCard({ controller }: {
       <ActionRow state={state} controller={controller}
         onLoadModels={() => { void controller.discoverModels(); }} />
       {state !== 'error' && (controller.error ?? controller.status?.error) && (
-        <div role="alert" style={errorText}>{controller.error ?? controller.status?.error}</div>
+        <div role="alert" style={errorText}>{t('失败:{error}', { error: controller.error ?? controller.status?.error ?? t('请刷新后重试。') })}</div>
       )}
-      {state === 'signed-in' && controller.modelError && <div role="alert" style={errorText}>{controller.modelError}</div>}
+      {state === 'signed-in' && controller.modelError && <div role="alert" style={errorText}>{t('失败:{error}', { error: controller.modelError })}</div>}
     </section>
   );
 }
@@ -61,7 +62,7 @@ function StatusSummary({ state, controller }: {
       t('Codex CLI 正在使用 API Key'),
       t('此页面仅启用 ChatGPT 订阅；API Key 请使用 OpenAI 厂商页。'),
     ],
-    error: [t('Codex 暂时不可用'), controller.error ?? status?.error ?? t('请刷新后重试。')],
+    error: [t('Codex 暂时不可用'), controller.error || status?.error ? t('失败:{error}', { error: controller.error ?? status?.error ?? t('请刷新后重试。') }) : t('请刷新后重试。')],
   };
   const [title, detail] = copy[state];
   const tone = state === 'signed-in' ? theme.success

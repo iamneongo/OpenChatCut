@@ -77,9 +77,9 @@ export function CopilotAccountCard({ controller }: {
         )}
       </div>
       {(controller.error ?? status?.error) && (
-        <div role="alert" style={errorText}>{controller.error ?? status?.error}</div>
+        <div role="alert" style={errorText}>{t('失败:{error}', { error: controller.error ?? status?.error ?? t('请刷新后重试。') })}</div>
       )}
-      {controller.modelError && <div role="alert" style={errorText}>{controller.modelError}</div>}
+      {controller.modelError && <div role="alert" style={errorText}>{t('失败:{error}', { error: controller.modelError })}</div>}
     </section>
   );
 }

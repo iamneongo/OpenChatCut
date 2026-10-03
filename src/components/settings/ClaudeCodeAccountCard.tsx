@@ -22,6 +22,7 @@ function accountState(controller: ClaudeCodeSettingsController): AccountState {
 export function ClaudeCodeAccountCard({ controller }: {
   controller: ClaudeCodeSettingsController;
 }) {
+  const t = useT();
   const state = accountState(controller);
   return (
     <section style={card} aria-live="polite">
@@ -30,9 +31,9 @@ export function ClaudeCodeAccountCard({ controller }: {
       <ActionRow state={state} controller={controller}
         onLoadModels={() => { void controller.discoverModels(); }} />
       {state !== 'error' && (controller.error ?? controller.status?.error) && (
-        <div role="alert" style={errorText}>{controller.error ?? controller.status?.error}</div>
+        <div role="alert" style={errorText}>{t('失败:{error}', { error: controller.error ?? controller.status?.error ?? t('请刷新后重试。') })}</div>
       )}
-      {state === 'signed-in' && controller.modelError && <div role="alert" style={errorText}>{controller.modelError}</div>}
+      {state === 'signed-in' && controller.modelError && <div role="alert" style={errorText}>{t('失败:{error}', { error: controller.modelError })}</div>}
     </section>
   );
 }
@@ -47,7 +48,7 @@ function StatusSummary({ state, controller }: {
     missing: [t('未检测到 Claude Code CLI'), t('请先安装官方 Claude Code CLI，然后刷新状态。')],
     'signed-out': [t('尚未登录 Claude'), t('在终端完成登录后点击“重新检测”。')],
     'signed-in': [t('已登录 Claude'), t('凭据与续期均由 Claude Code CLI 管理。')],
-    error: [t('Claude Code 暂时不可用'), controller.error ?? status?.error ?? t('请刷新后重试。')],
+    error: [t('Claude Code 暂时不可用'), controller.error || status?.error ? t('失败:{error}', { error: controller.error ?? status?.error ?? t('请刷新后重试。') }) : t('请刷新后重试。')],
   };
   const [title, detail] = copy[state];
   const tone = state === 'signed-in' ? theme.success
