@@ -30,7 +30,7 @@ import {
   unregisterEditorBridge,
 } from './external-bridge-registration';
 import { handleExternalBridgeAttemptError } from './external-bridge-attempt-error';
-import { useT } from '../i18n/locale';
+import { t, useT } from '../i18n/locale';
 import {
   parseExternalCall,
   parseExternalCancellation as parseCancellation,
@@ -76,7 +76,9 @@ function retryDelay(): Promise<void> {
   setTimeout(resolve, 1_000);
   return promise;
 }
-const errorMessage = (error: unknown) => error instanceof Error ? error.message : String(error);
+const errorMessage = (error: unknown) => t('失败:{error}', {
+  error: error instanceof Error ? error.message : String(error),
+});
 
 function failedOutcome(
   error: unknown,
