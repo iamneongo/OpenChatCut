@@ -63,7 +63,7 @@ async function readJson(req: IncomingMessage): Promise<ProgressRequest> {
   for await (const chunk of req) {
     const bytes = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk);
     total += bytes.length;
-    if (total > 100_000) throw new Error('request body too large');
+    if (total > 100_000) throw new Error('thân request quá lớn');
     chunks.push(bytes);
   }
   return JSON.parse(Buffer.concat(chunks).toString('utf8')) as ProgressRequest;
@@ -122,17 +122,17 @@ export function generationProgressPlugin(): Plugin {
         server.config.logger.error(`[generate:progress] failed to restore operations: ${error instanceof Error ? error.message : String(error)}`);
       });
       server.middlewares.use('/generate/progress', async (req, res) => {
-        if (req.method !== 'POST') { sendJson(res, 405, { error: 'method not allowed — use POST' }); return; }
+        if (req.method !== 'POST') { sendJson(res, 405, { error: 'phương thức không được phép — hãy dùng POST' }); return; }
         try {
           await initializeGenerationJobs();
           await resumeRestoredJobs();
           const input = await readJson(req);
-          if (input.target !== 'generation') throw new Error('target must be generation');
-          if (!input.action || !['params', 'status', 'wait', 'resume'].includes(input.action)) throw new Error('action must be params, status, wait, or resume');
+          if (input.target !== 'generation') throw new Error('target phải là generation');
+          if (!input.action || !['params', 'status', 'wait', 'resume'].includes(input.action)) throw new Error('action phải là params, status, wait hoặc resume');
           const jobIds = parseJobIds(input.jobIds);
-          if (!jobIds.length) throw new Error('jobIds is required');
+          if (!jobIds.length) throw new Error('cần có jobIds');
           const timeoutSeconds = input.timeoutSeconds ?? 90;
-          if (!Number.isFinite(timeoutSeconds) || timeoutSeconds < 0 || timeoutSeconds > 3600) throw new Error('timeoutSeconds must be between 0 and 3600');
+          if (!Number.isFinite(timeoutSeconds) || timeoutSeconds < 0 || timeoutSeconds > 3600) throw new Error('timeoutSeconds phải nằm trong khoảng từ 0 đến 3600');
 
           if (input.action === 'wait') {
             const deadline = Date.now() + timeoutSeconds * 1000;

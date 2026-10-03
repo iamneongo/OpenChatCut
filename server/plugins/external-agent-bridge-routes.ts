@@ -30,11 +30,11 @@ function registrationCapability(req: IncomingMessage, required: boolean): string
   const raw = req.headers[REGISTRATION_CAPABILITY_HEADER];
   const value = (Array.isArray(raw) ? raw[0] : raw)?.trim() ?? '';
   if (!value) {
-    if (required) throw new Error('editor registration capability is required');
+    if (required) throw new Error('cần có capability đăng ký editor');
     return null;
   }
   if (!/^[A-Za-z0-9_-]{43}$/.test(value)) {
-    throw new Error('editor registration capability is invalid');
+    throw new Error('capability đăng ký editor không hợp lệ');
   }
   return value;
 }
@@ -64,13 +64,13 @@ export async function readBridgeJson(
   for await (const chunk of req) {
     const buffer = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk);
     total += buffer.length;
-    if (total > maxBodyBytes) throw new Error('request body too large');
+    if (total > maxBodyBytes) throw new Error('thân request quá lớn');
     chunks.push(buffer);
   }
   const text = Buffer.concat(chunks).toString('utf8') || '{}';
   const parsed: unknown = JSON.parse(text);
   if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
-    throw new Error('body must be a JSON object');
+      throw new Error('thân request phải là một đối tượng JSON');
   }
   return parsed as Record<string, unknown>;
 }
@@ -115,7 +115,7 @@ function registrationInput(body: Record<string, unknown>): {
     || !body.editorId.trim()
     || !body.baseRevision.trim()
     || !validTools(body.tools)
-  ) throw new Error('invalid editor registration');
+  ) throw new Error('đăng ký editor không hợp lệ');
   return {
     projectId: body.projectId.trim(),
     editorId: body.editorId.trim(),
@@ -185,7 +185,7 @@ async function unregisterBridgeEditor(
     || typeof body.editorId !== 'string'
     || !body.projectId.trim()
     || !body.editorId.trim()
-  ) throw new Error('invalid editor unregistration');
+  ) throw new Error('hủy đăng ký editor không hợp lệ');
   const removed = await operations.unregisterEditor(
     body.projectId.trim(),
     body.editorId.trim(),
@@ -206,7 +206,7 @@ async function pollEditorCall(
   const editorId = url.searchParams.get('editorId') ?? '';
   const baseRevision = url.searchParams.get('baseRevision') ?? '';
   if (!projectId || !editorId || !baseRevision) {
-    throw new Error('projectId, editorId, and baseRevision are required');
+      throw new Error('cần có projectId, editorId và baseRevision');
   }
   const capability = registrationCapability(req, true);
   if (!operations.editorRegistrationMatches(projectId, editorId, capability)) {
@@ -234,7 +234,7 @@ async function pollEditorCancellation(
 ): Promise<void> {
   const projectId = url.searchParams.get('projectId') ?? '';
   const editorId = url.searchParams.get('editorId') ?? '';
-  if (!projectId || !editorId) throw new Error('projectId and editorId are required');
+  if (!projectId || !editorId) throw new Error('cần có projectId và editorId');
   const capability = registrationCapability(req, true);
   if (!operations.editorRegistrationMatches(projectId, editorId, capability)) {
     sendBridgeJson(res, 409, { error: 'editor registration is stale or owned by another session' });
@@ -258,7 +258,7 @@ async function settleBridgeCall(
   operations: BridgeOperations,
 ): Promise<void> {
   const body = await readBridgeJson(req, { resultBody: true });
-  if (typeof body.id !== 'string') throw new Error('invalid tool result');
+    if (typeof body.id !== 'string') throw new Error('kết quả tool không hợp lệ');
   const outcome = validOutcome(body.outcome)
     ? body.outcome
     : body.ok === true
@@ -266,7 +266,7 @@ async function settleBridgeCall(
       : body.ok === false
         ? 'failed'
         : null;
-  if (!outcome) throw new Error('invalid tool result outcome');
+  if (!outcome) throw new Error('trạng thái kết quả tool không hợp lệ');
   const capability = registrationCapability(req, true);
   const binding = operations.editorCallBinding(body.id);
   const settled = operations.settleEditorCall(
