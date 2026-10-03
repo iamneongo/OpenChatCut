@@ -106,8 +106,8 @@ export function reviewAnchor(
 
 function cleanText(value: string): string {
   const text = value.trim();
-  if (!text) throw new Error('评论内容不能为空');
-  if (text.length > MAX_TEXT_LENGTH) throw new Error(`评论不能超过 ${MAX_TEXT_LENGTH} 个字符`);
+  if (!text) throw new Error('Nội dung bình luận không được để trống');
+  if (text.length > MAX_TEXT_LENGTH) throw new Error(`Bình luận không được vượt quá ${MAX_TEXT_LENGTH} ký tự`);
   return text;
 }
 
