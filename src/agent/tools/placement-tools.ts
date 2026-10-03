@@ -112,7 +112,7 @@ export function canPlaceGraphic(state: TimelineState, item: TimelineItem): boole
 }
 
 export async function execPlaceGraphicsTool(name: string, args: Args, ctx: AgentContext): Promise<unknown> {
-  if (name !== 'place_graphics_in_safe_zone') return { error: `unknown tool ${name}` };
+  if (name !== 'place_graphics_in_safe_zone') return { error: `tool không được nhận diện: ${name}` };
   const state = ctx.getState();
   const doc = ctx.getDoc();
   const fps = state.fps || 30;

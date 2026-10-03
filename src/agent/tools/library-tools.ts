@@ -30,7 +30,7 @@ function compact(it: LibraryItem) {
 }
 
 export async function execLibraryTool(name: string, args: Args, ctx: AgentContext): Promise<unknown> {
-  if (name !== 'browse_library') return { error: `unknown tool ${name}` };
+  if (name !== 'browse_library') return { error: `tool không được nhận diện: ${name}` };
 
   const all = buildLibraryItems(ctx.templates);
   const id = typeof args.id === 'string' ? args.id.trim() : '';

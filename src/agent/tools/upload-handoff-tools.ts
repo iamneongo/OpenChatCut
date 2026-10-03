@@ -57,25 +57,25 @@ async function requestUploadSlot(
   sessionId: string,
 ): Promise<UploadHandoffResult | UploadHandoffError> {
   if (!isUploadSourceType(args.assetType)) {
-    return { error: 'assetType must be audio|gif|image|svg|video' };
+    return { error: 'assetType phải là audio|gif|image|svg|video' };
   }
   const contentType = String(args.contentType ?? '').trim();
   const filename = safeSourceFilename(args.filename);
   const mediaType = externalUploadMediaType(args.assetType, contentType);
   const size = Number(args.size);
-  if (!mediaType) return { error: 'assetType and contentType must be a supported media pair' };
-  if (!filename) return { error: 'filename must be a safe basename' };
+  if (!mediaType) return { error: 'assetType và contentType phải là cặp media được hỗ trợ' };
+  if (!filename) return { error: 'filename phải là tên cơ sở an toàn' };
   if (!Number.isSafeInteger(size) || size <= 0) {
-    return { error: 'size must be a positive integer byte count' };
+    return { error: 'size phải là số nguyên dương tính theo byte' };
   }
   const projectId = ctx.getProjectId?.();
-  if (!projectId) return { error: 'a persisted project is required for external upload handoff' };
+  if (!projectId) return { error: 'cần project đã lưu để chuyển giao upload bên ngoài' };
   const requestedAssetId = typeof args.assetId === 'string' ? args.assetId.trim() : '';
   const existing = requestedAssetId ? findUploadAsset(ctx, requestedAssetId) : null;
-  if (requestedAssetId && !existing) return { error: `asset not found: ${requestedAssetId}` };
+  if (requestedAssetId && !existing) return { error: `không tìm thấy asset: ${requestedAssetId}` };
   const kind = mapUploadKind(args.assetType);
   if (existing && kind !== existing.kind) {
-    return { error: `asset ${existing.id} is ${existing.kind}, not ${kind}` };
+    return { error: `asset ${existing.id} là ${existing.kind}, không phải ${kind}` };
   }
   const assetId = existing?.id ?? newId();
   const uploadName = `${assetId}.${sessionId}${mediaType.extension}`;
@@ -123,17 +123,17 @@ async function createSession(args: Args, ctx: AgentContext): Promise<unknown> {
     state: 'awaiting_upload',
     slots: [slot],
     next: [
-      'Upload once to the exact slot uploadUrl before expiry with the declared headers.',
-      'Pass the opaque receipt and echoed assetType to finalize_uploaded_asset; audio/video/gif also require durationInSeconds.',
-      'The asset becomes consumable only after finalize succeeds; invoke transcribe_track separately if transcription is desired.',
+      'Upload một lần vào đúng slot uploadUrl trước khi hết hạn, với các header đã khai báo.',
+      'Truyền receipt opaque và assetType được phản hồi vào finalize_uploaded_asset; audio/video/gif cũng cần durationInSeconds.',
+      'Asset chỉ có thể sử dụng sau khi finalize thành công; hãy gọi riêng transcribe_track nếu cần transcription.',
     ],
-    note: 'Import session created with one verified, filename-scoped, short-lived, single-use slot.',
+    note: 'Đã tạo session import với một slot đã xác minh, giới hạn theo filename, thời gian ngắn và chỉ dùng một lần.',
   };
 }
 
 export async function execImportMediaHandoff(args: Args, ctx: AgentContext): Promise<unknown> {
   if (args.action !== 'create_session') {
-    return { error: 'import_media action must be create_session' };
+    return { error: 'action import_media phải là create_session' };
   }
   return createSession(args, ctx);
 }

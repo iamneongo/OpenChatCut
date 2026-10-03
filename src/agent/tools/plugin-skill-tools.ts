@@ -394,7 +394,7 @@ export function execPluginSkillTool(
   _ctx?: AgentContext,
   harness?: HarnessToolExecutionContext,
 ): PluginSkillLoadResult {
-  if (name !== 'load_skill') return { error: `unknown tool ${name}` };
+  if (name !== 'load_skill') return { error: `tool không được nhận diện: ${name}` };
   const slug = typeof args.name === 'string' ? args.name.trim() : '';
   if (!slug) return { error: 'name must be a non-empty skill id.' };
   const source = builtInSource(slug) ?? creativeSource(slug);

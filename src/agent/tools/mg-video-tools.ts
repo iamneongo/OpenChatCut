@@ -372,5 +372,5 @@ export async function execMgVideoTool(name: string, args: Args, ctx: AgentContex
   if (name === 'convert_motion_graphic_to_video') return convert(args, ctx);
   if (name === 'register_converted_video') return register(args, ctx);
   if (name === 'export_motion_graphic_prores') return exportProres(args, ctx);
-  return { error: `unknown tool ${name}` };
+  return { error: `tool không được nhận diện: ${name}` };
 }

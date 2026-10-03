@@ -53,9 +53,9 @@ interface FinalizeContext {
 
 function validateFinalizeArgs(args: Args): { receipt: string; error?: string } {
   const receipt = typeof args.receipt === 'string' ? args.receipt.trim() : '';
-  if (!receipt) return { receipt, error: 'receipt is required' };
+  if (!receipt) return { receipt, error: 'bắt buộc phải có receipt' };
   if (!isUploadSourceType(args.assetType)) {
-    return { receipt, error: 'assetType must be audio, gif, image, svg, or video' };
+    return { receipt, error: 'assetType phải là audio, gif, image, svg hoặc video' };
   }
   const needsDuration = args.assetType === 'audio' || args.assetType === 'gif' || args.assetType === 'video';
   if (needsDuration && (
@@ -63,14 +63,14 @@ function validateFinalizeArgs(args: Args): { receipt: string; error?: string } {
     || !Number.isFinite(args.durationInSeconds)
     || args.durationInSeconds <= 0
   )) {
-    return { receipt, error: 'durationInSeconds is required for audio/video/gif and must be positive' };
+    return { receipt, error: 'audio/video/gif bắt buộc có durationInSeconds và giá trị phải dương' };
   }
   for (const field of ['durationInSeconds', 'width', 'height', 'fps'] as const) {
     const value = args[field];
     if (value !== undefined && (
       typeof value !== 'number' || !Number.isFinite(value) || value <= 0
     )) {
-      return { receipt, error: `${field} must be a positive finite number` };
+      return { receipt, error: `${field} phải là số hữu hạn dương` };
     }
   }
   return { receipt };
@@ -105,7 +105,7 @@ async function claimFinalizeInput(
       projectId,
       claimId: requestedClaimId,
     }).catch(() => null);
-    return { error: 'upload receipt claim request failed' };
+    return { error: 'yêu cầu nhận quyền receipt upload thất bại' };
   }
   const value: unknown = await response.json().catch(() => null);
   if (!response.ok || !value || typeof value !== 'object' || Array.isArray(value)) {
@@ -118,7 +118,7 @@ async function claimFinalizeInput(
     const message = value && typeof value === 'object' && !Array.isArray(value)
       && typeof (value as Record<string, unknown>).error === 'string'
       ? (value as Record<string, unknown>).error as string
-      : 'upload receipt is invalid, expired, consumed, or outside this project';
+      : 'receipt upload không hợp lệ, đã hết hạn, đã dùng hoặc không thuộc project này';
     return { error: message };
   }
   const record = value as Record<string, unknown>;
@@ -148,7 +148,7 @@ async function claimFinalizeInput(
       projectId,
       claimId: requestedClaimId,
     }).catch(() => null);
-    return { error: 'trusted upload receipt returned invalid media identity' };
+    return { error: 'receipt upload đáng tin cậy trả về danh tính media không hợp lệ' };
   }
   return {
     receipt, claimId, claimExpiresAt, projectId, sessionId, assetId, fileKey, filename, readUrl, size,
@@ -388,7 +388,7 @@ export async function execFinalizeUpload(
   const preliminary = validateFinalizeArgs(args);
   if (preliminary.error) return { error: preliminary.error };
   const projectId = ctx.getProjectId?.();
-  if (!projectId) return { error: 'a persisted project is required to finalize an upload receipt' };
+  if (!projectId) return { error: 'cần project đã lưu để hoàn tất receipt upload' };
   const key = receiptCommitKey({ receipt: preliminary.receipt, projectId });
   return withReceiptCommitLock(
     key,

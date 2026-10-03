@@ -17,7 +17,7 @@ export async function execUploadTool(name: string, args: Args, ctx: AgentContext
   if (name === 'import_media') return execImportMediaHandoff(args, ctx);
   if (name === 'finalize_uploaded_asset') return execFinalizeUpload(args, ctx);
   if (name === 'request_asset_download') return execRequestDownload(args, ctx);
-  return { error: `unknown tool ${name}` };
+  return { error: `tool không được nhận diện: ${name}` };
 }
 
 
@@ -30,7 +30,7 @@ function execRequestDownload(args: Args, ctx: AgentContext): unknown {
     return { error: 'only variant "source" is supported' };
   }
   const asset = findAsset(ctx, q);
-  if (!asset) return { error: `asset not found: ${q}` };
+  if (!asset) return { error: `không tìm thấy asset: ${q}` };
   if (!asset.src) {
     return {
       error: 'asset has no source media file (e.g. motion-graphic without baked video)',

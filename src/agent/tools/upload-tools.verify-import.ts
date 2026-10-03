@@ -47,7 +47,7 @@ export async function verifyUploadImportSession(fixture: UploadVerifierFixture):
     contentType: 'text/html',
     size: 32,
   }, context) as { error?: string };
-  assert.match(mismatchedMediaType.error ?? '', /supported media pair/);
+  assert.match(mismatchedMediaType.error ?? '', /cặp media được hỗ trợ/);
   assert.equal(state.mintedTickets, 0, 'unsupported MIME pairs are rejected before minting a credential');
 
   const session = await execUploadTool('import_media', {

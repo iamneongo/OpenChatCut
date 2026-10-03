@@ -40,7 +40,7 @@ function parseAssignments(raw: unknown, slots: Record<string, unknown>): Assignm
 }
 
 export function execLayoutTool(name: string, args: Args, ctx: AgentContext): unknown {
-  if (name !== 'apply_layout') return { error: `unknown tool ${name}` };
+  if (name !== 'apply_layout') return { error: `tool không được nhận diện: ${name}` };
   const layout = String(args.layout ?? '') as LayoutId;
   if (!LAYOUT_IDS.includes(layout)) {
     return { error: `unknown layout "${args.layout}" — valid layouts: ${LAYOUT_IDS.join(', ')}` };

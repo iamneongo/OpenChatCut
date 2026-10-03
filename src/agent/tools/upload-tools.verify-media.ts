@@ -22,7 +22,7 @@ export async function verifyUploadMediaFailures(fixture: UploadVerifierFixture):
     receipt: 'receipt-video',
     assetType: 'video',
   }, context) as { error?: string };
-  assert.match(missingDuration.error ?? '', /durationInSeconds is required/);
+  assert.match(missingDuration.error ?? '', /bắt buộc có durationInSeconds/);
   assert.equal(
     state.receiptClaims,
     claimsBeforeMissingDuration,
@@ -70,8 +70,8 @@ export async function verifyUploadMediaFailures(fixture: UploadVerifierFixture):
     contentType: 'image/png',
     size: 1,
   }, context) as { error?: string };
-  assert.match(unsafe.error ?? '', /safe basename/);
+  assert.match(unsafe.error ?? '', /tên cơ sở an toàn/);
   assert.equal(state.mintedBodies.length, 2);
   const removedLegacy = await execUploadTool('request_asset_upload_url', {}, context) as { error?: string };
-  assert.match(removedLegacy.error ?? '', /unknown tool/);
+  assert.match(removedLegacy.error ?? '', /tool không được nhận diện/);
 }

@@ -100,7 +100,7 @@ export function receiptCommitResult(
   return {
     ...result,
     receiptCommit: state,
-    warning: 'Asset changes are committed; upload receipt confirmation is being reconciled.',
+    warning: 'Thay đổi asset đã được ghi nhận; đang đối soát xác nhận receipt upload.',
   };
 }
 

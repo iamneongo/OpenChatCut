@@ -42,5 +42,5 @@ export function execUndoTool(name: string, ctx: HistoryCtx): unknown {
     }
     return applyHistoryTarget('redo', target, ctx);
   }
-  return { error: `unknown tool ${name}` };
+  return { error: `tool không được nhận diện: ${name}` };
 }
