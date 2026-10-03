@@ -1,6 +1,6 @@
 import { useState, type CSSProperties } from 'react';
 import type { AgentChangeSession } from '../../agent/changeLog';
-import { useT } from '../../i18n/locale';
+import { getLocale, useT } from '../../i18n/locale';
 import { theme, themeAlpha } from '../../theme';
 import { Icon } from '../icons';
 
@@ -9,6 +9,20 @@ interface AgentChangeLogMenuProps {
   running: boolean;
   canRollback: (id: string) => boolean;
   onRollback: (id: string, force?: boolean) => boolean;
+}
+
+function formatChangeDate(timestamp: number): string {
+  const locale = getLocale();
+  const browserLocale = locale === 'vi'
+    ? 'vi-VN'
+    : locale === 'zh'
+      ? 'zh-CN'
+      : locale === 'it'
+        ? 'it-IT'
+        : locale === 'ru'
+          ? 'ru-RU'
+          : 'en-US';
+  return new Date(timestamp).toLocaleString(browserLocale);
 }
 
 export function AgentChangeLogMenu({
@@ -61,7 +75,7 @@ export function AgentChangeLogMenu({
                   <div key={session.id} style={row}>
                     <div style={{ color: theme.text, fontSize: 12.5, lineHeight: 1.45 }}>{session.summary}</div>
                     <div style={{ color: theme.textDim, fontSize: 11, marginTop: 3 }}>
-                      {new Date(session.createdAt).toLocaleString()} · {session.operations.length} {t('项操作')}
+                      {formatChangeDate(session.createdAt)} · {session.operations.length} {t('项操作')}
                     </div>
                     {session.operations.map((operation, index) => (
                       <div key={`${session.id}:${index}`} style={{ color: theme.textDim, fontSize: 11.5, marginTop: 4 }}>
