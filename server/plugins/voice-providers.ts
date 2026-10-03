@@ -40,12 +40,12 @@ async function resolveElevenVoice(baseUrl: string, apiKey: string, voiceId: stri
   if (!response.ok) throw new Error(await providerError(response));
   const result = await response.json() as { voices?: Array<{ voice_id?: string; name?: string }> };
   const match = result.voices?.find((voice) => voice.name?.toLowerCase() === voiceId.toLowerCase());
-  if (!match?.voice_id) throw new Error(`ElevenLabs voice not found: ${voiceId}`);
+  if (!match?.voice_id) throw new Error(`không tìm thấy voice ElevenLabs: ${voiceId}`);
   return match.voice_id;
 }
 
 export async function elevenLabsVoice(options: VoiceOptions, input: ValidVoiceRequest): Promise<Buffer> {
-  if (!options.elevenApiKey) throw new Error('ElevenLabs is not configured. Set ELEVENLABS_API_KEY in .env.local.');
+  if (!options.elevenApiKey) throw new Error('ElevenLabs chưa được cấu hình. Hãy đặt ELEVENLABS_API_KEY trong .env.local.');
   const voiceId = await resolveElevenVoice(options.elevenBaseUrl, options.elevenApiKey, input.voiceId);
   const query = new URLSearchParams({ output_format: input.outputFormat });
   if (input.optimizeStreamingLatency != null) query.set('optimize_streaming_latency', String(input.optimizeStreamingLatency));
@@ -74,15 +74,15 @@ function doubaoAudio(text: string): Buffer {
   for (const line of text.split('\n')) {
     if (!line.trim()) continue;
     const item = JSON.parse(line) as { code?: number; data?: string; message?: string };
-    if (item.code && item.code !== 0) throw new Error(item.message ?? `Doubao failed (${item.code})`);
+    if (item.code && item.code !== 0) throw new Error(item.message ?? `Doubao thất bại (${item.code})`);
     if (item.data) parts.push(Buffer.from(item.data, 'base64'));
   }
-  if (!parts.length) throw new Error('Doubao returned no audio');
+  if (!parts.length) throw new Error('Doubao không trả về audio');
   return Buffer.concat(parts);
 }
 
 export async function doubaoVoice(options: VoiceOptions, input: ValidVoiceRequest): Promise<Buffer> {
-  if (!options.doubaoAppId || !options.doubaoAccessKey) throw new Error('Doubao is not configured. Set DOUBAO_TTS_APP_ID and DOUBAO_TTS_ACCESS_KEY.');
+  if (!options.doubaoAppId || !options.doubaoAccessKey) throw new Error('Doubao chưa được cấu hình. Hãy đặt DOUBAO_TTS_APP_ID và DOUBAO_TTS_ACCESS_KEY.');
   const audioParams = { format: 'mp3', sample_rate: 24_000,
     speech_rate: Math.round(((input.speedRatio ?? 1) - 1) * 100), loudness_rate: Math.round(((input.loudnessRatio ?? 1) - 1) * 100) };
   const reqParams: Record<string, unknown> = { text: input.text, speaker: DOUBAO_VOICES[input.voiceId] ?? input.voiceId, audio_params: audioParams };
@@ -117,7 +117,7 @@ function minimaxChunks(text: string): MinimaxTtsResponse[] {
       if (!payload || payload === '[DONE]') continue;
       try { chunks.push(JSON.parse(payload) as MinimaxTtsResponse); } catch { /* SSE comments / event fields */ }
     }
-    if (!chunks.length) throw new Error(`MiniMax returned invalid TTS data: ${text.slice(0, 200)}`);
+    if (!chunks.length) throw new Error(`MiniMax trả về dữ liệu TTS không hợp lệ: ${text.slice(0, 200)}`);
     return chunks;
   }
 }
@@ -126,22 +126,22 @@ export function minimaxVoiceResult(text: string, stream: boolean, excludeAggrega
   const chunks = minimaxChunks(text);
   for (const chunk of chunks) {
     if (chunk.base_resp && chunk.base_resp.status_code !== 0) {
-      throw new Error(chunk.base_resp.status_msg || `MiniMax TTS failed (${chunk.base_resp.status_code})`);
+      throw new Error(chunk.base_resp.status_msg || `TTS MiniMax thất bại (${chunk.base_resp.status_code})`);
     }
   }
   const subtitleUrl = chunks.find((chunk) => chunk.data?.subtitle_file)?.data?.subtitle_file;
   const final = chunks.find((chunk) => chunk.data?.status === 2 && chunk.data.audio)?.data?.audio;
   const pieces = chunks.filter((chunk) => chunk.data?.status === 1 && chunk.data.audio).map((chunk) => Buffer.from(chunk.data!.audio!, 'hex'));
   const audio = stream && excludeAggregatedAudio && pieces.length ? Buffer.concat(pieces) : Buffer.from(final ?? chunks[0]?.data?.audio ?? '', 'hex');
-  if (!audio.length) throw new Error('MiniMax returned no audio');
+  if (!audio.length) throw new Error('MiniMax không trả về audio');
   return { audio, subtitleUrl };
 }
 
 function validateMinimaxModelOptions(model: string, input: ValidVoiceRequest): void {
   if (/speech-(?:01|02)-/i.test(model) && ['Persian', 'Filipino', 'Tamil'].includes(input.languageBoost ?? '')) {
-    throw new Error(`${model} does not support languageBoost=${input.languageBoost}`);
+    throw new Error(`${model} không hỗ trợ languageBoost=${input.languageBoost}`);
   }
-  if (/speech-2\.8-/i.test(model) && input.emotion === 'whisper') throw new Error(`${model} does not support emotion=whisper`);
+  if (/speech-2\.8-/i.test(model) && input.emotion === 'whisper') throw new Error(`${model} không hỗ trợ emotion=whisper`);
 }
 
 export function minimaxVoiceBody(model: string, input: ValidVoiceRequest): Record<string, unknown> {

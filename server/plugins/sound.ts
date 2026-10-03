@@ -85,7 +85,7 @@ async function readJson(req: IncomingMessage): Promise<SoundRequest> {
   for await (const chunk of req) {
     const bytes = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk);
     total += bytes.length;
-    if (total > 1_000_000) throw new Error('request body too large');
+    if (total > 1_000_000) throw new Error('thân request quá lớn');
     chunks.push(bytes);
   }
   return JSON.parse(Buffer.concat(chunks).toString('utf8')) as SoundRequest;
@@ -110,20 +110,20 @@ async function providerError(response: Response): Promise<string> {
 /** Pure validation — exported for unit checks. */
 export function validateSoundRequest(input: SoundRequest): ValidSoundRequest {
   const provider = String(input.provider ?? 'elevenlabs');
-  if (provider !== 'elevenlabs' && provider !== 'sonilo') throw new Error('sound provider must be elevenlabs or sonilo');
+  if (provider !== 'elevenlabs' && provider !== 'sonilo') throw new Error('provider sound phải là elevenlabs hoặc sonilo');
   const prompt = String(input.prompt ?? '').trim();
   const name = String(input.name ?? '').trim();
-  if (name.length > 200) throw new Error('sound name must be at most 200 characters');
+  if (name.length > 200) throw new Error('tên sound dài tối đa 200 ký tự');
   const sourceRevisions = validateSourceRevisions(input.sourceRevisions);
   if (provider === 'sonilo') {
     // Sonilo video-to-SFX reads the cut itself — no prompt, no ElevenLabs
     // synthesis controls; the source video is the whole request.
     if (!input.sourceAssetPath || input.sourceAssetKind !== 'video') {
-      throw new Error('sonilo sound requires a project video sourceAssetId (the rendered cut)');
+      throw new Error('sound sonilo yêu cầu sourceAssetId video của project (bản dựng đã render)');
     }
-    if (prompt) throw new Error('sonilo sound is generated from the video; prompt is not supported');
+    if (prompt) throw new Error('sound sonilo được tạo từ video; prompt không được hỗ trợ');
     if ([input.durationSeconds, input.promptInfluence, input.loop, input.outputFormat].some((value) => value !== undefined)) {
-      throw new Error('ElevenLabs sound controls are not supported by sonilo');
+      throw new Error('sonilo không hỗ trợ các tùy chọn sound của ElevenLabs');
     }
     return {
       provider, prompt: '', promptInfluence: 0.3, loop: false,
@@ -135,16 +135,16 @@ export function validateSoundRequest(input: SoundRequest): ValidSoundRequest {
   const promptInfluence = input.promptInfluence ?? 0.3;
   const loop = input.loop ?? false;
   const outputFormat = String(input.outputFormat ?? 'mp3_44100_128');
-  if (!prompt) throw new Error('prompt is required');
+  if (!prompt) throw new Error('prompt là bắt buộc');
   if (input.sourceAssetPath !== undefined || input.sourceAssetKind !== undefined) {
-    throw new Error('sourceAssetId is supported by the sonilo provider only');
+    throw new Error('sourceAssetId chỉ được provider sonilo hỗ trợ');
   }
   if (durationSeconds != null && (!Number.isFinite(durationSeconds) || durationSeconds < 0.5 || durationSeconds > 30)) {
-    throw new Error('durationSeconds must be between 0.5 and 30');
+    throw new Error('durationSeconds phải nằm trong khoảng 0.5 đến 30');
   }
-  if (!Number.isFinite(promptInfluence) || promptInfluence < 0 || promptInfluence > 1) throw new Error('promptInfluence must be between 0 and 1');
-  if (typeof loop !== 'boolean') throw new Error('loop must be a boolean');
-  if (!OUTPUT_FORMATS.has(outputFormat)) throw new Error(`unsupported ElevenLabs outputFormat ${outputFormat}`);
+  if (!Number.isFinite(promptInfluence) || promptInfluence < 0 || promptInfluence > 1) throw new Error('promptInfluence phải nằm trong khoảng 0 đến 1');
+  if (typeof loop !== 'boolean') throw new Error('loop phải là boolean');
+  if (!OUTPUT_FORMATS.has(outputFormat)) throw new Error(`outputFormat ElevenLabs không được hỗ trợ: ${outputFormat}`);
   return {
     provider, prompt, durationSeconds, promptInfluence, loop, outputFormat,
     name: name || `Sound · ${prompt.slice(0, 36)}`, sourceRevisions,
@@ -155,7 +155,7 @@ function validateSourceRevisions(value: unknown): string[] | undefined {
   if (value === undefined) return undefined;
   if (!Array.isArray(value) || value.length > 16
     || value.some((revision) => typeof revision !== 'string' || !revision.trim())) {
-    throw new Error('sourceRevisions must be an array of non-empty strings');
+    throw new Error('sourceRevisions phải là mảng các chuỗi không rỗng');
   }
   return [...new Set(value.map((revision) => revision.trim()))];
 }
@@ -171,7 +171,7 @@ async function probeDuration(file: string): Promise<number> {
     child.on('close', (code) => {
       const duration = Number(output.trim());
       if (code === 0 && Number.isFinite(duration) && duration > 0) resolvePromise(duration);
-      else reject(new Error('unable to probe generated sound'));
+      else reject(new Error('không thể thăm dò sound đã tạo'));
     });
   });
 }
@@ -203,7 +203,7 @@ async function wrapRawAudio(bytes: Buffer, format: string): Promise<{ file: stri
 }
 
 async function saveAudio(bytes: Buffer, outputFormat: string): Promise<{ path: string; durationSeconds: number }> {
-  if (!bytes.length) throw new Error('sound provider returned empty audio');
+  if (!bytes.length) throw new Error('provider sound trả về audio rỗng');
   const dir = uploadDir();
   await mkdir(dir, { recursive: true });
   const raw = rawInput(outputFormat);

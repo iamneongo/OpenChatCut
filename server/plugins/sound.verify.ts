@@ -11,10 +11,10 @@ const custom = validateSoundRequest({ prompt: 'thunder', durationSeconds: 30, pr
 assert.equal(custom.durationSeconds, 30);
 assert.equal(custom.loop, true);
 
-assert.throws(() => validateSoundRequest({ prompt: '' }), /prompt is required/);
-assert.throws(() => validateSoundRequest({ prompt: 'x', durationSeconds: 0.1 }), /durationSeconds must be between/);
-assert.throws(() => validateSoundRequest({ prompt: 'x', promptInfluence: 2 }), /promptInfluence must be between/);
-assert.throws(() => validateSoundRequest({ prompt: 'x', outputFormat: 'wav' }), /unsupported ElevenLabs outputFormat/);
+assert.throws(() => validateSoundRequest({ prompt: '' }), /prompt là bắt buộc/);
+assert.throws(() => validateSoundRequest({ prompt: 'x', durationSeconds: 0.1 }), /durationSeconds phải nằm trong khoảng/);
+assert.throws(() => validateSoundRequest({ prompt: 'x', promptInfluence: 2 }), /promptInfluence phải nằm trong khoảng/);
+assert.throws(() => validateSoundRequest({ prompt: 'x', outputFormat: 'wav' }), /outputFormat ElevenLabs không được hỗ trợ/);
 
 // sonilo: SFX from the cut — video source in, no prompt, no synthesis controls
 assert.equal(ok.provider, 'elevenlabs', 'provider defaults to elevenlabs');
@@ -22,23 +22,23 @@ const sonilo = validateSoundRequest({ provider: 'sonilo', sourceAssetPath: '/med
 assert.equal(sonilo.provider, 'sonilo');
 assert.equal(sonilo.sourceAssetPath, '/media/uploads/cut.mp4');
 assert.equal(sonilo.prompt, '');
-assert.throws(() => validateSoundRequest({ provider: 'sonilo' }), /video sourceAssetId/);
+assert.throws(() => validateSoundRequest({ provider: 'sonilo' }), /sourceAssetId video của project/);
 assert.throws(
   () => validateSoundRequest({ provider: 'sonilo', sourceAssetPath: '/media/uploads/a.mp3', sourceAssetKind: 'audio' }),
-  /video sourceAssetId/,
+  /sourceAssetId video của project/,
 );
 assert.throws(
   () => validateSoundRequest({ provider: 'sonilo', sourceAssetPath: '/media/uploads/cut.mp4', sourceAssetKind: 'video', prompt: 'whoosh' }),
-  /prompt is not supported/,
+  /prompt không được hỗ trợ/,
 );
 assert.throws(
   () => validateSoundRequest({ provider: 'sonilo', sourceAssetPath: '/media/uploads/cut.mp4', sourceAssetKind: 'video', loop: true }),
-  /ElevenLabs sound controls/,
+  /tùy chọn sound của ElevenLabs/,
 );
 assert.throws(
   () => validateSoundRequest({ prompt: 'x', sourceAssetPath: '/media/uploads/cut.mp4', sourceAssetKind: 'video' }),
-  /sonilo provider only/,
+  /provider sonilo hỗ trợ/,
 );
-assert.throws(() => validateSoundRequest({ provider: 'freesound', prompt: 'x' }), /elevenlabs or sonilo/);
+assert.throws(() => validateSoundRequest({ provider: 'freesound', prompt: 'x' }), /provider sound phải là elevenlabs hoặc sonilo/);
 
 console.log('sound.check: ok (elevenlabs official sound parameters + sonilo video-to-sfx)');
