@@ -10,6 +10,7 @@ import { existsSync, mkdirSync, readFileSync } from 'node:fs';
 import { cp, mkdir, readdir, rename, rm, unlink, writeFile } from 'node:fs/promises';
 import { homedir } from 'node:os';
 import { dirname, isAbsolute, join, resolve } from 'node:path';
+import { localized } from './ui-locale.ts';
 
 /** Fixed pointer location — deliberately outside the movable storage root. */
 export function dataDirPointerPath(home: string = homedir()): string {
@@ -56,17 +57,17 @@ export interface DataDirProbe { ok: boolean; note?: string; error?: string; }
 
 /** Writability probe for the settings "test" action and for save-time validation. */
 export async function checkDataDir(raw: string, currentDir: string): Promise<DataDirProbe> {
-  if (!raw.trim()) return { ok: true, note: `未设置 · 使用默认目录 ${currentDir}` };
+  if (!raw.trim()) return { ok: true, note: localized({ zh: `未设置 · 使用默认目录 ${currentDir}`, en: `Not set · using default directory ${currentDir}`, vi: `Chưa đặt · đang dùng thư mục mặc định ${currentDir}` }) };
   const dir = expandDataDir(raw);
-  if (!dir) return { ok: false, error: '必须是绝对路径（可用 ~/ 开头）' };
+  if (!dir) return { ok: false, error: localized({ zh: '必须是绝对路径（可用 ~/ 开头）', en: 'The path must be absolute (it may start with ~/).', vi: 'Đường dẫn phải là đường dẫn tuyệt đối (có thể bắt đầu bằng ~/).' }) };
   try {
     await mkdir(dir, { recursive: true });
     const probe = join(dir, `.cc-data-probe-${process.pid}`);
     await writeFile(probe, 'ok');
     await unlink(probe);
-    return { ok: true, note: `目录可写 · ${dir}` };
+    return { ok: true, note: localized({ zh: `目录可写 · ${dir}`, en: `Directory is writable · ${dir}`, vi: `Thư mục có thể ghi · ${dir}` }) };
   } catch (err) {
-    return { ok: false, error: `目录不可写 · ${err instanceof Error ? err.message : String(err)}` };
+    return { ok: false, error: localized({ zh: `目录不可写 · ${err instanceof Error ? err.message : String(err)}`, en: `Directory is not writable · ${err instanceof Error ? err.message : String(err)}`, vi: `Thư mục không thể ghi · ${err instanceof Error ? err.message : String(err)}` }) };
   }
 }
 

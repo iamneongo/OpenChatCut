@@ -7,6 +7,7 @@ import { resolveTrackId, type TimelineState } from '../../editor/types';
 import { moveCaptionSourceEntry, normalizeCaptionSourceEntries } from '../../captions/sourceOrder';
 import { hasOperationalTranscript } from '../../transcript/types';
 import { isStableIdentity } from '../../transcript/identity';
+import { t } from '../../i18n/locale';
 
 // edit_captions Multi-lane tool set:
 // - positions puts multiple sources into place in one call (same anchor point = stacked in the same block)
@@ -229,7 +230,7 @@ export function execSourceUpdate(json: Json, c: CaptionsData, ctx: AgentContext,
       if (o.style && typeof o.style === 'object') {
         const mapped = mapCaptionStyle(o.style as Json, s.height);
         e.style = { ...e.style, ...mapped.styleOverride };
-        if (mapped.ignored.length) notes.push(`style 忽略字段:${mapped.ignored.join(',')}`);
+        if (mapped.ignored.length) notes.push(`${t('style 忽略字段')}: ${mapped.ignored.join(',')}`);
       }
       entries[i] = e;
       updated.push(entrySummary(e, i));

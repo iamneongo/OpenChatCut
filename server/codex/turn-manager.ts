@@ -12,6 +12,7 @@ import {
   type CodexNotification,
   type CodexServerRequest,
 } from './app-server.ts';
+import { localized } from '../ui-locale.ts';
 
 const THREAD_START_TIMEOUT_MS = 20_000;
 const TURN_START_TIMEOUT_MS = 20_000;
@@ -99,11 +100,15 @@ function codexErrorNotificationSummary(params: Record<string, unknown>): string 
   const detail = typeof err?.message === 'string' ? err.message.trim().slice(0, ERROR_SUMMARY_LIMIT) : '';
   const reason = typeof err?.codexErrorInfo === 'string' ? err.codexErrorInfo : '';
   if (reason === 'usageLimitExceeded' || /usage limit|quota|credits|billing/i.test(detail)) {
-    const base = 'Codex 调用失败：当前 OpenAI Codex 的使用额度已用尽。请前往 chatgpt.com/codex/settings/usage 查看并充值，或等待配额重置后再试；也可以切换到其他模型（如 DeepSeek）。';
+    const base = localized({
+      zh: 'Codex 调用失败：当前 OpenAI Codex 的使用额度已用尽。请前往 chatgpt.com/codex/settings/usage 查看并充值，或等待配额重置后再试；也可以切换到其他模型（如 DeepSeek）。',
+      en: 'Codex request failed: your OpenAI Codex usage limit has been reached. Visit chatgpt.com/codex/settings/usage to review usage and add credits, wait for the quota to reset, or switch to another model such as DeepSeek.',
+      vi: 'Yêu cầu Codex thất bại: bạn đã dùng hết hạn mức OpenAI Codex. Hãy mở chatgpt.com/codex/settings/usage để kiểm tra và nạp thêm, chờ hạn mức được đặt lại, hoặc chuyển sang model khác như DeepSeek.',
+    });
     return detail ? `${base}\n（${detail}）` : base;
   }
-  if (detail) return `Codex 调用失败：${detail}`;
-  return 'Codex 调用失败。请稍后重试，或在模型下拉里切换到其他模型（如 DeepSeek）。';
+  if (detail) return localized({ zh: `Codex 调用失败：${detail}`, en: `Codex request failed: ${detail}`, vi: `Yêu cầu Codex thất bại: ${detail}` });
+  return localized({ zh: 'Codex 调用失败。请稍后重试，或在模型下拉里切换到其他模型（如 DeepSeek）。', en: 'Codex request failed. Try again later or switch to another model such as DeepSeek.', vi: 'Yêu cầu Codex thất bại. Hãy thử lại sau hoặc chuyển sang model khác như DeepSeek.' });
 }
 
 function browserFailureSummary(result: unknown): string {

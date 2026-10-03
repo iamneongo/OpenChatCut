@@ -16,6 +16,7 @@ import {
   type RuntimeProfile,
 } from './runtime-profile.ts';
 import { resolveMediaReference } from './media-references.ts';
+import { localized } from './ui-locale.ts';
 
 export const DEFAULT_UPLOAD_DIR = join(process.cwd(), 'public', 'media', 'uploads');
 
@@ -382,7 +383,7 @@ export async function checkMediaDir(
   if (isIsolatedDevProfile(profile)) {
     return { ok: false, error: '隔离开发配置固定使用独立素材目录，不能修改 MEDIA_DIR' };
   }
-  if (!raw.trim()) return { ok: true, note: `未设置 · 使用默认目录 ${profile.mediaDir}` };
+  if (!raw.trim()) return { ok: true, note: localized({ zh: `未设置 · 使用默认目录 ${profile.mediaDir}`, en: `Not set · using default directory ${profile.mediaDir}`, vi: `Chưa đặt · đang dùng thư mục mặc định ${profile.mediaDir}` }) };
   const dir = expandMediaDir(raw);
   if (!dir) return { ok: false, error: '必须是绝对路径（可用 ~/ 开头）' };
   try {

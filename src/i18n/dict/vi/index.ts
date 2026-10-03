@@ -2641,4 +2641,6 @@ export const VI: Record<string, string> = {
   '低频冲击点，适合切点、标题砸入、重点强调。': 'Tiếng va chạm âm trầm, phù hợp điểm cắt, tiêu đề đập vào hoặc nhấn mạnh điểm chính.',
   '清脆 UI 点击，适合按钮、选中、确认操作反馈。': 'Tiếng nhấp giao diện trong, phù hợp phản hồi nút, chọn mục và xác nhận thao tác.',
   '成功完成提示音，适合任务完成、发布成功、正向反馈。': 'Âm báo hoàn tất thành công, phù hợp hoàn thành tác vụ, đăng thành công hoặc phản hồi tích cực.',
+  '当前环境不支持素材预览上传': 'Môi trường hiện tại không hỗ trợ tải lên tài nguyên để xem trước.',
+  'style 忽略字段': 'style đã bỏ qua các trường',
 };
