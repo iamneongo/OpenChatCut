@@ -34,7 +34,7 @@ env.allowRemoteModels = true;
 
 function proxyHost(): string {
   const origin = workerScope.location.origin;
-  if (origin === 'null') throw new Error('CLAP requires an HTTP(S) application origin');
+  if (origin === 'null') throw new Error('CLAP yêu cầu origin ứng dụng HTTP(S)');
   return `${origin}/api/hf-proxy`;
 }
 
@@ -47,7 +47,7 @@ function progressValue(value: unknown): number | null {
 
 async function loadModel(request: Extract<ClapWorkerRequest, { type: 'load' }>): Promise<void> {
   if (backend && backend !== request.backend) {
-    throw new Error(`CLAP worker is already bound to ${backend}`);
+    throw new Error(`worker CLAP đã được gắn với ${backend}`);
   }
   backend = request.backend;
   if (model && processor) return;
@@ -82,28 +82,28 @@ async function loadModel(request: Extract<ClapWorkerRequest, { type: 'load' }>):
 
 function normalizedVector(values: ArrayLike<number>): number[] {
   if (values.length !== CLAP_EMBEDDING_DIMENSION) {
-    throw new Error(`CLAP returned ${values.length} dimensions; expected ${CLAP_EMBEDDING_DIMENSION}`);
+    throw new Error(`CLAP trả về ${values.length} chiều; cần ${CLAP_EMBEDDING_DIMENSION}`);
   }
   let squaredLength = 0;
   for (let index = 0; index < values.length; index += 1) {
     const value = values[index]!;
-    if (!Number.isFinite(value)) throw new Error('CLAP returned a non-finite embedding');
+    if (!Number.isFinite(value)) throw new Error('CLAP trả về embedding có giá trị không hữu hạn');
     squaredLength += value * value;
   }
   const length = Math.sqrt(squaredLength);
   if (!Number.isFinite(length) || length <= Number.EPSILON) {
-    throw new Error('CLAP returned a zero-length embedding');
+    throw new Error('CLAP trả về embedding có độ dài bằng 0');
   }
   return Array.from(values, (value) => value / length);
 }
 
 function embeddingData(output: unknown): ArrayLike<number> {
-  if (!output || typeof output !== 'object') throw new Error('CLAP returned an invalid response');
+  if (!output || typeof output !== 'object') throw new Error('CLAP trả về phản hồi không hợp lệ');
   const tensor = (output as Record<string, unknown>).audio_embeds;
-  if (!tensor || typeof tensor !== 'object') throw new Error('CLAP returned no audio embedding');
+  if (!tensor || typeof tensor !== 'object') throw new Error('CLAP không trả về embedding âm thanh');
   const data = (tensor as Record<string, unknown>).data;
   const numericView = ArrayBuffer.isView(data) && !(data instanceof DataView) && 'length' in data;
-  if (!Array.isArray(data) && !numericView) throw new Error('CLAP returned invalid embedding data');
+  if (!Array.isArray(data) && !numericView) throw new Error('CLAP trả về dữ liệu embedding không hợp lệ');
   return data as ArrayLike<number>;
 }
 
@@ -116,21 +116,21 @@ function windowStarts(sampleCount: number): number[] {
 }
 
 async function embedWindow(samples: Float32Array): Promise<number[]> {
-  if (!model || !processor) throw new Error('CLAP model is not loaded');
+  if (!model || !processor) throw new Error('model CLAP chưa được tải');
   const inputs = await processor(samples);
   return normalizedVector(embeddingData(await model(inputs)));
 }
 
 function validateSamples(samples: Float32Array): void {
-  if (samples.length === 0) throw new Error('CLAP audio samples are empty');
+  if (samples.length === 0) throw new Error('mẫu âm thanh CLAP đang trống');
   for (const sample of samples) {
-    if (!Number.isFinite(sample)) throw new Error('CLAP audio samples contain non-finite values');
+    if (!Number.isFinite(sample)) throw new Error('mẫu âm thanh CLAP chứa giá trị không hữu hạn');
   }
 }
 
 async function embed(request: Extract<ClapWorkerRequest, { type: 'embed' }>): Promise<number[]> {
   if (request.sampleRate !== CLAP_SAMPLE_RATE) {
-    throw new Error(`CLAP worker requires ${CLAP_SAMPLE_RATE} Hz mono audio`);
+    throw new Error(`worker CLAP yêu cầu âm thanh mono ${CLAP_SAMPLE_RATE} Hz`);
   }
   validateSamples(request.samples);
   const starts = windowStarts(request.samples.length);
@@ -152,17 +152,17 @@ async function embed(request: Extract<ClapWorkerRequest, { type: 'embed' }>): Pr
 }
 
 function validateRequest(value: unknown): ClapWorkerRequest {
-  if (!value || typeof value !== 'object') throw new Error('Invalid CLAP worker request');
+  if (!value || typeof value !== 'object') throw new Error('request worker CLAP không hợp lệ');
   const request = value as Record<string, unknown>;
   if (!Number.isSafeInteger(request.id) || (request.id as number) < 0) {
-    throw new Error('Invalid CLAP worker request id');
+    throw new Error('request id worker CLAP không hợp lệ');
   }
   if (request.type === 'load' && (request.backend === 'webgpu' || request.backend === 'wasm')) {
     return request as ClapWorkerRequest;
   }
   if (request.type === 'embed' && request.samples instanceof Float32Array
     && request.sampleRate === CLAP_SAMPLE_RATE) return request as ClapWorkerRequest;
-  throw new Error('Invalid CLAP worker request payload');
+  throw new Error('payload request worker CLAP không hợp lệ');
 }
 
 async function handleRequest(value: unknown): Promise<void> {

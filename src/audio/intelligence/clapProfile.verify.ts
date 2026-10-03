@@ -47,10 +47,10 @@ assert.equal(orthogonal.every((tag) => tag.score === 0), true);
 
 assert.throws(() => parseClapPrototypeProfile({
   labels: labels.map((label, index) => index === 0 ? { ...label, vector: axis(0).slice(1) } : label),
-}), /511 dimensions; expected 512/, 'malformed prototype dimensions are rejected');
+}), /có 511 chiều; cần 512/, 'malformed prototype dimensions are rejected');
 
 assert.throws(() => parseClapPrototypeProfile({
   labels: labels.map((label, index) => index === 0 ? { ...label, vector: new Array(512).fill(0) } : label),
-}), /zero length/, 'zero prototype vectors are rejected');
+}), /có độ dài bằng 0/, 'zero prototype vectors are rejected');
 
 console.log('clapProfile.verify: ok');

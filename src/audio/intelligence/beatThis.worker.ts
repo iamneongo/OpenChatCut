@@ -47,15 +47,15 @@ function report(id: number, progress: number): void {
 }
 
 function validateRequest(value: unknown): AnalyzeRequest {
-  if (!value || typeof value !== 'object') throw new Error('Invalid Beat This worker request');
+  if (!value || typeof value !== 'object') throw new Error('request worker Beat This không hợp lệ');
   const request = value as Partial<AnalyzeRequest>;
   if (request.type !== 'analyze' || !Number.isSafeInteger(request.id) || (request.id ?? -1) < 0) {
-    throw new Error('Invalid Beat This worker request envelope');
+    throw new Error('envelope request worker Beat This không hợp lệ');
   }
-  if (request.backend !== 'webgpu' && request.backend !== 'wasm') throw new Error('Invalid Beat This backend');
-  if (!(request.samples instanceof Float32Array)) throw new Error('Invalid Beat This audio samples');
+  if (request.backend !== 'webgpu' && request.backend !== 'wasm') throw new Error('backend Beat This không hợp lệ');
+  if (!(request.samples instanceof Float32Array)) throw new Error('mẫu âm thanh Beat This không hợp lệ');
   if (request.samples.length <= 512 || request.samples.length > MAX_SAMPLES) {
-    throw new Error(`Beat This audio length out of range (max ${MAX_SAMPLES / BEAT_THIS_SAMPLE_RATE}s)`);
+    throw new Error(`độ dài âm thanh Beat This nằm ngoài phạm vi (tối đa ${MAX_SAMPLES / BEAT_THIS_SAMPLE_RATE}s)`);
   }
   return request as AnalyzeRequest;
 }
@@ -65,16 +65,16 @@ async function fetchPinnedBinary(
   expectedBytes: number,
   onProgress: (progress: number) => void,
 ): Promise<ArrayBuffer> {
-  if (!url.startsWith('/api/hf-proxy/')) throw new Error('Beat This model URL must use the local HF proxy');
+  if (!url.startsWith('/api/hf-proxy/')) throw new Error('URL model Beat This phải dùng HF proxy cục bộ');
   const response = await fetch(url, { cache: 'no-store' });
-  if (!response.ok) throw new Error(`Unable to load ${url.split('/').pop()}: HTTP ${response.status}`);
+  if (!response.ok) throw new Error(`không thể tải ${url.split('/').pop()}: HTTP ${response.status}`);
   const declared = Number(response.headers.get('content-length'));
   if (Number.isFinite(declared) && declared > 0 && declared !== expectedBytes) {
-    throw new Error(`Unexpected ${url.split('/').pop()} size: ${declared}`);
+    throw new Error(`kích thước ${url.split('/').pop()} không đúng: ${declared}`);
   }
   if (!response.body) {
     const bytes = await response.arrayBuffer();
-    if (bytes.byteLength !== expectedBytes) throw new Error(`Unexpected ${url.split('/').pop()} size: ${bytes.byteLength}`);
+    if (bytes.byteLength !== expectedBytes) throw new Error(`kích thước ${url.split('/').pop()} không đúng: ${bytes.byteLength}`);
     onProgress(1);
     return bytes;
   }
@@ -84,12 +84,12 @@ async function fetchPinnedBinary(
   while (true) {
     const { done, value } = await reader.read();
     if (done) break;
-    if (offset + value.length > expectedBytes) throw new Error(`${url.split('/').pop()} exceeds expected size`);
+    if (offset + value.length > expectedBytes) throw new Error(`${url.split('/').pop()} vượt quá kích thước dự kiến`);
     output.set(value, offset);
     offset += value.length;
     onProgress(offset / expectedBytes);
   }
-  if (offset !== expectedBytes) throw new Error(`Unexpected ${url.split('/').pop()} size: ${offset}`);
+  if (offset !== expectedBytes) throw new Error(`kích thước ${url.split('/').pop()} không đúng: ${offset}`);
   return output.buffer;
 }
 
@@ -111,14 +111,14 @@ async function runWindow(session: ort.InferenceSession, window: BeatThisWindow):
     const result = await session.run({ spect: input });
     const beatTensor = result.beat;
     const downbeatTensor = result.downbeat;
-    if (!beatTensor || !downbeatTensor) throw new Error('Beat This model did not return beat/downbeat tensors');
+    if (!beatTensor || !downbeatTensor) throw new Error('model Beat This không trả về tensor beat/downbeat');
     try {
       const beatData = await beatTensor.getData();
       const downbeatData = await downbeatTensor.getData();
       const beat = Float32Array.from(beatData as Float32Array);
       const downbeat = Float32Array.from(downbeatData as Float32Array);
       if (beat.length !== window.frames || downbeat.length !== window.frames) {
-        throw new Error(`Beat This output shape mismatch: expected ${window.frames}`);
+        throw new Error(`hình dạng output Beat This không khớp: cần ${window.frames}`);
       }
       return { beat, downbeat };
     } finally {
@@ -136,7 +136,7 @@ function writeWindowLogits(
   prediction: BeatThisWindowLogits,
 ): void {
   if (prediction.beat.length !== window.frames || prediction.downbeat.length !== window.frames) {
-    throw new Error(`Beat This output shape mismatch for window at ${window.start}`);
+    throw new Error(`hình dạng output Beat This không khớp tại cửa sổ ${window.start}`);
   }
   for (let frame = BEAT_THIS_BORDER_FRAMES; frame < window.frames - BEAT_THIS_BORDER_FRAMES; frame += 1) {
     const target = window.start + frame;
@@ -158,7 +158,7 @@ async function analyze(request: AnalyzeRequest): Promise<void> {
     for (let index = starts.length - 1; index >= 0; index -= 1) {
       const completed = starts.length - index - 1;
       const window = preprocessBeatThisWindow(request.samples, filterbank, starts[index]!);
-      if (window.frames > BEAT_THIS_CHUNK_FRAMES) throw new Error('Beat This chunk exceeds model limit');
+      if (window.frames > BEAT_THIS_CHUNK_FRAMES) throw new Error('chunk Beat This vượt giới hạn model');
       report(request.id, 0.4 + (completed * 0.59 + 0.25) / starts.length);
       writeWindowLogits(logits, window, await runWindow(session, window));
       report(request.id, 0.4 + ((completed + 1) / starts.length) * 0.59);
@@ -177,8 +177,8 @@ scope.onmessage = (event: MessageEvent<unknown>) => {
   let request: AnalyzeRequest;
   try {
     request = validateRequest(event.data);
-    if (started) throw new Error('Beat This worker accepts exactly one analysis job');
-    if (lockedBackend && lockedBackend !== request.backend) throw new Error('Beat This worker backend cannot change');
+    if (started) throw new Error('worker Beat This chỉ nhận đúng một tác vụ phân tích');
+    if (lockedBackend && lockedBackend !== request.backend) throw new Error('backend worker Beat This không thể thay đổi');
     started = true;
     lockedBackend = request.backend;
   } catch (error) {

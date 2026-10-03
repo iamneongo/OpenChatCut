@@ -70,19 +70,19 @@ export function classifyClapEmbedding(
 
 export function parseClapPrototypeProfile(value: unknown): ClapPrototypeProfile {
   if (!value || typeof value !== 'object' || !('labels' in value) || !Array.isArray(value.labels)) {
-    throw new Error('CLAP prototype profile must contain a labels array');
+    throw new Error('profile prototype CLAP phải chứa mảng labels');
   }
   const labels = value.labels.map((entry, index) => parsePrototype(entry, index));
-  if (labels.length === 0) throw new Error('CLAP prototype profile has no labels');
+  if (labels.length === 0) throw new Error('profile prototype CLAP không có label');
   const seen = new Set<string>();
   for (const label of labels) {
     const key = `${label.kind}:${label.label}`;
-    if (seen.has(key)) throw new Error(`CLAP prototype profile contains duplicate label ${key}`);
+    if (seen.has(key)) throw new Error(`profile prototype CLAP chứa label trùng ${key}`);
     seen.add(key);
   }
   for (const kind of TAG_KINDS) {
     if (!labels.some((label) => label.kind === kind)) {
-      throw new Error(`CLAP prototype profile has no ${kind} labels`);
+      throw new Error(`profile prototype CLAP không có label ${kind}`);
     }
   }
   return { labels };
@@ -94,17 +94,17 @@ function isMusicTagKind(value: unknown): value is MusicTagKind {
 
 function parsePrototype(value: unknown, index: number): ClapPrototypeLabel {
   if (!value || typeof value !== 'object') {
-    throw new Error(`CLAP prototype label ${index} is invalid`);
+    throw new Error(`label prototype CLAP tại ${index} không hợp lệ`);
   }
   const entry = value as Record<string, unknown>;
   if (!isMusicTagKind(entry.kind)) {
-    throw new Error(`CLAP prototype label ${index} has an invalid kind`);
+    throw new Error(`label prototype CLAP tại ${index} có kind không hợp lệ`);
   }
   if (typeof entry.label !== 'string' || entry.label.trim() !== entry.label || entry.label.length === 0) {
-    throw new Error(`CLAP prototype label ${index} has an invalid label`);
+    throw new Error(`label prototype CLAP tại ${index} có nội dung không hợp lệ`);
   }
   if (!Array.isArray(entry.vector)) {
-    throw new Error(`CLAP prototype ${entry.label} has no vector`);
+    throw new Error(`prototype CLAP ${entry.label} không có vector`);
   }
   const vector = normalizeEmbedding(entry.vector, `CLAP prototype ${entry.label}`, false);
   return { kind: entry.kind, label: entry.label, vector };
@@ -116,20 +116,20 @@ function normalizeEmbedding(
   normalize = true,
 ): number[] {
   if (values.length !== CLAP_EMBEDDING_DIMENSION) {
-    throw new Error(`${name} has ${values.length} dimensions; expected ${CLAP_EMBEDDING_DIMENSION}`);
+    throw new Error(`${name} có ${values.length} chiều; cần ${CLAP_EMBEDDING_DIMENSION}`);
   }
   let squaredLength = 0;
   const vector = values.map((value) => {
     if (typeof value !== 'number' || !Number.isFinite(value)) {
-      throw new Error(`${name} contains a non-finite value`);
+      throw new Error(`${name} chứa giá trị không hữu hạn`);
     }
     squaredLength += value * value;
     return value;
   });
   const length = Math.sqrt(squaredLength);
-  if (!Number.isFinite(length) || length <= Number.EPSILON) throw new Error(`${name} has zero length`);
+  if (!Number.isFinite(length) || length <= Number.EPSILON) throw new Error(`${name} có độ dài bằng 0`);
   if (!normalize && Math.abs(length - 1) > UNIT_TOLERANCE) {
-    throw new Error(`${name} is not unit-normalized`);
+    throw new Error(`${name} chưa được chuẩn hóa đơn vị`);
   }
   return normalize ? vector.map((value) => value / length) : vector;
 }
@@ -141,7 +141,7 @@ function validatedThresholds(
   for (const kind of TAG_KINDS) {
     const threshold = thresholds[kind];
     if (!Number.isFinite(threshold) || threshold < -1 || threshold > 1) {
-      throw new Error(`CLAP ${kind} threshold must be between -1 and 1`);
+      throw new Error(`threshold CLAP ${kind} phải từ -1 đến 1`);
     }
   }
   return thresholds;
