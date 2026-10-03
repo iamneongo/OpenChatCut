@@ -2,6 +2,7 @@ import type { AgentContext } from './context';
 import { buildOperation, buildProposal, type Operation, type Proposal } from './proposal';
 import { makeDraft, type DraftEngine } from '../editor/store';
 import type { ProjectDoc } from '../editor/types';
+import { localizedCatalogText } from '../i18n/locale';
 
 export type ExternalEditSessionTerminalStatus =
   | 'applied'
@@ -77,9 +78,9 @@ export function revisionOf(doc: ProjectDoc): string {
 }
 
 function normalizedClientName(value: unknown): string {
-  if (typeof value !== 'string') return 'External Agent';
+  if (typeof value !== 'string') return localizedCatalogText('External Agent', '外部 Agent', undefined, 'Tác nhân AI bên ngoài');
   const name = value.trim().slice(0, 40);
-  return name || 'External Agent';
+  return name || localizedCatalogText('External Agent', '外部 Agent', undefined, 'Tác nhân AI bên ngoài');
 }
 
 function normalizedApprovalMode(value: unknown): ExternalApprovalMode {

@@ -119,7 +119,8 @@ export function isBrowserFileHandle(value: unknown): value is BrowserExportFileH
 }
 
 export function safeDirectoryLabel(name: string): string {
-  return replaceControlCharacters(name).slice(0, 500) || 'Selected folder';
+  return replaceControlCharacters(name).slice(0, 500)
+    || localizedCatalogText('Selected folder', '已选择的文件夹', undefined, 'Thư mục đã chọn');
 }
 
 function validDestinationLabel(value: unknown): value is string {
@@ -185,3 +186,4 @@ export function checkedFilename(name: unknown): string {
   if (typeof name !== 'string' || !validFilename(name)) throw new ExportDestinationError('导出文件名无效');
   return name;
 }
+import { localizedCatalogText } from '../i18n/locale';
