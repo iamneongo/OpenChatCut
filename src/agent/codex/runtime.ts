@@ -336,7 +336,7 @@ function projectIdForRun(
 ): string | null {
   const projectId = ctx.getProjectId?.().trim() ?? '';
   if (askOnly || projectId) return projectId;
-  onEvent({ type: 'error', message: 'Agent edits require a persisted project id.' });
+    onEvent({ type: 'error', message: 'Chỉnh sửa bằng Agent yêu cầu project id đã được lưu.' });
   return null;
 }
 

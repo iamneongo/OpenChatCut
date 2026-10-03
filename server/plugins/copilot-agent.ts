@@ -276,7 +276,7 @@ async function streamTurn(req: IncomingMessage, res: ServerResponse, body: Recor
   try {
     await runCopilotTurn(request, emit, controller.signal);
   } catch {
-    emit({ type: 'error', message: 'Copilot could not run this turn.' });
+    emit({ type: 'error', message: 'Copilot không thể chạy lượt này.' });
   } finally {
     finished = true;
     req.off('aborted', disconnect);

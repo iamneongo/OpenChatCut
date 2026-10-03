@@ -262,7 +262,7 @@ export function assessExportQuality(
   const add = (issue: ExportQaIssue) => issues.push(issue);
 
   if (!analysis.hasVideo) {
-    add({ code: 'missing_video', severity: 'error', message: 'The exported file has no video stream.' });
+    add({ code: 'missing_video', severity: 'error', message: 'Tệp đã xuất không có luồng video.' });
   }
 
   const durationTolerance = Math.max(0.25, 2 / Math.max(1, expected.fps));
@@ -271,7 +271,7 @@ export function assessExportQuality(
     add({
       code: 'duration_mismatch',
       severity: 'error',
-      message: `Export duration differs by ${durationDelta.toFixed(2)}s (expected ${expected.durationSeconds.toFixed(2)}s, got ${analysis.durationSeconds.toFixed(2)}s).`,
+      message: `Thời lượng tệp xuất lệch ${durationDelta.toFixed(2)} giây (dự kiến ${expected.durationSeconds.toFixed(2)} giây, thực tế ${analysis.durationSeconds.toFixed(2)} giây).`,
     });
   }
 
@@ -279,7 +279,7 @@ export function assessExportQuality(
     add({
       code: 'resolution_mismatch',
       severity: 'error',
-      message: `Export resolution is ${analysis.width}×${analysis.height}; expected ${expected.width}×${expected.height}.`,
+      message: `Độ phân giải tệp xuất là ${analysis.width}×${analysis.height}; dự kiến ${expected.width}×${expected.height}.`,
     });
   }
 
@@ -287,12 +287,12 @@ export function assessExportQuality(
     add({
       code: 'fps_mismatch',
       severity: 'warning',
-      message: `Export frame rate is ${analysis.fps.toFixed(2)} fps; expected ${expected.fps.toFixed(2)} fps.`,
+      message: `Tốc độ khung hình tệp xuất là ${analysis.fps.toFixed(2)} fps; dự kiến ${expected.fps.toFixed(2)} fps.`,
     });
   }
 
   if (expected.expectsAudio && !analysis.hasAudio) {
-    add({ code: 'missing_audio', severity: 'error', message: 'The timeline contains audible media but the export has no audio stream.' });
+    add({ code: 'missing_audio', severity: 'error', message: 'Timeline có media phát được âm thanh nhưng tệp xuất không có luồng âm thanh.' });
   }
 
   for (const black of analysis.blackFrames.filter((value) => value.durationSeconds >= 0.2)) {
@@ -301,7 +301,7 @@ export function assessExportQuality(
       add({
         code: 'black_frames',
         severity: black.durationSeconds >= 1 ? 'error' : 'warning',
-        message: `Black frames detected for ${black.durationSeconds.toFixed(2)}s.`,
+        message: `Phát hiện khung hình đen kéo dài ${black.durationSeconds.toFixed(2)} giây.`,
         startSeconds: black.startSeconds,
         endSeconds: black.endSeconds,
       });
@@ -312,7 +312,7 @@ export function assessExportQuality(
     add({
       code: 'frozen_frames',
       severity: frozen.durationSeconds >= 3 ? 'error' : 'warning',
-      message: `A still/frozen span lasts ${frozen.durationSeconds.toFixed(2)}s; verify that it is intentional.`,
+      message: `Một đoạn ảnh tĩnh/đứng hình kéo dài ${frozen.durationSeconds.toFixed(2)} giây; hãy kiểm tra xem đây có phải chủ ý không.`,
       startSeconds: frozen.startSeconds,
       endSeconds: frozen.endSeconds,
     });
@@ -325,7 +325,7 @@ export function assessExportQuality(
         add({
           code: 'long_silence',
           severity: 'warning',
-          message: `Audio is silent for ${silent.durationSeconds.toFixed(2)}s; verify that the gap is intentional.`,
+          message: `Âm thanh im lặng trong ${silent.durationSeconds.toFixed(2)} giây; hãy kiểm tra xem khoảng trống này có phải chủ ý không.`,
           startSeconds: silent.startSeconds,
           endSeconds: silent.endSeconds,
         });
@@ -337,7 +337,7 @@ export function assessExportQuality(
     add({
       code: 'audio_peak',
       severity: 'warning',
-      message: `Audio peaks at ${analysis.maxVolumeDb.toFixed(1)} dBFS and may clip after platform transcoding.`,
+      message: `Âm thanh đạt đỉnh ${analysis.maxVolumeDb.toFixed(1)} dBFS và có thể bị clipping sau khi nền tảng chuyển mã.`,
     });
   }
 

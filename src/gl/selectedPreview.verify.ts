@@ -104,8 +104,8 @@ assert.deepEqual(staticEffectPreviewStatus({
   phase: 'fallback',
   fallbackReason: 'unsupported-media',
 }, 'unsupported media takes precedence over a missing shader');
-assert.equal(glPreviewFailureReason(new Error('WebGL2 not available')), 'webgl-unavailable');
-assert.equal(glPreviewFailureReason(new Error('WebGL context lost')), 'webgl-unavailable');
+assert.equal(glPreviewFailureReason(new Error('WebGL2 không khả dụng')), 'webgl-unavailable');
+assert.equal(glPreviewFailureReason(new Error('Đã mất context WebGL')), 'webgl-unavailable');
 assert.equal(glPreviewFailureReason(new Error('fragment shader compile failed')), 'shader-error');
 
 assert.equal(transitionProgress(0, 1), 1, 'a one-frame transition is the incoming endpoint');

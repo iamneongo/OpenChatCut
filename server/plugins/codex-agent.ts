@@ -387,7 +387,7 @@ async function streamTurn(req: IncomingMessage, res: ServerResponse, body: Recor
   try {
     await codexTurnManager.run(client, request, emit, controller.signal);
   } catch {
-    emit({ type: 'error', message: 'Codex could not run this turn.' });
+    emit({ type: 'error', message: 'Codex không thể chạy lượt này.' });
   } finally {
     finished = true;
     req.off('aborted', disconnect);

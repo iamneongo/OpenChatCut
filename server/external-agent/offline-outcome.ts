@@ -14,7 +14,7 @@ export async function captureCheckpointedToolOutcome(
     return {
       status: 'checkpointed',
       operationId: invocation.operationId,
-      warning: 'The action is durably checkpointed. Its result archive failed; do not retry this operation.',
+      warning: 'Thao tác đã được ghi checkpoint bền vững. Lưu trữ kết quả thất bại; không chạy lại thao tác này.',
     };
   }
 }

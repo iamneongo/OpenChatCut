@@ -79,7 +79,7 @@ export class SemanticClient {
   }
 
   private getWorker(): Worker {
-    if (this.disposed) throw new Error('Semantic client is disposed');
+    if (this.disposed) throw new Error('Semantic client đã được giải phóng');
     if (this.worker) return this.worker;
     const worker = this.createWorker();
     worker.onmessage = (event: MessageEvent<unknown>) => {

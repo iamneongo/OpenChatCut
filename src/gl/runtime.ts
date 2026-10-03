@@ -82,7 +82,7 @@ export function createGlRuntime(canvas: HTMLCanvasElement): GlRuntime {
   // preserveDrawingBuffer: thumb previews copy via drawImage right after draw;
   // without it some GPUs present+clear before the 2D readback lands.
   const gl = canvas.getContext('webgl2', { premultipliedAlpha: false, alpha: true, preserveDrawingBuffer: true });
-  if (!gl) throw new Error('WebGL2 not available');
+  if (!gl) throw new Error('WebGL2 không khả dụng');
   const colorManagedGl = gl as WebGL2RenderingContext & {
     drawingBufferColorSpace?: PredefinedColorSpace;
     unpackColorSpace?: PredefinedColorSpace;
@@ -321,7 +321,7 @@ export function createGlRuntime(canvas: HTMLCanvasElement): GlRuntime {
   let disposed = false;
   activeGlRuntimes += 1;
   const assertContextAvailable = () => {
-    if (disposed || gl.isContextLost()) throw new Error('WebGL context lost');
+    if (disposed || gl.isContextLost()) throw new Error('Đã mất context WebGL');
   };
 
   return {

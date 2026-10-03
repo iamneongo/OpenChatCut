@@ -237,7 +237,7 @@ export function execChangeCam(args: Args, ctx: Pick<AgentContext, 'getState' | '
       decision: plan.group.decisions?.find((decision) =>
         decision.angleId === angle.id && decision.fromFrame <= fromFrame && decision.toFrame >= toFrame),
       syncEvidence: plan.group.evidence.filter((evidence) => evidence.angleId === angle.id),
-      message: `switched persistent multicam angle "${angle.label}" for ${sec(fromFrame)}s–${sec(toFrame)}s`,
+      message: `Đã chuyển góc multicam bền vững sang "${angle.label}" trong khoảng ${sec(fromFrame)}–${sec(toFrame)} giây`,
     };
   }
   if (rawIds.length < 2) return { error: 'itemIds cần ít nhất 2 clip góc máy (mục tiêu + các góc khác)' };

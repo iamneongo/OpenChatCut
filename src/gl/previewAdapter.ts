@@ -116,7 +116,7 @@ export function staticEffectPreviewStatus(input: {
 
 export function glPreviewFailureReason(error: unknown): SelectedPreviewFallbackReason {
   const message = error instanceof Error ? error.message : String(error);
-  return /webgl2?\s+(?:is\s+)?not available|webgl.*(?:unavailable|context lost)/i.test(message)
+  return /webgl2?\s+(?:is\s+)?not available|webgl.*(?:unavailable|context lost)|webgl2?\s+không\s+khả\s+dụng|mất\s+context\s+webgl/i.test(message)
     ? 'webgl-unavailable'
     : 'shader-error';
 }

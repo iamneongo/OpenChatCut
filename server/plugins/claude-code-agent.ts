@@ -242,7 +242,7 @@ async function streamTurn(req: IncomingMessage, res: ServerResponse, body: Recor
   try {
     await runClaudeCodeTurn(installation.path, request, mcpUrl, externalMcpToken(), emit, controller.signal);
   } catch {
-    emit({ type: 'error', message: 'Claude Code could not run this turn.' });
+    emit({ type: 'error', message: 'Claude Code không thể chạy lượt này.' });
     emit({ type: 'done' });
   } finally {
     finished = true;
