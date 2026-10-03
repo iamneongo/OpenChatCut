@@ -41,7 +41,7 @@ const [committedFile] = committedStart.files;
 assert.ok(committedFile);
 await assert.rejects(
   committedSession.acknowledge(committedFile.importId, 'accepted'),
-  /publication is not reserved/,
+  /publication nhập thư mục chưa được giữ chỗ/,
   'ownership cannot finalize before the renderer reserves the publication',
 );
 await committedSession.acknowledge(committedFile.importId, 'reserved');
@@ -106,7 +106,7 @@ assert.ok(failedCommitFile);
 const failedCommitStop = failedCommitSession.stop();
 await assert.rejects(
   failedCommitSession.acknowledge(failedCommitFile.importId, 'reserved'),
-  /directory watch is stopped/,
+  /theo dõi thư mục đã dừng/,
   'an acknowledgement that loses ownership before commit must fail',
 );
 await failedCommitStop;
@@ -390,7 +390,7 @@ assert.equal(watcherFailures.length, 1, 'native watcher errors must be reported 
 assert.equal(watcherError.events.length, 0, 'a failed native watcher must not continue publishing files');
 await assert.rejects(
   watcherErrorSession.activate(),
-  /directory watch is not ready|unknown error, watch/i,
+  /theo dõi thư mục chưa sẵn sàng|unknown error, watch/i,
   'a native watcher failure must retire the session',
 );
 

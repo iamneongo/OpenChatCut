@@ -100,7 +100,7 @@ export class DirectoryWatchController {
     await watch.session.activate();
     if (!this.isCurrent(owner, watch.projectId, watch.generation)
       || this.watches.get(watchId)?.session !== watch.session) {
-      throw new Error('directory watch grant is unavailable');
+      throw new Error('quyền theo dõi thư mục không khả dụng');
     }
   }
 
@@ -200,7 +200,7 @@ export class DirectoryWatchController {
   private acknowledgementWatch(owner: DirectoryWatchSender, watchId: string): OwnedWatch {
     const watch = this.watches.get(watchId) ?? this.retiredWatches.get(watchId);
     if (!watch || watch.owner !== owner || owner.isDestroyed()) {
-      throw new Error('directory watch grant is unavailable');
+      throw new Error('quyền theo dõi thư mục không khả dụng');
     }
     return watch;
   }
@@ -209,7 +209,7 @@ export class DirectoryWatchController {
     const watch = this.watches.get(watchId);
     if (!watch || watch.owner !== owner || owner.isDestroyed()
       || !this.isCurrent(owner, watch.projectId, watch.generation)) {
-      throw new Error('directory watch grant is unavailable');
+      throw new Error('quyền theo dõi thư mục không khả dụng');
     }
     return watch;
   }

@@ -134,12 +134,12 @@ assert.equal(ownerB.sent.length, 0, 'events must only reach the initiating WebCo
 assert.equal(sessions[0].options.onImported({ ...eventA, projectId: 'project-b' }), false);
 assert.equal(ownerA.sent.length, 1, 'project-mismatched events must be suppressed');
 
-await assert.rejects(controller.activate(ownerB, 'watch-1'), /grant is unavailable/);
+await assert.rejects(controller.activate(ownerB, 'watch-1'), /quyền theo dõi thư mục không khả dụng/);
 await assert.rejects(
   controller.acknowledge(ownerB, 'watch-1', 'import-a', 'reserved'),
-  /grant is unavailable/,
+  /quyền theo dõi thư mục không khả dụng/,
 );
-await assert.rejects(controller.stop(ownerB, 'watch-1'), /grant is unavailable/);
+await assert.rejects(controller.stop(ownerB, 'watch-1'), /quyền theo dõi thư mục không khả dụng/);
 await controller.activate(ownerA, 'watch-1');
 await controller.acknowledge(ownerA, 'watch-1', 'import-a', 'reserved');
 await controller.stop(ownerA, 'watch-1');

@@ -285,7 +285,7 @@ export async function probeDirectoryMedia(
   };
   const streamType = kind === 'audio' ? 'audio' : 'video';
   const stream = output.streams?.find((candidate) => candidate.codec_type === streamType);
-  if (!stream) throw new Error(`ffprobe found no ${streamType} stream`);
+  if (!stream) throw new Error(`ffprobe không tìm thấy stream ${streamType}`);
   const duration = Number(output.format?.duration ?? stream.duration);
   const codedWidth = Number(stream.width);
   const codedHeight = Number(stream.height);
@@ -331,7 +331,7 @@ async function resolveDirectoryPublication(
   imported: LocalMediaImport,
 ): Promise<ResolvedDirectoryPublication> {
   const storedPath = dependencies.resolveUpload(imported.storedName);
-  if (!storedPath) throw new Error('referenced directory media is offline');
+  if (!storedPath) throw new Error('media thư mục được tham chiếu đang offline');
   if (kind !== 'video') {
     const probe = await checked(
       dependencies.probeMedia(storedPath, kind, request.signal), request.cancelled,
@@ -356,7 +356,7 @@ async function resolveDirectoryPublication(
   await assertPinnedDestination(request.pinnedUploadDirectory, dependencies, request.cancelled);
   const finalPath = await checked(dependencies.realpath(normalized.outputPath), request.cancelled);
   if (normalized.normalized && !isPathInside(request.pinnedUploadDirectory, finalPath)) {
-    throw new Error('normalized directory media escaped the pinned destination');
+    throw new Error('media thư mục sau chuẩn hóa đã thoát khỏi đích được ghim');
   }
   return {
     src: normalized.path,
@@ -383,7 +383,7 @@ async function completeCopiedCandidate(
   await assertPinnedDestination(request.pinnedUploadDirectory, dependencies, request.cancelled);
   const normalizedHash = normalizeSha256Hash(imported.contentHash);
   if (imported.contentHash !== '' && !normalizedHash) {
-    throw new Error('directory import returned an invalid content hash');
+    throw new Error('nhập thư mục trả về content hash không hợp lệ');
   }
   const hash = normalizedHash ?? '';
   if (hash && request.knownHashes.has(hash)) {

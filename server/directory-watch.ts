@@ -142,7 +142,7 @@ export class DirectoryWatchSession {
   }
 
   async start(): Promise<DirectoryWatchStartResult> {
-    if (this.phase !== 'created') throw new Error('directory watch was already started');
+    if (this.phase !== 'created') throw new Error('theo dõi thư mục đã được khởi động');
     this.phase = 'starting';
     try {
       this.watcher = this.dependencies.watch(this.options.root, () => this.markDirty());
@@ -169,7 +169,7 @@ export class DirectoryWatchSession {
       this.assertReady();
       return;
     }
-    if (this.phase !== 'inactive') throw new Error('directory watch is not ready for activation');
+    if (this.phase !== 'inactive') throw new Error('theo dõi thư mục chưa sẵn sàng để kích hoạt');
     this.phase = 'active';
     try {
       await this.requestScan();
@@ -183,23 +183,23 @@ export class DirectoryWatchSession {
 
   async acknowledge(importId: string, disposition: DirectoryImportDisposition): Promise<void> {
     const publication = this.publications.get(importId);
-    if (!publication) throw new Error('directory import grant is unavailable');
+    if (!publication) throw new Error('quyền nhập thư mục không khả dụng');
     if (disposition === 'reserved') {
-      if (publication.state === 'rejected') throw new Error('directory import grant is unavailable');
+      if (publication.state === 'rejected') throw new Error('quyền nhập thư mục không khả dụng');
       if (publication.state === 'uncommitted') {
-        if (this.cancelled()) throw new Error('directory watch is stopped');
+        if (this.cancelled()) throw new Error('theo dõi thư mục đã dừng');
         this.publications.set(importId, { ...publication, state: 'reserved' });
       }
       return;
     }
     if (disposition === 'accepted') {
-      if (publication.state === 'rejected') throw new Error('directory import grant is unavailable');
-      if (publication.state === 'uncommitted') throw new Error('directory import publication is not reserved');
+      if (publication.state === 'rejected') throw new Error('quyền nhập thư mục không khả dụng');
+      if (publication.state === 'uncommitted') throw new Error('publication nhập thư mục chưa được giữ chỗ');
       if (publication.state === 'reserved') this.publications.set(importId, { ...publication, state: 'committed' });
       return;
     }
     if (publication.state === 'rejected') return;
-    if (publication.state === 'committed') throw new Error('directory import publication is already committed');
+    if (publication.state === 'committed') throw new Error('publication nhập thư mục đã được commit');
     await this.dependencies.removeFiles(publication.paths);
     if (this.publications.get(importId) === publication) this.publications.set(importId, { ...publication, state: 'rejected' });
   }

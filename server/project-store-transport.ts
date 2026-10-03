@@ -25,7 +25,7 @@ import {
 export async function executeProjectStoreRequest(
   value: unknown,
 ): Promise<ProjectStoreResponse> {
-  if (!isProjectStoreRequest(value)) throw new Error('invalid project store request');
+  if (!isProjectStoreRequest(value)) throw new Error('request kho project không hợp lệ');
   const request: ProjectStoreRequest = value;
   switch (request.operation) {
     case 'snapshot':
@@ -52,7 +52,7 @@ export async function executeProjectStoreRequest(
       return rotateAgentSession(request.projectId);
     case 'set':
       if (/^project:[a-zA-Z0-9_-]{1,160}$/.test(request.key)) {
-        throw new Error('project document writes require authoritative ownership CAS');
+        throw new Error('ghi tài liệu project yêu cầu CAS quyền sở hữu chính tắc');
       }
       await setStoredEntry(request.key, request.value);
       return { ok: true };
