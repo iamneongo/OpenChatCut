@@ -75,7 +75,7 @@ assert.equal(shouldCoerceEffectUpdateToClip(
   );
   assert.match(String(msg ?? ''), /type:"audio"/);
   assert.match(String(msg ?? ''), /volume/);
-  assert.match(String(msg ?? ''), /generic update/i);
+  assert.match(String(msg ?? ''), /cập nhật generic/i);
 }
 
 // ── Coerced payload shape: effect-style rows must arrive at the generic
