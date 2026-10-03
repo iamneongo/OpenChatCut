@@ -180,13 +180,13 @@ function findInAsset(assetQ: string, opts: FindOpts, ctx: AgentContext): unknown
   const assets = ctx.getDoc().assets ?? state.assets ?? [];
   const exact = assets.filter((a) => a.id === assetQ);
   const cands = exact.length ? exact : assets.filter((a) => a.id.startsWith(assetQ));
-  if (!cands.length) return { error: `Không có asset nào khớp với "${assetQ}" — hãy truyền asset id hoặc tiền tố lấy từ kho tư liệu` };
-  if (cands.length > 1) return { error: `Tiền tố asset "${assetQ}" không đủ rõ ràng (${cands.map((a) => a.id.slice(0, 12)).join(', ')})` };
+  if (!cands.length) return { error: `Không có tư liệu nào khớp với "${assetQ}" — hãy truyền mã tư liệu hoặc tiền tố lấy từ kho tư liệu` };
+  if (cands.length > 1) return { error: `Tiền tố tư liệu "${assetQ}" không đủ rõ ràng (${cands.map((a) => a.id.slice(0, 12)).join(', ')})` };
   const asset = cands[0]!;
   if (asset.transcriptStale) {
-    return { error: `Transcript của asset "${asset.name}" đã cũ sau khi thay nguồn; hãy chép lời lại` };
+    return { error: `Bản chép lời của tư liệu "${asset.name}" đã cũ sau khi thay nguồn; hãy chép lời lại` };
   }
-  if (!hasOperationalTranscript(asset)) return { error: `Asset "${asset.name}" chưa có transcript` };
+  if (!hasOperationalTranscript(asset)) return { error: `Tư liệu "${asset.name}" chưa có bản chép lời` };
 
   const view = searchView(asset.transcript); // RAW:asset mode ignores clipping
   const found = (opts.fuzzy ? fuzzyMatches : contiguousMatches)(view, opts.query, opts.limit);

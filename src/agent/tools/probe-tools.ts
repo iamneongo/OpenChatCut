@@ -24,9 +24,9 @@ function resolveSource(ctx: AgentContext, raw: string): ResolvedSource {
   const assets: MediaAsset[] = ctx.getDoc().assets ?? ctx.getState().assets ?? [];
   const exact = assets.find((a) => a.id === s);
   const hits = exact ? [exact] : assets.filter((a) => a.id.startsWith(s));
-  if (hits.length !== 1) return { error: `không có asset / path / url duy nhất cho "${s}"` };
+  if (hits.length !== 1) return { error: `không có tư liệu / đường dẫn / URL duy nhất cho "${s}"` };
   const src = hits[0]!.src;
-  if (!src) return { error: `asset ${hits[0]!.id} không có media file (ví dụ motion-graphic chưa có video kết xuất)` };
+  if (!src) return { error: `tư liệu ${hits[0]!.id} không có tệp media (ví dụ motion graphic chưa có video kết xuất)` };
   return { url: src };
 }
 

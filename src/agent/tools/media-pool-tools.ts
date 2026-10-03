@@ -94,9 +94,9 @@ export async function execMediaPoolTool(name: string, args: Args, ctx: AgentCont
     }
     case 'move_assets': {
       const refs = parseAssetRefs(args);
-      if (!refs.length) return { error: 'Cần có assetIds' };
+      if (!refs.length) return { error: 'Cần có mã tư liệu (assetIds)' };
       const { found, missing } = resolveAssets(doc, refs);
-      if (missing.length) return { error: `Không tìm thấy asset: ${missing.join(', ')}` };
+      if (missing.length) return { error: `Không tìm thấy tư liệu: ${missing.join(', ')}` };
       const target = findFolder(doc, args.targetPath);
       if (target === null) return { error: `Không tìm thấy thư mục đích: ${args.targetPath}` };
       const ids = found.map((asset) => asset.id);
@@ -108,16 +108,16 @@ export async function execMediaPoolTool(name: string, args: Args, ctx: AgentCont
       const newName = String(args.newName ?? '').trim();
       if (refs.length !== 1 || !newName) return { error: 'rename_asset cần đúng một assetIds và newName' };
       const asset = findAsset(doc, refs[0]!);
-      if (!asset) return { error: `Không tìm thấy asset: ${refs[0]}` };
+      if (!asset) return { error: `Không tìm thấy tư liệu: ${refs[0]}` };
       ctx.commands.renameMediaAsset(asset.id, newName);
       return { ok: true, assetId: asset.id, name: newName };
     }
     case 'favorite_assets':
     case 'unfavorite_assets': {
       const refs = parseAssetRefs(args);
-      if (!refs.length) return { error: 'Cần có assetIds' };
+      if (!refs.length) return { error: 'Cần có mã tư liệu (assetIds)' };
       const { found, missing } = resolveAssets(doc, refs);
-      if (missing.length) return { error: `Không tìm thấy asset: ${missing.join(', ')}` };
+      if (missing.length) return { error: `Không tìm thấy tư liệu: ${missing.join(', ')}` };
       const favorite = String(args.action) === 'favorite_assets';
       const ids = found.map((asset) => asset.id);
       if (ids.length === 1) ctx.commands.setMediaAssetFavorite(ids[0]!, favorite);
@@ -126,9 +126,9 @@ export async function execMediaPoolTool(name: string, args: Args, ctx: AgentCont
     }
     case 'delete_assets': {
       const refs = parseAssetRefs(args);
-      if (!refs.length) return { error: 'Cần có assetIds' };
+      if (!refs.length) return { error: 'Cần có mã tư liệu (assetIds)' };
       const { found, missing } = resolveAssets(doc, refs);
-      if (missing.length) return { error: `Không tìm thấy asset: ${missing.join(', ')}` };
+      if (missing.length) return { error: `Không tìm thấy tư liệu: ${missing.join(', ')}` };
       const items = ctx.getState().items;
       const referenced = found
         .map((asset) => ({ id: asset.id, name: asset.name, referencedBy: referencingClipCount(items, asset) }))
@@ -149,7 +149,7 @@ export async function execMediaPoolTool(name: string, args: Args, ctx: AgentCont
       const refs = parseAssetRefs(args);
       if (refs.length !== 1) return { error: 'relink_asset cần đúng một giá trị assetIds' };
       const asset = findAsset(doc, refs[0]!);
-      if (!asset) return { error: `Không tìm thấy asset: ${refs[0]}` };
+      if (!asset) return { error: `Không tìm thấy tư liệu: ${refs[0]}` };
       if (asset.kind === 'motion-graphic') {
         return { error: 'relink_asset dành cho media có tệp (video/audio/image); dùng edit_asset cho motion graphic' };
       }
@@ -205,7 +205,7 @@ export async function execMediaPoolTool(name: string, args: Args, ctx: AgentCont
         sourceRevision: next?.sourceRevision ?? sourceRevision,
         transcriptStale: next?.transcriptStale ?? false,
         clipsLinked: clipsBefore,
-        note: 'Asset gốc trong kho và các clip liên kết trên timeline giờ trỏ đến nguồn mới. Transcript hiện tại được giữ nhưng có thể bị đánh dấu cũ; hãy chép lời lại nếu nội dung media đã thay đổi.',
+        note: 'Tư liệu gốc trong kho và các clip liên kết trên dòng thời gian giờ trỏ đến nguồn mới. Bản chép lời hiện tại được giữ nhưng có thể bị đánh dấu cũ; hãy chép lời lại nếu nội dung media đã thay đổi.',
       };
     }
     default:

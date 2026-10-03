@@ -125,7 +125,7 @@ async function createSession(args: Args, ctx: AgentContext): Promise<unknown> {
     next: [
       'Upload một lần vào đúng slot uploadUrl trước khi hết hạn, với các header đã khai báo.',
       'Truyền receipt opaque và assetType được phản hồi vào finalize_uploaded_asset; audio/video/gif cũng cần durationInSeconds.',
-      'Asset chỉ có thể sử dụng sau khi finalize thành công; hãy gọi riêng transcribe_track nếu cần transcription.',
+      'Tư liệu chỉ có thể sử dụng sau khi hoàn tất thành công; hãy gọi riêng transcribe_track nếu cần chép lời.',
     ],
     note: 'Đã tạo session import với một slot đã xác minh, giới hạn theo filename, thời gian ngắn và chỉ dùng một lần.',
   };

@@ -23,12 +23,12 @@ function sourceFor(ctx: AgentContext, args: Args): { asset: MediaAsset | null; i
   if (item && item.kind !== 'video' && item.kind !== 'gif') return { error: `item ${item.id} là ${item.kind}; phát hiện cảnh cần video/gif` };
   const asset = prefixed(ctx.getDoc().assets, args.assetId)
     ?? (item?.src ? ctx.getDoc().assets.find((candidate) => candidate.src === item.src) ?? null : null);
-  if (args.assetId && !asset) return { error: `không tìm thấy media asset: ${String(args.assetId)}` };
-  if (asset && asset.kind !== 'video' && asset.kind !== 'gif') return { error: `asset ${asset.id} là ${asset.kind}; phát hiện cảnh cần video/gif` };
+  if (args.assetId && !asset) return { error: `không tìm thấy tư liệu media: ${String(args.assetId)}` };
+  if (asset && asset.kind !== 'video' && asset.kind !== 'gif') return { error: `tư liệu ${asset.id} là ${asset.kind}; phát hiện cảnh cần video/gif` };
   const src = item?.src ?? asset?.src ?? '';
   if (!src) return { error: 'itemId hoặc assetId là bắt buộc và phải trỏ tới video nguồn' };
   if (!src.startsWith('/media/uploads/')) {
-    return { error: 'phát hiện cảnh cần media cục bộ đã lưu dưới /media/uploads; hãy tải lên hoặc liên kết lại asset trước' };
+    return { error: 'phát hiện cảnh cần media cục bộ đã lưu dưới /media/uploads; hãy tải lên hoặc liên kết lại tư liệu trước' };
   }
   return { asset, item, src };
 }

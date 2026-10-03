@@ -261,7 +261,7 @@ function existingFinalizeResult(
     width: asset.width, height: asset.height,
     transcription: finalize.offersTranscription ? 'not_started' : undefined,
     next: finalize.offersTranscription
-      ? `No transcription was started. If transcription is desired, place asset ${asset.id} on an audio/video track and invoke transcribe_track for that track.`
+      ? `Chưa bắt đầu chép lời. Nếu cần chép lời, hãy đặt tư liệu ${asset.id} lên rãnh âm thanh/video rồi gọi transcribe_track cho rãnh đó.`
       : undefined,
     note: 'Đã thay thế tư liệu hiện có từ biên nhận nhập đã xác minh.',
   };
@@ -282,7 +282,7 @@ function newFinalizeResult(
     width: asset.width, height: asset.height,
     transcription: finalize.offersTranscription ? 'not_started' : undefined,
     next: finalize.offersTranscription
-      ? `No transcription was started. If transcription is desired, place asset ${asset.id} on an audio/video track and invoke transcribe_track for that track.`
+      ? `Chưa bắt đầu chép lời. Nếu cần chép lời, hãy đặt tư liệu ${asset.id} lên rãnh âm thanh/video rồi gọi transcribe_track cho rãnh đó.`
       : undefined,
     note: 'Đã đăng ký tư liệu vào kho media (hoàn tất cục bộ trong môi trường phát triển).',
   };
