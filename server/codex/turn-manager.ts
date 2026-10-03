@@ -300,14 +300,14 @@ export class CodexTurnManager {
       { timeoutMs: THREAD_START_TIMEOUT_MS, restartOnTimeout: true, signal },
     ));
     session.threadId = identifier(object(threadResponse?.thread)?.id);
-    if (!session.threadId) throw new Error('Codex did not return a thread id.');
+    if (!session.threadId) throw new Error('Codex không trả về thread ID.');
     const turnResponse = object(await session.client.request(
       'turn/start',
       turnStartParams(session.threadId, request),
       { timeoutMs: TURN_START_TIMEOUT_MS, restartOnTimeout: true, signal },
     ));
     session.turnId = identifier(object(turnResponse?.turn)?.id) ?? session.turnId;
-    if (!session.turnId) throw new Error('Codex did not return a turn id.');
+    if (!session.turnId) throw new Error('Codex không trả về turn ID.');
   }
 
   private notification(session: TurnSession, notification: CodexNotification): void {

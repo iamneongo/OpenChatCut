@@ -195,7 +195,7 @@ export class OfflineExternalEditRuntime {
   ): Promise<Record<string, unknown>> {
     const active = [...this.sessions.values()]
       .find(({ session }) => ACTIVE_SESSION_STATUSES[session.status] === true);
-    if (active) throw new Error(`Resolve or discard active edit session ${active.session.id} first.`);
+    if (active) throw new Error(`Trước hết hãy giải quyết hoặc loại bỏ phiên chỉnh sửa đang hoạt động ${active.session.id}.`);
     if (approvalMode !== 'auto') {
       throw new ExternalEditorCallError(
         'rejected',
@@ -285,7 +285,7 @@ export class OfflineExternalEditRuntime {
       throw new ExternalEditorCallError('rejected', `Open ${this.editorUrl} to review a manual edit session.`);
     }
     const draftDoc = session.draft?.getDoc();
-    if (!draftDoc) throw new Error(`Edit session ${session.id} is ${session.status}, not drafting.`);
+  if (!draftDoc) throw new Error(`Phiên chỉnh sửa ${session.id} đang ở trạng thái ${session.status}, không phải drafting.`);
     const run = this.requireRun(session.id);
     const reviewedState = this.publishSession(state, reviewExternalEditSession(session, summary));
     const proposalId = reviewedState.session.proposal?.id;
@@ -442,7 +442,7 @@ export class OfflineExternalEditRuntime {
   }
 
   private context(session: ExternalEditSession): AgentContext {
-    if (!session.draft) throw new Error(`Edit session ${session.id} is no longer writable.`);
+  if (!session.draft) throw new Error(`Phiên chỉnh sửa ${session.id} không còn cho phép ghi.`);
     return offlineAgentContext(session.draft, this.projectId, this.catalogs);
   }
 
@@ -456,7 +456,7 @@ export class OfflineExternalEditRuntime {
 
   private requireRun(sessionId: string): ExternalSessionRunLedger {
     const run = this.runs.get(sessionId);
-    if (!run) throw new Error(`Agent run for offline edit session ${sessionId} is unavailable.`);
+  if (!run) throw new Error(`Lượt chạy Agent của phiên chỉnh sửa ngoại tuyến ${sessionId} không khả dụng.`);
     return run;
   }
 
