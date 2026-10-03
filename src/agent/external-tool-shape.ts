@@ -18,19 +18,19 @@ export interface ExternalRegisteredTool extends AgentToolSchema {
 
 const SESSION_ID_PROPERTY = {
   type: 'string',
-  description: 'Session id returned by begin_edit_session. All editor tools run against this draft.',
+  description: 'ID phiên do begin_edit_session trả về. Mọi tool chỉnh sửa sẽ chạy trên bản nháp này.',
 };
 
 export const EXTERNAL_SESSION_TOOLS: readonly ExternalRegisteredTool[] = [
   {
     name: 'list_edit_sessions',
-    description: 'List edit sessions for the bound project, including recovery metadata for drafts whose MCP owner disconnected.',
+    description: 'Liệt kê các phiên chỉnh sửa của dự án đã liên kết, bao gồm metadata khôi phục cho các bản nháp bị chủ MCP ngắt kết nối.',
     input_schema: { type: 'object', properties: {} },
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false },
   },
   {
     name: 'recover_edit_session',
-    description: 'Resume or discard an orphaned edit session. Resume is allowed only when its checkpoint still matches the live project revision.',
+    description: 'Tiếp tục hoặc loại bỏ một phiên chỉnh sửa mồ côi. Chỉ được tiếp tục khi checkpoint vẫn khớp với revision hiện tại của dự án.',
     input_schema: {
       type: 'object',
       properties: {
@@ -43,15 +43,15 @@ export const EXTERNAL_SESSION_TOOLS: readonly ExternalRegisteredTool[] = [
   },
   {
     name: 'begin_edit_session',
-    description: 'Start an isolated OpenChatCut edit draft. Manual mode waits for proposal review; auto mode applies only the staged proposal at review_edit_session. Real-project tools always require separate confirmation.',
+    description: 'Bắt đầu một bản nháp chỉnh sửa OpenChatCut tách biệt. Chế độ manual chờ duyệt đề xuất; chế độ auto chỉ áp dụng đề xuất đã xếp tại review_edit_session. Tool tác động dự án thật luôn cần xác nhận riêng.',
     input_schema: {
       type: 'object',
       properties: {
-        clientName: { type: 'string', description: 'Display name shown on the review card, such as Codex or Claude.' },
+        clientName: { type: 'string', description: 'Tên hiển thị trên thẻ review, ví dụ Codex hoặc Claude.' },
         approvalMode: {
           type: 'string',
           enum: ['manual', 'auto'],
-          description: 'manual (default) requires proposal approval in OpenChatCut; auto applies the reviewed draft only and never bypasses real-tool confirmation.',
+          description: 'manual (mặc định) yêu cầu duyệt đề xuất trong OpenChatCut; auto chỉ áp dụng bản nháp đã review và không bao giờ bỏ qua xác nhận tool thật.',
         },
       },
     },
@@ -59,7 +59,7 @@ export const EXTERNAL_SESSION_TOOLS: readonly ExternalRegisteredTool[] = [
   },
   {
     name: 'get_edit_session',
-    description: 'Read session status: drafting/awaiting_review or terminal applied/rejected/cancelled/stale/failed.',
+    description: 'Đọc trạng thái phiên: drafting/awaiting_review hoặc trạng thái kết thúc applied/rejected/cancelled/stale/failed.',
     input_schema: {
       type: 'object',
       properties: { editSessionId: SESSION_ID_PROPERTY },
@@ -69,12 +69,12 @@ export const EXTERNAL_SESSION_TOOLS: readonly ExternalRegisteredTool[] = [
   },
   {
     name: 'review_edit_session',
-    description: 'Finish drafting. Manual sessions show a review card; auto sessions immediately apply all staged proposal edits. This does not approve real-project tools.',
+    description: 'Kết thúc việc soạn bản nháp. Phiên manual hiển thị thẻ review; phiên auto lập tức áp dụng mọi chỉnh sửa đề xuất đã xếp. Thao tác này không duyệt tool tác động dự án thật.',
     input_schema: {
       type: 'object',
       properties: {
         editSessionId: SESSION_ID_PROPERTY,
-        summary: { type: 'string', description: 'Short human-readable summary of the staged edit.' },
+        summary: { type: 'string', description: 'Tóm tắt ngắn, dễ đọc của chỉnh sửa đã xếp.' },
       },
       required: ['editSessionId'],
     },
@@ -82,7 +82,7 @@ export const EXTERNAL_SESSION_TOOLS: readonly ExternalRegisteredTool[] = [
   },
   {
     name: 'discard_edit_session',
-    description: 'Cancel a draft or pending review without changing the live OpenChatCut project.',
+    description: 'Hủy bản nháp hoặc lượt review đang chờ mà không thay đổi dự án OpenChatCut đang hoạt động.',
     input_schema: {
       type: 'object',
       properties: { editSessionId: SESSION_ID_PROPERTY },
