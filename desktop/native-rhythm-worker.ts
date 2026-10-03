@@ -140,7 +140,7 @@ async function ensureLoaded(requestId: string): Promise<LoadedRhythmModel> {
 
 function outputData(tensor: ort.Tensor, expected: number): Float32Array {
   if (!(tensor.data instanceof Float32Array) || tensor.data.length !== expected) {
-    throw new Error(`native rhythm output shape mismatch: expected ${expected}`);
+    throw new Error(`hình dạng output rhythm native không khớp: cần ${expected}`);
   }
   for (const value of tensor.data) {
     if (!Number.isFinite(value)) throw new Error('model rhythm native trả về logit không hữu hạn');

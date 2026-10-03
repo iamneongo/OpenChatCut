@@ -16,14 +16,14 @@ function content(result: ClientResult): Record<string, unknown> {
     typeof result.structuredContent !== 'object' ||
     Array.isArray(result.structuredContent)
   ) {
-    throw new Error('MCP tool returned no structured content');
+    throw new Error('tool MCP không trả về nội dung có cấu trúc');
   }
   return result.structuredContent as Record<string, unknown>;
 }
 
 function stringField(result: ClientResult, key: string): string {
   const value = content(result)[key];
-  if (typeof value !== 'string') throw new Error(`MCP field ${key} is not a string`);
+  if (typeof value !== 'string') throw new Error(`trường MCP ${key} không phải chuỗi`);
   return value;
 }
 
@@ -58,7 +58,7 @@ async function target(client: Client, projectId: string): Promise<void> {
     if (!message.includes('already has an active')) throw new Error(message);
     await new Promise((resolve) => setTimeout(resolve, 50));
   }
-  throw new Error('offline project ownership was not released after MCP transport close');
+  throw new Error('quyền sở hữu project ngoại tuyến chưa được giải phóng sau khi đóng transport MCP');
 }
 
 async function begin(client: Client): Promise<ClientResult> {

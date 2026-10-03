@@ -98,7 +98,7 @@ export async function ensureRemotionBinaries(options: RemotionBinariesOptions): 
     await mirrorDirectory(source, temporary, '');
   }
   await writeFile(join(temporary, READY_MARKER), 'ok');
-  if (!await ready(temporary, platform)) throw new Error('Remotion binaries are incomplete');
+  if (!await ready(temporary, platform)) throw new Error('bộ binary Remotion chưa đầy đủ');
   await rm(destination, { recursive: true, force: true });
   await rename(temporary, destination);
   await cleanupOldDirectories(options.userDataPath, basename(destination));

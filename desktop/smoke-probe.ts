@@ -43,19 +43,19 @@ export async function runDesktopSmokeProbe(
   const pickerType = await win.webContents.executeJavaScript(
     'typeof window.openChatCutDesktop?.selectDirectory',
   ) as unknown;
-  if (pickerType !== 'function') throw new Error('desktop directory picker preload is unavailable');
+  if (pickerType !== 'function') throw new Error('preload bộ chọn thư mục desktop không khả dụng');
   console.log('[smoke] desktop directory picker preload ok');
   const updaterType = await win.webContents.executeJavaScript(
     'typeof window.openChatCutDesktop?.updates?.check',
   ) as unknown;
-  if (updaterType !== 'function') throw new Error('desktop updater preload is unavailable');
+  if (updaterType !== 'function') throw new Error('preload trình cập nhật desktop không khả dụng');
   console.log('[smoke] desktop updater preload ok');
   // Editor bridge heartbeat (issue #86): the long poll is timer-driven, so
   // background throttling must be off or minimizing the window drops the
   // MCP bridge offline. Assert the RUNTIME value, not just the source flag.
   const throttlingDisabled = win.webContents.getBackgroundThrottling();
   if (throttlingDisabled !== false) {
-    throw new Error(`background throttling is enabled (${String(throttlingDisabled)}); the MCP bridge heartbeat will stall in background windows`);
+    throw new Error(`đang bật giới hạn nền (${String(throttlingDisabled)}); heartbeat cầu nối MCP sẽ đình trệ trong cửa sổ chạy nền`);
   }
   console.log('[smoke] background throttling disabled (bridge heartbeat safe)');
   const inference = await win.webContents.executeJavaScript(
@@ -81,7 +81,7 @@ export async function runDesktopSmokeProbe(
     || typeof inference.hardware?.cpu?.logicalCores !== 'number'
     || typeof inference.hardware?.cpu?.totalMemoryBytes !== 'number'
     || typeof inference.hardware?.hardwareAcceleration !== 'boolean') {
-    throw new Error('desktop native inference preload is unavailable');
+      throw new Error('preload suy luận native desktop không khả dụng');
   }
   console.log('[smoke] desktop native inference preload ok');
   if (render) {

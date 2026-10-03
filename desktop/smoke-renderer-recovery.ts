@@ -42,7 +42,7 @@ export async function runDesktopRendererRecoverySmoke(win: BrowserWindow): Promi
   };
   await win.webContents.executeJavaScript(`window.openChatCutDesktop.openTranscriptWindow(${JSON.stringify(payload)})`);
   const floating = BrowserWindow.getAllWindows().find((candidate) => candidate !== win);
-  if (!floating) throw new Error('floating transcript window was not created');
+  if (!floating) throw new Error('chưa tạo được cửa sổ transcript nổi');
   await waitForTranscript(floating, payload.entries[0]!.name);
   const latest = { ...payload, entries: [{ ...payload.entries[0]!, name: 'Transcript recovery latest' }] };
   await win.webContents.executeJavaScript(`window.openChatCutDesktop.openTranscriptWindow(${JSON.stringify(latest)})`);
