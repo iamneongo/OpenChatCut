@@ -74,7 +74,7 @@ export function execLayoutTool(name: string, args: Args, ctx: AgentContext): unk
   }));
   ctx.commands.batch(
     placed.map(({ itemId, transform }) => ({ type: 'setTransform' as const, id: itemId, patch: transform })),
-    `应用布局 ${layout}`,
+    `Áp dụng bố cục ${layout}`,
   );
 
   const notes: string[] = [];
@@ -86,7 +86,7 @@ export function execLayoutTool(name: string, args: Args, ctx: AgentContext): unk
   const overlapFrom = Math.max(...spans.map(([from]) => from));
   const overlapTo = Math.min(...spans.map(([, to]) => to));
   if (assignments.length > 1 && overlapFrom >= overlapTo) {
-    notes.push('assigned clips never overlap in time — they will not appear on screen together');
+    notes.push('Các đoạn đã gán không bao giờ chồng thời gian — chúng sẽ không cùng xuất hiện trên màn hình');
   }
   // pip stacking reminder: lines above the timeline are rendered on the upper layer, and inset must be higher than main.
   if (layout === 'pip') {

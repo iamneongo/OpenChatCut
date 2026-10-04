@@ -103,18 +103,18 @@ assert.match(bad.error ?? '', /slot không được nhận diện/, '未知槽�
 const dup = execLayoutTool('apply_layout', { layout: '2up-horizontal', assignments: [{ slot: 'left', itemId: 'a' }, { slot: 'left', itemId: 'b' }] }, ctx) as { error?: string };
 assert.match(dup.error ?? '', /đã được gán hai lần/, '重复槽报错');
 const audio = execLayoutTool('apply_layout', { layout: 'full', assignments: [{ slot: 'full', itemId: 'snd' }] }, ctx) as { error?: string };
-assert.match(audio.error ?? '', /clip hình ảnh toàn khung/, '音频片段拒绝');
+assert.match(audio.error ?? '', /đoạn hình ảnh toàn khung/, '音频片段拒绝');
 
 // trackOrder V2 in front (upstream) → inset V1 (downstream) should be reminded; if the time does not overlap, it should also be reminded
 const warn = execLayoutTool('apply_layout', {
   layout: 'pip',
   assignments: [{ slot: 'main', itemId: 'b' }, { slot: 'inset', itemId: 'a' }],
 }, ctx) as { notes?: string[] };
-assert.ok(warn.notes?.some((n) => n.includes('BEHIND')), 'inset 低于 main → 叠放提醒');
+assert.ok(warn.notes?.some((n) => n.includes('nằm SAU đoạn toàn khung')), 'inset 低于 main → 叠放提醒');
 const never = execLayoutTool('apply_layout', {
   layout: '2up-horizontal',
   assignments: [{ slot: 'left', itemId: 'a' }, { slot: 'right', itemId: 'late' }],
 }, ctx) as { notes?: string[] };
-assert.ok(never.notes?.some((n) => n.includes('overlap in time')), '时间不重叠 → 提醒');
+assert.ok(never.notes?.some((n) => n.includes('không bao giờ chồng thời gian')), '时间不重叠 → 提醒');
 
 console.log('layouts.verify: ok (cover 槽位恒等/anchor/fit/pip/复位/工具校验)');

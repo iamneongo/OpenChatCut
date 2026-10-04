@@ -80,9 +80,9 @@ const { validateGenericUpdate } = await import('../agent/tools/edit-item-generic
 const okAudio = validateGenericUpdate(base, { type: 'update', itemId: 'a1', keyframes: { volume: [{ frame: 0, value: 1.5 }] } });
 assert.ok(!('error' in okAudio && okAudio.error), 'audio+volume 关键帧通过校验');
 const badImage = validateGenericUpdate(base, { type: 'update', itemId: 'i1', keyframes: { volume: [{ frame: 0, value: 1 }] } }) as { error?: string };
-assert.match(badImage.error ?? '', /not supported on a image/, 'image+volume 被拒并报 kind');
+assert.match(badImage.error ?? '', /không được hỗ trợ trên đoạn image/, 'image+volume 被拒并报 kind');
 const badAudioOpacity = validateGenericUpdate(base, { type: 'update', itemId: 'a1', keyframes: { opacity: [{ frame: 0, value: 0.5 }] } }) as { error?: string };
-assert.match(badAudioOpacity.error ?? '', /not supported on a audio/, 'audio+opacity 被拒');
+assert.match(badAudioOpacity.error ?? '', /không được hỗ trợ trên đoạn audio/, 'audio+opacity 被拒');
 const badRange = validateGenericUpdate(base, { type: 'update', itemId: 'a1', keyframes: { volume: [{ frame: 0, value: 3 }] } }) as { error?: string };
 assert.match(badRange.error ?? '', /0\.\.2/, 'volume>2 被范围校验拒绝');
 
