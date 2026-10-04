@@ -1,5 +1,5 @@
 import { localizedCatalogText, useT } from '../../i18n/locale';
-import { CREATIVE_SKILLS, allCreativeSkills } from '../../agent/skills/skills-catalog';
+import { CREATIVE_SKILLS, allCreativeSkills, localizedSkillSummary } from '../../agent/skills/skills-catalog';
 import { Icon } from '../icons';
 
 interface WorkflowPickerContentProps {
@@ -60,7 +60,7 @@ export function WorkflowPickerContent({
             className="cc-creative-mode-row cc-creative-mode-card"
             data-active={creativeMode === skill.id}
             aria-pressed={creativeMode === skill.id}
-            title={t(skill.summary)}
+            title={localizedSkillSummary(skill)}
           >
             <span className="cc-creative-mode-icon"><Icon name="wand" size={15} /></span>
             <span className="cc-creative-mode-copy">
@@ -68,7 +68,7 @@ export function WorkflowPickerContent({
                 <strong>{skillName(skill)}</strong>
                 {!builtinIds.has(skill.id) && <em>{t('自定义')}</em>}
               </span>
-              <small>{t(skill.summary)}</small>
+            <small>{localizedSkillSummary(skill)}</small>
             </span>
             {creativeMode === skill.id && <span className="cc-creative-mode-check"><Icon name="check" size={13} strokeWidth={2.4} /></span>}
           </button>

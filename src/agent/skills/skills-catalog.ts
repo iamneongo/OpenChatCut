@@ -1,5 +1,6 @@
 import { getPluginSkill } from './plugin-skills';
 import type { SkillDefinition } from './skill-types';
+import { getLocale, t } from '../../i18n/locale';
 
 interface CreativeSkillMetadata {
   id: string;
@@ -7,6 +8,7 @@ interface CreativeSkillMetadata {
   name: string;
   nameZh: string;
   nameVi: string;
+  summaryVi: string;
   summary: string;
   scenarios: string[];
 }
@@ -18,6 +20,7 @@ export const CREATIVE_SKILL_METADATA: CreativeSkillMetadata[] = [
     name: 'Livestream to Clips',
     nameZh: '直播智能切片',
     nameVi: 'Cắt đoạn nổi bật từ buổi phát trực tiếp',
+    summaryVi: 'Cắt bản ghi livestream bán hàng, chơi game, phỏng vấn, dạy học, giải trí, thể thao, âm nhạc hoặc nội dung kết hợp thành các đoạn nổi bật có căn cứ và sẵn sàng đăng tải.',
     summary: '把带货、游戏、访谈、教学、娱乐、体育、音乐或混合直播录屏剪成有证据、可发布的高光切片。',
     scenarios: [
       'livestream-to-clips',
@@ -34,6 +37,7 @@ export const CREATIVE_SKILL_METADATA: CreativeSkillMetadata[] = [
     name: 'Long Video to Shorts',
     nameZh: '长视频转短视频',
     nameVi: 'Chuyển video dài thành video ngắn',
+    summaryVi: 'Biến podcast, phỏng vấn, khóa học hoặc livestream dài thành video ngắn và các đoạn nổi bật phù hợp để đăng lên mạng xã hội.',
     summary: '把一条长播客、访谈、课程或直播剪成适合社媒发布的短视频和高光。',
     scenarios: [
       'long-video-to-shorts',
@@ -50,6 +54,7 @@ export const CREATIVE_SKILL_METADATA: CreativeSkillMetadata[] = [
     name: 'Multi Clips to Reels',
     nameZh: '多素材剪 Reels',
     nameVi: 'Dựng Reels từ nhiều đoạn video',
+    summaryVi: 'Dựng các tư liệu sản phẩm, sự kiện, du lịch hoặc trò chơi thành Reels phù hợp để đăng lên mạng xã hội.',
     summary: '把产品、活动、旅行或游戏素材剪成适合社媒发布的 Reels。',
     scenarios: [
       'multi-clips-to-reels',
@@ -66,6 +71,7 @@ export const CREATIVE_SKILL_METADATA: CreativeSkillMetadata[] = [
     name: 'AI Cinematic Short Film',
     nameZh: 'AI 电影感短片',
     nameVi: 'Phim ngắn điện ảnh bằng AI',
+    summaryVi: 'Lập kế hoạch và sản xuất phim ngắn điện ảnh bằng AI, gồm câu chuyện, cảnh quay, câu lệnh, tính nhất quán và kiểm tra cuối.',
     summary: '规划并制作 AI 电影感短片，覆盖故事、镜头、提示词、连续性和最终检查。',
     scenarios: [
       'ai-film',
@@ -82,6 +88,7 @@ export const CREATIVE_SKILL_METADATA: CreativeSkillMetadata[] = [
     name: 'Product Ad Video Script',
     nameZh: '产品广告脚本',
     nameVi: 'Kịch bản video quảng cáo sản phẩm',
+    summaryVi: 'Chuyển sản phẩm hoặc trang web thành hướng quảng cáo, câu mở đầu thu hút, phân cảnh, phụ đề, lời kêu gọi hành động và định hướng hình ảnh.',
     summary: '把产品或页面转成广告角度、开头钩子、分镜、字幕、CTA 和视觉方向。',
     scenarios: [
       'ad',
@@ -98,6 +105,7 @@ export const CREATIVE_SKILL_METADATA: CreativeSkillMetadata[] = [
     name: 'Explainer Video',
     nameZh: '解说视频制作',
     nameVi: 'Sản xuất video giải thích',
+    summaryVi: 'Biến chủ đề, kịch bản, lời thuyết minh, logic sản phẩm hoặc dữ liệu thành một video giải thích hoàn chỉnh.',
     summary: '把主题、脚本、配音、产品逻辑或数据做成完整解说视频。',
     scenarios: [
       'concept',
@@ -114,6 +122,7 @@ export const CREATIVE_SKILL_METADATA: CreativeSkillMetadata[] = [
     name: 'Motion Graphic Placement',
     nameZh: '动效点缀指南',
     nameVi: 'Hướng dẫn bố trí đồ họa chuyển động',
+    summaryVi: 'Thêm đồ họa chuyển động đúng lúc để nhấn mạnh nội dung mà không che khuất thông tin.',
     summary: '在合适时机添加动效，强化表达且不遮挡内容。',
     scenarios: [
       'creator-video',
@@ -130,6 +139,7 @@ export const CREATIVE_SKILL_METADATA: CreativeSkillMetadata[] = [
     name: 'Storyboard Shot Breakdown',
     nameZh: '拉片分镜图',
     nameVi: 'Phân tích cảnh quay và bảng phân cảnh',
+    summaryVi: 'Phân tích ngôn ngữ hình ảnh theo từng cảnh và tạo hình tham khảo cho bảng phân cảnh.',
     summary: '逐镜拆解镜头语言，并生成分镜参考图。',
     scenarios: [
       'cinematography',
@@ -146,6 +156,7 @@ export const CREATIVE_SKILL_METADATA: CreativeSkillMetadata[] = [
     name: 'Video Thumbnail Generator',
     nameZh: '视频封面生成',
     nameVi: 'Tạo ảnh bìa video',
+    summaryVi: 'Dựa trên nội dung video và khung hình thật để tạo ảnh bìa phù hợp với từng nền tảng.',
     summary: '基于视频内容和真实画面生成适合平台的封面图。',
     scenarios: [
       'bilibili-cover',
@@ -162,6 +173,7 @@ export const CREATIVE_SKILL_METADATA: CreativeSkillMetadata[] = [
     name: 'News Rough Cut',
     nameZh: '新闻智能粗剪',
     nameVi: 'Dựng thô tin tức bằng AI',
+    summaryVi: 'Dựng thô tư liệu tin tức thành video ngắn đầy đủ nội dung, mạch lạc, nhịp nhanh và không thêm âm thanh bên ngoài.',
     summary: '把新闻素材粗剪为一条内容完整、逻辑清晰、节奏紧凑的新闻短视频，不加任何外部声音。',
     scenarios: [
       'news-rough-cut',
@@ -178,6 +190,7 @@ export const CREATIVE_SKILL_METADATA: CreativeSkillMetadata[] = [
     name: 'Skill Creator',
     nameZh: '技能创作器',
     nameVi: 'Trình tạo kỹ năng',
+    summaryVi: 'Biến quy trình lặp lại hoặc ý tưởng thành kỹ năng tùy chỉnh có thể dùng lại và cài vào thư mục kỹ năng trên máy.',
     summary: '把重复流程或想法做成可复用的自定义技能（SKILL.md），并安装到本机技能目录。',
     scenarios: [
       'create-skill',
@@ -208,6 +221,11 @@ export const CREATIVE_SKILLS: SkillDefinition[] = CREATIVE_SKILL_METADATA.flatMa
     source: 'builtin',
   }];
 });
+
+/** Text shown in the workflow picker; the model-facing summary remains the Chinese source key. */
+export function localizedSkillSummary(skill: Pick<SkillDefinition, 'summary' | 'summaryVi'>): string {
+  return getLocale() === 'vi' && skill.summaryVi ? skill.summaryVi : t(skill.summary);
+}
 
 let customSkills: SkillDefinition[] = [];
 

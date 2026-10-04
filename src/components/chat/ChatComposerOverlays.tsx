@@ -1,6 +1,7 @@
 import type { RefObject } from 'react';
 import { isSelectionRefKind } from '../../agent/selection-refs';
 import type { SkillDefinition } from '../../agent/skills/skill-types';
+import { localizedSkillSummary } from '../../agent/skills/skills-catalog';
 import { localizedCatalogText, tData, useT } from '../../i18n/locale';
 import { theme } from '../../theme';
 import { Icon } from '../icons';
@@ -117,7 +118,6 @@ function SlashSkillRow({ skill, index, activeIndex, selected, onActivate, onHove
   onActivate: (skill: SkillDefinition) => void;
   onHover: (index: number) => void;
 }) {
-  const t = useT();
   const name = localizedCatalogText(skill.name, skill.nameZh, undefined, skill.nameVi);
   return (
     <button type="button" onClick={() => onActivate(skill)} onMouseEnter={() => onHover(index)}
@@ -130,7 +130,7 @@ function SlashSkillRow({ skill, index, activeIndex, selected, onActivate, onHove
           <code style={{ fontSize: 10, color: theme.textDim }}>/{skill.slug}</code>
         </span>
         <span style={{ display: 'block', fontSize: 10.5, color: theme.textDim, lineHeight: 1.4, marginTop: 1 }}>
-          {t(skill.summary)}
+          {localizedSkillSummary(skill)}
         </span>
       </span>
       {selected && <Icon name="check" size={12} strokeWidth={2.4} />}
