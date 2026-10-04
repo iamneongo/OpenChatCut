@@ -143,7 +143,7 @@ export async function executeCodexTool(request: CodexToolRequest): Promise<{
   if (!schema) {
     return {
       activation,
-      execution: { success: false, result: { error: `Unknown Codex tool: ${name}` } },
+      execution: { success: false, result: { error: `Không nhận diện được công cụ Codex: ${name}` } },
     };
   }
   // A model may remember a tool it used earlier in the conversation even though

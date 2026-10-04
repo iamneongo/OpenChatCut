@@ -80,6 +80,6 @@ export async function execMgCodeTool(
     width: asset.width,
     height: asset.height,
     durationInFrames: asset.durationInFrames,
-    note: 'Asset MG đã được đăng ký trong kho media. Đặt bằng adds của edit_item hoặc giao diện.',
+    note: 'Tư liệu MG đã được đăng ký trong kho tư liệu. Đặt bằng adds của edit_item hoặc giao diện.',
   };
 }

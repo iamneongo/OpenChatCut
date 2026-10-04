@@ -123,7 +123,7 @@ await assert.rejects(upsertAgentApproval({
   argsDigest: 'f'.repeat(64),
   status: 'pending',
   createdAt: MAX_APPROVALS,
-}), /limit reached/, 'pending approval overflow fails closed');
+}), /đã đạt giới hạn approval Agent đang chờ/, 'pending approval overflow fails closed');
 resetAgentRuntimeStoreMemory();
 
 async function legacyRun(

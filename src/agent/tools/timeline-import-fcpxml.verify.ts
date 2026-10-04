@@ -192,7 +192,7 @@ const mediaRep = (file: string) => `<media-rep kind="original-media" src="file:/
     'title@01:00:27:00: không nhập title',
     'asset-clip@01:00:29:00: clip đã bị tắt',
   ]);
-  assert.ok((result.warnings as string[]).some((warning) => /1 audio component\(s\) of video files were merged/.test(warning)));
+  assert.ok((result.warnings as string[]).some((warning) => /1 thành phần âm thanh của tệp video đã được gộp/.test(warning)));
 }
 
 // ── Rate conform: 25p media in a 24p project (FCP "24With25Media") ──
@@ -276,7 +276,7 @@ const mediaRep = (file: string) => `<media-rep kind="original-media" src="file:/
     { asset: 'cam1', track: 'Imported V1', start: 0, duration: 100, srcIn: 200 },
     { asset: 'cam1', track: 'Imported V1', start: 100, duration: 50, srcIn: 300, muted: true },
   ]);
-  assert.match(reasons(result).join('\n'), /asset-clip@01:00:04:00: audio of a video file that is not in sync/);
+  assert.match(reasons(result).join('\n'), /asset-clip@01:00:04:00: âm thanh của tệp video không đồng bộ/);
 }
 
 // ── Resolve per-clip assets: asset start/duration describe only the used range ──

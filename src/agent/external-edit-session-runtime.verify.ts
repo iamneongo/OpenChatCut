@@ -56,7 +56,7 @@ assert(
   missingSkill
     && typeof missingSkill === 'object'
     && 'error' in missingSkill
-    && String(missingSkill.error).includes('no such skill'),
+    && String(missingSkill.error).includes('không có skill nào có tên'),
   'stateless skill reads execute without an edit session',
 );
 const begun = await runtime.execute('begin_edit_session', {}, runtimeBinding);

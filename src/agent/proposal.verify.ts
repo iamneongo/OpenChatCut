@@ -40,8 +40,8 @@ const compacted = compactOperations([
 assert.equal(compacted.length, 1);
 assert.equal(compacted[0].callCount, 4);
 assert.equal(compacted[0].actions.length, 4);
-assert.equal(compacted[0].action, '人声隔离');
-assert.equal(compacted[0].impact, '4 处改动');
+assert.equal(compacted[0].action, 'Tách giọng');
+assert.equal(compacted[0].impact, '4 thay đổi');
 
 const distinctArguments = compactOperations([
   buildOperation('edit_captions', { itemId: 'clip-1', text: 'First' }, [{ type: 'setItemDenoise', id: 'clip-1', denoisedSrc: '/first.m4a', strength: 10 }]),
@@ -167,7 +167,7 @@ async function verifyProposalPersistenceFence(): Promise<void> {
     proposalPersistence(failedOrder, { saveDoc: async () => saveResult(false) }),
   );
   assert.equal(failedOrder.includes('apply'), false);
-  assert.match(failedErrors[0] ?? '', /提案未应用/);
+  assert.match(failedErrors[0] ?? '', /đề xuất chưa được áp dụng/);
 }
 async function verifyConcurrentRestoreFailureFence(): Promise<void> {
   const proposal = buildProposal(
@@ -204,7 +204,7 @@ async function verifyConcurrentRestoreFailureFence(): Promise<void> {
   assert.equal(order.filter((entry) => entry === 'apply').length, 1);
   assert.equal(order.some((entry) => entry.startsWith('settle-')), false);
   assert.equal(order.includes('durable-clear'), false, 'the applying recovery record remains durable');
-  assert.match(errors[0] ?? '', /提案未应用/);
+  assert.match(errors[0] ?? '', /đề xuất chưa được áp dụng/);
 }
 
 async function verifyCommittedRecoveryFence(): Promise<void> {
@@ -228,7 +228,7 @@ async function verifyCommittedRecoveryFence(): Promise<void> {
   );
   assert.equal(quotaOrder.includes('save'), false);
   assert.equal(quotaOrder.includes('apply'), false);
-  assert.match(quotaErrors[0] ?? '', /提案未应用/);
+  assert.match(quotaErrors[0] ?? '', /đề xuất chưa được áp dụng/);
 
   const crashOrder: string[] = [];
   const crashErrors: string[] = [];
@@ -242,7 +242,7 @@ async function verifyCommittedRecoveryFence(): Promise<void> {
   );
   assert.equal(crashOrder.includes('apply'), true, 'a saved document remains applied if settlement cleanup fails');
   assert.equal(crashOrder.includes('durable-clear'), false, 'the applying recovery record remains durable');
-  assert.match(crashErrors[0] ?? '', /已保存到工程/);
+  assert.match(crashErrors[0] ?? '', /Đề xuất đã được lưu vào dự án/);
 }
 
 async function verifyProposalOwnershipFence(): Promise<void> {
@@ -261,7 +261,7 @@ async function verifyProposalOwnershipFence(): Promise<void> {
     proposalState(unowned, applyOrder, applyErrors), 'proposal-persistence-verify', new Set([0]),
   );
   assert.equal(applyOrder.includes('apply'), false);
-  assert.match(applyErrors[0] ?? '', /运行权限/);
+  assert.match(applyErrors[0] ?? '', /Không thể lấy quyền chạy đề xuất/);
   const rejectOrder: string[] = [];
   const rejectErrors: string[] = [];
   await rejectPendingProposal(
@@ -277,7 +277,7 @@ async function verifyProposalOwnershipFence(): Promise<void> {
     }),
   );
   assert.equal(rejectOrder.includes('clear'), true);
-  assert.match(rejectErrors[0] ?? '', /已拒绝/);
+  assert.match(rejectErrors[0] ?? '', /Đề xuất đã bị từ chối/);
 }
 
 function persistentTurn(order: string[], controller = new AbortController()): AgentTurn {
@@ -572,14 +572,14 @@ async function verifyLiveEditLandingFence(): Promise<void> {
     assert.equal(live.doc().timelines[0]?.name, 'Second');
     assert.equal(live.changeLog().length, 1, 'both landings share one change-log row');
     assert.deepEqual(live.changeLog()[0]?.operations.map((operation) => operation.target), [renameOp('First').target, renameOp('Second').target]);
-    assert.equal(live.changeLog()[0]?.summary, 'Agent 修改（进行中）');
+    assert.equal(live.changeLog()[0]?.summary, 'Agent chỉnh sửa (đang thực hiện)');
     assert.equal(rollbackAgentChange(live.changeLog()[0]!, live.doc())?.timelines[0]?.name, 'Timeline', 'rollback returns to before the first landing');
     // The finished run names the row after the model's own summary.
-    live.turn.assistantText = '已把时间线改名为 Second';
+    live.turn.assistantText = 'Đã đổi tên dòng thời gian thành Second';
     finalizeRunSession(live.turn);
-    assert.equal(live.changeLog()[0]?.summary, '已把时间线改名为 Second');
+    assert.equal(live.changeLog()[0]?.summary, 'Đã đổi tên dòng thời gian thành Second');
     finalizeRunSession(live.turn);
-    assert.equal(live.changeLog()[0]?.summary, '已把时间线改名为 Second', 'renaming is idempotent');
+    assert.equal(live.changeLog()[0]?.summary, 'Đã đổi tên dòng thời gian thành Second', 'renaming is idempotent');
   }
 
   // Nothing pending is a no-op; a failed save leaves the ops pending for the terminal proposal.

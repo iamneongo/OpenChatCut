@@ -46,7 +46,7 @@ export function reconcileClips(clips: readonly ParsedClip[], report: ImportRepor
         element: audio.from.element,
         name: audio.from.name,
         at: audio.from.at,
-        reason: 'audio of a video file that is not in sync with a video clip of that file; OpenChatCut plays a video file\'s audio from its video clip',
+        reason: 'âm thanh của tệp video không đồng bộ với đoạn video tương ứng; OpenChatCut phát âm thanh của tệp video từ đoạn video đó',
       });
       continue;
     }
@@ -55,10 +55,10 @@ export function reconcileClips(clips: readonly ParsedClip[], report: ImportRepor
     if (audio.startFrame < match.clip.startFrame - 1 || end(audio) > end(match.clip) + 1) longer += 1;
   }
   if (merged) {
-    report.warnings.push(`${merged} audio component(s) of video files were merged into their video clips, which play that audio`);
+    report.warnings.push(`${merged} thành phần âm thanh của tệp video đã được gộp vào đoạn video tương ứng, là nơi phát âm thanh đó`);
   }
   if (longer) {
-    report.warnings.push(`${longer} merged audio component(s) extended past their video clip (split edits); that extra audio is not imported`);
+    report.warnings.push(`${longer} thành phần âm thanh đã gộp kéo dài quá đoạn video (chỉnh sửa tách); phần âm thanh thừa đó không được nhập`);
   }
   const seen = new Set<string>();
   let duplicates = 0;
@@ -75,7 +75,7 @@ export function reconcileClips(clips: readonly ParsedClip[], report: ImportRepor
       return true;
     });
   if (duplicates) {
-    report.warnings.push(`${duplicates} duplicate audio channel component(s) of the same file and range were merged`);
+    report.warnings.push(`${duplicates} thành phần kênh âm thanh trùng của cùng tệp và khoảng thời gian đã được gộp`);
   }
   return reconciled;
 }

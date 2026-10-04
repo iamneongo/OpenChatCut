@@ -89,7 +89,7 @@ try {
   await executor.reconcileStoredAttempts(runId, attempts);
   assert.deepEqual(posted.get(recoveredCall)?.result, { ok: true },
     'a persisted draft outcome is delivered even when its tool-request event is before the cursor');
-  assert.match(String(posted.get(interruptedCall)?.error), /not replayed automatically/,
+  assert.match(String(posted.get(interruptedCall)?.error), /không được tự động chạy lại/,
     'a cursor-admitted attempt without a durable outcome settles as interrupted instead of hanging');
   assert.deepEqual(readStoredServerRun(projectId)?.attempts, [],
     'settled cursor-admitted attempts are removed from browser recovery storage');

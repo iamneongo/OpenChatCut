@@ -54,7 +54,7 @@ assert.match(unavailable.prompt, /cannot call tools/);
 for (const skill of syntheticSkills) assert.doesNotMatch(unavailable.prompt, new RegExp(skill.slug));
 assert.throws(
   () => buildSkillsIndex(syntheticSkills, { budgetChars: 10 }),
-  /cannot fit/,
+  /Ngân sách chỉ mục skill không đủ chỗ/,
   'the prompt never silently exceeds a budget too small for exact slug discovery',
 );
 assert.equal(unavailable.diagnostics.advertisedSkills, 0);
@@ -104,7 +104,7 @@ assert.equal(followupSkillLoad.contents['references/b.md'], skillSource.contents
 assert.deepEqual(followupSkillLoad.omittedFiles, []);
 assert.deepEqual(
   buildBoundedSkillResult(skillSource, ['../secret.md']),
-  { error: 'Unsafe skill file path: ../secret.md' },
+  { error: 'Đường dẫn tệp skill không an toàn: ../secret.md' },
   'follow-up paths cannot traverse outside the selected skill',
 );
 assert.deepEqual(

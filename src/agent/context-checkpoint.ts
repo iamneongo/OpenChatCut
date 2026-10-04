@@ -35,7 +35,7 @@ export interface ContextCheckpointSourceArtifact {
 
 export class ContextIntegrityError extends Error {
   constructor(message: string) {
-    super(`Context integrity error: ${message}`);
+    super(`Lỗi toàn vẹn ngữ cảnh: ${message}`);
     this.name = 'ContextIntegrityError';
   }
 }
@@ -164,9 +164,9 @@ export async function verifyCanonicalContextCheckpoint(
   if (canonicalText === null || !canonicalText.startsWith(CHECKPOINT_SUMMARY_PREFIX)) return null;
   if (checkpoints.length === 0) return null;
   const marker = parseContextCheckpointMarker(canonical);
-  if (!marker) throw new ContextIntegrityError('canonical checkpoint marker is missing.');
+  if (!marker) throw new ContextIntegrityError('thiếu marker checkpoint chính tắc.');
   const persisted = checkpoints.find((checkpoint) => checkpoint.checkpointId === marker.checkpointId);
-  if (!persisted) throw new ContextIntegrityError('marked checkpoint sidecar is missing.');
+  if (!persisted) throw new ContextIntegrityError('thiếu sidecar checkpoint được đánh dấu.');
   const summaryDigest = persisted.summaryDigest ?? await sha256Text(persisted.summary);
   verifyContextCheckpointMarker(canonical, {
     checkpointId: persisted.checkpointId,
@@ -175,13 +175,13 @@ export async function verifyCanonicalContextCheckpoint(
   });
   if (await sha256Text(checkpointSummary(canonical)) !== summaryDigest
       || await sha256Text(persisted.summary) !== summaryDigest) {
-    throw new ContextIntegrityError('checkpoint summary digest has changed.');
+    throw new ContextIntegrityError('digest tóm tắt checkpoint đã thay đổi.');
   }
   const artifact = await loadSourceArtifact(persisted.sourceArtifactId);
   if (!artifact || artifact.kind !== 'checkpoint-source'
       || artifact.bodySha256 !== persisted.sourceDigest
       || await sha256Text(artifact.body) !== persisted.sourceDigest) {
-    throw new ContextIntegrityError('checkpoint source artifact is missing or has changed.');
+    throw new ContextIntegrityError('artifact nguồn checkpoint bị thiếu hoặc đã thay đổi.');
   }
   return marker;
 }

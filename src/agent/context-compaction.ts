@@ -161,7 +161,7 @@ export function rescueOversizedTail(messages: readonly ModelMessage[]): ModelMes
       // input untouched, so prepareContext's retry loop could never make progress.
       return {
         ...part,
-        input: { rescuedToolCall: true, note: `[rescued tool call input; ${raw.length} chars elided, re-read with a narrow filter or id if needed]` },
+        input: { rescuedToolCall: true, note: `[đã rút gọn dữ liệu gọi công cụ để cứu ngữ cảnh; lược bỏ ${raw.length} ký tự, hãy đọc lại bằng bộ lọc hoặc ID hẹp nếu cần]` },
       };
     });
     return changed ? { ...message, content } as ModelMessage : message;

@@ -51,7 +51,7 @@ export async function execTranscriptionProgress(args: Args, ctx: AgentContext): 
 
   const { ids, unresolved } = resolveAssetIds(ctx, args.assetIds ?? args.jobIds);
   if (ids.length === 0) {
-    return { error: `no matching asset for target=transcription assetIds=${String(args.assetIds ?? args.jobIds ?? '')}`, unresolved };
+    return { error: `không có tư liệu khớp cho target=transcription assetIds=${String(args.assetIds ?? args.jobIds ?? '')}`, unresolved };
   }
 
   if (action === 'wait') {

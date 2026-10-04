@@ -78,7 +78,7 @@ async function runAnalysis(
     return {
       assetId: asset.id,
       status: 'running',
-      note: 'waiting for master upload before visual analysis',
+      note: 'đang chờ tải tư liệu gốc lên trước khi phân tích hình ảnh',
     };
   }
 
@@ -88,7 +88,7 @@ async function runAnalysis(
       assetId: asset.id,
       status: ok ? 'succeeded' : 'running',
       sampleCount: ok ? 1 : 0,
-      note: ok ? 'still image ready' : 'image not reachable yet',
+      note: ok ? 'hình ảnh tĩnh đã sẵn sàng' : 'chưa thể truy cập hình ảnh',
     };
   }
 
@@ -113,7 +113,7 @@ async function runAnalysis(
           assetId: asset.id,
           status: 'succeeded',
           sampleCount: n,
-          note: 'contact-sheet warm complete; use view_asset_frames for vision',
+          note: 'đã chuẩn bị xong bảng liên hệ; dùng view_asset_frames để xem hình',
         };
       }
       // extract may be unavailable — fall through to reachability probe
@@ -126,9 +126,9 @@ async function runAnalysis(
       status: ok ? 'succeeded' : 'failed',
       sampleCount: ok ? 0 : undefined,
       note: ok
-        ? 'source reachable (contact-sheet warm skipped); use view_asset_frames'
-        : 'source not reachable',
-      error: ok ? undefined : 'media not reachable',
+        ? 'có thể truy cập nguồn (bỏ qua chuẩn bị bảng liên hệ); dùng view_asset_frames'
+        : 'không thể truy cập nguồn',
+      error: ok ? undefined : 'không thể truy cập tư liệu',
     };
   }
 
@@ -137,7 +137,7 @@ async function runAnalysis(
     assetId: asset.id,
     status: 'succeeded',
     sampleCount: 0,
-    note: 'remote/library source; analyze on demand via view_asset_frames',
+    note: 'nguồn từ xa/thư viện; phân tích khi cần bằng view_asset_frames',
   };
 }
 

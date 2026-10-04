@@ -57,12 +57,12 @@ export function resolveAsset(
   const scored = assets.map((asset) => ({ asset, score: assetMatchScore(asset, references) }))
     .filter((entry) => entry.score > 0)
     .sort((left, right) => right.score - left.score);
-  if (!scored.length) return { reason: 'no matching media-pool asset' };
+  if (!scored.length) return { reason: 'không có tư liệu nào trong kho khớp' };
   const best = scored[0]!.score;
   const winners = scored.filter((entry) => entry.score === best);
   return winners.length === 1
     ? winners[0]!.asset
-    : { reason: `ambiguous media-pool match: ${winners.slice(0, 6).map((entry) => entry.asset.id).join(', ')}` };
+    : { reason: `khớp nhiều tư liệu trong kho, chưa xác định được: ${winners.slice(0, 6).map((entry) => entry.asset.id).join(', ')}` };
 }
 
 /** Pool kinds whose clips have no meaningful source in-point. */

@@ -174,7 +174,7 @@ const oversizedProjection = projectServerRunToolResult({
 });
 assert.deepEqual(oversizedProjection, {
   omitted: true,
-  note: 'Tool result exceeded the browser-to-server transport limit. Request a narrower result.',
+  note: 'Kết quả tool vượt quá giới hạn truyền tải từ trình duyệt đến máy chủ. Hãy yêu cầu kết quả thu hẹp hơn.',
 });
 assert.ok(
   new TextEncoder().encode(JSON.stringify(oversizedProjection)).byteLength < 1024 * 1024,
@@ -414,7 +414,7 @@ assert.equal(await refreshExecutor.handle(
 ), true);
 const settledRefreshResult = refreshResultBody as Record<string, unknown> | null;
 assert(settledRefreshResult, 'refresh must settle the interrupted tool request');
-assert.match(String(settledRefreshResult.error), /not replayed automatically/);
+assert.match(String(settledRefreshResult.error), /không được tự động chạy lại/);
 assert.equal(settledRefreshResult.result, undefined,
   'a durable in-flight refresh becomes interruption rather than a replayed side effect');
 const retryProject = 'project-result-retry';

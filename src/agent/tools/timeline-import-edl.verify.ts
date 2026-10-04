@@ -106,7 +106,7 @@ FCM: NON-DROP FRAME
     { asset: 'broll', track: 'Imported V1', start: 180, duration: 120, srcIn: 600 },
   ]);
   assert.deepEqual(skippedOf(result), ['event 005@01:00:06:00: không nhập transition dissolve; các clip sẽ gặp nhau bằng một cut']);
-  assert.ok((result.warnings as string[]).some((warning) => /2 audio component\(s\) of video files were merged/.test(warning)));
+  assert.ok((result.warnings as string[]).some((warning) => /2 thành phần âm thanh của tệp video đã được gộp/.test(warning)));
 }
 
 // ── Drop-frame 29.97: ';' labels, FCM, and CMX-style ':' labels under FCM: DROP FRAME ──
@@ -243,7 +243,7 @@ FCM: NON-DROP FRAME
   assert.deepEqual(missing, {
     ok: false,
     error: 'Các tham chiếu media trong EDL chưa được phân giải',
-    unresolved: [{ reference: 'event 002: pickup.mov', reason: 'no matching media-pool asset' }],
+    unresolved: [{ reference: 'event 002: pickup.mov', reason: 'không có tư liệu nào trong kho khớp' }],
   });
   assert.equal(draft.getDoc(), before, 'an unresolved list changes nothing');
   const { result, items } = await importEdl(edl, [take, { id: 'pickup', name: 'pickup.mov', kind: 'video', seconds: 10 }], { fps: 25 }, 25);

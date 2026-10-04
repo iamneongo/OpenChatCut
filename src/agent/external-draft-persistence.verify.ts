@@ -91,7 +91,7 @@ const guarded = await first.execute('read_export_history', guardedArgs, firstBin
 assert.equal(needsConfirmation(guarded), true);
 await assert.rejects(
   first.execute('read_export_history', guardedArgs, firstBinding),
-  /already pending/,
+  /đã có approval Agent tương ứng đang chờ/,
   'repeated retries cannot allocate duplicate durable approvals',
 );
 const pendingApproval = (await loadAgentRuntimeSidecar(projectId)).approvals

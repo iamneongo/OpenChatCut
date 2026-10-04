@@ -96,7 +96,7 @@ const ctx: AgentContext = {
   templates: [],
   audio: [],
 };
-assert.deepEqual(await execScriptTool('read_script', { track: 'missing' }, ctx), { error: 'Track “missing” không tồn tại' });
+assert.deepEqual(await execScriptTool('read_script', { track: 'missing' }, ctx), { error: 'Rãnh “missing” không tồn tại' });
 const toolRead = await execScriptTool('read_script', { track: speechAlias, showSilence: true }, ctx) as { content: string; trackId: string };
 assert.equal(toolRead.trackId, 'track_v1');
 assert.match(toolRead.content, /script-silence:true/);

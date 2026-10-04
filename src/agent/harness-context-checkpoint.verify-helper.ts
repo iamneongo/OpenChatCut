@@ -113,7 +113,7 @@ assert.deepEqual(verifyContextCheckpointMarker(savedCheckpointMessage, checkpoin
 assert.equal(parseContextCheckpointMarker(message('assistant', 'Legacy checkpoint.')), null);
 assert.throws(
   () => verifyContextCheckpointMarker(savedCheckpointMessage, undefined),
-  /Context integrity error.*sidecar is missing/,
+  /Lỗi toàn vẹn ngữ cảnh.*thiếu sidecar/,
 );
 assert.throws(
   () => verifyContextCheckpointMarker(savedCheckpointMessage, {
@@ -121,14 +121,14 @@ assert.throws(
     sourceDigest: '0'.repeat(64),
     summaryDigest: checkpoint.summaryDigest,
   }),
-  /Context integrity error.*does not match/,
+  /Lỗi toàn vẹn ngữ cảnh.*không khớp/,
 );
 assert.throws(
   () => parseContextCheckpointMarker(message(
     'assistant',
     'Bad\\n\\n<openchatcut_checkpoint>{}</openchatcut_checkpoint>',
   )),
-  /Context integrity error.*fields are invalid/,
+  /Lỗi toàn vẹn ngữ cảnh.*các trường marker checkpoint không hợp lệ/,
 );
 const checkpointPart = compacted.messages[0]?.content;
 assert.ok(Array.isArray(checkpointPart));
@@ -262,7 +262,7 @@ await assert.rejects(
     [checkpointSidecar],
     loadCheckpointArtifact,
   ),
-  /Context integrity error.*marker is missing/,
+  /Lỗi toàn vẹn ngữ cảnh.*thiếu marker/,
   'a sidecar-bound canonical checkpoint cannot silently lose its marker',
 );
 await assert.rejects(
@@ -274,7 +274,7 @@ await assert.rejects(
     [checkpointSidecar],
     loadCheckpointArtifact,
   ),
-  /Context integrity error.*marker is missing/,
+  /Lỗi toàn vẹn ngữ cảnh.*thiếu marker/,
   'removing both the marker and its summary text cannot bypass reserved-prefix linkage',
 );
 if (savedCheckpointMessage.role !== 'assistant') {
@@ -299,7 +299,7 @@ await assert.rejects(
     [checkpointSidecar],
     loadCheckpointArtifact,
   ),
-  /Context integrity error.*summary digest has changed/,
+  /Lỗi toàn vẹn ngữ cảnh.*digest tóm tắt checkpoint đã thay đổi/,
 );
 await assert.rejects(
   verifyCanonicalContextCheckpoint(
@@ -307,7 +307,7 @@ await assert.rejects(
     [{ ...checkpointSidecar, sourceDigest: '3'.repeat(64) }],
     loadCheckpointArtifact,
   ),
-  /Context integrity error.*does not match/,
+  /Lỗi toàn vẹn ngữ cảnh.*không khớp/,
   'tampered source linkage fails before artifact recovery',
 );
 await assert.rejects(
@@ -316,7 +316,7 @@ await assert.rejects(
     [checkpointSidecar],
     async () => ({ ...checkpointArtifact, body: `${checkpointArtifact.body}tampered` }),
   ),
-  /Context integrity error.*source artifact is missing or has changed/,
+  /Lỗi toàn vẹn ngữ cảnh.*artifact nguồn checkpoint bị thiếu hoặc đã thay đổi/,
 );
 await assert.rejects(
   verifyCanonicalContextCheckpoint(
@@ -324,7 +324,7 @@ await assert.rejects(
     [checkpointSidecar],
     async () => ({ ...checkpointArtifact, bodySha256: '4'.repeat(64) }),
   ),
-  /Context integrity error.*source artifact is missing or has changed/,
+  /Lỗi toàn vẹn ngữ cảnh.*artifact nguồn checkpoint bị thiếu hoặc đã thay đổi/,
 );
 
 

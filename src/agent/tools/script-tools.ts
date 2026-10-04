@@ -18,7 +18,7 @@ function resolveRequestedTrack(args: Args, ctx: AgentContext): TrackId | undefin
   if (args.track === undefined || args.track === null || String(args.track).trim() === '') return undefined;
   const ref = String(args.track).trim();
   const trackId = resolveTrackId(ctx.getState(), ref);
-  if (!trackId) throw new Error(`Track “${ref}” không tồn tại`);
+  if (!trackId) throw new Error(`Rãnh “${ref}” không tồn tại`);
   return trackId;
 }
 
