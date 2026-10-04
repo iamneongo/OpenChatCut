@@ -472,7 +472,7 @@ export const VI: Record<string, string> = {
   '模型下载 {percent}%': 'Đang tải mô hình {percent}%',
   '加载模型 {file}': 'Đang tải mô hình {file}',
   '转写服务报错：{error}': 'Dịch vụ chép lời báo lỗi: {error}',
-  '正在云端转写（{status}，已等待 {seconds}s）': 'Đang chép lời trên đám mây ({status}, đã chờ {seconds}s)',
+  '正在云端转写（{status}，已等待 {seconds}s）': 'Đang chép lời trên đám mây ({status}, đã chờ {seconds} giây)',
   '停顿': 'Khoảng dừng',
   '段落视图': 'Chế độ đoạn văn',
   '片段视图': 'Chế độ đoạn',
