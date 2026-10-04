@@ -68,15 +68,15 @@ export function planSlip(
   requestedDeltaInFrames: number,
 ): SlipResult {
   const item = state.items.find((candidate) => candidate.id === itemId);
-  if (!item) return failure(itemId, 'unknown-item', `item not found: ${itemId}`);
+  if (!item) return failure(itemId, 'unknown-item', `Không tìm thấy đoạn: ${itemId}`);
   if (item.kind !== 'video' && item.kind !== 'audio') {
-    return failure(itemId, 'unsupported-kind', `slip is not supported on a ${item.kind} clip`);
+    return failure(itemId, 'unsupported-kind', `Không hỗ trợ trượt trên đoạn ${item.kind}`);
   }
   if (state.tracks?.[item.track]?.locked) {
-    return failure(itemId, 'locked-track', `track ${item.track} is locked`);
+    return failure(itemId, 'locked-track', `Rãnh ${item.track} đang bị khóa`);
   }
   if (!item.src) {
-    return failure(itemId, 'source-unavailable', 'clip has no source media');
+    return failure(itemId, 'source-unavailable', 'Đoạn không có tư liệu nguồn');
   }
   const wordDriven = item.kind === 'audio' && hasOperationalTranscript(item);
   let totalSourceFrames: number;
@@ -90,14 +90,14 @@ export function planSlip(
     );
     sourceSpan = item.durationInFrames;
     if (!(totalSourceFrames > 0) || !(sourceSpan > 0)) {
-      return failure(itemId, 'no-source-handles', 'clip has no usable edited transcript stream');
+      return failure(itemId, 'no-source-handles', 'Đoạn không có luồng bản chép lời đã chỉnh sửa để trượt');
     }
   } else {
     const asset = item.sourceAssetId
       ? state.assets?.find((candidate) => candidate.id === item.sourceAssetId)
       : state.assets?.find((candidate) => candidate.src === item.src);
     if (!asset || !(asset.durationInFrames > 0)) {
-      return failure(itemId, 'source-unavailable', 'source duration is unavailable');
+      return failure(itemId, 'source-unavailable', 'Không xác định được thời lượng tư liệu nguồn');
     }
     totalSourceFrames = asset.durationInFrames;
     const zeroBasedWindow = sourceWindowForTimelineRange(
@@ -111,11 +111,11 @@ export function planSlip(
   const maxSrcInFrame = Math.max(0, totalSourceFrames - sourceSpan);
   const currentSrcInFrame = Math.max(0, item.srcInFrame ?? 0);
   if (maxSrcInFrame <= EPSILON || currentSrcInFrame > maxSrcInFrame + EPSILON) {
-    return failure(itemId, 'no-source-handles', 'clip has no valid source handles available to slip');
+    return failure(itemId, 'no-source-handles', 'Đoạn không có tay nắm nguồn hợp lệ để trượt');
   }
 
   if (!Number.isFinite(requestedDeltaInFrames)) {
-    return failure(itemId, 'invalid-delta', 'slip needs a finite deltaInFrames');
+    return failure(itemId, 'invalid-delta', 'Trượt cần deltaInFrames là số hữu hạn');
   }
   const requested = requestedDeltaInFrames;
   const requestedSourceDelta = wordDriven
