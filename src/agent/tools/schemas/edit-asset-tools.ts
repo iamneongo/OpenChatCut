@@ -19,7 +19,7 @@ export const EDIT_ASSET_TOOL_SCHEMAS: AgentToolSchema[] = [
         favorite: { type: 'boolean', description: 'update: cờ yêu thích.' },
         sourceTimecode: {
           type: 'object',
-          description: 'Timecode nhúng đã chuẩn hóa: {frameCount, frameRate:{numerator,denominator}, dropFrame}.',
+          description: 'Mã thời gian nhúng đã chuẩn hóa: {frameCount, frameRate:{numerator,denominator}, dropFrame}.',
           properties: {
             frameCount: { type: 'number' },
             frameRate: {

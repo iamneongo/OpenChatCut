@@ -12,7 +12,7 @@ export const CORE_TOOL_SCHEMAS: AgentToolSchema[] = [
   {
     name: 'list_templates',
     description: 'Khám phá mẫu đồ họa chuyển động. Không có tham số: trả về danh sách category kèm số lượng. Có category: trả về tên các mẫu trong đó. Có khoảng 211 mẫu, nên ưu tiên truyền category hoặc dùng search_templates thay vì liệt kê tất cả.',
-    input_schema: { type: 'object', properties: { category: { type: 'string', description: 'Category tùy chọn cần liệt kê (ví dụ "title-cards", "lower-thirds").' } } },
+    input_schema: { type: 'object', properties: { category: { type: 'string', description: 'Nhóm tùy chọn cần liệt kê (ví dụ "title-cards", "lower-thirds").' } } },
   },
   {
     name: 'search_templates',
@@ -28,7 +28,7 @@ export const CORE_TOOL_SCHEMAS: AgentToolSchema[] = [
         templateName: { type: 'string', description: 'Tên mẫu (khớp gần đúng với list_templates).' },
         track: { type: 'string', description: 'Bí danh hoặc ID ổn định của rãnh video hiện tại (mặc định V1).' },
         startFrame: { type: 'number', description: 'Frame bắt đầu chính xác, tùy chọn; bỏ qua để nối vào cuối.' },
-        ripple: { type: 'boolean', description: 'Insert edit: đẩy các đoạn cùng rãnh tại/sau startFrame sang phải để tạo chỗ.' },
+        ripple: { type: 'boolean', description: 'Chèn: đẩy các đoạn cùng rãnh tại/sau startFrame sang phải để tạo chỗ.' },
       },
       required: ['templateName'],
     },
@@ -60,7 +60,7 @@ export const CORE_TOOL_SCHEMAS: AgentToolSchema[] = [
   },
   {
     name: 'set_item_timing',
-    description: 'Đổi timing đoạn: thay frame bắt đầu và/hoặc thời lượng (tính bằng frame), và/hoặc đặt fade-in / fade-out. Dùng để cắt ngắn, kéo dài hoặc tạo fade cho đoạn. Fade tính bằng GIÂY (theo ngữ nghĩa fadeIn/fadeOut của edit_item) — đoạn video fade opacity, đoạn âm thanh fade volume; 0 xóa fade. ripple:true dịch các đoạn cùng rãnh phía sau khi mép phải thay đổi (rút ngắn thì đóng khoảng trống; kéo dài thì đẩy sang phải).',
+    description: 'Đổi thời gian đoạn: thay frame bắt đầu và/hoặc thời lượng (tính bằng frame), và/hoặc đặt fade-in / fade-out. Dùng để cắt ngắn, kéo dài hoặc tạo fade cho đoạn. Fade tính bằng GIÂY (theo ngữ nghĩa fadeIn/fadeOut của edit_item) — đoạn video fade opacity, đoạn âm thanh fade volume; 0 xóa fade. ripple:true dịch các đoạn cùng rãnh phía sau khi mép phải thay đổi (rút ngắn thì đóng khoảng trống; kéo dài thì đẩy sang phải).',
     input_schema: {
       type: 'object',
       properties: {
@@ -103,7 +103,7 @@ export const CORE_TOOL_SCHEMAS: AgentToolSchema[] = [
         audioName: { type: 'string', description: 'Tên tư liệu âm thanh (khớp gần đúng với list_audio).' },
         track: { type: 'string', description: 'Bí danh hoặc ID ổn định của rãnh âm thanh hiện tại (mặc định A1).' },
         startFrame: { type: 'number', description: 'Frame bắt đầu chính xác, tùy chọn; bỏ qua để nối vào cuối.' },
-        ripple: { type: 'boolean', description: 'Insert edit: đẩy các đoạn cùng rãnh tại/sau startFrame sang phải để tạo chỗ.' },
+        ripple: { type: 'boolean', description: 'Chèn: đẩy các đoạn cùng rãnh tại/sau startFrame sang phải để tạo chỗ.' },
       },
       required: ['audioName'],
     },
@@ -114,7 +114,7 @@ export const CORE_TOOL_SCHEMAS: AgentToolSchema[] = [
     name: 'submit_motion_graphic',
     description: [
       'Gửi một tác vụ sinh Motion Graphic.',
-      'Tạo MỘT tư liệu đồ họa chuyển động trong kho tư liệu từ brief; KHÔNG đặt tư liệu lên dòng thời gian.',
+      'Tạo MỘT tư liệu đồ họa chuyển động trong kho tư liệu từ mô tả; KHÔNG đặt tư liệu lên dòng thời gian.',
       'Sau khi thành công, đặt bằng edit_item với adds:[{type:"motion-graphic", assetId, trackId?, fromFrame?}].',
       'Ưu tiên mẫu trong thư viện (browse_library / add_motion_graphic) nếu phù hợp; chỉ dùng công cụ này cho hình ảnh hoàn toàn mới.',
       'Chỉ gọi khi người dùng nói rõ muốn tạo MG mới.',
@@ -136,12 +136,12 @@ export const CORE_TOOL_SCHEMAS: AgentToolSchema[] = [
   {
     // Legacy alias kept for older prompts/skills; same executor as submit_motion_graphic.
     name: 'create_motion_graphic',
-    description: 'Alias của submit_motion_graphic (chỉ sinh MG trong pool). Ưu tiên submit_motion_graphic. Không đặt lên timeline — dùng edit_item sau đó.',
+    description: 'Bí danh của submit_motion_graphic (chỉ sinh MG trong kho). Ưu tiên submit_motion_graphic. Không đặt lên dòng thời gian — dùng edit_item sau đó.',
     input_schema: {
       type: 'object',
       properties: {
         description: { type: 'string', description: 'Nội dung/hành động đồ họa chuyển động cần hiển thị hoặc animate.' },
-        prompt: { type: 'string', description: 'Alias của description.' },
+        prompt: { type: 'string', description: 'Bí danh của description.' },
         name: { type: 'string', description: 'Tên hiển thị ngắn.' },
         durationSeconds: { type: 'number', minimum: 0.5, maximum: 600, description: 'Thời lượng tính bằng giây (mặc định 3).' },
         durationInFrames: { type: 'number', minimum: 15, maximum: 36000 },

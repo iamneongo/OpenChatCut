@@ -43,13 +43,13 @@ export const TRANSCRIPT_TOOL_SCHEMAS: AgentToolSchema[] = [
   },
   {
     name: 'find_transcript',
-    description: 'Tìm THỜI ĐIỂM một câu được nói — tra cứu tọa độ thời gian, không phải tool đọc hoặc chỉnh transcript. Trả về kết quả cùng phạm vi frame timeline (fromFrame/toFrame) để neo B-roll, motion graphic, marker hoặc overlay tại thời điểm đó (hoặc tìm vị trí trước delete_text). Mặc định: khớp liên tục không phân biệt hoa thường/dấu câu/khoảng trắng trên mọi clip có transcript trong timeline; các chỉnh sửa được tôn trọng (từ đã xóa sẽ không khớp). asset = tìm transcript raw của MỘT asset bất kể đang dùng trong timeline (tra cứu thư viện, bỏ qua chỉnh sửa). track = giới hạn trong track đó. fuzzy = khớp theo thứ tự token với dung sai cửa sổ (dùng khi ASR có thể chèn từ đệm như "uh," giữa các token truy vấn). includeWordTimestamps = thêm block Words dưới mỗi kết quả với thời điểm bắt đầu → kết thúc của từng từ — dùng khi đồng bộ nhịp animation với từ đang nói; bỏ qua khi chỉ cần neo câu (để tránh output thừa). limit = số kết quả tối đa (mặc định 10).',
+    description: 'Tìm THỜI ĐIỂM một câu được nói — tra cứu tọa độ thời gian, không phải công cụ đọc hoặc chỉnh transcript. Trả về kết quả cùng phạm vi frame dòng thời gian (fromFrame/toFrame) để neo B-roll, motion graphic, marker hoặc overlay tại thời điểm đó (hoặc tìm vị trí trước delete_text). Mặc định: khớp liên tục không phân biệt hoa thường/dấu câu/khoảng trắng trên mọi đoạn có transcript trong dòng thời gian; các chỉnh sửa được tôn trọng (từ đã xóa sẽ không khớp). asset = tìm transcript thô của MỘT asset bất kể đang dùng trong dòng thời gian (tra cứu thư viện, bỏ qua chỉnh sửa). track = giới hạn trong rãnh đó. fuzzy = khớp theo thứ tự token với dung sai cửa sổ (dùng khi ASR có thể chèn từ đệm như "uh," giữa các token truy vấn). includeWordTimestamps = thêm khối Words dưới mỗi kết quả với thời điểm bắt đầu → kết thúc của từng từ — dùng khi đồng bộ nhịp chuyển động với từ đang nói; bỏ qua khi chỉ cần neo câu (để tránh output thừa). limit = số kết quả tối đa (mặc định 10).',
     input_schema: {
       type: 'object',
       properties: {
         query: { type: 'string', description: 'Văn bản cần tìm.' },
         asset: { type: 'string', description: 'Id asset hoặc tiền tố id. Bỏ qua để tìm trong toàn bộ dự án.' },
-        track: { type: 'string', description: 'Alias track (V1/A1/...) hoặc id track. Giới hạn tìm kiếm trong track đó.' },
+        track: { type: 'string', description: 'Bí danh rãnh (V1/A1/...) hoặc id rãnh. Giới hạn tìm kiếm trong rãnh đó.' },
         fuzzy: { type: 'boolean', description: 'Khớp theo cửa sổ token (cho phép có từ đệm giữa các token).' },
         includeWordTimestamps: { type: 'boolean', description: 'Bao gồm timestamp từng từ trong mỗi kết quả (mặc định false). Thêm block Words với thời điểm bắt đầu -> kết thúc của từng từ. Dùng khi đồng bộ nhịp animation với lời nói (ví dụ nhịp nội bộ MG khớp với từ đang được nói).' },
         limit: { type: 'integer', description: 'Số kết quả tối đa (mặc định 10).' },
@@ -59,12 +59,12 @@ export const TRANSCRIPT_TOOL_SCHEMAS: AgentToolSchema[] = [
   },
   {
     name: 'clean_script',
-    description: 'Làm sạch clip đã chuyển lời theo cơ chế cố định, gồm xóa từ đệm và các quy tắc pause có kiểu. only có thể là "fillers", "silence" hoặc "fillers,silence". silence nhận compress:400, restore:500, normalize:500, range:300-800 cùng cú pháp cũ max:400, min:500, 500 và min:300,max:800. Quy tắc kéo dài pause không bao giờ vượt quá khoảng im lặng có trong bản ghi. Các lời gọi maxPauseSeconds/removeFillers hiện có vẫn được hỗ trợ. Toàn bộ thao tác là một bước undo.',
+    description: 'Làm sạch đoạn đã chuyển lời theo cơ chế cố định, gồm xóa từ đệm và các quy tắc khoảng dừng có kiểu. only có thể là "fillers", "silence" hoặc "fillers,silence". silence nhận compress:400, restore:500, normalize:500, range:300-800 cùng cú pháp cũ max:400, min:500, 500 và min:300,max:800. Quy tắc kéo dài khoảng dừng không bao giờ vượt quá khoảng im lặng có trong bản ghi. Các lời gọi maxPauseSeconds/removeFillers hiện có vẫn được hỗ trợ. Toàn bộ thao tác là một bước undo.',
     input_schema: {
       type: 'object',
       properties: {
-        track: { type: 'string', description: 'Alias/id track chứa clip voiceover cần làm sạch (mặc định A1). Làm sạch mọi clip đã chuyển lời trên track.' },
-        itemId: { type: 'string', description: 'Tùy chọn: chỉ làm sạch clip này thay vì toàn bộ track.' },
+        track: { type: 'string', description: 'Bí danh/id rãnh chứa đoạn voiceover cần làm sạch (mặc định A1). Làm sạch mọi đoạn đã chuyển lời trên rãnh.' },
+        itemId: { type: 'string', description: 'Tùy chọn: chỉ làm sạch đoạn này thay vì toàn bộ rãnh.' },
         only: { type: 'string', description: 'Chạy fillers, silence hoặc cả hai dưới dạng fillers,silence. Bỏ qua để giữ hành vi mặc định hiện có.' },
         silence: { type: 'string', description: 'Quy tắc pause: compress:400, restore:500, normalize:500, range:300-800 hoặc cú pháp cũ.' },
         longSilence: { type: 'number', description: 'Ngưỡng pause dài tính bằng mili giây cho quy tắc silence mặc định (pause từ ngưỡng trở lên được nén còn 200ms). Mặc định 3000 khi only gồm silence mà không truyền quy tắc silence.' },
@@ -77,7 +77,7 @@ export const TRANSCRIPT_TOOL_SCHEMAS: AgentToolSchema[] = [
   {
     name: 'edit_gap',
     description:
-      'Liệt kê hoặc chỉnh khoảng thở/im lặng giữa các từ nói trên clip đã chuyển lời. Khoảng được tính từ timestamp của từ (next.start − prev.end), không phải asset riêng. action=list trả về các khoảng nhìn thấy cùng afterWordIndex/gapSeconds/context. action=delete xóa một khoảng (silence→0, audio phía sau dồn về trước). action=cap nén một khoảng xuống maxSeconds (ví dụ 0.2). action=restore xóa ghi đè theo khoảng để trả lại pause gốc. Nên gọi list trước để lấy afterWordIndex. Để làm sạch pause hàng loạt trên toàn track, dùng clean_script.',
+      'Liệt kê hoặc chỉnh khoảng thở/im lặng giữa các từ nói trên đoạn đã chuyển lời. Khoảng được tính từ timestamp của từ (next.start − prev.end), không phải asset riêng. action=list trả về các khoảng nhìn thấy cùng afterWordIndex/gapSeconds/context. action=delete xóa một khoảng (silence→0, âm thanh phía sau dồn về trước). action=cap nén một khoảng xuống maxSeconds (ví dụ 0.2). action=restore xóa ghi đè theo khoảng để trả lại khoảng dừng gốc. Nên gọi list trước để lấy afterWordIndex. Để làm sạch khoảng dừng hàng loạt trên toàn rãnh, dùng clean_script.',
     input_schema: {
       type: 'object',
       properties: {
@@ -86,8 +86,8 @@ export const TRANSCRIPT_TOOL_SCHEMAS: AgentToolSchema[] = [
           enum: ['list', 'delete', 'cap', 'restore'],
           description: 'list=liệt kê khoảng; delete=xóa một khoảng; cap=nén một khoảng; restore=hoàn tác ghi đè theo khoảng.',
         },
-        track: { type: 'string', description: 'Alias/id track (mặc định A1) khi bỏ qua itemId.' },
-        itemId: { type: 'string', description: 'Id clip đích (chấp nhận tiền tố). Ưu tiên dùng khi nhiều clip chung một track.' },
+        track: { type: 'string', description: 'Bí danh/id rãnh (mặc định A1) khi bỏ qua itemId.' },
+        itemId: { type: 'string', description: 'Id đoạn đích (chấp nhận tiền tố). Ưu tiên dùng khi nhiều đoạn chung một rãnh.' },
         afterWordIndex: {
           type: 'number',
           description: 'Index của từ NGAY SAU khoảng (lấy từ list). Bắt buộc cho delete/cap/restore trừ khi truyền afterText.',
@@ -114,12 +114,12 @@ export const TRANSCRIPT_TOOL_SCHEMAS: AgentToolSchema[] = [
   },
   {
     name: 'delete_text',
-    description: 'Xóa một câu nói khỏi track — "xóa text = xóa video": audio của các từ khớp và thời lượng của chúng bị cắt, clip được tính lại timing. Nếu không chắc câu chính xác, hãy gọi find_transcript trước. ⚠ Chỉ clip AUDIO được tính lại timing theo cách này; clip VIDEO luôn phát liên tục từ srcInFrame — xóa từ KHÔNG cắt gì (caption vẫn phản chiếu lời nói nghe được nên không có hiệu ứng hiển thị). Để cắt clip video, dùng split_item / edit_item (srcInFrame + durationInFrames); để ẩn từng từ trong caption, dùng edit_captions action=display_text.',
+    description: 'Xóa một câu nói khỏi rãnh — "xóa văn bản = xóa video": âm thanh của các từ khớp và thời lượng của chúng bị cắt, đoạn được tính lại thời gian. Nếu không chắc câu chính xác, hãy gọi find_transcript trước. ⚠ Chỉ đoạn AUDIO được tính lại thời gian theo cách này; đoạn VIDEO luôn phát liên tục từ srcInFrame — xóa từ KHÔNG cắt gì (caption vẫn phản chiếu lời nói nghe được nên không có hiệu ứng hiển thị). Để cắt đoạn video, dùng split_item / edit_item (srcInFrame + durationInFrames); để ẩn từng từ trong caption, dùng edit_captions action=display_text.',
     input_schema: { type: 'object', properties: { track: { type: 'string' }, query: { type: 'string', description: 'Câu cần xóa (khớp với transcript).' } }, required: ['query'] },
   },
   {
     name: 'manage_transcript',
-    description: 'Sửa transcript nguồn và quản lý các biến thể dịch; phần lớn action giữ nguyên timing từ và thời lượng clip. Tám action:\n'
+    description: 'Sửa transcript nguồn và quản lý các biến thể dịch; phần lớn action giữ nguyên thời gian của từ và thời lượng đoạn. Tám action:\n'
       + '- fix: sửa transcript nguồn. Với một từ, truyền wordIndex hoặc find chứa text nguồn sai cùng text đã sửa; chỉ word.text thay đổi. Để đổi tên hoặc gộp người nói, truyền from với nhãn hiện có như "A" cùng to là tên hiển thị mới; truyền một nhãn hiện có khác sẽ gộp người nói. Chỉ word.speaker thay đổi.\n'
       + '- clear_edits: đưa clip về transcript raw bằng cách xóa từ đã xóa, giới hạn silence, ghi đè gap và ghi đè thứ tự phát (giống nút “Khôi phục tất cả” trong panel Transcript). Tính lại timing clip theo toàn bộ thời lượng transcript.\n'
       + '- set_play_order: đổi thứ tự phát lời nói qua mảng chỉ số từ playOrder (giống kéo block lời nói trong panel Transcript). Truyền playOrder:null hoặc clearPlayOrder:true để khôi phục thứ tự thời gian. Tính lại timing clip.\n'
@@ -140,8 +140,8 @@ export const TRANSCRIPT_TOOL_SCHEMAS: AgentToolSchema[] = [
           ],
           description: 'Xem mô tả tool: sửa từ/người nói, khôi phục chỉnh sửa, đặt thứ tự phát lời nói, chạy lại ASR hoặc quản lý bản dịch.',
         },
-        itemId: { type: 'string', description: 'Id item clip đích hoặc tiền tố duy nhất; bỏ qua để dùng clip audio/video có transcript đầu tiên trên track.' },
-        track: { type: 'string', description: 'Khi bỏ qua itemId, tìm theo alias hoặc id ổn định của track; mặc định A1.' },
+        itemId: { type: 'string', description: 'Id item đoạn đích hoặc tiền tố duy nhất; bỏ qua để dùng đoạn audio/video có transcript đầu tiên trên rãnh.' },
+        track: { type: 'string', description: 'Khi bỏ qua itemId, tìm theo bí danh hoặc id ổn định của rãnh; mặc định A1.' },
         provider: {
           type: 'string',
           enum: ['assemblyai', 'local', 'openai', 'mistral', 'deepgram', 'groq', 'elevenlabs', 'cartesia'],
