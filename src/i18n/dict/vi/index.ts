@@ -74,7 +74,7 @@ export const VI: Record<string, string> = {
   '闪黑转场': 'Chuyển cảnh chớp đen',
   '闪白转场': 'Chuyển cảnh chớp trắng',
   '冲击抖动转场': 'Chuyển cảnh rung va đập',
-  '叠加转场': 'Chuyển cảnh hòa trộn',
+  '叠加转场': 'Chuyển cảnh hòa trộn độ sáng',
   '光溶转场': 'Chuyển cảnh hòa tan hữu cơ',
   '翻页转场': 'Chuyển cảnh lật trang',
   '焦点转场': 'Chuyển cảnh đổi tiêu điểm',
