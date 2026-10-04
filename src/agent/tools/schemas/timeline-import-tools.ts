@@ -3,8 +3,8 @@ import type { AgentToolSchema } from '../../tool-schema';
 export const TIMELINE_IMPORT_TOOL_SCHEMAS: AgentToolSchema[] = [{
   name: 'import_timeline',
   description: [
-    'Nhập dự án Final Cut Pro / DaVinci Resolve FCPXML 1.x hoặc CMX 3600 EDL vào timeline OpenChatCut mới có thể chỉnh sửa.',
-    'Timeline mới chạy theo frame rate của dự án; sequence hoặc list có rate khác sẽ được chuyển đổi, làm tròn điểm cắt tới frame gần nhất.',
+    'Nhập dự án Final Cut Pro / DaVinci Resolve FCPXML 1.x hoặc CMX 3600 EDL vào dòng thời gian OpenChatCut mới có thể chỉnh sửa.',
+    'Dòng thời gian mới chạy theo tốc độ khung hình của dự án; sequence hoặc list có tốc độ khác sẽ được chuyển đổi, làm tròn điểm cắt tới frame gần nhất.',
     'Thời gian FCPXML được chuyển sang timeline mới qua tcStart của sequence và mọi clip bao ngoài, gap, connected clip hoặc storyline (lane), compound clip (ref-clip), sync-clip, multicam clip (active angle) và audition (active pick), gồm cả rate conform và tốc độ retime; điểm vào nguồn được đo từ timecode bắt đầu riêng của từng file.',
     'Event EDL được đặt từ mốc record start của list: dùng mốc đầu giờ (ví dụ 01:00:00:00) khi record-in đầu tiên cách mốc đó chưa tới một phút, nếu không thì dùng record-in đầu tiên, hoặc startTimecode nếu được truyền. EDL không ghi frame rate: fps mặc định theo timeline hiện tại (29.97/59.94 cho list drop-frame).',
     'File được tham chiếu phải tồn tại sẵn trong media pool hiện tại; việc khớp dùng asset id, original path, source path, source filename và asset name. Media không tìm thấy hoặc mơ hồ sẽ khiến import dừng mà không thay đổi dự án.',

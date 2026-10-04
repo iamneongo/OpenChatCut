@@ -4,7 +4,7 @@ export const SCENE_QUALITY_TOOL_SCHEMAS: AgentToolSchema[] = [
   {
     name: 'review_scene_plan',
     description: [
-      'Rà soát mang tính tư vấn một kế hoạch nhiều cảnh để phát hiện lặp lại, hình ảnh trang trí, lạm dụng card tĩnh và ngôn ngữ chung chung.',
+      'Rà soát mang tính tư vấn một kế hoạch nhiều cảnh để phát hiện lặp lại, hình ảnh trang trí, lạm dụng thẻ tĩnh và ngôn ngữ chung chung.',
       'Trả về điểm rủi ro chuẩn hóa 0–5, lời khuyên sửa và số thứ tự các cảnh bị ảnh hưởng.',
       'Báo cáo chỉ là tư vấn tùy chọn, không bao giờ chặn hoặc cấp phép submit_image/submit_video.',
     ].join(' '),
@@ -14,7 +14,7 @@ export const SCENE_QUALITY_TOOL_SCHEMAS: AgentToolSchema[] = [
         scenes: {
           type: 'array',
           minItems: 1,
-          description: 'Các cảnh theo thứ tự cần rà soát. So sánh type sẽ bỏ khoảng trắng và không phân biệt hoa thường; field trách nhiệm trống được tính là thiếu.',
+          description: 'Các cảnh theo thứ tự cần rà soát. So sánh type sẽ bỏ khoảng trắng và không phân biệt hoa thường; trường trách nhiệm trống được tính là thiếu.',
           items: {
             type: 'object',
             properties: {
