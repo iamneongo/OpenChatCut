@@ -19,11 +19,11 @@ export const COLOR_SCOPE_TOOL_SCHEMAS: AgentToolSchema[] = [
     input_schema: {
       type: 'object',
       properties: {
-        frame: { type: 'number', description: 'Frame trên dòng thời gian cần đo (đã ghép). Mặc định: giữa nội dung.' },
-        seconds: { type: 'number', description: 'Thời điểm trên dòng thời gian tính bằng giây (thay cho frame).' },
+        frame: { type: 'number', description: 'Khung trên dòng thời gian cần đo (đã ghép). Mặc định: giữa nội dung.' },
+        seconds: { type: 'number', description: 'Thời điểm trên dòng thời gian tính bằng giây (thay cho khung).' },
         assetId: { type: 'string', description: 'Đo tư liệu GỐC trong kho tư liệu thay vì dòng thời gian (được dùng tiền tố ID).' },
         sourceSeconds: { type: 'number', description: 'Chỉ dùng ở chế độ tư liệu: thời điểm nguồn cần lấy mẫu (mặc định: giữa tư liệu).' },
-        referenceFrame: { type: 'number', description: 'Frame trên dòng thời gian tham chiếu để so sánh.' },
+        referenceFrame: { type: 'number', description: 'Khung trên dòng thời gian tham chiếu để so sánh.' },
         referenceSeconds: { type: 'number', description: 'Thời điểm dòng thời gian tham chiếu tính bằng giây (thay cho referenceFrame).' },
         referenceAssetId: { type: 'string', description: 'So sánh với frame của tư liệu GỐC trong kho tư liệu (được dùng tiền tố ID).' },
         referenceSourceSeconds: { type: 'number', description: 'Thời điểm nguồn của tư liệu tham chiếu (mặc định: giữa tư liệu).' },

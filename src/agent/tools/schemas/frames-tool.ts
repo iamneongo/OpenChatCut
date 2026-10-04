@@ -12,7 +12,7 @@ export const FRAMES_TOOL_SCHEMAS: AgentToolSchema[] = [
     input_schema: {
       type: 'object',
       properties: {
-        frames: { type: 'array', items: { type: 'number' }, maxItems: 8, description: 'Số frame tuyệt đối trên dòng thời gian cần kết xuất.' },
+        frames: { type: 'array', items: { type: 'number' }, maxItems: 8, description: 'Số khung tuyệt đối trên dòng thời gian cần kết xuất.' },
         seconds: { type: 'array', items: { type: 'number' }, maxItems: 8, description: 'Số giây tuyệt đối trên dòng thời gian (được đổi theo fps dòng thời gian).' },
         count: { type: 'number', minimum: 1, maximum: 8, description: 'Các điểm giữa đều nhau trên dòng thời gian/vùng (mặc định 4, tối đa 8).' },
         fromSeconds: { type: 'number', description: 'Điểm đầu vùng dòng thời gian tuyệt đối (dùng cùng toSeconds).' },
@@ -42,7 +42,7 @@ export const FRAMES_TOOL_SCHEMAS: AgentToolSchema[] = [
           maxItems: 8,
           description: 'Độ lệch mili giây theo thời gian tư liệu nguồn. Nhận 1–8 giá trị.',
         },
-        frames: { type: 'array', items: { type: 'number' }, maxItems: 8, description: 'Số frame tư liệu nguồn (theo timebase dự án/nguồn).' },
+        frames: { type: 'array', items: { type: 'number' }, maxItems: 8, description: 'Số khung tư liệu nguồn (theo timebase dự án/nguồn).' },
         seconds: { type: 'array', items: { type: 'number' }, maxItems: 8, description: 'Số giây tư liệu nguồn.' },
         count: { type: 'number', minimum: 1, maximum: 8, description: 'Các điểm giữa đều nhau của vùng nguồn (mặc định 6 cho video, tối đa 8).' },
         fromSeconds: { type: 'number', description: 'Điểm đầu vùng tư liệu nguồn; giao với vùng đoạn khi dùng itemId.' },

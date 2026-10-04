@@ -27,7 +27,7 @@ export const CORE_TOOL_SCHEMAS: AgentToolSchema[] = [
       properties: {
         templateName: { type: 'string', description: 'Tên mẫu (khớp gần đúng với list_templates).' },
         track: { type: 'string', description: 'Bí danh hoặc ID ổn định của rãnh video hiện tại (mặc định V1).' },
-        startFrame: { type: 'number', description: 'Frame bắt đầu chính xác, tùy chọn; bỏ qua để nối vào cuối.' },
+        startFrame: { type: 'number', description: 'Khung bắt đầu chính xác, tùy chọn; bỏ qua để nối vào cuối.' },
         ripple: { type: 'boolean', description: 'Chèn: đẩy các đoạn cùng rãnh tại/sau startFrame sang phải để tạo chỗ.' },
       },
       required: ['templateName'],
@@ -47,7 +47,7 @@ export const CORE_TOOL_SCHEMAS: AgentToolSchema[] = [
   },
   {
     name: 'move_item',
-    description: 'Di chuyển đoạn sang rãnh khác và/hoặc frame bắt đầu khác.',
+    description: 'Di chuyển đoạn sang rãnh khác và/hoặc khung bắt đầu khác.',
     input_schema: {
       type: 'object',
       properties: {
@@ -60,7 +60,7 @@ export const CORE_TOOL_SCHEMAS: AgentToolSchema[] = [
   },
   {
     name: 'set_item_timing',
-    description: 'Đổi thời gian đoạn: thay frame bắt đầu và/hoặc thời lượng (tính bằng frame), và/hoặc đặt fade-in / fade-out. Dùng để cắt ngắn, kéo dài hoặc tạo fade cho đoạn. Fade tính bằng GIÂY (theo ngữ nghĩa fadeIn/fadeOut của edit_item) — đoạn video fade opacity, đoạn âm thanh fade volume; 0 xóa fade. ripple:true dịch các đoạn cùng rãnh phía sau khi mép phải thay đổi (rút ngắn thì đóng khoảng trống; kéo dài thì đẩy sang phải).',
+    description: 'Đổi thời gian đoạn: thay khung bắt đầu và/hoặc thời lượng (tính bằng khung), và/hoặc đặt fade-in / fade-out. Dùng để cắt ngắn, kéo dài hoặc tạo fade cho đoạn. Fade tính bằng GIÂY (theo ngữ nghĩa fadeIn/fadeOut của edit_item) — đoạn video fade opacity, đoạn âm thanh fade volume; 0 xóa fade. ripple:true dịch các đoạn cùng rãnh phía sau khi mép phải thay đổi (rút ngắn thì đóng khoảng trống; kéo dài thì đẩy sang phải).',
     input_schema: {
       type: 'object',
       properties: {
@@ -86,7 +86,7 @@ export const CORE_TOOL_SCHEMAS: AgentToolSchema[] = [
   },
   {
     name: 'split_item',
-    description: 'Tách đoạn thành hai tại frame tuyệt đối được chỉ định.',
+    description: 'Tách đoạn thành hai tại khung tuyệt đối được chỉ định.',
     input_schema: { type: 'object', properties: { itemId: { type: 'string', minLength: 1 }, atFrame: { type: 'number' } }, required: ['itemId', 'atFrame'] },
   },
   {
@@ -102,7 +102,7 @@ export const CORE_TOOL_SCHEMAS: AgentToolSchema[] = [
       properties: {
         audioName: { type: 'string', description: 'Tên tư liệu âm thanh (khớp gần đúng với list_audio).' },
         track: { type: 'string', description: 'Bí danh hoặc ID ổn định của rãnh âm thanh hiện tại (mặc định A1).' },
-        startFrame: { type: 'number', description: 'Frame bắt đầu chính xác, tùy chọn; bỏ qua để nối vào cuối.' },
+        startFrame: { type: 'number', description: 'Khung bắt đầu chính xác, tùy chọn; bỏ qua để nối vào cuối.' },
         ripple: { type: 'boolean', description: 'Chèn: đẩy các đoạn cùng rãnh tại/sau startFrame sang phải để tạo chỗ.' },
       },
       required: ['audioName'],

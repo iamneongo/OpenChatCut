@@ -26,7 +26,7 @@ export const TRANSCRIPT_TOOL_SCHEMAS: AgentToolSchema[] = [
   },
   {
     name: 'search_media',
-    description: 'Tìm tư liệu dự án qua một giao diện có kiểu rõ ràng. Trả về kết quả cảnh hình ảnh ChineseCLIP và kết quả bản chép lời với điểm số chuẩn hóa theo từng modality, khoảng thời gian nguồn, ID tư liệu và revision nguồn. Kết quả được nhóm theo modality vì điểm cosine và điểm bản chép lời không thể so sánh trực tiếp; kết quả suy dẫn đã cũ sẽ bị loại. Truyền nguyên vẹn sourceStartMs/sourceEndMs của kết quả vào edit_item adds với cùng tên field; edit_item tự chuyển mili giây thành frame nguồn.',
+    description: 'Tìm tư liệu dự án qua một giao diện có kiểu rõ ràng. Trả về kết quả cảnh hình ảnh ChineseCLIP và kết quả bản chép lời với điểm số chuẩn hóa theo từng modality, khoảng thời gian nguồn, ID tư liệu và revision nguồn. Kết quả được nhóm theo modality vì điểm cosine và điểm bản chép lời không thể so sánh trực tiếp; kết quả suy dẫn đã cũ sẽ bị loại. Truyền nguyên vẹn sourceStartMs/sourceEndMs của kết quả vào edit_item adds với cùng tên field; edit_item tự chuyển mili giây thành khung nguồn.',
     input_schema: {
       type: 'object',
       properties: {
@@ -43,7 +43,7 @@ export const TRANSCRIPT_TOOL_SCHEMAS: AgentToolSchema[] = [
   },
   {
     name: 'find_transcript',
-    description: 'Tìm THỜI ĐIỂM một câu được nói — tra cứu tọa độ thời gian, không phải công cụ đọc hoặc chỉnh transcript. Trả về kết quả cùng phạm vi frame dòng thời gian (fromFrame/toFrame) để neo B-roll, motion graphic, marker hoặc overlay tại thời điểm đó (hoặc tìm vị trí trước delete_text). Mặc định: khớp liên tục không phân biệt hoa thường/dấu câu/khoảng trắng trên mọi đoạn có transcript trong dòng thời gian; các chỉnh sửa được tôn trọng (từ đã xóa sẽ không khớp). asset = tìm transcript thô của MỘT asset bất kể đang dùng trong dòng thời gian (tra cứu thư viện, bỏ qua chỉnh sửa). track = giới hạn trong rãnh đó. fuzzy = khớp theo thứ tự token với dung sai cửa sổ (dùng khi ASR có thể chèn từ đệm như "uh," giữa các token truy vấn). includeWordTimestamps = thêm khối Words dưới mỗi kết quả với thời điểm bắt đầu → kết thúc của từng từ — dùng khi đồng bộ nhịp chuyển động với từ đang nói; bỏ qua khi chỉ cần neo câu (để tránh output thừa). limit = số kết quả tối đa (mặc định 10).',
+    description: 'Tìm THỜI ĐIỂM một câu được nói — tra cứu tọa độ thời gian, không phải công cụ đọc hoặc chỉnh transcript. Trả về kết quả cùng phạm vi khung dòng thời gian (fromFrame/toFrame) để neo B-roll, motion graphic, marker hoặc overlay tại thời điểm đó (hoặc tìm vị trí trước delete_text). Mặc định: khớp liên tục không phân biệt hoa thường/dấu câu/khoảng trắng trên mọi đoạn có transcript trong dòng thời gian; các chỉnh sửa được tôn trọng (từ đã xóa sẽ không khớp). asset = tìm transcript thô của MỘT tư liệu bất kể đang dùng trong dòng thời gian (tra cứu thư viện, bỏ qua chỉnh sửa). track = giới hạn trong rãnh đó. fuzzy = khớp theo thứ tự token với dung sai cửa sổ (dùng khi ASR có thể chèn từ đệm như "uh," giữa các token truy vấn). includeWordTimestamps = thêm khối Words dưới mỗi kết quả với thời điểm bắt đầu → kết thúc của từng từ — dùng khi đồng bộ nhịp chuyển động với từ đang nói; bỏ qua khi chỉ cần neo câu (để tránh đầu ra thừa). limit = số kết quả tối đa (mặc định 10).',
     input_schema: {
       type: 'object',
       properties: {
@@ -77,7 +77,7 @@ export const TRANSCRIPT_TOOL_SCHEMAS: AgentToolSchema[] = [
   {
     name: 'edit_gap',
     description:
-      'Liệt kê hoặc chỉnh khoảng thở/im lặng giữa các từ nói trên đoạn đã chuyển lời. Khoảng được tính từ timestamp của từ (next.start − prev.end), không phải asset riêng. action=list trả về các khoảng nhìn thấy cùng afterWordIndex/gapSeconds/context. action=delete xóa một khoảng (silence→0, âm thanh phía sau dồn về trước). action=cap nén một khoảng xuống maxSeconds (ví dụ 0.2). action=restore xóa ghi đè theo khoảng để trả lại khoảng dừng gốc. Nên gọi list trước để lấy afterWordIndex. Để làm sạch khoảng dừng hàng loạt trên toàn rãnh, dùng clean_script.',
+      'Liệt kê hoặc chỉnh khoảng thở/im lặng giữa các từ nói trên đoạn đã chuyển lời. Khoảng được tính từ dấu thời gian của từ (next.start − prev.end), không phải tư liệu riêng. action=list trả về các khoảng nhìn thấy cùng afterWordIndex/gapSeconds/context. action=delete xóa một khoảng (silence→0, âm thanh phía sau dồn về trước). action=cap nén một khoảng xuống maxSeconds (ví dụ 0.2). action=restore xóa ghi đè theo khoảng để trả lại khoảng dừng gốc. Nên gọi list trước để lấy afterWordIndex. Để làm sạch khoảng dừng hàng loạt trên toàn rãnh, dùng clean_script.',
     input_schema: {
       type: 'object',
       properties: {
@@ -140,7 +140,7 @@ export const TRANSCRIPT_TOOL_SCHEMAS: AgentToolSchema[] = [
           ],
           description: 'Xem mô tả công cụ: sửa từ/người nói, khôi phục chỉnh sửa, đặt thứ tự phát lời nói, chạy lại ASR hoặc quản lý bản dịch.',
         },
-        itemId: { type: 'string', description: 'Id item đoạn đích hoặc tiền tố duy nhất; bỏ qua để dùng đoạn audio/video có transcript đầu tiên trên rãnh.' },
+        itemId: { type: 'string', description: 'ID đoạn đích hoặc tiền tố duy nhất; bỏ qua để dùng đoạn âm thanh/video có bản chép lời đầu tiên trên rãnh.' },
         track: { type: 'string', description: 'Khi bỏ qua itemId, tìm theo bí danh hoặc id ổn định của rãnh; mặc định A1.' },
         provider: {
           type: 'string',

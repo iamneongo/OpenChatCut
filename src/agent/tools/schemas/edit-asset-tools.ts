@@ -5,7 +5,7 @@ export const EDIT_ASSET_TOOL_SCHEMAS: AgentToolSchema[] = [
     name: 'edit_asset',
     description: [
       'Cập nhật hoặc xóa tư liệu trong kho tư liệu, không phải đoạn trên dòng thời gian; dùng move_item/remove_item cho đoạn.',
-      'action=update thay đổi name, props hoặc metadata sourceTimecode/captureClock chính xác; asset code như đồ họa chuyển động được sinh có thể nhận code mới,',
+      'action=update thay đổi name, props hoặc metadata sourceTimecode/captureClock chính xác; mã tư liệu như đồ họa chuyển động được sinh có thể nhận code mới,',
       'nhưng code phải vượt qua bước biên dịch sandbox trước khi lưu thay đổi. Metadata đồng hồ dùng frameCount + frameRate dạng hữu tỉ + dropFrame đã chuẩn hóa.',
     ].join(' '),
     input_schema: {
