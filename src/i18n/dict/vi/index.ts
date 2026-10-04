@@ -1,7 +1,7 @@
 // Vietnamese UI translations. Chinese originals remain the lookup keys so the
 // existing i18n contract stays compatible with projects and agent messages.
-// Untranslated copy intentionally falls back to English while the Vietnamese
-// dictionary is completed domain by domain.
+// The Vietnamese UI is complete by domain; unknown UI keys stay visible as
+// their original lookup key instead of silently falling back to English.
 export const VI: Record<string, string> = {
   '渲染': 'Kết xuất',
   '上传': 'Tải lên',
