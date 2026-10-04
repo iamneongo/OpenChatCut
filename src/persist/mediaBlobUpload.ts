@@ -12,7 +12,7 @@ export async function serverPathIsAuthoritative(src: string): Promise<boolean> {
 }
 
 export async function sha256Blob(blob: Blob): Promise<string> {
-  if (!globalThis.crypto?.subtle) throw new Error('môi trường hiện tại không hỗ trợ hash media an toàn');
+  if (!globalThis.crypto?.subtle) throw new Error('môi trường hiện tại không hỗ trợ mã băm tư liệu an toàn');
   const digest = await globalThis.crypto.subtle.digest('SHA-256', await blob.arrayBuffer());
   return Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, '0')).join('');
 }
@@ -29,18 +29,18 @@ export async function serverMediaHash(src: string): Promise<string | null> {
   try {
     response = await fetch(src, { cache: 'no-store' });
   } catch {
-    throw new Error(`không thể xác nhận đích media đã tồn tại hay chưa: ${src}`);
+    throw new Error(`không thể xác nhận đích tư liệu đã tồn tại hay chưa: ${src}`);
   }
   if (response.status === 404
     || (isSpaFallback(response) && response.headers.get(MEDIA_AUTHORITY_HEADER) !== 'server')) return null;
-  if (!response.ok) throw new Error(`không thể xác nhận đích media đã tồn tại hay chưa (${response.status}): ${src}`);
+  if (!response.ok) throw new Error(`không thể xác nhận đích tư liệu đã tồn tại hay chưa (${response.status}): ${src}`);
   const declaredBytes = Number(response.headers.get('content-length'));
   if (Number.isFinite(declaredBytes) && declaredBytes > MAX_TOTAL_CACHE_BYTES) {
-    throw new Error(`kích thước đích media hiện có không hợp lệ: ${src}`);
+    throw new Error(`kích thước đích tư liệu hiện có không hợp lệ: ${src}`);
   }
   const blob = await response.blob();
   if (blob.size <= 0 || blob.size > MAX_TOTAL_CACHE_BYTES) {
-    throw new Error(`kích thước đích media hiện có không hợp lệ: ${src}`);
+    throw new Error(`kích thước đích tư liệu hiện có không hợp lệ: ${src}`);
   }
   return sha256Blob(blob);
 }
@@ -60,7 +60,7 @@ export function uploadAssetIdFromSrc(src: string): string | null {
 
 export function uploadPathForRecord(rec: MediaBlobRecord): string {
   const assetId = uploadAssetIdFromSrc(rec.src);
-  if (!assetId) throw new Error(`không thể tạo đường dẫn server từ src media gói project: ${rec.src}`);
+  if (!assetId) throw new Error(`không thể tạo đường dẫn máy chủ từ src tư liệu gói dự án: ${rec.src}`);
   return `/media/uploads/${assetId}${mediaExtension(rec.name)}`;
 }
 

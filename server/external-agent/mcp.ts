@@ -324,14 +324,14 @@ async function readMcpPostBody(req: IncomingMessage): Promise<unknown> {
   for await (const chunk of req) {
     const buffer = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk);
     bytes += buffer.length;
-    if (bytes > MCP_POST_BODY_LIMIT_BYTES) throw new Error('thân request MCP vượt quá 2 MiB');
+    if (bytes > MCP_POST_BODY_LIMIT_BYTES) throw new Error('thân yêu cầu MCP vượt quá 2 MiB');
     chunks.push(buffer);
   }
-  if (bytes === 0) throw new Error('thân request MCP đang trống');
+  if (bytes === 0) throw new Error('thân yêu cầu MCP đang trống');
   try {
     return JSON.parse(Buffer.concat(chunks).toString('utf8')) as unknown;
   } catch {
-    throw new Error('thân request MCP chứa JSON không hợp lệ');
+    throw new Error('thân yêu cầu MCP chứa JSON không hợp lệ');
   }
 }
 

@@ -109,12 +109,12 @@ export function assertCanonicalToolInvocation(
   active: readonly AgentToolSchema[],
 ): void {
   const expected = active.find((candidate) => candidate.name === schema.name);
-  if (!expected) throw new Error(`Tool không hoạt động trong request này: ${schema.name}`);
+  if (!expected) throw new Error(`Công cụ không hoạt động trong yêu cầu này: ${schema.name}`);
   if (canonicalJson(schema.input_schema) !== canonicalJson(expected.input_schema)) {
-    throw new Error('Schema tool đã thay đổi trong lúc xử lý request.');
+    throw new Error('Lược đồ công cụ đã thay đổi trong lúc xử lý yêu cầu.');
   }
   if (!args || typeof args !== 'object' || Array.isArray(args)) {
-    throw new Error(`Đối số của tool ${schema.name} không hợp lệ.`);
+    throw new Error(`Đối số của công cụ ${schema.name} không hợp lệ.`);
   }
   const validation = validateAgentToolInvocation(schema, args, active);
   if (!validation.ok) throw new Error(validation.error);

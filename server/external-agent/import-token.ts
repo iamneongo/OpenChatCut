@@ -59,15 +59,15 @@ export function isSafeImportFilename(value: unknown): value is string {
     && safeSourceFilename(value) === value && !hasControlCharacter(value);
 }
 function normalizeScope(scope: ImportTokenScope): ImportTokenScope {
-  if (!SESSION_ID_PATTERN.test(scope.sessionId)) throw new Error('session id nhập không hợp lệ');
-  if (!ASSET_ID_PATTERN.test(scope.assetId)) throw new Error('asset id nhập không hợp lệ');
-  if (ASSET_TYPES[scope.assetType] !== true) throw new Error('loại asset nhập không hợp lệ');
+  if (!SESSION_ID_PATTERN.test(scope.sessionId)) throw new Error('ID phiên nhập không hợp lệ');
+  if (!ASSET_ID_PATTERN.test(scope.assetId)) throw new Error('ID tư liệu nhập không hợp lệ');
+  if (ASSET_TYPES[scope.assetType] !== true) throw new Error('loại tư liệu nhập không hợp lệ');
   if (!isSafeImportFilename(scope.filename)) throw new Error('tên tệp nhập không hợp lệ');
-  if (!PROJECT_ID_PATTERN.test(scope.projectId)) throw new Error('project id nhập không hợp lệ');
-  if (METHODS[scope.method] !== true) throw new Error('phương thức upload nhập không hợp lệ');
+  if (!PROJECT_ID_PATTERN.test(scope.projectId)) throw new Error('ID dự án nhập không hợp lệ');
+  if (METHODS[scope.method] !== true) throw new Error('phương thức tải lên nhập không hợp lệ');
   const contentType = normalizedContentType(scope.contentType);
   const mediaType = externalUploadMediaType(scope.assetType, contentType);
-  if (!contentType || !mediaType) throw new Error('loại asset hoặc content type nhập không hợp lệ');
+  if (!contentType || !mediaType) throw new Error('loại tư liệu hoặc kiểu nội dung nhập không hợp lệ');
   if (!Number.isSafeInteger(scope.expectedBytes) || scope.expectedBytes <= 0) throw new Error('kích thước byte dự kiến của import không hợp lệ');
   return { ...scope, contentType: mediaType.contentType };
 }
@@ -129,10 +129,10 @@ export function parseImportTokenScope(value: Record<string, unknown>): ImportTok
     method: true, contentType: true, expectedBytes: true,
   };
   if (Object.keys(value).some((key) => allowedKeys[key] !== true)) {
-    throw new Error('request import token không hợp lệ');
+    throw new Error('yêu cầu mã nhập không hợp lệ');
   }
   const scope = normalizeScope(value as unknown as ImportTokenScope);
-  if (scope.method !== 'POST') throw new Error('request import token không hợp lệ');
+  if (scope.method !== 'POST') throw new Error('yêu cầu mã nhập không hợp lệ');
   return scope;
 }
 const importTokens = new ImportTokenRegistry();
@@ -214,11 +214,11 @@ export function mintUploadReceipt(
   uploaded: { path: string; fileKey: string; bytes: number; contentHash: string },
 ): string {
   if (uploaded.bytes !== scope.expectedBytes || !/^[a-f0-9]{64}$/.test(uploaded.contentHash)) {
-    throw new Error('định danh media đã upload không khớp scope bàn giao');
+    throw new Error('định danh tư liệu đã tải lên không khớp phạm vi bàn giao');
   }
   pruneUploadReceipts();
   if (uploadReceipts.size >= RECEIPT_MAX_ENTRIES) {
-    throw new Error('đã đạt giới hạn upload receipt');
+    throw new Error('đã đạt giới hạn biên nhận tải lên');
   }
   const receipt = randomBytes(32).toString('base64url');
   uploadReceipts.set(receipt, {

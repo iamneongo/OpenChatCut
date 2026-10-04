@@ -11,7 +11,7 @@ import { resolveAgentMediaPath } from './local-path-import.ts';
 import { directoryMediaKind } from './directory-watch-import.ts';
 
 export async function browseLocalMedia(request: unknown): Promise<AgentLocalMediaResult> {
-  if (!isAgentLocalMediaRequest(request)) throw new Error('request duyệt media cục bộ không hợp lệ');
+  if (!isAgentLocalMediaRequest(request)) throw new Error('yêu cầu duyệt tư liệu cục bộ không hợp lệ');
   const root = await resolveAgentMediaPath(request.path ?? homedir());
   const query = (request.query ?? '').toLocaleLowerCase();
   const entries: AgentLocalMediaEntry[] = [];

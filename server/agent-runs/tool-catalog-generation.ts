@@ -26,12 +26,12 @@ export async function serverToolCatalogForGeneration(
   const cloned = structuredClone(schemas);
   const loadSkill = cloned.find((schema) => schema.name === 'load_skill');
   if (!loadSkill) return [...cloned];
-  if (!loadSkill.description?.endsWith('Skill đóng gói: .')) {
+  if (!loadSkill.description?.endsWith('Kỹ năng đóng gói: .')) {
     throw new Error('định dạng mô tả schema load_skill đã thay đổi.');
   }
   loadSkill.description = loadSkill.description.replace(
-    'Skill đóng gói: .',
-    `Skill đóng gói: ${(await bundledSkillIds()).join(', ')}.`,
+    'Kỹ năng đóng gói: .',
+    `Kỹ năng đóng gói: ${(await bundledSkillIds()).join(', ')}.`,
   );
   return [...cloned];
 }

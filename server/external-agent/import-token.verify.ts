@@ -79,11 +79,11 @@ assert.equal(capped.consume(afterPrune.token, use).status, 'accepted');
 
 assert.throws(
   () => parseImportTokenScope({ ...scope, extra: true }),
-  /request import token không hợp lệ/,
+  /yêu cầu mã nhập không hợp lệ/,
 );
 assert.throws(
   () => parseImportTokenScope({ ...scope, method: 'PUT' }),
-  /request import token không hợp lệ/,
+  /yêu cầu mã nhập không hợp lệ/,
 );
 assert.throws(
   () => registry.mint({ ...scope, filename: '../clip.mov' }),
@@ -91,7 +91,7 @@ assert.throws(
 );
 assert.throws(
   () => registry.mint({ ...scope, assetType: 'image' }),
-  /loại asset hoặc content type nhập không hợp lệ/,
+  /loại tư liệu hoặc kiểu nội dung nhập không hợp lệ/,
   'asset type and MIME must be an allowlisted pair',
 );
 const displayedUrl = importUploadUrl(scope, 'visible-only-in-issued-url');

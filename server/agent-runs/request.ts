@@ -59,10 +59,10 @@ function validatedMessages(value: unknown): ValidatedCreateInput['messages'] {
     throw new Error(`messages phải chứa từ 1 đến ${MAX_MESSAGES} mục`);
   }
   return value.map((raw) => {
-    if (!isJsonObject(raw)) throw new Error('message không hợp lệ');
+    if (!isJsonObject(raw)) throw new Error('tin nhắn không hợp lệ');
     const content = typeof raw.content === 'string' ? raw.content : '';
     if (!content || content.length > MAX_MESSAGE_CHARS) {
-      throw new Error(`nội dung message phải dài từ 1 đến ${MAX_MESSAGE_CHARS} ký tự`);
+      throw new Error(`nội dung tin nhắn phải dài từ 1 đến ${MAX_MESSAGE_CHARS} ký tự`);
     }
     return {
       role: raw.role === 'assistant' ? 'assistant' as const : 'user' as const,
@@ -90,25 +90,25 @@ export async function readJson(
 ): Promise<Record<string, unknown>> {
   const length = requestHeader(req, 'content-length');
   if (length && (!/^\d+$/.test(length) || Number(length) > maxBytes)) {
-    throw new Error('thân request quá lớn');
+    throw new Error('thân yêu cầu quá lớn');
   }
   const chunks: Buffer[] = [];
   let total = 0;
   for await (const chunk of req) {
     const buffer = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk);
     total += buffer.length;
-    if (total > maxBytes) throw new Error('thân request quá lớn');
+    if (total > maxBytes) throw new Error('thân yêu cầu quá lớn');
     chunks.push(buffer);
   }
   const parsed: unknown = JSON.parse(Buffer.concat(chunks).toString('utf8') || '{}');
-  if (!isJsonObject(parsed)) throw new Error('thân request phải là một đối tượng JSON');
+  if (!isJsonObject(parsed)) throw new Error('thân yêu cầu phải là một đối tượng JSON');
   return parsed;
 }
 
 export function requireProjectId(value: unknown): string {
   const projectId = typeof value === 'string' ? value.trim() : '';
   if (!/^[A-Za-z0-9_-]{1,160}$/.test(projectId)) {
-    throw new Error('cần có projectId hợp lệ');
+    throw new Error('cần có ID dự án hợp lệ');
   }
   return projectId;
 }
@@ -189,15 +189,15 @@ export function validateCreateInput(body: Record<string, unknown>): ValidatedCre
   const tools = Array.isArray(body.tools) ? body.tools : [];
   const references = Array.isArray(body.references) ? body.references : [];
   if (references.length > MAX_REFERENCES || jsonBytes(references) > MAX_REFERENCE_BYTES) {
-    throw new Error('references vượt quá giới hạn request');
+    throw new Error('references vượt quá giới hạn yêu cầu');
   }
   const context = body.context;
   if (context !== undefined && jsonBytes(context) > MAX_CONTEXT_BYTES) {
-    throw new Error('context vượt quá giới hạn request');
+    throw new Error('context vượt quá giới hạn yêu cầu');
   }
   const instructions = typeof body.systemPrompt === 'string' ? body.systemPrompt.trim() : '';
   if (instructions.length > MAX_SYSTEM_PROMPT_CHARS) {
-    throw new Error('system prompt vượt quá giới hạn request');
+    throw new Error('system prompt vượt quá giới hạn yêu cầu');
   }
   return {
     projectId,
