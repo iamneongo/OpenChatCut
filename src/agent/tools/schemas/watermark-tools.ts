@@ -11,7 +11,7 @@ export const WATERMARK_TOOL_SCHEMAS: AgentToolSchema[] = [
         enabled: { type: 'boolean', description: 'Hiện (true) hoặc ẩn (false) hình mờ.' },
         text: { type: 'string', description: 'Nội dung nhãn hình mờ.' },
         position: { type: 'string', enum: ['tl', 'tr', 'bl', 'br'], description: 'Góc: tl=trên trái, tr=trên phải, bl=dưới trái, br=dưới phải.' },
-        opacity: { type: 'number', minimum: 0, maximum: 1, description: 'Độ trong suốt overlay 0..1 (mặc định 0.7).' },
+        opacity: { type: 'number', minimum: 0, maximum: 1, description: 'Độ trong suốt lớp phủ 0..1 (mặc định 0.7).' },
       },
     },
   },

@@ -8,7 +8,7 @@ export const SHADER_TOOL_SCHEMAS: AgentToolSchema[] = [
     input_schema: {
       type: 'object',
       properties: {
-        type: { type: 'string', enum: ['effect', 'transition'], description: 'Shader là hiệu ứng theo đoạn (màu, blur, mask, grade kiểu LUT, distortion) hay chuyển cảnh giữa đoạn (crossfade, wipe, slide, cube 3D).' },
+          type: { type: 'string', enum: ['effect', 'transition'], description: 'Shader là hiệu ứng theo đoạn (màu, làm mờ, mặt nạ, hiệu chỉnh màu kiểu LUT, biến dạng) hay chuyển cảnh giữa đoạn (crossfade, wipe, slide, cube 3D).' },
         prompt: { type: 'string', minLength: 1, description: 'Mô tả shader bằng ngôn ngữ tự nhiên. Diễn đạt lại ý người dùng trong một câu cụ thể — ví dụ "Chromatic aberration with RGB split", "Cinematic teal-orange color grade", "Smooth crossfade with soft edge".' },
         name: { type: 'string', description: 'Tên tư liệu hiển thị trong thư viện. Mặc định được tạo từ prompt.' },
         referenceAssetIds: {
@@ -22,7 +22,7 @@ export const SHADER_TOOL_SCHEMAS: AgentToolSchema[] = [
           items: {
             type: 'object',
             properties: {
-              key: { type: 'string', description: 'Identifier GLSL; trở thành u_<key>.' },
+              key: { type: 'string', description: 'Mã định danh GLSL; trở thành u_<key>.' },
               label: { type: 'string', description: 'Nhãn UI tiếng Việt.' },
               default: { type: 'number' },
               min: { type: 'number' },
