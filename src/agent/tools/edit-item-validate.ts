@@ -363,7 +363,7 @@ function effectNotFound(item: TimelineItem | null): OpResult {
   return {
     error: 'effect update: không tìm thấy effect',
     hint: item && !(item.effects ?? []).length
-      ? `item ${item.id} has no effects yet — add one via adds:[{type:"effect",targetItemId:"${item.id}",assetId}]`
+      ? `Mục ${item.id} chưa có hiệu ứng — hãy thêm một hiệu ứng qua adds:[{type:"effect",targetItemId:"${item.id}",assetId}]`
       : 'pass effectId (or targetItemId owning the effect); existingEffects lists what is there now',
     existingEffects: item ? (item.effects ?? []).map((effect) => ({ id: effect.id, assetId: effect.assetId })) : [],
   };

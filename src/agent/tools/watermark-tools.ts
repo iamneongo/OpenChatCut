@@ -45,7 +45,7 @@ export function execWatermarkTool(name: string, args: Args, ctx: AgentContext): 
     ok: true,
     watermark,
     ...(watermark?.enabled && !watermark.text
-      ? { warning: 'watermark is enabled but has no text; set text so it renders' }
+      ? { warning: 'Đã bật watermark nhưng chưa có nội dung; hãy đặt text để watermark hiển thị' }
       : {}),
   };
 }
