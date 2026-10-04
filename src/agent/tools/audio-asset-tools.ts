@@ -39,7 +39,7 @@ export function execAudioAssetTool(name: string, args: Args, ctx: AgentContext):
     }));
   }
   const q = String(args.audioName ?? '').trim().toLowerCase();
-  if (!q) return { error: 'Cần có audioName; hãy gọi list_audio để chọn một tài sản' };
+  if (!q) return { error: 'Cần có audioName; hãy gọi list_audio để chọn một tư liệu' };
   const asset = choices.find((candidate) => candidate.id.toLowerCase() === q)
     ?? choices.find((candidate) => candidate.id.toLowerCase().startsWith(q))
     ?? choices.find((candidate) => candidate.name.toLowerCase().includes(q));

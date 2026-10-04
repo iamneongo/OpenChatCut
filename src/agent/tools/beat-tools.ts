@@ -58,8 +58,8 @@ export async function execBeatTool(name: string, args: Args, ctx: AgentContext):
     if (typeof args.itemId === 'string' && args.itemId.trim()) {
       const q = args.itemId.trim();
       item = state.items.find((it) => (it.id === q || it.id.startsWith(q)) && (it.kind === 'video' || it.kind === 'audio'));
-      if (!item) return { error: `Không tìm thấy clip âm thanh/video ${q}` };
-      if (!item.src) return { error: `Clip ${item.id} không có nguồn media` };
+      if (!item) return { error: `Không tìm thấy đoạn âm thanh/video ${q}` };
+      if (!item.src) return { error: `Đoạn ${item.id} không có nguồn tư liệu` };
       src = item.src;
     } else if (typeof args.assetId === 'string' && args.assetId.trim()) {
       const q = args.assetId.trim();
@@ -67,7 +67,7 @@ export async function execBeatTool(name: string, args: Args, ctx: AgentContext):
       if (!asset) return { error: `Không tìm thấy tư liệu trong kho tư liệu ${q}` };
       src = asset.src;
     } else {
-      return { error: 'Hãy truyền assetId (kho tư liệu) hoặc itemId (clip trên dòng thời gian)' };
+      return { error: 'Hãy truyền assetId (kho tư liệu) hoặc itemId (đoạn trên dòng thời gian)' };
     }
 
     const analysis: BeatAnalysis = await analyzeAssetBeats(src);

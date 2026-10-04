@@ -7,7 +7,6 @@ import { resolveTrackId, type TimelineState } from '../../editor/types';
 import { moveCaptionSourceEntry, normalizeCaptionSourceEntries } from '../../captions/sourceOrder';
 import { hasOperationalTranscript } from '../../transcript/types';
 import { isStableIdentity } from '../../transcript/identity';
-import { t } from '../../i18n/locale';
 
 // edit_captions Multi-lane tool set:
 // - positions puts multiple sources into place in one call (same anchor point = stacked in the same block)
@@ -147,7 +146,7 @@ export function execLayoutPolicy(json: Json, c: CaptionsData, ctx: AgentContext)
     }
     patch.perSource = per;
   }
-  if (!('layoutPolicy' in patch) && !('perSource' in patch)) return { error: 'Ví dụ layout_policy: {"mode":"auto-stack","maxVisibleSources":2} (xếp dọc) / {"mode":"single-lane"} (chỉ hiện một lane tại vị trí) / {"mode":"manual-slots","slots":[…]} / {"perSource":{"<sourceId>":{"maxLines":2}}} / {"layoutPolicy":null} để xóa' };
+  if (!('layoutPolicy' in patch) && !('perSource' in patch)) return { error: 'Ví dụ layout_policy: {"mode":"auto-stack","maxVisibleSources":2} (xếp dọc) / {"mode":"single-lane"} (chỉ hiện một rãnh tại vị trí) / {"mode":"manual-slots","slots":[…]} / {"perSource":{"<sourceId>":{"maxLines":2}}} / {"layoutPolicy":null} để xóa' };
   ctx.commands.updateCaptions(patch);
   return { ok: true, layoutPolicy: patch.layoutPolicy ?? c.layoutPolicy ?? { mode: 'auto-stack' }, ...(patch.perSource ? { perSource: patch.perSource } : {}), note: 'perSource.maxLines được ước tính theo maxLines × số từ mỗi trang của template (phân trang theo số từ)' };
 }
@@ -230,7 +229,7 @@ export function execSourceUpdate(json: Json, c: CaptionsData, ctx: AgentContext,
       if (o.style && typeof o.style === 'object') {
         const mapped = mapCaptionStyle(o.style as Json, s.height);
         e.style = { ...e.style, ...mapped.styleOverride };
-        if (mapped.ignored.length) notes.push(`${t('style 忽略字段')}: ${mapped.ignored.join(',')}`);
+        if (mapped.ignored.length) notes.push(`Phong cách bỏ qua trường: ${mapped.ignored.join(',')}`);
       }
       entries[i] = e;
       updated.push(entrySummary(e, i));
