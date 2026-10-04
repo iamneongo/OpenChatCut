@@ -306,8 +306,8 @@ const mediaRep = (file: string) => `<media-rep kind="original-media" src="file:/
     { asset: 'aoa', track: 'Imported V1', start: 626, duration: 240, srcIn: 104 },
   ]);
   assert.deepEqual(result.warnings, [
-    'input.mov (1 clip): assumed to have no embedded timecode, since the FCPXML describes only the ranges its clips use',
-    'AOA_CLIP_02.mov (1 clip): embedded timecode assumed to start on the hour; set the asset\'s sourceTimecode (edit_asset) if it does not',
+    'input.mov (1 đoạn): giả định không có timecode được ghi trong tệp vì FCPXML chỉ mô tả các khoảng mà đoạn sử dụng',
+    'AOA_CLIP_02.mov (1 đoạn): giả định timecode được ghi trong tệp bắt đầu đúng đầu giờ; nếu không, hãy đặt sourceTimecode của tư liệu (edit_asset)',
   ]);
   // Unprobed file: two assets with different ranges of one file still mark them as ranges.
   // A range that fits the file on neither clock is refused, not guessed.
@@ -319,7 +319,7 @@ const mediaRep = (file: string) => `<media-rep kind="original-media" src="file:/
     { asset: 'input', track: 'Imported V1', start: 0, duration: 346, srcIn: 0 },
     { asset: 'input', track: 'Imported V1', start: 346, duration: 280, srcIn: 346 },
   ]);
-  assert.match(reasons(unprobed.result).join('\n'), /asset-clip@01:00:25:01: source timecode lies outside AOA_CLIP_02\.mov \(12s long\); set the asset's sourceTimecode/);
+  assert.match(reasons(unprobed.result).join('\n'), /asset-clip@01:00:25:01: timecode nguồn nằm ngoài AOA_CLIP_02\.mov \(dài 12s\); hãy đặt sourceTimecode/);
 }
 
 // ── Media matching: Resolve Windows URLs match the exact original path ──

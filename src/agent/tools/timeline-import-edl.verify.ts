@@ -156,8 +156,8 @@ FCM: NON-DROP FRAME
     // No recorded timecode: a clock starting on the hour keeps the event inside the file.
     { asset: 'b', track: 'Imported V1', start: 50, duration: 25, srcIn: 125 },
   ]);
-  assert.match((result.warnings as string[]).join('\n'), /B002C001\.mov \(1 clip\): embedded timecode assumed to start on the hour/);
-  assert.match(skippedOf(result).join('\n'), /event 003@01:00:03:00: source timecode lies outside C003C001\.mov .*sourceTimecode/);
+  assert.match((result.warnings as string[]).join('\n'), /B002C001\.mov \(1 đoạn\): giả định timecode được ghi trong tệp bắt đầu đúng đầu giờ/);
+  assert.match(skippedOf(result).join('\n'), /event 003@01:00:03:00: timecode nguồn nằm ngoài C003C001\.mov .*sourceTimecode/);
 }
 
 // ── Record start: hour boundary within a minute, else the first record-in, or startTimecode ──
@@ -190,7 +190,7 @@ FCM: NON-DROP FRAME
   ]);
   // One assumption, reported once for the whole list rather than per event.
   assert.deepEqual(early.result.warnings, [
-    'take_1.mov, take_2.mov (2 clips): embedded timecode assumed to start on the hour; set the asset\'s sourceTimecode (edit_asset) if it does not',
+    'take_1.mov, take_2.mov (2 đoạn): giả định timecode được ghi trong tệp bắt đầu đúng đầu giờ; nếu không, hãy đặt sourceTimecode của tư liệu (edit_asset)',
   ]);
   // A 25 fps list read at 24 fps names the frame rate to pass.
   const { ctx } = context(pool, 24);

@@ -47,7 +47,7 @@ export const STOCK_TOOL_SCHEMAS: AgentToolSchema[] = [
     name: 'push_asset',
     description: [
       'Đăng ký URL tư liệu http(s) công khai thành tư liệu của dự án.',
-      'filePath = URL công khai (chuỗi hoặc mảng). Môi trường local-dev sẽ tải vào /media/uploads khi có thể.',
+      'filePath = URL công khai (chuỗi hoặc mảng). Môi trường phát triển cục bộ sẽ tải vào /media/uploads khi có thể.',
       'type có thể là motion-graphic (kèm duration / durationInFrames / properties). type effect/transition không phải tư liệu trong kho ở đây.',
       'KHÔNG truyền đường dẫn hệ thống tệp cục bộ. Trả về { failed, succeeded, results: [{ assetId, name, type, success } | { error, success:false }] }.',
     ].join(' '),
@@ -59,7 +59,7 @@ export const STOCK_TOOL_SCHEMAS: AgentToolSchema[] = [
         },
         name: {
           type: 'string',
-          description: 'Ghi đè tên hiển thị. Bị bỏ qua khi chạy lô (>1 filePath).',
+          description: 'Ghi đè tên hiển thị. Bị bỏ qua khi chạy lô (>1 đường dẫn tệp).',
         },
         type: {
           type: 'string',
@@ -99,7 +99,7 @@ export const STOCK_TOOL_SCHEMAS: AgentToolSchema[] = [
       type: 'object',
       properties: {
         url: { type: 'string', description: 'URL http(s) công khai của tệp tư liệu.' },
-        name: { type: 'string', description: 'Tên hiển thị; mặc định theo tên file trong URL.' },
+        name: { type: 'string', description: 'Tên hiển thị; mặc định theo tên tệp trong URL.' },
         kind: {
           type: 'string',
           enum: ['video', 'image', 'audio'],

@@ -130,7 +130,7 @@ FCM: DROP FRAME
   }
   const outside = await parseTimelineImport('edl', dropFrame, draft.getDoc().assets, draft.getState());
   assert.equal(outside.ok, false, 'a source timecode past the end of a file without timecode is reported, not imported');
-  if (!outside.ok) assert.match(outside.skipped?.[0]?.reason ?? '', /source timecode lies outside clip\.mp4/);
+  if (!outside.ok) assert.match(outside.skipped?.[0]?.reason ?? '', /timecode nguồn nằm ngoài clip\.mp4/);
 }
 
 // ── OpenChatCut FCPXML export → import round trip: tracks, positions, in-points and speed survive ──

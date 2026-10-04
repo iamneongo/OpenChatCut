@@ -7,7 +7,7 @@ export const UPLOAD_TOOL_SCHEMAS: AgentToolSchema[] = [
     name: 'import_media',
     description: [
       'Tạo một phiên nhập bên ngoài chính thức với một ô tải lên ngắn hạn, chỉ dùng một lần.',
-      'Ô được ràng buộc với session, project, tư liệu, filename, phương thức POST, MIME type và số byte chính xác.',
+      'Ô được ràng buộc với phiên, dự án, tư liệu, tên tệp, phương thức POST, loại MIME và số byte chính xác.',
       'Tải đúng số byte đã khai báo, sau đó truyền receipt opaque của máy chủ và assetType được phản hồi vào finalize_uploaded_asset.',
       'Không tư liệu nào trong kho được công bố trước khi finalize thành công.',
       'Chỉ truyền assetId khi muốn thay thế tư liệu hiện có trong kho; bỏ qua khi tạo tư liệu mới.',
@@ -42,7 +42,7 @@ export const UPLOAD_TOOL_SCHEMAS: AgentToolSchema[] = [
     name: 'finalize_uploaded_asset',
     description: [
       'Hoàn tất số byte đã upload qua quy trình bàn giao upload bên ngoài.',
-      'Truyền receipt opaque cùng assetType từ phản hồi upload thành công; path, hash, size, filename và media type có thẩm quyền sẽ được server phân giải.',
+      'Truyền receipt không hiển thị cùng assetType từ phản hồi tải lên thành công; đường dẫn, mã băm, kích thước, tên tệp và loại tư liệu chính thức sẽ được máy chủ phân giải.',
       'Receipt được claim trong quá trình kiểm tra và chuẩn hóa, sau đó chỉ bị tiêu thụ khi commit asset thành công.',
       'durationInSeconds là bắt buộc trong schema với audio/video/gif; width/height có thể cung cấp metadata media.',
     ].join(' '),
@@ -53,7 +53,7 @@ export const UPLOAD_TOOL_SCHEMAS: AgentToolSchema[] = [
         assetType: {
           type: 'string',
           enum: [...ASSET_TYPES],
-          description: 'Media type được phản hồi upload gửi lại; phải khớp với receipt đáng tin cậy.',
+          description: 'Loại tư liệu được phản hồi tải lên gửi lại; phải khớp với receipt đáng tin cậy.',
         },
         durationInSeconds: { type: 'number', exclusiveMinimum: 0, description: 'Thời lượng của audio, gif hoặc video.' },
         width: { type: 'number', exclusiveMinimum: 0 },
@@ -76,7 +76,7 @@ export const UPLOAD_TOOL_SCHEMAS: AgentToolSchema[] = [
     name: 'request_asset_download',
     description: [
       'Trả về URL/đường dẫn tải xuống dành cho người dùng của một tư liệu trong kho.',
-      'Local-dev: trả về asset.src (thường là /media/uploads/…). Không dùng cho motion graphic không có src.',
+      'Môi trường phát triển cục bộ: trả về asset.src (thường là /media/uploads/…). Không dùng cho đồ họa chuyển động không có src.',
     ].join(' '),
     input_schema: {
       type: 'object',

@@ -146,16 +146,16 @@ export function resolveSourceIn(request: SourceInRequest): SourceInResult {
   if (hourStart && !isZero(hourStart) && fits(sub(mediaIn, hourStart))) {
     return { ok: true, in: sub(mediaIn, hourStart), note: 'hour-clock' };
   }
-  const seconds = fileSeconds ? ` (${formatSeconds(fileSeconds)} long)` : '';
+  const seconds = fileSeconds ? ` (dài ${formatSeconds(fileSeconds)})` : '';
   return {
     ok: false,
-    reason: `source timecode lies outside ${asset.name}${seconds}; set the asset's sourceTimecode (edit_asset) to the file's embedded start timecode`,
+    reason: `timecode nguồn nằm ngoài ${asset.name}${seconds}; hãy đặt sourceTimecode của tư liệu (edit_asset) theo timecode bắt đầu được ghi trong tệp`,
   };
 }
 
 const SOURCE_NOTE_TEXT: Record<SourceNote, string> = {
-  'range-only-asset': 'assumed to have no embedded timecode, since the FCPXML describes only the ranges its clips use',
-  'hour-clock': 'embedded timecode assumed to start on the hour; set the asset\'s sourceTimecode (edit_asset) if it does not',
+  'range-only-asset': 'giả định không có timecode được ghi trong tệp vì FCPXML chỉ mô tả các khoảng mà đoạn sử dụng',
+  'hour-clock': 'giả định timecode được ghi trong tệp bắt đầu đúng đầu giờ; nếu không, hãy đặt sourceTimecode của tư liệu (edit_asset)',
 };
 const NAMED_FILES = 3;
 
@@ -177,8 +177,8 @@ export function sourceNoteLog(): SourceNoteLog {
     },
     warnings: () => [...entries].map(([note, { clips, files }]) => {
       const names = [...files];
-      const more = names.length > NAMED_FILES ? ` and ${names.length - NAMED_FILES} more files` : '';
-      const count = `${clips} clip${clips === 1 ? '' : 's'}`;
+      const more = names.length > NAMED_FILES ? ` và thêm ${names.length - NAMED_FILES} tệp` : '';
+      const count = `${clips} đoạn`;
       return `${names.slice(0, NAMED_FILES).join(', ')}${more} (${count}): ${SOURCE_NOTE_TEXT[note]}`;
     }),
   };
