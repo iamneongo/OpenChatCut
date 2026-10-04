@@ -2437,7 +2437,7 @@ export const VI: Record<string, string> = {
   '创建扩展包': 'Tạo gói mở rộng',
   '把当前工程中的自定义 MG、Shader 特效和转场打包分享；接收方安装后仍会经过安全校验。': 'Đóng gói và chia sẻ MG, hiệu ứng bộ đổ bóng và chuyển cảnh tùy chỉnh trong dự án hiện tại; bên nhận vẫn phải qua kiểm tra an toàn sau khi cài đặt.',
   '已安装「{name}」': 'Đã cài “{name}”',
-  '插件包是一份 JSON(MG 模板 / 转场 / 特效 / LUT / 缩放曲线),安装后出现在各分类里。': 'Gói phần bổ trợ là một JSON (mẫu MG / chuyển cảnh / hiệu ứng / LUT / đường cong thu phóng), sau khi cài sẽ xuất hiện trong các danh mục.',
+  '插件包是一份 JSON(MG 模板 / 转场 / 特效 / LUT / 缩放曲线),安装后出现在各分类里。': 'Gói phần bổ trợ là một tệp JSON (mẫu MG / chuyển cảnh / hiệu ứng / LUT / đường cong thu phóng), sau khi cài sẽ xuất hiện trong các danh mục.',
   '示例:': 'Ví dụ:',
   '插件包 JSON 的 URL…': 'URL JSON gói phần bổ trợ…',
   '选文件': 'Chọn tệp',
