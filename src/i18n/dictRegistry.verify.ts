@@ -108,6 +108,8 @@ function onlyIn(has: Record<string, string>, lacks: Record<string, string>): str
     'Vietnamese UI values must not fall back to Chinese text');
   assert.equal(t('导出'), VI['导出'], 'vi reads the Vietnamese UI dictionary');
   assert.equal(t('导出'), 'Xuất', 'the Vietnamese UI fixture is actually translated');
+  assert.equal(t('Vietnamese fallback sentinel'), 'Vietnamese fallback sentinel',
+    'vi must not fall back to English for an unknown UI key');
   assert.equal(tData('竖屏·重点词弹出'), 'Dọc · từ khóa bật lên',
     'vi reads Vietnamese template names');
   assert.equal(tData('Simple Whoosh'), 'Âm vút đơn giản',
