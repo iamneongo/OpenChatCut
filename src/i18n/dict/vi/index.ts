@@ -821,7 +821,7 @@ export const VI: Record<string, string> = {
   '选择模式：点片段 / 拖画布 / 选文字稿作为引用': 'Chế độ chọn: nhấp đoạn / kéo trên khung vẽ / chọn bản chép lời làm tham chiếu',
   '引用媒体池素材': 'Tham chiếu tư liệu từ kho',
   '媒体池暂无素材': 'Kho tư liệu đang trống',
-  '引用模板库': 'Tham chiếu thư viện mẫu',
+  '引用模板库': 'Tham chiếu từ thư viện mẫu',
   '引用': 'Tham chiếu',
   '时间线暂无片段': 'Dòng thời gian chưa có đoạn',
   '暂无模板': 'Chưa có mẫu',
