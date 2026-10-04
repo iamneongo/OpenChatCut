@@ -291,7 +291,7 @@ async function setProjectDocument(key: string, value: unknown): Promise<void> {
   const local = await localGet<unknown>(key);
   if (!ownership && local !== undefined) {
     ownership = await waitForBrowserProjectOwnership(projectId);
-    if (!ownership) throw new Error('quyền chỉnh sửa project chưa được đăng ký, project chưa được lưu');
+    if (!ownership) throw new Error('quyền chỉnh sửa dự án chưa được đăng ký, dự án chưa được lưu');
   }
   const request: ProjectDocumentWriteRequest = ownership
     ? {
@@ -312,14 +312,14 @@ async function setProjectDocument(key: string, value: unknown): Promise<void> {
   }
   if (!result.accepted) {
     await cacheMutation(key, result);
-    throw new Error('project đã được editor khác cập nhật, hãy tự làm mới trang rồi thử lại');
+    throw new Error('dự án đã được trình chỉnh sửa khác cập nhật, hãy tự làm mới trang rồi thử lại');
   }
   if (!result.found || typeof result.currentRevision !== 'string') {
-    throw new Error('phản hồi CAS tài liệu project thành công không hợp lệ');
+    throw new Error('phản hồi CAS tài liệu dự án thành công không hợp lệ');
   }
   if (ownership) {
     if (result.ownershipEpoch !== ownership.epoch) {
-      throw new Error('epoch quyền sở hữu project đã thay đổi trong lúc lưu');
+      throw new Error('epoch quyền sở hữu dự án đã thay đổi trong lúc lưu');
     }
     advanceBrowserProjectOwnership(ownership, result.currentRevision);
   }
@@ -339,13 +339,13 @@ export async function kvSet(key: string, value: unknown): Promise<void> {
     return;
   }
   if (!projectStoreWriteCredential()) {
-    throw new Error('kho project dùng chung đang ở chế độ chỉ đọc (chưa kết nối phiên editor), thay đổi chưa được đồng bộ');
+    throw new Error('kho dự án dùng chung đang ở chế độ chỉ đọc (chưa kết nối phiên chỉnh sửa), thay đổi chưa được đồng bộ');
   }
   try {
     await requestProjectStore({ operation: 'set', key, value });
   } catch (error) {
     if (isAuthError(error)) {
-      throw new Error('kho project dùng chung ở chế độ chỉ đọc (phiên editor đã hết hiệu lực), thay đổi chưa được đồng bộ');
+      throw new Error('kho dự án dùng chung ở chế độ chỉ đọc (phiên chỉnh sửa đã hết hiệu lực), thay đổi chưa được đồng bộ');
     }
     await disableRemote();
     await localSet(key, value);
@@ -366,18 +366,18 @@ export async function kvDel(key: string): Promise<void> {
   // Node memory fallback (no IndexedDB) keeps local semantics for checks.
   const requireSharedDelete = isProjectDocumentKey(key) && (canSync() || hasIdb());
   if (!remoteCache) {
-    if (requireSharedDelete) throw new Error('database project dùng chung tạm thời không khả dụng, project chưa được xóa');
+    if (requireSharedDelete) throw new Error('cơ sở dữ liệu dự án dùng chung tạm thời không khả dụng, dự án chưa được xóa');
     await localDel(key);
     return;
   }
   if (isProjectDocumentKey(key) && !projectStoreWriteCredential()) {
-    throw new Error('kho project dùng chung đang ở chế độ chỉ đọc (chưa kết nối phiên editor), project chưa được xóa');
+    throw new Error('kho dự án dùng chung đang ở chế độ chỉ đọc (chưa kết nối phiên chỉnh sửa), dự án chưa được xóa');
   }
   try {
     await requestProjectStore({ operation: 'delete', key });
   } catch (error) {
     if (isAuthError(error) && isProjectDocumentKey(key)) {
-      throw new Error('kho project dùng chung ở chế độ chỉ đọc (phiên editor đã hết hiệu lực), project chưa được xóa');
+      throw new Error('kho dự án dùng chung ở chế độ chỉ đọc (phiên chỉnh sửa đã hết hiệu lực), dự án chưa được xóa');
     }
     await disableRemote();
     if (requireSharedDelete) throw error;
@@ -409,7 +409,7 @@ export async function kvPurgeProject(projectId: string): Promise<void> {
   await ready();
   const requireSharedDelete = canSync();
   if (!remoteCache) {
-    if (requireSharedDelete) throw new Error('database project dùng chung tạm thời không khả dụng, project chưa được xóa');
+    if (requireSharedDelete) throw new Error('cơ sở dữ liệu dự án dùng chung tạm thời không khả dụng, dự án chưa được xóa');
     await purgeLocalProjectEntries(projectId);
     return;
   }
