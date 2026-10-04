@@ -1343,7 +1343,7 @@ export const VI: Record<string, string> = {
   '短视频撞色': 'Màu tương phản video ngắn',
   '故事黄高亮': 'Tô sáng vàng kể chuyện',
   '粗描边': 'Viền dày',
-  '工作室白底': 'Nền trắng phòng dựng',
+  '工作室白底': 'Thẻ phòng dựng nền trắng',
   '白卡片': 'Thẻ trắng',
   '杂志黄标': 'Nhãn vàng tạp chí',
   '气泡大字': 'Chữ lớn bong bóng',
