@@ -21,7 +21,7 @@ export const TRANSCRIPT_TOOL_SCHEMAS: AgentToolSchema[] = [
     description: 'Chép lời các đoạn âm thanh/video trên rãnh, gắn dữ liệu bản chép lời đã chuẩn hóa và bao gồm chi tiết từ/người nói khi nhà cung cấp trả về. Dùng nhà cung cấp được chọn trong Settings (mặc định AssemblyAI) trừ khi truyền provider rõ ràng. Bắt buộc gọi trước find_transcript / clean_script / delete_text / captions khi đoạn chưa có bản chép lời.',
     input_schema: { type: 'object', properties: {
       track: { type: 'string', description: 'Bí danh hoặc ID ổn định của rãnh có âm thanh cần chép lời (mặc định A1).' },
-      provider: { type: 'string', enum: ['assemblyai', 'local', 'openai', 'mistral', 'deepgram', 'groq', 'elevenlabs', 'cartesia'], description: 'Provider đã cấu hình để ghi đè, tùy chọn. Bỏ qua để dùng provider được chọn trong Settings.' },
+      provider: { type: 'string', enum: ['assemblyai', 'local', 'openai', 'mistral', 'deepgram', 'groq', 'elevenlabs', 'cartesia'], description: 'Nhà cung cấp đã cấu hình để ghi đè, tùy chọn. Bỏ qua để dùng nhà cung cấp được chọn trong Cài đặt.' },
     } },
   },
   {
@@ -138,7 +138,7 @@ export const TRANSCRIPT_TOOL_SCHEMAS: AgentToolSchema[] = [
             'fix', 'clear_edits', 'set_play_order', 'retry_transcription',
             'translation_create', 'translation_ensure', 'translation_list', 'translation_read',
           ],
-          description: 'Xem mô tả tool: sửa từ/người nói, khôi phục chỉnh sửa, đặt thứ tự phát lời nói, chạy lại ASR hoặc quản lý bản dịch.',
+          description: 'Xem mô tả công cụ: sửa từ/người nói, khôi phục chỉnh sửa, đặt thứ tự phát lời nói, chạy lại ASR hoặc quản lý bản dịch.',
         },
         itemId: { type: 'string', description: 'Id item đoạn đích hoặc tiền tố duy nhất; bỏ qua để dùng đoạn audio/video có transcript đầu tiên trên rãnh.' },
         track: { type: 'string', description: 'Khi bỏ qua itemId, tìm theo bí danh hoặc id ổn định của rãnh; mặc định A1.' },
@@ -162,7 +162,7 @@ export const TRANSCRIPT_TOOL_SCHEMAS: AgentToolSchema[] = [
           description: 'set_play_order: khi true, xóa transcriptPlayOrder và khôi phục lời nói theo thứ tự thời gian.',
         },
         lang: { type: 'string', description: 'translation_create/ensure: ngôn ngữ đích, như English, Chinese hoặc Japanese; translation_read: ngôn ngữ của biến thể cần đọc.' },
-        targetLanguage: { type: 'string', description: 'translation_read: alias của lang để chọn ngôn ngữ đã dịch.' },
+        targetLanguage: { type: 'string', description: 'translation_read: bí danh của lang để chọn ngôn ngữ đã dịch.' },
       },
       required: ['action'],
     },

@@ -13,7 +13,7 @@ export function withProgressTargets(schemas: AgentToolSchema[]): AgentToolSchema
         properties: {
           ...properties,
           target: { type: 'string', enum: ['generation', 'transcription', 'upload', 'visual-analysis'], description: 'Loại tác vụ bất đồng bộ cần kiểm tra: generation (mặc định), transcription, upload hoặc visual-analysis.' },
-          assetIds: { type: 'string', description: 'Các ID/tiền tố asset phân tách bằng dấu phẩy, dùng cho target=transcription / upload / visual-analysis.' },
+          assetIds: { type: 'string', description: 'Các ID/tiền tố tư liệu phân tách bằng dấu phẩy, dùng cho target=transcription / upload / visual-analysis.' },
         },
         required: ['action'],
       },

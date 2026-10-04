@@ -11,12 +11,12 @@ export const CORE_TOOL_SCHEMAS: AgentToolSchema[] = [
   },
   {
     name: 'list_templates',
-    description: 'Khám phá mẫu đồ họa chuyển động. Không có tham số: trả về danh sách category kèm số lượng. Có category: trả về tên các mẫu trong đó. Có khoảng 211 mẫu, nên ưu tiên truyền category hoặc dùng search_templates thay vì liệt kê tất cả.',
+    description: 'Khám phá mẫu đồ họa chuyển động. Không có tham số: trả về danh sách nhóm kèm số lượng. Có category: trả về tên các mẫu trong đó. Có khoảng 211 mẫu, nên ưu tiên truyền category hoặc dùng search_templates thay vì liệt kê tất cả.',
     input_schema: { type: 'object', properties: { category: { type: 'string', description: 'Nhóm tùy chọn cần liệt kê (ví dụ "title-cards", "lower-thirds").' } } },
   },
   {
     name: 'search_templates',
-    description: 'Tìm gần đúng mẫu theo tên/từ khóa category. Dùng công cụ này để tìm một mẫu cụ thể trong khoảng 211 mẫu.',
+    description: 'Tìm gần đúng mẫu theo tên/từ khóa nhóm. Dùng công cụ này để tìm một mẫu cụ thể trong khoảng 211 mẫu.',
     input_schema: { type: 'object', properties: { query: { type: 'string' } }, required: ['query'] },
   },
   {

@@ -17,7 +17,7 @@ export const FRAMES_TOOL_SCHEMAS: AgentToolSchema[] = [
         count: { type: 'number', minimum: 1, maximum: 8, description: 'Các điểm giữa đều nhau trên dòng thời gian/vùng (mặc định 4, tối đa 8).' },
         fromSeconds: { type: 'number', description: 'Điểm đầu vùng dòng thời gian tuyệt đối (dùng cùng toSeconds).' },
         toSeconds: { type: 'number', description: 'Điểm cuối vùng dòng thời gian tuyệt đối (dùng cùng fromSeconds).' },
-        timelineId: { type: 'string', description: 'ID/tiền tố timeline; bỏ qua để dùng timeline đang hoạt động trong phiên agent.' },
+        timelineId: { type: 'string', description: 'ID/tiền tố dòng thời gian; bỏ qua để dùng dòng thời gian đang hoạt động trong phiên tác nhân AI.' },
       },
     },
   },
@@ -35,7 +35,7 @@ export const FRAMES_TOOL_SCHEMAS: AgentToolSchema[] = [
       properties: {
         assetId: { type: 'string', description: 'ID tư liệu trong kho tư liệu (chấp nhận tiền tố).' },
         itemId: { type: 'string', description: 'ID/tiền tố đoạn đã đặt. Dùng đúng vùng nguồn hiển thị; thay thế cho assetId.' },
-        timelineId: { type: 'string', description: 'Timeline chứa itemId; bỏ qua để dùng timeline đang hoạt động.' },
+        timelineId: { type: 'string', description: 'Dòng thời gian chứa itemId; bỏ qua để dùng dòng thời gian đang hoạt động.' },
         sourceTimesMs: {
           type: 'array',
           items: { type: 'number' },

@@ -17,7 +17,7 @@ export const FONT_TOOL_SCHEMAS: AgentToolSchema[] = [
       properties: {
         query: {
           type: 'string',
-          description: 'Chuỗi con để khớp tên family font hoặc alias tên gốc.',
+          description: 'Chuỗi con để khớp tên họ phông chữ hoặc bí danh tên gốc.',
         },
         projectId: {
           type: 'string',
