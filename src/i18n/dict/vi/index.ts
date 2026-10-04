@@ -1594,7 +1594,7 @@ export const VI: Record<string, string> = {
   '此导出正在由另一个窗口恢复，请稍后重试': 'Quá trình xuất này đang được khôi phục bởi cửa sổ khác, hãy thử lại sau',
   '剪映草稿导出失败': 'Xuất bản nháp CapCut thất bại',
   '生成剪映草稿': 'Tạo bản nháp CapCut',
-  '把时间线上的视频、音轨与字幕写入本地草稿库，用剪映或 CapCut 打开即可继续剪辑。': 'Ghi video, rãnh âm thanh và phụ đề trên dòng thời gian vào thư viện bản nháp cục bộ; mở bằng CapCut để tiếp tục dựng.',
+  '把时间线上的视频、音轨与字幕写入本地草稿库，用剪映或 CapCut 打开即可继续剪辑。': 'Ghi video, rãnh âm thanh và phụ đề trên dòng thời gian vào thư viện bản nháp cục bộ; mở bằng JianYing hoặc CapCut để tiếp tục dựng.',
   '草稿名称': 'Tên bản nháp',
   '目标草稿库': 'Thư viện bản nháp đích',
   'CapCut 草稿库': 'Thư viện bản nháp CapCut',
