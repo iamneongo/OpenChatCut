@@ -3,7 +3,7 @@ import type { AgentToolSchema } from '../../tool-schema';
 export const TRANSCRIPT_TOOL_SCHEMAS: AgentToolSchema[] = [
   {
     name: 'read_transcript',
-    description: 'Đọc bản chép lời của dòng thời gian hiện tại dưới dạng các cụm câu gọn để lập kế hoạch và chỉnh sửa ngữ nghĩa. Đây là bề mặt đọc bản chép lời mặc định cho video dài và nhiều take: từ được nhóm theo thay đổi người nói, khoảng dừng và kích thước cụm giới hạn, đồng thời giữ mục nguồn, dấu thời gian nguồn, frame dòng thời gian và phạm vi word-index gốc. Từ đã xóa/cắt được bỏ qua, nhưng bản chép lời cấp từ vẫn giữ nguyên để chỉnh sửa chính xác. Dùng find_transcript khi cần tìm một câu trích dẫn cụ thể.',
+    description: 'Đọc bản chép lời của dòng thời gian hiện tại dưới dạng các cụm câu gọn để lập kế hoạch và chỉnh sửa ngữ nghĩa. Đây là bề mặt đọc bản chép lời mặc định cho video dài và nhiều take: từ được nhóm theo thay đổi người nói, khoảng dừng và kích thước cụm giới hạn, đồng thời giữ đoạn nguồn, dấu thời gian nguồn, khung dòng thời gian và phạm vi word-index gốc. Từ đã xóa/cắt được bỏ qua, nhưng bản chép lời cấp từ vẫn giữ nguyên để chỉnh sửa chính xác. Dùng find_transcript khi cần tìm một câu trích dẫn cụ thể.',
     input_schema: {
       type: 'object',
       properties: {
@@ -18,7 +18,7 @@ export const TRANSCRIPT_TOOL_SCHEMAS: AgentToolSchema[] = [
   },
   {
     name: 'transcribe_track',
-    description: 'Chép lời các đoạn âm thanh/video trên rãnh, gắn dữ liệu bản chép lời đã chuẩn hóa và bao gồm chi tiết từ/người nói khi nhà cung cấp trả về. Dùng nhà cung cấp được chọn trong Settings (mặc định AssemblyAI) trừ khi truyền provider rõ ràng. Bắt buộc gọi trước find_transcript / clean_script / delete_text / captions khi đoạn chưa có bản chép lời.',
+    description: 'Chép lời các đoạn âm thanh/video trên rãnh, gắn dữ liệu bản chép lời đã chuẩn hóa và bao gồm chi tiết từ/người nói khi nhà cung cấp trả về. Dùng nhà cung cấp được chọn trong Cài đặt (mặc định AssemblyAI) trừ khi truyền provider rõ ràng. Bắt buộc gọi trước find_transcript / clean_script / delete_text / captions khi đoạn chưa có bản chép lời.',
     input_schema: { type: 'object', properties: {
       track: { type: 'string', description: 'Bí danh hoặc ID ổn định của rãnh có âm thanh cần chép lời (mặc định A1).' },
       provider: { type: 'string', enum: ['assemblyai', 'local', 'openai', 'mistral', 'deepgram', 'groq', 'elevenlabs', 'cartesia'], description: 'Nhà cung cấp đã cấu hình để ghi đè, tùy chọn. Bỏ qua để dùng nhà cung cấp được chọn trong Cài đặt.' },
@@ -115,15 +115,15 @@ export const TRANSCRIPT_TOOL_SCHEMAS: AgentToolSchema[] = [
   {
     name: 'delete_text',
     description: 'Xóa một câu nói khỏi rãnh — "xóa văn bản = xóa video": âm thanh của các từ khớp và thời lượng của chúng bị cắt, đoạn được tính lại thời gian. Nếu không chắc câu chính xác, hãy gọi find_transcript trước. ⚠ Chỉ đoạn AUDIO được tính lại thời gian theo cách này; đoạn VIDEO luôn phát liên tục từ srcInFrame — xóa từ KHÔNG cắt gì (caption vẫn phản chiếu lời nói nghe được nên không có hiệu ứng hiển thị). Để cắt đoạn video, dùng split_item / edit_item (srcInFrame + durationInFrames); để ẩn từng từ trong caption, dùng edit_captions action=display_text.',
-    input_schema: { type: 'object', properties: { track: { type: 'string' }, query: { type: 'string', description: 'Câu cần xóa (khớp với transcript).' } }, required: ['query'] },
+    input_schema: { type: 'object', properties: { track: { type: 'string' }, query: { type: 'string', description: 'Câu cần xóa (khớp với bản chép lời).' } }, required: ['query'] },
   },
   {
     name: 'manage_transcript',
     description: 'Sửa transcript nguồn và quản lý các biến thể dịch; phần lớn action giữ nguyên thời gian của từ và thời lượng đoạn. Tám action:\n'
       + '- fix: sửa transcript nguồn. Với một từ, truyền wordIndex hoặc find chứa text nguồn sai cùng text đã sửa; chỉ word.text thay đổi. Để đổi tên hoặc gộp người nói, truyền from với nhãn hiện có như "A" cùng to là tên hiển thị mới; truyền một nhãn hiện có khác sẽ gộp người nói. Chỉ word.speaker thay đổi.\n'
-      + '- clear_edits: đưa clip về transcript raw bằng cách xóa từ đã xóa, giới hạn silence, ghi đè gap và ghi đè thứ tự phát (giống nút “Khôi phục tất cả” trong panel Transcript). Tính lại timing clip theo toàn bộ thời lượng transcript.\n'
-      + '- set_play_order: đổi thứ tự phát lời nói qua mảng chỉ số từ playOrder (giống kéo block lời nói trong panel Transcript). Truyền playOrder:null hoặc clearPlayOrder:true để khôi phục thứ tự thời gian. Tính lại timing clip.\n'
-      + '- retry_transcription: buộc ASR chạy lại cho clip và thay transcript khi việc chuyển lời bị kẹt, lỗi hoặc cần làm mới. Nhận cùng provider override tùy chọn như transcribe_track.\n'
+      + '- clear_edits: đưa đoạn về bản chép lời thô bằng cách xóa từ đã xóa, giới hạn silence, ghi đè gap và ghi đè thứ tự phát (giống nút “Khôi phục tất cả” trong panel Transcript). Tính lại thời gian đoạn theo toàn bộ thời lượng bản chép lời.\n'
+      + '- set_play_order: đổi thứ tự phát lời nói qua mảng chỉ số từ playOrder (giống kéo khối lời nói trong panel Transcript). Truyền playOrder:null hoặc clearPlayOrder:true để khôi phục thứ tự thời gian. Tính lại thời gian đoạn.\n'
+      + '- retry_transcription: buộc ASR chạy lại cho đoạn và thay bản chép lời khi việc chuyển lời bị kẹt, lỗi hoặc cần làm mới. Nhận cùng provider override tùy chọn như transcribe_track.\n'
       + '- translation_create: dịch toàn bộ transcript sang lang và tạo hoặc thay thế biến thể dịch cấp từ dùng chung timeline nguồn.\n'
       + '- translation_ensure: dùng lại biến thể hiện có cho lang một cách idempotent hoặc tạo mới nếu chưa có. Ưu tiên action này cho yêu cầu dịch thông thường.\n'
       + '- translation_list: liệt kê transcript nguồn và mọi biến thể dịch cùng id/lang/số từ.\n'

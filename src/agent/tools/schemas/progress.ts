@@ -7,7 +7,7 @@ export function withProgressTargets(schemas: AgentToolSchema[]): AgentToolSchema
     const properties = (tool.input_schema.properties ?? {}) as Record<string, unknown>;
     return {
       ...tool,
-      description: `${tool.description} Với target=transcription, kiểm tra độ sẵn sàng ASR tự động lúc ingest bằng assetIds thay vì jobIds; asset thành công sẽ mang transcript cấp từ mà clip kế thừa. target=upload kiểm tra file media của từng asset có thể truy cập hay không (blob placeholder báo running cho tới khi được liên kết lại với /media/uploads); target=visual-analysis theo dõi job làm nóng contact sheet / sẵn sàng frame (được xếp hàng khi ingest; dùng view_asset_frames / view_timeline_frames để xem hình ảnh thực tế).`,
+      description: `${tool.description} Với target=transcription, kiểm tra độ sẵn sàng ASR tự động lúc nhập bằng assetIds thay vì jobIds; tư liệu thành công sẽ mang transcript cấp từ mà đoạn kế thừa. target=upload kiểm tra tệp media của từng tư liệu có thể truy cập hay không (blob placeholder báo running cho tới khi được liên kết lại với /media/uploads); target=visual-analysis theo dõi job làm nóng contact sheet / sẵn sàng khung (được xếp hàng khi nhập; dùng view_asset_frames / view_timeline_frames để xem hình ảnh thực tế).`,
       input_schema: {
         ...tool.input_schema,
         properties: {

@@ -28,7 +28,7 @@ export const STOCK_TOOL_SCHEMAS: AgentToolSchema[] = [
         },
         name: {
           type: 'string',
-          description: 'Ghi đè tên hiển thị. Bị bỏ qua khi chạy batch (>1 url).',
+          description: 'Ghi đè tên hiển thị. Bị bỏ qua khi chạy lô (>1 URL).',
         },
         type: {
           type: 'string',
@@ -59,7 +59,7 @@ export const STOCK_TOOL_SCHEMAS: AgentToolSchema[] = [
         },
         name: {
           type: 'string',
-          description: 'Ghi đè tên hiển thị. Bị bỏ qua khi chạy batch (>1 filePath).',
+          description: 'Ghi đè tên hiển thị. Bị bỏ qua khi chạy lô (>1 filePath).',
         },
         type: {
           type: 'string',
@@ -72,7 +72,7 @@ export const STOCK_TOOL_SCHEMAS: AgentToolSchema[] = [
         },
         durationInFrames: {
           type: 'number',
-          description: 'Thời lượng tính bằng frame theo fps timeline (thay thế duration cho motion-graphic).',
+          description: 'Thời lượng tính bằng khung theo fps dòng thời gian (thay thế duration cho motion-graphic).',
         },
         width: { type: 'number' },
         height: { type: 'number' },
