@@ -38,7 +38,7 @@ const describe = (t: Timeline, doc: ProjectDoc) => ({
 });
 
 export async function execTimelineTool(name: string, args: Args, ctx: AgentContext): Promise<unknown> {
-  if (name !== 'manage_timelines') return { error: `Tool không xác định: ${name}` };
+  if (name !== 'manage_timelines') return { error: `Công cụ không xác định: ${name}` };
   const doc = ctx.getDoc();
   switch (String(args.action)) {
     case 'list':

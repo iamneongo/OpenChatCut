@@ -51,7 +51,7 @@ async function waitForTracks(ctx: AgentContext, ids: TrackId[]): Promise<Timelin
 }
 
 export async function execTrackTool(name: string, args: Args, ctx: AgentContext): Promise<unknown> {
-  if (name !== 'edit_track') return { error: `Tool không xác định: ${name}` };
+  if (name !== 'edit_track') return { error: `Công cụ không xác định: ${name}` };
   const state = ctx.getState();
   switch (String(args.action)) {
     case 'list':

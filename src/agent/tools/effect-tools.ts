@@ -46,7 +46,7 @@ const describe = (it: TimelineItem) => {
 };
 
 export async function execEffectTool(name: string, args: Args, ctx: AgentContext): Promise<unknown> {
-  if (name !== 'manage_effects') return { error: `Tool không xác định: ${name}` };
+  if (name !== 'manage_effects') return { error: `Công cụ không xác định: ${name}` };
   if (String(args.action) === 'list') return { effects: catalog() };
 
   const state = ctx.getState();

@@ -26,7 +26,7 @@ function targetItems(ctx: AgentContext, itemId: unknown): SilenceTargetItem[] | 
 }
 
 export async function execSilenceTool(name: string, args: Args, ctx: AgentContext): Promise<unknown> {
-  if (name !== 'remove_silence') return { error: `Tool không xác định: ${name}` };
+  if (name !== 'remove_silence') return { error: `Công cụ không xác định: ${name}` };
   if (!vadSilenceRemovalEnabled()) {
     return {
       ok: true,

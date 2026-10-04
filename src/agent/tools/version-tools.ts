@@ -30,7 +30,7 @@ function findVersion(versions: ProjectVersion[], ref: string): ProjectVersion | 
 }
 
 export async function execVersionTool(name: string, args: Args, ctx: AgentContext): Promise<unknown> {
-  if (name !== 'manage_versions') return { error: `Tool không xác định: ${name}` };
+  if (name !== 'manage_versions') return { error: `Công cụ không xác định: ${name}` };
   const projectId = ctx.getProjectId?.();
   if (!projectId) return { error: 'manage_versions cần project id đã lưu và đang mở' };
 

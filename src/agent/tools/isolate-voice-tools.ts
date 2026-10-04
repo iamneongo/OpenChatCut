@@ -36,7 +36,7 @@ export async function execIsolateVoiceTool(
   args: Args,
   ctx: AgentContext,
 ): Promise<unknown> {
-  if (name !== 'isolate_voice') return { error: `Tool không xác định: ${name}` };
+  if (name !== 'isolate_voice') return { error: `Công cụ không xác định: ${name}` };
 
   const state = ctx.getState();
   const item = findItem(state.items, args.itemId);

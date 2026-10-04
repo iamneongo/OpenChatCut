@@ -50,7 +50,7 @@ function markerActions(
 const listed = (times: readonly number[]): number[] => times.slice(0, MAX_LISTED);
 
 export async function execBeatTool(name: string, args: Args, ctx: AgentContext): Promise<unknown> {
-  if (name !== 'detect_beats') return { error: `Tool không xác định: ${name}` };
+  if (name !== 'detect_beats') return { error: `Công cụ không xác định: ${name}` };
   try {
     const state = ctx.getState();
     let src = '';

@@ -47,7 +47,7 @@ async function main(): Promise<void> {
   const missing = await execSearchTool('search_content', {});
   assert.equal((missing as { error: string }).error, 'Cần có query');
   const wrongName = await execSearchTool('search_fonts', { query: 'x' });
-  assert.ok((wrongName as { error: string }).error.includes('Tool không xác định'));
+  assert.ok((wrongName as { error: string }).error.includes('Công cụ không xác định'));
 
   // ── fetch failure → friendly error ──
   (globalThis as Record<string, unknown>).fetch = async () => {

@@ -23,7 +23,7 @@ function findAudioItems(ctx: AgentContext, itemId: unknown) {
 }
 
 export async function execLoudnessTool(name: string, args: Args, ctx: AgentContext): Promise<unknown> {
-  if (name !== 'normalize_loudness') return { error: `Tool không xác định: ${name}` };
+  if (name !== 'normalize_loudness') return { error: `Công cụ không xác định: ${name}` };
 
   const target = typeof args.target === 'number' && Number.isFinite(args.target) ? args.target : DEFAULT_TARGET_LUFS;
   const items = findAudioItems(ctx, args.itemId);

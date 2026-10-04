@@ -316,7 +316,7 @@ function trimCopyToHighlight(
 }
 
 export async function execHighlightTool(name: string, args: Args, ctx: AgentContext): Promise<unknown> {
-  if (name !== 'find_highlights') return { error: `Tool không xác định: ${name}` };
+  if (name !== 'find_highlights') return { error: `Công cụ không xác định: ${name}` };
 
   const doc = ctx.getDoc();
   const originalActiveId = doc.activeTimelineId;

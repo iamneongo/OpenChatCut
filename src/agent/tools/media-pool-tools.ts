@@ -53,7 +53,7 @@ function referencingClipCount(items: { templateId?: string; src?: string }[], as
 }
 
 export async function execMediaPoolTool(name: string, args: Args, ctx: AgentContext): Promise<unknown> {
-  if (name !== 'manage_media_pool') return { error: `Tool không xác định: ${name}` };
+  if (name !== 'manage_media_pool') return { error: `Công cụ không xác định: ${name}` };
   const doc = ctx.getDoc();
   switch (String(args.action)) {
     case 'list':

@@ -101,7 +101,7 @@ export async function execProjectTool(name: string, args: Args, ctx: AgentContex
     case 'get_editor_url':
       return execGetUrl(args, ctx);
     default:
-      return { error: `Tool không xác định: ${name}` };
+      return { error: `Công cụ không xác định: ${name}` };
   }
 }
 

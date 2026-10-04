@@ -486,7 +486,7 @@ export async function execFramesTool(name: string, args: Args, ctx: AgentContext
     ? await viewTimelineFrames(args, ctx)
     : name === 'view_asset_frames'
       ? await viewAssetFrames(args, ctx)
-      : { error: `Tool không xác định: ${name}` };
+      : { error: `Công cụ không xác định: ${name}` };
   return await maybeDescribeFramesResult(
     result,
     name === 'view_asset_frames' ? 'asset-frames' : 'timeline-frames',

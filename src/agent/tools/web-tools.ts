@@ -75,7 +75,7 @@ export async function execWebTool(
   if (name === 'web_map') return execMap(args);
   if (name === 'web_crawl') return execCrawl(args);
   if (name === 'web_batch_scrape') return execBatchScrape(args);
-  return { error: `Tool không xác định: ${name}` };
+  return { error: `Công cụ không xác định: ${name}` };
 }
 
 async function execScrape(args: Args, ctx: AgentContext): Promise<unknown> {

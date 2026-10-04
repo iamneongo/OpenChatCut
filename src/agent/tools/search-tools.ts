@@ -21,7 +21,7 @@ function describeHit(hit: SearchHit): string {
 }
 
 export async function execSearchTool(name: string, args: Args): Promise<unknown> {
-  if (name !== 'search_content') return { error: `Tool không xác định: ${name}` };
+  if (name !== 'search_content') return { error: `Công cụ không xác định: ${name}` };
   const query = String(args.query ?? '').trim();
   if (!query) return { error: 'Cần có query' };
   const projectId = typeof args.projectId === 'string' && args.projectId.trim()

@@ -286,7 +286,7 @@ function parsePlacement(value: unknown): { placement?: TemplatePlacement; error?
 const strArg = (v: unknown): string => (typeof v === 'string' ? v.trim() : '');
 
 export async function execTemplateTool(name: string, args: Args, ctx: AgentContext): Promise<unknown> {
-  if (name !== 'manage_template') return { error: `Tool không xác định: ${name}` };
+  if (name !== 'manage_template') return { error: `Công cụ không xác định: ${name}` };
   const action = String(args.action ?? '');
 
   switch (action) {
