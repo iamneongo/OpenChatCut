@@ -29,12 +29,12 @@ const PLAN_PROPERTIES = {
   fromFrame: {
     type: 'number',
     minimum: 0,
-    description: 'Frame bắt đầu của phạm vi timeline, bao gồm, tùy chọn; mặc định đầu clip BGM.',
+    description: 'Frame bắt đầu của phạm vi dòng thời gian, bao gồm, tùy chọn; mặc định đầu đoạn BGM.',
   },
   toFrame: {
     type: 'number',
     minimum: 1,
-    description: 'Frame kết thúc phạm vi timeline, không bao gồm, tùy chọn; mặc định cuối clip BGM.',
+    description: 'Frame kết thúc phạm vi dòng thời gian, không bao gồm, tùy chọn; mặc định cuối đoạn BGM.',
   },
   targetItemIds: {
     type: 'array',
@@ -47,7 +47,7 @@ const PLAN_PROPERTIES = {
 const IMAGE_PLAN_PROPERTIES = {
   itemId: {
     type: 'string',
-    description: 'Id clip audio/video BGM trên timeline (chấp nhận tiền tố duy nhất).',
+    description: 'ID đoạn âm thanh/video BGM trên dòng thời gian (chấp nhận tiền tố duy nhất).',
   },
   timing: {
     type: 'string',
@@ -62,22 +62,22 @@ const IMAGE_PLAN_PROPERTIES = {
   fromFrame: {
     type: 'number',
     minimum: 0,
-    description: 'Frame bắt đầu của phạm vi timeline, bao gồm, tùy chọn; mặc định đầu clip BGM.',
+    description: 'Frame bắt đầu của phạm vi dòng thời gian, bao gồm, tùy chọn; mặc định đầu đoạn BGM.',
   },
   toFrame: {
     type: 'number',
     minimum: 1,
-    description: 'Frame kết thúc phạm vi timeline, không bao gồm, tùy chọn; mặc định cuối clip BGM.',
+    description: 'Frame kết thúc phạm vi dòng thời gian, không bao gồm, tùy chọn; mặc định cuối đoạn BGM.',
   },
   imageAssetIds: {
     type: 'array',
     items: { type: 'string' },
     maxItems: 64,
-    description: 'Id/tiền tố asset image theo thứ tự hiển thị, tùy chọn. Mặc định mọi asset image theo thứ tự media pool và lặp vòng khi cần.',
+    description: 'ID/tiền tố tư liệu hình ảnh theo thứ tự hiển thị, tùy chọn. Mặc định mọi tư liệu hình ảnh theo thứ tự kho tư liệu và lặp vòng khi cần.',
   },
   track: {
     type: 'string',
-    description: 'Id hoặc alias track video đích, mặc định V1. Phạm vi đích phải rỗng và không bị khóa.',
+    description: 'ID hoặc bí danh rãnh video đích, mặc định V1. Phạm vi đích phải rỗng và không bị khóa.',
   },
 } as const;
 
@@ -93,7 +93,7 @@ export const MUSIC_INTELLIGENCE_TOOL_SCHEMAS: AgentToolSchema[] = [
       type: 'object',
       properties: {
         ...TARGET_PROPERTIES,
-        force: { type: 'boolean', description: 'Tính lại ngay cả khi đã có phân tích cache hợp lệ. Mặc định false.' },
+        force: { type: 'boolean', description: 'Tính lại ngay cả khi đã có phân tích được lưu bộ nhớ đệm hợp lệ. Mặc định false.' },
         optional: { type: 'boolean', description: 'Khi true, thiếu pack hoặc phân tích lỗi sẽ trả available=false để chỉnh sửa lớn hơn tiếp tục với bằng chứng audio đơn giản hơn. Target không hợp lệ vẫn lỗi.' },
       },
     },
@@ -101,9 +101,9 @@ export const MUSIC_INTELLIGENCE_TOOL_SCHEMAS: AgentToolSchema[] = [
   {
     name: 'inspect_music',
     description: [
-      'Đọc phân tích Beat This + CLAP cục bộ đã cache cho asset media pool hoặc clip timeline.',
+      'Đọc phân tích Beat This + CLAP cục bộ đã lưu bộ nhớ đệm cho tư liệu trong kho hoặc đoạn trên dòng thời gian.',
       'Trả về BPM, meter, độ tin cậy, tag, section và các điểm beat/downbeat giới hạn ở dạng gọn; không bao giờ lộ embedding.',
-      'Tool này không bắt đầu phân tích và không tải model. Nếu chưa có cache, tool giải thích cách cài pack cần thiết và phân tích trước.',
+      'Công cụ này không bắt đầu phân tích và không tải mô hình. Nếu chưa có bộ nhớ đệm, công cụ giải thích cách cài gói cần thiết và phân tích trước.',
     ].join(' '),
     input_schema: {
       type: 'object',
@@ -117,9 +117,9 @@ export const MUSIC_INTELLIGENCE_TOOL_SCHEMAS: AgentToolSchema[] = [
   {
     name: 'music_edit_plan',
     description: [
-      'Tạo kế hoạch cắt xác định, chỉ đọc từ phân tích nhạc đã cache, mapping trim/speed của clip BGM và các clip video chồng phạm vi.',
+      'Tạo kế hoạch cắt xác định, chỉ đọc từ phân tích nhạc đã lưu bộ nhớ đệm, ánh xạ trim/speed của đoạn BGM và các đoạn video chồng phạm vi.',
       'Trả về kế hoạch frame có giới hạn và analysisRef opaque, không có embedding hay mảng phân tích không giới hạn.',
-      'Gọi tool này để xem chỉnh sửa nhịp đề xuất trước sync_cuts_to_music.',
+      'Gọi công cụ này để xem chỉnh sửa nhịp đề xuất trước sync_cuts_to_music.',
     ].join(' '),
     input_schema: {
       type: 'object',
@@ -130,9 +130,9 @@ export const MUSIC_INTELLIGENCE_TOOL_SCHEMAS: AgentToolSchema[] = [
   {
     name: 'sync_cuts_to_music',
     description: [
-      'Tính lại kế hoạch cắt nhạc đã cache tại thời điểm thực thi và chỉ tách các clip video không khóa tại frame đã lập kế hoạch.',
+      'Tính lại kế hoạch cắt nhạc đã lưu bộ nhớ đệm tại thời điểm thực thi và chỉ tách các đoạn video không khóa tại frame đã lập kế hoạch.',
       'Truyền analysisRef do music_edit_plan trả về để từ chối phân tích cũ. Mọi lần tách là một batch EditorCommands và một bước undo.',
-      'Tool này không bắt đầu phân tích và không sửa chính clip BGM.',
+      'Công cụ này không bắt đầu phân tích và không sửa chính đoạn BGM.',
     ].join(' '),
     input_schema: {
       type: 'object',
@@ -149,9 +149,9 @@ export const MUSIC_INTELLIGENCE_TOOL_SCHEMAS: AgentToolSchema[] = [
   {
     name: 'music_image_plan',
     description: [
-      'Tạo kế hoạch đặt ảnh xác định, chỉ đọc từ phân tích nhạc đã cache và mapping trim/speed của clip BGM.',
-      'Kế hoạch lấp đầy phạm vi yêu cầu bằng image trong media pool, đổi ảnh tại ranh giới beat/downbeat/section và lặp vòng theo thứ tự ảnh đã chọn.',
-      'Gọi trước sync_images_to_music để người dùng xem kế hoạch placement có giới hạn. Tool này không bắt đầu phân tích.',
+      'Tạo kế hoạch đặt ảnh xác định, chỉ đọc từ phân tích nhạc đã lưu bộ nhớ đệm và ánh xạ trim/speed của đoạn BGM.',
+      'Kế hoạch lấp đầy phạm vi yêu cầu bằng hình ảnh trong kho tư liệu, đổi ảnh tại ranh giới beat/downbeat/section và lặp vòng theo thứ tự ảnh đã chọn.',
+      'Gọi trước sync_images_to_music để người dùng xem kế hoạch đặt ảnh có giới hạn. Công cụ này không bắt đầu phân tích.',
     ].join(' '),
     input_schema: {
       type: 'object',
@@ -162,9 +162,9 @@ export const MUSIC_INTELLIGENCE_TOOL_SCHEMAS: AgentToolSchema[] = [
   {
     name: 'sync_images_to_music',
     description: [
-      'Tính lại kế hoạch ảnh nhạc đã cache và thêm một clip image cho mỗi khoảng beat đã lập kế hoạch.',
+      'Tính lại kế hoạch ảnh nhạc đã lưu bộ nhớ đệm và thêm một đoạn hình ảnh cho mỗi khoảng beat đã lập kế hoạch.',
       'Truyền analysisRef do music_image_plan trả về để từ chối phân tích cũ. Mọi lần thêm ảnh là một batch EditorCommands và một bước undo.',
-      'Track video đích phải không khóa và rỗng trong phạm vi yêu cầu; tool này không bắt đầu phân tích và không sửa clip BGM.',
+      'Rãnh video đích phải không khóa và rỗng trong phạm vi yêu cầu; công cụ này không bắt đầu phân tích và không sửa đoạn BGM.',
     ].join(' '),
     input_schema: {
       type: 'object',
