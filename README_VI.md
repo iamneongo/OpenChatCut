@@ -50,7 +50,7 @@ npx tsc -b --pretty false
 
 Các thay đổi bản địa hóa nằm chủ yếu trong `src/i18n/dict/vi/`. Chuỗi giao diện dùng khóa tiếng Trung của dự án gốc; tên mẫu, âm thanh và thiết lập sẵn được dịch qua các bảng dữ liệu riêng để không làm thay đổi dữ liệu chuẩn trong dự án.
 
-Nếu phát hiện chuỗi chưa được Việt hóa, hãy mở issue kèm đường dẫn màn hình hoặc file liên quan.
+Nếu phát hiện chuỗi chưa được Việt hóa, hãy tạo báo cáo lỗi kèm đường dẫn màn hình hoặc tệp liên quan.
 
 ## Giấy phép
 
