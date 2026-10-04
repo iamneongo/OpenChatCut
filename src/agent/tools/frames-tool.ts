@@ -140,7 +140,7 @@ function resolveAssetFrameTarget(args: Args, ctx: AgentContext): AssetFrameTarge
     const exact = base.items.find((candidate) => candidate.id === itemQuery);
     const matches = exact ? [exact] : base.items.filter((candidate) => candidate.id.startsWith(itemQuery));
     if (matches.length !== 1) {
-      return { error: matches.length ? `Tiền tố item "${itemQuery}" không đủ rõ ràng` : `Không tìm thấy item ${itemQuery}` };
+      return { error: matches.length ? `Tiền tố đoạn "${itemQuery}" không đủ rõ ràng` : `Không tìm thấy đoạn ${itemQuery}` };
     }
     item = matches[0]!;
   }
@@ -375,7 +375,7 @@ async function viewTimelineFrames(args: Args, ctx: AgentContext): Promise<unknow
     return { error: error instanceof Error ? error.message : String(error) };
   }
   if (total <= 0 || !state.items.length) {
-    return { error: 'Timeline đang trống — không có gì để render' };
+    return { error: 'Dòng thời gian đang trống — không có gì để kết xuất' };
   }
   const frames = pickFrames(args, total, state.fps, DEFAULT_TIMELINE_SCAN);
   const note = `Timeline "${state.name}" gồm ${frames.length} frame (tọa độ timeline tuyệt đối f${frames.join(', f')}, tổng ${total} @${state.fps}fps) — hình ảnh ghép từ bản nháp timeline đích (gồm chỉnh sửa chưa gửi)`;

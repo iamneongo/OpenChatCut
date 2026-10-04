@@ -327,7 +327,7 @@ export async function execHighlightTool(name: string, args: Args, ctx: AgentCont
     typeof args.itemId === 'string' ? args.itemId : undefined,
   );
   if (!hasOperationalTranscript(item)) {
-    return { error: 'Timeline hiện không có clip video/âm thanh đã chép lời; hãy chạy transcribe_track trước rồi mới cắt thông minh.' };
+    return { error: 'Dòng thời gian hiện không có đoạn video/âm thanh đã chép lời; hãy chạy transcribe_track trước rồi mới cắt thông minh.' };
   }
 
   const ratio = typeof args.ratio === 'string' ? args.ratio : '9:16';
@@ -376,7 +376,7 @@ export async function execHighlightTool(name: string, args: Args, ctx: AgentCont
   if (!highlights.length) {
     ctx.commands.switchTimeline(originalActiveId);
     return {
-      error: 'Bản chép lời chưa đủ để chọn đoạn nổi bật: cả mô hình và phương pháp heuristic đều không tìm thấy ứng viên. Hãy kiểm tra bản chép lời của clip (dùng read_transcript), hoặc thử clip có nội dung lời thoại phong phú hơn.',
+      error: 'Bản chép lời chưa đủ để chọn đoạn nổi bật: cả mô hình và phương pháp heuristic đều không tìm thấy ứng viên. Hãy kiểm tra bản chép lời của đoạn (dùng read_transcript), hoặc thử đoạn có nội dung lời thoại phong phú hơn.',
     };
   }
 

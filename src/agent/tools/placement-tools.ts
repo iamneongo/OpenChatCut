@@ -126,10 +126,10 @@ export async function execPlaceGraphicsTool(name: string, args: Args, ctx: Agent
     })()
     : graphics;
   if (requested && !targets.length) {
-    return { error: `Không tìm thấy clip đồ họa ${requested} (các loại khả dụng: motion-graphic/text/solid)`, available: graphics.map((g) => ({ itemId: g.id, name: g.name, kind: g.kind })) };
+    return { error: `Không tìm thấy đoạn đồ họa ${requested} (các loại khả dụng: motion-graphic/text/solid)`, available: graphics.map((g) => ({ itemId: g.id, name: g.name, kind: g.kind })) };
   }
   if (!targets.length) {
-    return { ok: true, adjusted: 0, note: 'Timeline không có đồ họa phủ nào có thể sắp xếp (motion-graphic/text/solid).' };
+    return { ok: true, adjusted: 0, note: 'Dòng thời gian không có đồ họa phủ nào có thể sắp xếp (motion-graphic/text/solid).' };
   }
 
   const geometryBySrc = new Map<string, VisualGeometryAsset | null>();

@@ -247,10 +247,10 @@ try {
   const missingRequest = { ...sourceRequest, sourceAssetId: 'missing-asset' };
   const missingCalls = providerCalls;
   const missingFirst = await execGenerateTool('submit_music', missingRequest, missingContext) as { error?: string; code?: string };
-  assert.match(missingFirst.error ?? '', /music source asset not found/);
+  assert.match(missingFirst.error ?? '', /Không tìm thấy tệp nguồn nhạc/);
   assert.notEqual(missingFirst.code, 'duplicate_submission');
   const missingSecond = await execGenerateTool('submit_music', missingRequest, missingContext) as { error?: string; code?: string };
-  assert.match(missingSecond.error ?? '', /music source asset not found/);
+  assert.match(missingSecond.error ?? '', /Không tìm thấy tệp nguồn nhạc/);
   assert.notEqual(missingSecond.code, 'duplicate_submission', 'failed reference resolution is never remembered as accepted');
   assert.equal(providerCalls, missingCalls, 'a missing source keeps the existing preflight error before provider submission');
 

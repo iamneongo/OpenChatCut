@@ -53,7 +53,7 @@ assert.equal(strengthOnly.backgroundFill, true, 'selecting a percentage enables 
 assert.equal(strengthOnly.backgroundFillStrength, 87);
 assert.match(String(validateGenericUpdate(state, {
   type: 'video', itemId: 'overlay', backgroundFill: true,
-}).error), /track video dưới cùng/);
+}).error), /rãnh video dưới cùng/);
 assert.equal(validateGenericUpdate(state, {
   type: 'video', itemId: 'overlay', backgroundFill: false,
 }).backgroundFill, false, 'an invalid historical flag can still be cleared');

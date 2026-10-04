@@ -47,7 +47,7 @@ try {
   }, ctx) as { applicableCount: number; appliedCount: number };
   assert.equal(marked.applicableCount, 2);
   assert.equal(marked.appliedCount, 2);
-  assert.equal(batches[0]!.label, 'Add scene markers');
+  assert.equal(batches[0]!.label, 'Thêm marker cảnh');
   assert.deepEqual(batches[0]!.actions.map((action) => (
     action.type === 'addMarker' ? action.marker.fromFrame : null
   )), [130, 190]);

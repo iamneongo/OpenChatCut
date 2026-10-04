@@ -276,7 +276,7 @@ assert.equal(validateGenericDelete(state, { type: 'video', id: 'v1_abc' }).itemI
 }
 {
   const err = String(validateGenericUpdate(state, { type: 'video', transform: { crop: { left: 10 } } }).error ?? '');
-  assert.ok(err.includes('Chưa chọn clip'), err);
+  assert.ok(err.includes('Chưa chọn đoạn'), err);
 }
 
 console.log('edit-item-generic.check.ts OK');

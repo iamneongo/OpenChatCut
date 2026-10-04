@@ -53,7 +53,7 @@ export async function execEffectTool(name: string, args: Args, ctx: AgentContext
   const visual = state.items.filter((it) => it.kind === 'video' || it.kind === 'image');
   const it = findItem(visual, args.targetItemId);
   if (!it) {
-    return { error: `Không tìm thấy clip video/ảnh ${args.targetItemId ?? '(thiếu targetItemId)'}`, available: visual.map((x) => ({ itemId: x.id, kind: x.kind, name: x.name })) };
+    return { error: `Không tìm thấy đoạn video/ảnh ${args.targetItemId ?? '(thiếu targetItemId)'}`, available: visual.map((x) => ({ itemId: x.id, kind: x.kind, name: x.name })) };
   }
 
   switch (String(args.action)) {

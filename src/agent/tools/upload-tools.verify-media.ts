@@ -53,7 +53,7 @@ export async function verifyUploadMediaFailures(fixture: UploadVerifierFixture):
   }, context) as { next?: string; transcription?: string };
   assert.equal(videoReceipt.committed, true, 'successful asset commit must terminally commit the receipt');
   assert.equal(finalizedVideo.transcription, 'not_started');
-  assert.match(finalizedVideo.next ?? '', /invoke transcribe_track/);
+  assert.match(finalizedVideo.next ?? '', /gọi transcribe_track/);
   const videoAsset = draft.getDoc().assets.find((asset) => asset.id === 'video-asset');
   assert.equal(videoAsset?.transcribeStatus, undefined, 'finalize must not enqueue or mark ASR running');
   const replayedVideo = await execUploadTool('finalize_uploaded_asset', {

@@ -110,7 +110,7 @@ function resolveAssetForItem(item: TimelineItem, assets: readonly MediaAsset[]):
     const bySource = assets.filter((asset) => asset.src === item.src);
     if (bySource.length === 1 && bySource[0]) return bySource[0];
   }
-  throw new Error(`Clip ${item.id} không liên kết với duy nhất một tư liệu trong kho media; hãy liên kết lại trước khi phân tích nhạc`);
+  throw new Error(`Đoạn ${item.id} không liên kết với duy nhất một tư liệu trong kho media; hãy liên kết lại trước khi phân tích nhạc`);
 }
 
 export function resolveMusicTarget(args: Args, ctx: AgentContext): ResolvedMusicTarget {
@@ -120,7 +120,7 @@ export function resolveMusicTarget(args: Args, ctx: AgentContext): ResolvedMusic
   if (itemQuery) {
     const item = resolvePrefix(ctx.getState().items, itemQuery, 'timeline item');
     if (item.kind !== 'audio' && item.kind !== 'video') {
-      throw new Error(`Clip ${item.id} là ${item.kind}; phân tích nhạc cần đoạn âm thanh/video`);
+      throw new Error(`Đoạn ${item.id} là ${item.kind}; phân tích nhạc cần đoạn âm thanh/video`);
     }
     return { item, asset: resolveAssetForItem(item, ctx.getDoc().assets) };
   }

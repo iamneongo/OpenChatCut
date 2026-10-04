@@ -31,8 +31,8 @@ assert.deepEqual(
 
 const timelineSchema = FRAMES_TOOL_SCHEMAS.find((schema) => schema.name === 'view_timeline_frames')!;
 const assetSchema = FRAMES_TOOL_SCHEMAS.find((schema) => schema.name === 'view_asset_frames')!;
-assert.match(timelineSchema.description ?? '', /ABSOLUTE TIMELINE/);
-assert.match(assetSchema.description ?? '', /SOURCE-MEDIA/);
+assert.match(timelineSchema.description ?? '', /DÒNG THỜI GIAN TUYỆT ĐỐI/);
+assert.match(assetSchema.description ?? '', /TƯ LIỆU NGUỒN/);
 assert.ok('itemId' in (assetSchema.input_schema.properties ?? {}));
 const sourceTimesSchema = assetSchema.input_schema.properties?.sourceTimesMs as { maxItems?: number };
 assert.equal(sourceTimesSchema.maxItems, 8);

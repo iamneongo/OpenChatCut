@@ -116,7 +116,7 @@ async function main(): Promise<void> {
     assetId: 'asset-v',
     sourceEndSeconds: 99,
   });
-  assert.match(String(endPast.error), /vượt quá độ dài asset/);
+  assert.match(String(endPast.error), /vượt quá độ dài tư liệu/);
 
   const audioHit = validateGenericAdd(state, assets, {
     type: 'audio',

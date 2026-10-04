@@ -35,7 +35,7 @@ const run = (ctx: AgentContext, args: Record<string, unknown>) => execEditAssetT
 {
   const { ctx, calls } = makeCtx([vid], []);
   const r = await run(ctx, { action: 'update', assetId: 'vid_1', code: 'const T=()=>null;' }) as { error?: string };
-  assert.ok(r.error && /not a code/.test(r.error), 'video asset rejects code');
+  assert.ok(r.error && /không phải mã tư liệu/.test(r.error), 'video asset rejects code');
   assert.equal(calls.length, 0, 'no mutation on rejected code');
 }
 

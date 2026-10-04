@@ -62,7 +62,7 @@ function readTimeline(ctx: AgentContext): unknown {
 
 function setItemTiming(args: Args, ctx: AgentContext): unknown {
   const item = findItem(ctx, args.itemId);
-  if (!item) return { error: `Không tìm thấy item ${args.itemId}` };
+  if (!item) return { error: `Không tìm thấy đoạn ${args.itemId}` };
   if (args.startFrame !== undefined || args.durationInFrames !== undefined) {
     ctx.commands.setItemTiming(item.id, {
       startFrame: args.startFrame as number,
@@ -91,7 +91,7 @@ function setItemTiming(args: Args, ctx: AgentContext): unknown {
 function mutateItem(name: string, args: Args, ctx: AgentContext): unknown {
   if (name === 'set_item_timing') return setItemTiming(args, ctx);
   const item = findItem(ctx, args.itemId);
-  if (!item) return { error: `Không tìm thấy item ${args.itemId}` };
+  if (!item) return { error: `Không tìm thấy đoạn ${args.itemId}` };
   if (name === 'update_item_props') {
     ctx.commands.updateItemProps(item.id, (args.props ?? {}) as Args);
     return { ok: true, itemId: item.id, updated: Object.keys((args.props ?? {}) as Args) };

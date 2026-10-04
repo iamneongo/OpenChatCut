@@ -180,7 +180,7 @@ export function applyPlacement(active: Timeline, tplActive: Timeline, keptItems:
       ? resolvePlacementTrack(active, placement.targetTrackId, sourceKind)
       : undefined;
     if (placement.targetTrackId && !targetTrack) {
-      throw new Error(`Không tìm thấy track đích "${placement.targetTrackId}" hoặc track có sai loại`);
+      throw new Error(`Không tìm thấy rãnh đích "${placement.targetTrackId}" hoặc rãnh sai loại`);
     }
     const { items, map, scale } = exactItems(keptItems, placement, sourceTrack, targetTrack ?? undefined, end);
     const remapTrack = (id: TrackId): TrackId => sourceTrack && targetTrack && id === sourceTrack ? targetTrack : id;

@@ -72,9 +72,9 @@ export async function execReframeTool(name: string, args: Args, ctx: AgentContex
   const videos = state.items.filter((it) => it.kind === 'video');
   const item = findItem(videos, args.itemId);
   if (!item) {
-    return { error: `Không tìm thấy clip video ${args.itemId ?? '(thiếu itemId)'}`, available: videos.map((v) => ({ itemId: v.id, name: v.name })) };
+    return { error: `Không tìm thấy đoạn video ${args.itemId ?? '(thiếu itemId)'}`, available: videos.map((v) => ({ itemId: v.id, name: v.name })) };
   }
-  if (!item.src) return { error: `clip ${item.id} không có nguồn video để lấy mẫu (thiếu src)` };
+  if (!item.src) return { error: `đoạn ${item.id} không có nguồn video để lấy mẫu (thiếu src)` };
 
   // ——Parameter cleaning——
   const intervalFrames = Number.isFinite(Number(args.intervalFrames)) ? Math.max(1, Math.floor(Number(args.intervalFrames))) : undefined;
@@ -124,7 +124,7 @@ export async function execReframeTool(name: string, args: Args, ctx: AgentContex
       });
 
     if (!keyframes.length) {
-      return { error: `auto_reframe: không lấy được frame nào từ clip ${item.id} (video có thể không đọc được)`, keyframes: 0 };
+      return { error: `auto_reframe: không lấy được khung nào từ đoạn ${item.id} (video có thể không đọc được)`, keyframes: 0 };
     }
 
     clearReframe(ctx, item);

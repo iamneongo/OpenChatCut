@@ -88,7 +88,7 @@ assert.deepEqual(
 assert.equal(isFailedToolResult(unavailable), false, 'optional transcript discovery must not poison final Agent completion');
 assert.match(
   String((execReadTranscript({ itemId: 'missing' }, ctx) as { error: string }).error),
-  /Không có item âm thanh\/video nào khớp/,
+  /Không có đoạn âm thanh\/video nào khớp/,
   'a bad item id remains a real tool failure',
 );
 
@@ -96,7 +96,7 @@ const staleState = { ...state, items: state.items.map((item) => ({ ...item, tran
 for (const args of [{}, { itemId: 'clip-aud' }, { track: 'V1' }]) {
   const stale = execReadTranscript(args, { ...ctx, getState: () => staleState });
   assert.equal(isFailedToolResult(stale), true, 'stale source words remain a failed read in every scope');
-  assert.match(String((stale as { error: string }).error), /stale/);
+  assert.match(String((stale as { error: string }).error), /đã cũ/);
 }
 const mixedState = { ...state, items: [staleState.items[0]!, untranscribedState.items[1]!] };
 assert.equal(

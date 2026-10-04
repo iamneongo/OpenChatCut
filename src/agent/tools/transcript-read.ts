@@ -44,7 +44,7 @@ function matchingItem<T extends TimelineItem>(items: readonly T[], query: string
   const exact = items.filter((item) => item.id === query);
   const matches = exact.length ? exact : items.filter((item) => item.id.startsWith(query));
   if (!matches.length) return null;
-  if (matches.length > 1) return { error: `tiền tố itemId "${query}" không đủ rõ ràng (${matches.map((item) => item.id).join(', ')})` };
+  if (matches.length > 1) return { error: `tiền tố mã đoạn "${query}" không đủ rõ ràng (${matches.map((item) => item.id).join(', ')})` };
   return matches[0]!;
 }
 
@@ -100,7 +100,7 @@ export function execReadTranscript(args: Args, ctx: AgentContext): unknown {
   const itemQuery = typeof args.itemId === 'string' ? args.itemId.trim() : '';
   if (itemQuery) {
     const item = matchingItem(mediaItems, itemQuery);
-    if (!item) return { error: `Không có item âm thanh/video nào khớp với "${itemQuery}"` };
+    if (!item) return { error: `Không có đoạn âm thanh/video nào khớp với "${itemQuery}"` };
     if ('error' in item) return item;
     if (!hasOperationalTranscript(item)) return transcriptUnavailable([item], item.id);
     items = [item];
@@ -108,7 +108,7 @@ export function execReadTranscript(args: Args, ctx: AgentContext): unknown {
     const trackQuery = typeof args.track === 'string' ? args.track.trim() : '';
     if (trackQuery) {
       const trackId = resolveTrackId(state, trackQuery);
-      if (!trackId) return { error: `Không tìm thấy track "${trackQuery}"` };
+      if (!trackId) return { error: `Không tìm thấy rãnh "${trackQuery}"` };
       items = items.filter((item) => item.track === trackId);
       if (!items.length) return transcriptUnavailable(mediaItems.filter((item) => item.track === trackId), undefined, trackAlias(state, trackId));
     }

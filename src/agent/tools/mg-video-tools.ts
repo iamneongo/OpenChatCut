@@ -43,7 +43,7 @@ function findClip(ctx: AgentContext, args: Args): TimelineItem | null {
 
 async function convert(args: Args, ctx: AgentContext): Promise<unknown> {
   const item = findClip(ctx, args);
-  if (!item) return { error: 'Không tìm thấy clip; hãy truyền itemId (ưu tiên) hoặc assetId' };
+  if (!item) return { error: 'Không tìm thấy đoạn; hãy truyền itemId (ưu tiên) hoặc assetId' };
   if (item.kind === 'audio') return { error: 'Đoạn âm thanh không có video để kết xuất; convert áp dụng cho đoạn motion-graphic/video/image' };
 
   const state = ctx.getState();

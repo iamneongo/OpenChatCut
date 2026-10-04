@@ -19,7 +19,7 @@ assert.deepEqual(parseSilenceRule('min:500'), { mode: 'restore', minMs: 500 });
 assert.deepEqual(parseSilenceRule('500'), { mode: 'normalize', targetMs: 500 });
 assert.deepEqual(parseSilenceRule('min:300,max:800'), { mode: 'range', minMs: 300, maxMs: 800 });
 assert.deepEqual(parseCleanOnly('silence'), { fillers: false, silence: true });
-assert.throws(() => parseSilenceRule('range:900-200'), /minimum cannot exceed/);
+assert.throws(() => parseSilenceRule('range:900-200'), /giá trị tối thiểu.*không được lớn hơn/);
 
 const compressed = buildSilenceGapCaps(words, { mode: 'compress', maxMs: 400 }, { fps: 30 });
 assert.deepEqual(compressed, { '2': 400 });

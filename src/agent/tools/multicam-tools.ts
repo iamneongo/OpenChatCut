@@ -17,7 +17,7 @@ function resolveItemIds(state: TimelineState, rawIds: readonly string[]): { ids:
   const ids: string[] = [];
   for (const id of rawIds) {
     const hit = state.items.find((item) => item.id === id || item.id.startsWith(id));
-    if (!hit) return { error: `Không tìm thấy item: ${id}` };
+    if (!hit) return { error: `Không tìm thấy đoạn: ${id}` };
     if (!ids.includes(hit.id)) ids.push(hit.id);
   }
   return { ids };
@@ -30,14 +30,14 @@ function execManageLinkGroup(args: Args, ctx: Pick<AgentContext, 'getState' | 'c
   if ('error' in resolved) return resolved;
   const action = String(args.action ?? '');
   if (action === 'unlink') {
-    if (!resolved.ids.length) return { error: 'unlink cần ít nhất 1 item' };
+    if (!resolved.ids.length) return { error: 'unlink cần ít nhất 1 đoạn' };
     const next = unlinkItems(state, resolved.ids);
     if (next !== state) ctx.commands.applyState(next);
     return { ok: true, changed: next !== state, itemIds: resolved.ids };
   }
   const mode = action === 'link' ? 'linked' : action === 'sync_lock' ? 'sync-lock' : null;
   if (!mode) return { error: 'action phải là link|sync_lock|unlink' };
-  if (resolved.ids.length < 2) return { error: `${action} cần ít nhất 2 item` };
+  if (resolved.ids.length < 2) return { error: `${action} cần ít nhất 2 đoạn` };
   const anchorRef = String(args.anchorItemId ?? '');
   const anchor = anchorRef
     ? resolved.ids.find((id) => id === anchorRef || id.startsWith(anchorRef))
@@ -111,8 +111,8 @@ export async function execMulticamTool(name: string, args: Args, ctx: AgentConte
   const resolved: string[] = [];
   for (const id of rawIds) {
     const hit = state.items.find((x) => x.id === id || x.id.startsWith(id));
-    if (!hit) return { error: `Không tìm thấy item: ${id}` };
-    if (!canMulticamItem(hit)) return { error: `item ${hit.id} không phải video/audio có media` };
+    if (!hit) return { error: `Không tìm thấy đoạn: ${id}` };
+    if (!canMulticamItem(hit)) return { error: `đoạn ${hit.id} không phải video/audio có media` };
     if (state.tracks?.[hit.track]?.locked) return { error: `rãnh ${hit.track} đang bị khóa` };
     resolved.push(hit.id);
   }
@@ -244,14 +244,14 @@ export function execChangeCam(args: Args, ctx: Pick<AgentContext, 'getState' | '
   const group: TimelineItem[] = [];
   for (const id of rawIds) {
     const hit = state.items.find((x) => x.id === id || x.id.startsWith(id));
-    if (!hit) return { error: `Không tìm thấy item: ${id}` };
+    if (!hit) return { error: `Không tìm thấy đoạn: ${id}` };
     if (hit.kind !== 'video') return { error: `Các góc change_cam phải là đoạn video; ${hit.id} là ${hit.kind}` };
     if (state.tracks?.[hit.track]?.locked) return { error: `rãnh ${hit.track} đang bị khóa` };
     if (!group.some((g) => g.id === hit.id)) group.push(hit);
   }
   const targetRef = String(args.targetItemId ?? '');
   const target = targetRef ? group.find((g) => g.id === targetRef || g.id.startsWith(targetRef)) : undefined;
-  if (!target) return { error: 'targetItemId phải là một trong các itemIds' };
+  if (!target) return { error: 'targetItemId phải là một trong các mã đoạn itemIds' };
 
   const fps = state.fps || 30;
   const fromSecondsRaw = Number(args.fromSeconds);
@@ -267,7 +267,7 @@ export function execChangeCam(args: Args, ctx: Pick<AgentContext, 'getState' | '
   const isTargetAngle = (it: TimelineItem) => it.id === target.id || (!!target.src && it.src === target.src);
   const targets = group.filter(isTargetAngle);
   const others = group.filter((it) => !isTargetAngle(it));
-  if (!others.length) return { error: 'itemIds phải có ít nhất một góc khác ngoài mục tiêu' };
+  if (!others.length) return { error: 'itemIds phải có ít nhất một góc khác ngoài đoạn mục tiêu' };
   if (coveredFrames(targets, fromFrame, toFrame) === 0) {
     return { error: 'Góc mục tiêu không có đoạn trong khoảng chuyển — chuyển cảnh sẽ hiển thị màu đen' };
   }

@@ -184,8 +184,8 @@ export function validateGenericUpdate(
   if (!it) {
     return {
       error: itemRef
-        ? `Không tìm thấy item: ${itemRef}`
-        : 'Chưa chọn clip — hãy truyền itemId từ read_project.timeline.selectedId',
+        ? `Không tìm thấy đoạn: ${itemRef}`
+        : 'Chưa chọn đoạn — hãy truyền itemId từ read_project.timeline.selectedId',
     };
   }
   const plan: OpResult = { ok: true, kind: it.kind, plan: 'genericUpdate', itemId: it.id };
@@ -304,7 +304,7 @@ export function validateSlipUpdate(state: TimelineState, entry: Record<string, u
   const itemRef = entry.itemId ?? entry.id;
   const item = findItem(state.items, itemRef);
   if (!item) {
-    return { ok: false, error: `Không tìm thấy item: ${String(itemRef ?? '')}`, code: 'unknown-item' };
+    return { ok: false, error: `Không tìm thấy đoạn: ${String(itemRef ?? '')}`, code: 'unknown-item' };
   }
   const deltaInFrames = finiteNum(entry.deltaInFrames);
   if (deltaInFrames === undefined) {
@@ -328,7 +328,7 @@ export function validateGenericDelete(state: TimelineState, entry: Record<string
   if (unknown) return { error: unknown };
   const itemRef = entry.itemId ?? entry.id;
   const it = findItem(state.items, itemRef);
-  if (!it) return { error: `Không tìm thấy item: ${String(itemRef ?? '')}` };
+  if (!it) return { error: `Không tìm thấy đoạn: ${String(itemRef ?? '')}` };
   return { ok: true, kind: it.kind, plan: 'genericDelete', itemId: it.id, ripple: entry.ripple === true };
 }
 

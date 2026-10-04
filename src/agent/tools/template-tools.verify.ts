@@ -77,7 +77,7 @@ assert.equal(placed.transitions?.[0]?.trackId, 'track_v2');
 assert.deepEqual(placed.trackOrder, ['track_v1', 'track_v2']);
 assert.throws(
   () => applyPlacement(active, templateTimeline, templateItems, { targetTrackId: 'A1' }),
-  /Không tìm thấy track đích.*hoặc track có sai loại/,
+  /Không tìm thấy rãnh đích.*hoặc rãnh sai loại/,
 );
 
 const currentDoc: ProjectDoc = {

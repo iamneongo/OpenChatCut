@@ -19,8 +19,8 @@ const prefixed = <T extends { id: string }>(items: readonly T[], value: unknown)
 function sourceFor(ctx: AgentContext, args: Args): { asset: MediaAsset | null; item: TimelineItem | null; src: string } | { error: string } {
   const state = ctx.getState();
   const item = prefixed(state.items, args.itemId);
-  if (args.itemId && !item) return { error: `không tìm thấy item trên timeline: ${String(args.itemId)}` };
-  if (item && item.kind !== 'video' && item.kind !== 'gif') return { error: `item ${item.id} là ${item.kind}; phát hiện cảnh cần video/gif` };
+  if (args.itemId && !item) return { error: `không tìm thấy đoạn trên dòng thời gian: ${String(args.itemId)}` };
+  if (item && item.kind !== 'video' && item.kind !== 'gif') return { error: `đoạn ${item.id} là ${item.kind}; phát hiện cảnh cần video/gif` };
   const asset = prefixed(ctx.getDoc().assets, args.assetId)
     ?? (item?.src ? ctx.getDoc().assets.find((candidate) => candidate.src === item.src) ?? null : null);
   if (args.assetId && !asset) return { error: `không tìm thấy tư liệu media: ${String(args.assetId)}` };

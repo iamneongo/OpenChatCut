@@ -59,7 +59,7 @@ export function validateSourceFrameUpdate(
   }
   if ((sourceStart !== undefined || sourceDuration !== undefined)
     && item.kind !== 'video' && item.kind !== 'audio') {
-    return { error: `cửa sổ frame nguồn chỉ áp dụng cho clip video/audio (nhận ${item.kind})` };
+    return { error: `cửa sổ khung nguồn chỉ áp dụng cho đoạn video/audio (nhận ${item.kind})` };
   }
   if ((sourceStart !== undefined || sourceDuration !== undefined)
     && item.kind === 'audio' && hasOperationalTranscript(item)) {

@@ -224,12 +224,12 @@ export function execFindTranscript(args: Args, ctx: AgentContext): unknown {
   const trackQ = typeof args.track === 'string' ? args.track.trim() : '';
   if (trackQ) {
     const trackId = resolveTrackId(state, trackQ);
-    if (!trackId) return { error: `Không tìm thấy track "${trackQ}"` };
+    if (!trackId) return { error: `Không tìm thấy rãnh "${trackQ}"` };
     items = items.filter((it) => it.track === trackId);
   }
   items = [...items].sort((a, b) => a.startFrame - b.startFrame);
   if (!items.length) {
-    return { error: trackQ ? `Chưa có bản chép lời trên ${trackQ}; hãy gọi transcribe_track trước` : 'Không có clip nào đã chép lời trên dòng thời gian; hãy gọi transcribe_track trước' };
+    return { error: trackQ ? `Chưa có bản chép lời trên ${trackQ}; hãy gọi transcribe_track trước` : 'Không có đoạn nào đã chép lời trên dòng thời gian; hãy gọi transcribe_track trước' };
   }
 
   const matches: NonNullable<ReturnType<typeof timelineMatchRow>>[] = [];

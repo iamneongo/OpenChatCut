@@ -269,7 +269,7 @@ export async function execTranscriptTool(name: string, args: Args, ctx: AgentCon
   if (name === 'search_media') return execSearchMedia(args, ctx);
   const state = ctx.getState();
   const track = resolveTrackId(state, args.track ?? 'A1') ?? defaultTrackId(state, 'audio');
-  if (!track) return { error: 'Không có track khả dụng; hãy tạo bằng edit_track trước' };
+  if (!track) return { error: 'Không có rãnh khả dụng; hãy tạo bằng edit_track trước' };
   const alias = trackAlias(state, track);
   switch (name) {
     case 'transcribe_track': {
@@ -283,7 +283,7 @@ export async function execTranscriptTool(name: string, args: Args, ctx: AgentCon
       const clips = ctx.getState().items
         .filter((it) => (it.kind === 'audio' || it.kind === 'video') && it.track === track && it.src)
         .sort((a, b) => a.startFrame - b.startFrame);
-      if (!clips.length) return { error: `Không có clip âm thanh/video trên ${alias}` };
+      if (!clips.length) return { error: `Không có đoạn âm thanh/video trên ${alias}` };
       const results: { itemId: string; words: number; text: string; skipped?: boolean; skippedReason?: string }[] = [];
       try {
         for (const it of clips) {
@@ -321,7 +321,7 @@ export async function execTranscriptTool(name: string, args: Args, ctx: AgentCon
       const clips = targetId
         ? state.items.filter((x) => (x.id === targetId || x.id.startsWith(targetId)) && hasOperationalTranscript(x))
         : state.items.filter((x) => x.track === track && hasOperationalTranscript(x));
-      if (!clips.length) return { error: targetId ? `Không tìm thấy item đã chép lời ${targetId}` : `Chưa có transcript trên ${alias}; hãy gọi transcribe_track trước` };
+      if (!clips.length) return { error: targetId ? `Không tìm thấy đoạn đã chép lời ${targetId}` : `Chưa có bản chép lời trên ${alias}; hãy gọi transcribe_track trước` };
       const fps = state.fps;
       const usesTypedArgs = args.only != null || args.silence != null || args.longSilence != null;
       let selection: { fillers: boolean; silence: boolean };
@@ -388,7 +388,7 @@ export async function execTranscriptTool(name: string, args: Args, ctx: AgentCon
       const action = String(args.action ?? '');
       const it = resolveClip(ctx, track, args.itemId, true);
       if (!hasOperationalTranscript(it)) {
-        return { error: args.itemId ? `Không tìm thấy item đã chép lời ${String(args.itemId)}` : `Chưa có transcript trên ${alias}; hãy gọi transcribe_track trước` };
+        return { error: args.itemId ? `Không tìm thấy đoạn đã chép lời ${String(args.itemId)}` : `Chưa có bản chép lời trên ${alias}; hãy gọi transcribe_track trước` };
       }
       const minGap = typeof args.minGapSeconds === 'number' ? args.minGapSeconds : 0.25;
       const gaps = listGapsOnClip(it, minGap);
@@ -457,7 +457,7 @@ export async function execTranscriptTool(name: string, args: Args, ctx: AgentCon
     }
     case 'delete_text': {
       const it = trackClip(ctx, track, true);
-      if (!hasOperationalTranscript(it)) return { error: `Chưa có transcript hiện tại trên ${alias}; hãy gọi transcribe_track trước` };
+      if (!hasOperationalTranscript(it)) return { error: `Chưa có bản chép lời hiện tại trên ${alias}; hãy gọi transcribe_track trước` };
       const m = findPhrase(it.transcript, String(args.query ?? ''));
       if (!m) return { deleted: false, query: args.query, note: 'không tìm thấy phrase' };
       const idxs = Array.from({ length: m.count }, (_, k) => m.start + k);

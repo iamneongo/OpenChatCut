@@ -22,7 +22,7 @@ function targetItems(ctx: AgentContext, itemId: unknown): SilenceTargetItem[] | 
   );
   if (!q) return clips;
   const match = clips.find((it) => it.id === q || it.id.startsWith(q));
-  return match ? [match] : { error: `Không tìm thấy clip âm thanh/video ${q}` };
+  return match ? [match] : { error: `Không tìm thấy đoạn âm thanh/video ${q}` };
 }
 
 export async function execSilenceTool(name: string, args: Args, ctx: AgentContext): Promise<unknown> {

@@ -123,7 +123,7 @@ function mediaPoolPlan(
   format: 'video' | 'audio',
 ): AgentExportMediaPoolPlan {
   const timeline = project.timelines.find((candidate) => candidate.id === timelineId);
-  if (!timeline) throw new Error(`Không tìm thấy timeline ${timelineId}`);
+  if (!timeline) throw new Error(`Không tìm thấy dòng thời gian ${timelineId}`);
   return {
     format,
     timelineId,

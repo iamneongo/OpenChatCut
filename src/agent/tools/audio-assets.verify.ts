@@ -57,11 +57,11 @@ assert.deepEqual(listed, [{
 }]);
 assert.deepEqual(
   execAudioAssetTool('add_audio', {}, ctx),
-  { error: 'Cần có audioName; hãy gọi list_audio để chọn một tài sản' },
+  { error: 'Cần có audioName; hãy gọi list_audio để chọn một tư liệu' },
 );
 assert.deepEqual(
   execAudioAssetTool('add_audio', { audioName: 'asset_voice', track: 'A9' }, ctx),
-  { error: 'Track âm thanh "A9" chưa tồn tại. Hãy tạo trước bằng edit_track action=create json={"trackType":"audio","name":"A9"} (hoặc bỏ qua track để đặt lên track âm thanh mặc định).' },
+  { error: 'Rãnh âm thanh "A9" chưa tồn tại. Hãy tạo trước bằng edit_track action=create json={"trackType":"audio","name":"A9"} (hoặc bỏ qua track để đặt lên rãnh âm thanh mặc định).' },
 );
 const added = execAudioAssetTool('add_audio', {
   audioName: 'asset_voice',

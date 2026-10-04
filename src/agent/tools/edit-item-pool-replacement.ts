@@ -61,7 +61,7 @@ export function validatePoolAssetReplacement(
   const unknown = rejectUnknownFields(entry, REPLACEMENT_KEYS);
   if (unknown) return { error: unknown };
   const item = findItem(state.items, entry.itemId ?? entry.id);
-  if (!item) return { error: `Không tìm thấy item: ${String(entry.itemId ?? entry.id ?? '')}` };
+  if (!item) return { error: `Không tìm thấy đoạn: ${String(entry.itemId ?? entry.id ?? '')}` };
   if (!isFileMediaKind(item.kind)) return { error: `Thay tư liệu trong kho cần đoạn có tệp, nhưng nhận ${item.kind}` };
   const resolved = findAsset(assets, entry.assetId);
   if ('error' in resolved) return resolved;
