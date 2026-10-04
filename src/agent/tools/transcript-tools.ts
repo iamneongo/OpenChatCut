@@ -459,7 +459,7 @@ export async function execTranscriptTool(name: string, args: Args, ctx: AgentCon
       const it = trackClip(ctx, track, true);
       if (!hasOperationalTranscript(it)) return { error: `Chưa có bản chép lời hiện tại trên ${alias}; hãy gọi transcribe_track trước` };
       const m = findPhrase(it.transcript, String(args.query ?? ''));
-      if (!m) return { deleted: false, query: args.query, note: 'không tìm thấy phrase' };
+      if (!m) return { deleted: false, query: args.query, note: 'không tìm thấy cụm từ' };
       const idxs = Array.from({ length: m.count }, (_, k) => m.start + k);
       const text = it.transcript.slice(m.start, m.start + m.count).map((w) => w.text).join(' ');
       ctx.commands.deleteWords(it.id, idxs);

@@ -55,7 +55,7 @@ export async function execIsolateVoiceTool(
   const action = String(args.action ?? 'apply').toLowerCase();
   if (action === 'clear') {
     if (!item.denoisedSrc) {
-      return { ok: true, itemId: item.id, action: 'clear', note: 'Clip vốn chưa có tách giọng' };
+      return { ok: true, itemId: item.id, action: 'clear', note: 'Đoạn vốn chưa có tách giọng' };
     }
     ctx.commands.setItemDenoise(item.id, null);
     return { ok: true, itemId: item.id, action: 'clear', denoisedSrc: null };

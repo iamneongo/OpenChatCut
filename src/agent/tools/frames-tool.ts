@@ -212,7 +212,7 @@ function packImages(
       __images: [{ frame: frames[0]!.frame, base64: gridBase64 }],
       frames: frames.map((frame) => frame.frame),
       layout: 'contact_sheet',
-      note: `${note} · contact sheet ${frames.length} cells L→R T→B: ${map}`,
+      note: `${note} · bảng liên hệ gồm ${frames.length} ô, trái→phải trên→dưới: ${map}`,
       ...extra,
     };
   }
