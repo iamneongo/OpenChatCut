@@ -94,7 +94,7 @@ export const MUSIC_INTELLIGENCE_TOOL_SCHEMAS: AgentToolSchema[] = [
       properties: {
         ...TARGET_PROPERTIES,
         force: { type: 'boolean', description: 'Tính lại ngay cả khi đã có phân tích được lưu bộ nhớ đệm hợp lệ. Mặc định false.' },
-        optional: { type: 'boolean', description: 'Khi true, thiếu pack hoặc phân tích lỗi sẽ trả available=false để chỉnh sửa lớn hơn tiếp tục với bằng chứng audio đơn giản hơn. Target không hợp lệ vẫn lỗi.' },
+        optional: { type: 'boolean', description: 'Khi true, thiếu gói hoặc phân tích lỗi sẽ trả available=false để chỉnh sửa lớn hơn tiếp tục với bằng chứng âm thanh đơn giản hơn. Mục tiêu không hợp lệ vẫn lỗi.' },
       },
     },
   },

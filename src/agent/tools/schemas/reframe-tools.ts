@@ -12,7 +12,7 @@ export const REFRAME_TOOL_SCHEMAS: AgentToolSchema[] = [
         intervalFrames: { type: 'number', description: 'Lấy mẫu video mỗi N frame (mặc định 15, tối thiểu 1). Nhỏ hơn = nhiều keyframe hơn, chậm hơn.' },
         sensitivity: { type: 'number', description: 'Độ sắc nét tiêu điểm 0..1: cao hơn sẽ bám mạnh hơn vào vùng nhiều chi tiết nhất (mặc định 0.5).' },
         smooth: { type: 'number', description: 'EMA theo thời gian 0..1 trên đường đi của tiêu điểm (mặc định 0.45). Cao hơn = crop ít rung hơn; 0 = năng lượng thô theo từng frame.' },
-        maxSamples: { type: 'number', description: 'Giới hạn số lần seek mẫu cho clip dài (mặc định 60).' },
+        maxSamples: { type: 'number', description: 'Giới hạn số lần tìm mẫu cho đoạn dài (mặc định 60).' },
       },
       required: ['itemId'],
     },

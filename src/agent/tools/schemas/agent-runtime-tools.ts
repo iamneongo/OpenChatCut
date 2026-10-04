@@ -4,7 +4,7 @@ export const AGENT_RUNTIME_TOOL_NAMES = new Set(['read_agent_artifact']);
 
 export const AGENT_RUNTIME_TOOL_SCHEMAS: AgentToolSchema[] = [{
   name: 'read_agent_artifact',
-  description: 'Đọc một phần giới hạn của kết quả tool Agent đã lưu trữ trong dự án hiện tại. Dùng JSON Pointer để chọn trường hẹp trước khi phân trang bằng offset/limit.',
+  description: 'Đọc một phần giới hạn của kết quả công cụ Agent đã lưu trữ trong dự án hiện tại. Dùng JSON Pointer để chọn trường hẹp trước khi phân trang bằng offset/limit.',
   input_schema: {
     type: 'object',
     properties: {

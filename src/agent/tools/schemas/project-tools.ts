@@ -103,7 +103,7 @@ export const PROJECT_TOOL_SCHEMAS: AgentToolSchema[] = [
     name: 'target_project',
     description: [
       'Gắn session với một dự án hiện có và mở dự án đó trong editor (điều hướng bằng hash).',
-      'Dùng sau list_projects. Các tool tiếp theo sẽ chạy trên dự án mới mở sau khi reload.',
+      'Dùng sau list_projects. Các công cụ tiếp theo sẽ chạy trên dự án mới mở sau khi tải lại.',
     ].join(' '),
     input_schema: {
       type: 'object',

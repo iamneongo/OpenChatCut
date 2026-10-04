@@ -5,12 +5,12 @@ export const FONT_TOOL_SCHEMAS: AgentToolSchema[] = [
     name: 'search_fonts',
     description: [
       'Tìm trong danh mục phông chữ mà bộ kết xuất cục bộ/headless có thể tải (Google Fonts được đóng gói trong ứng dụng',
-      '+ các font chữ Hán của foundry được đóng gói cục bộ, source:"bundled"). Dùng khi export báo font không được hỗ trợ',
+      '+ các font chữ Hán của nhà đúc chữ được đóng gói cục bộ, source:"bundled"). Dùng khi xuất báo font không được hỗ trợ',
       'hoặc khi chọn fontFamily cho item đồ họa chuyển động / phụ đề. Kết quả trả về tên family chuẩn',
       'để dùng nguyên văn. Tìm theo chuỗi con trong tên family VÀ alias tên gốc',
       '(không phân biệt hoa thường/dấu câu) — ví dụ "inter", "playfair", "noto sc", "思源黑体", "得意黑",',
       '"抖音美好体". loadable=false nghĩa là font chỉ có trong catalog; hãy ưu tiên font thay thế có thể tải hoặc',
-      'gọi confirmFontFallback khi export.',
+      'gọi confirmFontFallback khi xuất.',
     ].join(' '),
     input_schema: {
       type: 'object',
