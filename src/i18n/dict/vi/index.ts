@@ -915,7 +915,7 @@ export const VI: Record<string, string> = {
   '清理成功': 'Dọn dẹp thành công',
   '清理失败': 'Dọn dẹp thất bại',
   '可重试': 'Có thể thử lại',
-  'CapCut / 剪映': 'CapCut',
+  'CapCut / 剪映': 'CapCut / JianYing',
   '安全框': 'Vùng an toàn',
   '拖动调整大小': 'Kéo để đổi kích thước',
   '上一关键帧': 'Khung hình chính trước',
