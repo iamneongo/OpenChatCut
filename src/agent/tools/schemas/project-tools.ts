@@ -19,7 +19,7 @@ export const PROJECT_TOOL_SCHEMAS: AgentToolSchema[] = [
   {
     name: 'create_project',
     description: [
-      'Tạo dự án rỗng mới (một timeline, một track video) và trả về projectId + editorUrl.',
+      'Tạo dự án rỗng mới (một dòng thời gian, một rãnh video) và trả về projectId + editorUrl.',
       'Không tự mở trừ khi gọi target_project với id được trả về.',
     ].join(' '),
     input_schema: {
@@ -63,7 +63,7 @@ export const PROJECT_TOOL_SCHEMAS: AgentToolSchema[] = [
   {
     name: 'duplicate_project',
     description: [
-      'Sao chép toàn bộ dự án (timeline, asset, caption). Lịch sử chat không được sao chép.',
+      'Sao chép toàn bộ dự án (dòng thời gian, tư liệu, phụ đề). Lịch sử chat không được sao chép.',
       'activate=true (mặc định) điều hướng editor tới bản sao mới khi openProject khả dụng.',
     ].join(' '),
     input_schema: {
@@ -80,8 +80,8 @@ export const PROJECT_TOOL_SCHEMAS: AgentToolSchema[] = [
     name: 'edit_project',
     description: [
       'Cập nhật cài đặt cấp dự án hoặc người nói. action=update: đổi name/description qua json {"name"?, "description"?}.',
-      'action=speaker-update: đổi tên/gộp người nói trên toàn dự án — {from:"A", to:"Tên mới"} đổi nhãn mọi từ của người nói đó trên tất cả clip đã chuyển lời trong dự án đang mở.',
-      'speaker-create/speaker-delete không được hỗ trợ ở đây (không có danh sách speaker — speaker là nhãn diarization theo từng từ); dùng speaker-update để đổi nhãn, hoặc manage_transcript fix theo từng clip.',
+      'action=speaker-update: đổi tên/gộp người nói trên toàn dự án — {from:"A", to:"Tên mới"} đổi nhãn mọi từ của người nói đó trên tất cả đoạn đã chép lời trong dự án đang mở.',
+      'speaker-create/speaker-delete không được hỗ trợ ở đây (không có danh sách speaker — speaker là nhãn phân tách người nói theo từng từ); dùng speaker-update để đổi nhãn, hoặc manage_transcript fix theo từng đoạn.',
     ].join(' '),
     input_schema: {
       type: 'object',

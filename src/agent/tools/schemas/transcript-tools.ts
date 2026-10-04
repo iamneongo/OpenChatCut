@@ -3,12 +3,12 @@ import type { AgentToolSchema } from '../../tool-schema';
 export const TRANSCRIPT_TOOL_SCHEMAS: AgentToolSchema[] = [
   {
     name: 'read_transcript',
-    description: 'Đọc transcript timeline hiện tại dưới dạng các cụm câu gọn để lập kế hoạch và chỉnh sửa ngữ nghĩa. Đây là bề mặt đọc transcript mặc định cho video dài và nhiều take: từ được nhóm theo thay đổi người nói, khoảng dừng và kích thước cụm giới hạn, đồng thời giữ source item, timestamp nguồn, frame timeline và phạm vi word-index gốc. Từ đã xóa/cắt được bỏ qua, nhưng transcript cấp từ vẫn giữ nguyên để chỉnh sửa chính xác. Dùng find_transcript khi cần tìm một câu trích dẫn cụ thể.',
+    description: 'Đọc bản chép lời của dòng thời gian hiện tại dưới dạng các cụm câu gọn để lập kế hoạch và chỉnh sửa ngữ nghĩa. Đây là bề mặt đọc bản chép lời mặc định cho video dài và nhiều take: từ được nhóm theo thay đổi người nói, khoảng dừng và kích thước cụm giới hạn, đồng thời giữ mục nguồn, dấu thời gian nguồn, frame dòng thời gian và phạm vi word-index gốc. Từ đã xóa/cắt được bỏ qua, nhưng bản chép lời cấp từ vẫn giữ nguyên để chỉnh sửa chính xác. Dùng find_transcript khi cần tìm một câu trích dẫn cụ thể.',
     input_schema: {
       type: 'object',
       properties: {
-        itemId: { type: 'string', description: 'Id clip hoặc tiền tố duy nhất, tùy chọn. Bỏ qua để đọc mọi clip đã có transcript.' },
-        track: { type: 'string', description: 'Alias/id track, tùy chọn. Bị bỏ qua khi đã đặt itemId.' },
+        itemId: { type: 'string', description: 'ID đoạn hoặc tiền tố duy nhất, tùy chọn. Bỏ qua để đọc mọi đoạn đã có bản chép lời.' },
+        track: { type: 'string', description: 'Bí danh/ID rãnh, tùy chọn. Bị bỏ qua khi đã đặt itemId.' },
         silenceThresholdSeconds: { type: 'number', minimum: 0, maximum: 10, description: 'Bắt đầu cụm mới sau khoảng dừng này; mặc định 0.5 giây.' },
         maxWordsPerPhrase: { type: 'integer', minimum: 1, maximum: 100, description: 'Giới hạn cứng cho đoạn nói liên tục; mặc định 40 từ.' },
         offset: { type: 'integer', minimum: 0, description: 'Offset cụm để phân trang; mặc định 0.' },
@@ -18,15 +18,15 @@ export const TRANSCRIPT_TOOL_SCHEMAS: AgentToolSchema[] = [
   },
   {
     name: 'transcribe_track',
-    description: 'Chuyển lời các clip audio/video trên track, gắn dữ liệu transcript đã chuẩn hóa và bao gồm chi tiết từ/người nói khi provider trả về. Dùng provider được chọn trong Settings (mặc định AssemblyAI) trừ khi truyền provider rõ ràng. Bắt buộc gọi trước find_transcript / clean_script / delete_text / captions khi clip chưa có transcript.',
+    description: 'Chép lời các đoạn âm thanh/video trên rãnh, gắn dữ liệu bản chép lời đã chuẩn hóa và bao gồm chi tiết từ/người nói khi nhà cung cấp trả về. Dùng nhà cung cấp được chọn trong Settings (mặc định AssemblyAI) trừ khi truyền provider rõ ràng. Bắt buộc gọi trước find_transcript / clean_script / delete_text / captions khi đoạn chưa có bản chép lời.',
     input_schema: { type: 'object', properties: {
-      track: { type: 'string', description: 'Alias hoặc id ổn định của track có audio cần chuyển lời (mặc định A1).' },
+      track: { type: 'string', description: 'Bí danh hoặc ID ổn định của rãnh có âm thanh cần chép lời (mặc định A1).' },
       provider: { type: 'string', enum: ['assemblyai', 'local', 'openai', 'mistral', 'deepgram', 'groq', 'elevenlabs', 'cartesia'], description: 'Provider đã cấu hình để ghi đè, tùy chọn. Bỏ qua để dùng provider được chọn trong Settings.' },
     } },
   },
   {
     name: 'search_media',
-    description: 'Tìm media dự án qua một giao diện có kiểu rõ ràng. Trả về kết quả cảnh hình ảnh ChineseCLIP và kết quả transcript lời nói với điểm số chuẩn hóa theo từng modality, khoảng thời gian nguồn, id asset và revision nguồn. Kết quả được nhóm theo modality vì điểm cosine và điểm transcript không thể so sánh trực tiếp; kết quả suy dẫn đã cũ sẽ bị loại. Truyền nguyên vẹn sourceStartMs/sourceEndMs của kết quả vào edit_item adds với cùng tên field; edit_item tự chuyển mili giây thành frame nguồn.',
+    description: 'Tìm tư liệu dự án qua một giao diện có kiểu rõ ràng. Trả về kết quả cảnh hình ảnh ChineseCLIP và kết quả bản chép lời với điểm số chuẩn hóa theo từng modality, khoảng thời gian nguồn, ID tư liệu và revision nguồn. Kết quả được nhóm theo modality vì điểm cosine và điểm bản chép lời không thể so sánh trực tiếp; kết quả suy dẫn đã cũ sẽ bị loại. Truyền nguyên vẹn sourceStartMs/sourceEndMs của kết quả vào edit_item adds với cùng tên field; edit_item tự chuyển mili giây thành frame nguồn.',
     input_schema: {
       type: 'object',
       properties: {

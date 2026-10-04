@@ -9,11 +9,11 @@ export const STOCK_TOOL_SCHEMAS: AgentToolSchema[] = [
   {
     name: 'download_media',
     description: [
-      'Tải file media từ URL công khai vào media pool của dự án.',
+      'Tải tệp tư liệu từ URL công khai vào kho tư liệu của dự án.',
       'Nhận một url hoặc mảng url. Type được suy ra từ extension / Content-Type; truyền type để ghi đè.',
-      'Local-dev: server tải byte vào /media/uploads (đóng vai S3). Trả về { failed, succeeded, results } giống push_asset.',
+      'Local-dev: máy chủ tải dữ liệu vào /media/uploads (đóng vai S3). Trả về { failed, succeeded, results } giống push_asset.',
       'Tuần tự: mỗi lần gọi có cửa sổ 75s để bắt đầu URL, nên truyền tối đa 3 URL mỗi lần và gọi lại cho phần còn lại. Host không truy cập được sẽ là dòng failed, không bao giờ fallback sang remote.',
-      'Mỗi dòng thành công có probe (thời lượng, kích thước, fps, track audio/video, codec, qualityRisks) được đo bằng ffprobe cục bộ lúc import — không gọi probe_media cho file vừa tải. Byte không phải media đọc được sẽ lỗi not_media và không bao giờ vào pool.',
+      'Mỗi dòng thành công có probe (thời lượng, kích thước, fps, rãnh âm thanh/video, codec, qualityRisks) được đo bằng ffprobe cục bộ lúc nhập — không gọi probe_media cho tệp vừa tải. Dữ liệu không phải tư liệu đọc được sẽ lỗi not_media và không bao giờ vào kho.',
     ].join(' '),
     input_schema: {
       type: 'object',
@@ -33,7 +33,7 @@ export const STOCK_TOOL_SCHEMAS: AgentToolSchema[] = [
         type: {
           type: 'string',
           enum: [...MEDIA_TYPE_ENUM],
-          description: 'Ghi đè loại asset; tự phát hiện từ Content-Type / extension URL khi bỏ qua.',
+          description: 'Ghi đè loại tư liệu; tự phát hiện từ Content-Type / phần mở rộng URL khi bỏ qua.',
         },
         projectId: {
           type: 'string',
@@ -46,16 +46,16 @@ export const STOCK_TOOL_SCHEMAS: AgentToolSchema[] = [
   {
     name: 'push_asset',
     description: [
-      'Đăng ký URL media http(s) công khai thành asset của dự án.',
+      'Đăng ký URL tư liệu http(s) công khai thành tư liệu của dự án.',
       'filePath = URL công khai (chuỗi hoặc mảng). Local-dev sẽ tải vào /media/uploads khi có thể.',
-      'type có thể là motion-graphic (kèm duration / durationInFrames / properties). type effect/transition không phải media pool ở đây.',
+      'type có thể là motion-graphic (kèm duration / durationInFrames / properties). type effect/transition không phải tư liệu trong kho ở đây.',
       'KHÔNG truyền path filesystem cục bộ. Trả về { failed, succeeded, results: [{ assetId, name, type, success } | { error, success:false }] }.',
     ].join(' '),
     input_schema: {
       type: 'object',
       properties: {
         filePath: {
-          description: 'URL media http(s) công khai hoặc mảng URL. Không nhận path cục bộ.',
+          description: 'URL tư liệu http(s) công khai hoặc mảng URL. Không nhận đường dẫn cục bộ.',
         },
         name: {
           type: 'string',
@@ -64,11 +64,11 @@ export const STOCK_TOOL_SCHEMAS: AgentToolSchema[] = [
         type: {
           type: 'string',
           enum: [...PUSH_TYPE_ENUM],
-          description: 'Ghi đè loại asset; tự phát hiện từ extension khi bỏ qua.',
+          description: 'Ghi đè loại tư liệu; tự phát hiện từ phần mở rộng khi bỏ qua.',
         },
         duration: {
           type: 'number',
-          description: 'Thời lượng tính bằng giây (motion-graphic khi bỏ qua durationInFrames; cũng là fallback cho media).',
+          description: 'Thời lượng tính bằng giây (motion-graphic khi bỏ qua durationInFrames; cũng là giá trị dự phòng cho tư liệu).',
         },
         durationInFrames: {
           type: 'number',
@@ -92,13 +92,13 @@ export const STOCK_TOOL_SCHEMAS: AgentToolSchema[] = [
   {
     name: 'import_url_asset',
     description: [
-      'Alias cũ của push_asset: đăng ký URL media http(s) công khai thành asset dự án.',
+      'Bí danh cũ của push_asset: đăng ký URL tư liệu http(s) công khai thành tư liệu dự án.',
       'Ưu tiên download_media để tải vào thư viện hoặc push_asset để đăng ký URL. Hành vi cục bộ giống nhau.',
     ].join(' '),
     input_schema: {
       type: 'object',
       properties: {
-        url: { type: 'string', description: 'URL http(s) công khai của file media.' },
+        url: { type: 'string', description: 'URL http(s) công khai của tệp tư liệu.' },
         name: { type: 'string', description: 'Tên hiển thị; mặc định theo tên file trong URL.' },
         kind: {
           type: 'string',
@@ -112,7 +112,7 @@ export const STOCK_TOOL_SCHEMAS: AgentToolSchema[] = [
   {
     name: 'search_stock_media',
     description: [
-      'Tìm B-roll, ảnh, âm thanh hoặc nhạc trên các nền tảng stock được tuyển chọn; trả về kết quả thống nhất có importUrl.',
+      'Tìm B-roll, ảnh, âm thanh hoặc nhạc trên các nền tảng tư liệu được tuyển chọn; trả về kết quả thống nhất có importUrl.',
       'kind=any|video|audio|music|image (mặc định video). platforms là danh sách provider phân tách bằng dấu phẩy, tùy chọn.',
       'Dùng category để thu hẹp ý định và horizontal|square|vertical cho hướng khung; tên orientation cũ vẫn được chấp nhận.',
       'Tổ hợp provider/type không hỗ trợ sẽ bị bỏ qua kèm cảnh báo. Ưu tiên key chính thức; tìm hình ảnh đủ điều kiện có thể fallback qua Firecrawl.',
@@ -145,7 +145,7 @@ export const STOCK_TOOL_SCHEMAS: AgentToolSchema[] = [
           minimum: 1,
           maximum: 6,
           default: 3,
-          description: 'Số kết quả tối đa cho mỗi platform và loại media.',
+          description: 'Số kết quả tối đa cho mỗi nền tảng và loại tư liệu.',
         },
       },
       required: ['query'],
