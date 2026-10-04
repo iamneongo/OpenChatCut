@@ -172,7 +172,7 @@ export const VI: Record<string, string> = {
   '· 我的工程': '· Dự án của tôi',
   '示例工程': 'Dự án mẫu',
   '联系作者': 'Liên hệ tác giả',
-  'GitHub 仓库': 'Kho GitHub',
+  'GitHub 仓库': 'Kho lưu trữ GitHub',
   '配置模型后开始使用 Agent': 'Cấu hình mô hình để bắt đầu dùng tác nhân AI',
   '配置模型': 'Cấu hình mô hình',
   '无法检查 Agent 密钥状态。': 'Không thể kiểm tra trạng thái khóa của tác nhân AI.',
