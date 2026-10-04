@@ -123,7 +123,7 @@ export const SHORTCUT_LABELS_VI: Record<string, string> = {
   'marker-prev': 'Dấu mốc trước', 'marker-next': 'Dấu mốc tiếp theo', 'snapping': 'Bám dính',
   'selection-mode': 'Chế độ chọn (Alt)', 'zoom-in': 'Phóng to dòng thời gian', 'zoom-out': 'Thu nhỏ dòng thời gian',
   'zoom-fit': 'Vừa dòng thời gian vào khung', 'fullscreen': 'Xem trước toàn màn hình', 'keyboard-shortcuts': 'Phím tắt',
-  'ask-ai': 'Thêm vào chat AI',
+  'ask-ai': 'Thêm vào trò chuyện với AI',
 };
 
 export const SHORTCUT_BY_ID = Object.fromEntries(
