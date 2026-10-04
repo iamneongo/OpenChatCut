@@ -195,7 +195,7 @@ export async function applyCaptionAvoidance(
     if (adjusted) ctx.commands.setCaptions(next, trackId ?? undefined);
     total += adjusted;
     const names = [...new Set(analyzed.map((entry) => entry.target.asset.name))];
-    if (names.length) summary.push({ source: names.join('、'), adjusted, details });
+    if (names.length) summary.push({ source: names.join(', '), adjusted, details });
   }
 
   if (!sourceCount) {
@@ -217,6 +217,6 @@ export async function applyCaptionAvoidance(
 }
 
 export async function execCaptionAvoidanceTool(name: string, _args: Args, ctx: AgentContext): Promise<unknown> {
-  if (name !== 'apply_caption_avoidance') return { error: `Tool không xác định: ${name}` };
+  if (name !== 'apply_caption_avoidance') return { error: `Công cụ không xác định: ${name}` };
   return applyCaptionAvoidance(ctx);
 }

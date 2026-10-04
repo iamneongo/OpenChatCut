@@ -62,16 +62,16 @@ export function validatePoolAssetReplacement(
   if (unknown) return { error: unknown };
   const item = findItem(state.items, entry.itemId ?? entry.id);
   if (!item) return { error: `Không tìm thấy item: ${String(entry.itemId ?? entry.id ?? '')}` };
-  if (!isFileMediaKind(item.kind)) return { error: `Thay tư liệu trong kho cần clip có tệp, nhưng nhận ${item.kind}` };
+  if (!isFileMediaKind(item.kind)) return { error: `Thay tư liệu trong kho cần đoạn có tệp, nhưng nhận ${item.kind}` };
   const resolved = findAsset(assets, entry.assetId);
   if ('error' in resolved) return resolved;
   const asset = resolved;
   const assetKind = asset.kind;
   if (assetKind !== 'video' && assetKind !== 'audio' && assetKind !== 'image' && assetKind !== 'gif') {
-    return { error: `Tư liệu ${asset.id} không phải media có tệp` };
+    return { error: `Tư liệu ${asset.id} không phải tư liệu có tệp` };
   }
   if ((item.kind === 'audio') !== (asset.kind === 'audio')) {
-    return { error: `Tư liệu ${asset.id} loại=${asset.kind} không tương thích với clip ${item.kind} ${item.id}` };
+    return { error: `Tư liệu ${asset.id} loại=${asset.kind} không tương thích với đoạn ${item.kind} ${item.id}` };
   }
   const startAlias = positiveFrame(entry.srcInFrame, 'srcInFrame', true);
   if (startAlias && typeof startAlias === 'object') return startAlias;

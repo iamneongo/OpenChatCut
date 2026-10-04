@@ -21,12 +21,12 @@ export function validateBackgroundFillUpdate(
     return { error: 'backgroundFillStrength phải là số nguyên từ 0 đến 100' };
   }
   if (item.kind !== 'video' && item.kind !== 'image') {
-    return { error: `backgroundFill chỉ hỗ trợ clip video/image (nhận ${item.kind})` };
+    return { error: `backgroundFill chỉ hỗ trợ đoạn video/hình ảnh (nhận ${item.kind})` };
   }
   const enabled = typeof enabledValue === 'boolean' ? enabledValue : true;
   const targetItem = targetTrack === undefined ? item : { ...item, track: targetTrack };
   if (enabled && !isBackgroundFillEligible(state, targetItem)) {
-    return { error: 'backgroundFill chỉ hỗ trợ clip video/image trên track video dưới cùng (V1)' };
+    return { error: 'backgroundFill chỉ hỗ trợ đoạn video/hình ảnh trên rãnh video dưới cùng (V1)' };
   }
   if (strengthValue === undefined) return { enabled };
   return { enabled, strength: strengthValue };

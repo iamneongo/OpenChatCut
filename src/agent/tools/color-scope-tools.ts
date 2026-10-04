@@ -159,7 +159,7 @@ async function measureAsset(ctx: AgentContext, rawId: unknown, rawSeconds: unkno
 async function measureTimeline(ctx: AgentContext, rawFrame: unknown, rawSeconds: unknown): Promise<ScopeResult> {
   const state = ctx.getState();
   const contentEnd = state.items.reduce((max, item) => Math.max(max, item.startFrame + item.durationInFrames), 0);
-  if (contentEnd === 0) throw new Error('timeline trống — không có gì để đo');
+  if (contentEnd === 0) throw new Error('Dòng thời gian trống — không có gì để đo');
   const frame = typeof rawFrame === 'number' ? Math.max(0, Math.round(rawFrame))
     : typeof rawSeconds === 'number' ? Math.max(0, Math.round(rawSeconds * state.fps))
       : Math.floor(contentEnd / 2);

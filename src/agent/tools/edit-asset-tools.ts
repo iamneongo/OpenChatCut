@@ -49,7 +49,7 @@ async function update(asset: MediaAsset, args: Args, ctx: AgentContext): Promise
     try {
       await prepareTemplate(code); // Sandbox validation and restricted-scope compilation must complete before persistence.
     } catch (e) {
-      return { error: `Sandbox từ chối code mới: ${e instanceof Error ? e.message : String(e)}`, code };
+      return { error: `Sandbox từ chối mã mới: ${e instanceof Error ? e.message : String(e)}`, code };
     }
     patch.code = code;
   }
@@ -62,7 +62,7 @@ async function update(asset: MediaAsset, args: Args, ctx: AgentContext): Promise
 function remove(asset: MediaAsset, args: Args, ctx: AgentContext): unknown {
   const refs = referencingItems(ctx.getState().items, asset);
   if (refs > 0 && args.confirm !== true) {
-    return { needsConfirm: true, referencedBy: refs, note: `${refs} clip trên timeline đang tham chiếu “${asset.name}”. Xóa chỉ loại mục khỏi kho media, không ảnh hưởng clip đã đặt. Để xác nhận, hãy gửi lại với confirm:true.` };
+    return { needsConfirm: true, referencedBy: refs, note: `${refs} đoạn trên dòng thời gian đang tham chiếu “${asset.name}”. Xóa chỉ loại mục khỏi kho tư liệu, không ảnh hưởng đoạn đã đặt. Để xác nhận, hãy gửi lại với confirm:true.` };
   }
   ctx.commands.removeMediaAsset(asset.id);
   return { ok: true, deleted: asset.id, name: asset.name, wasReferencedBy: refs };

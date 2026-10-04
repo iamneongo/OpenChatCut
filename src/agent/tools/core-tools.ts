@@ -63,7 +63,7 @@ function execTemplateCatalog(name: string, args: Args, ctx: AgentContext): unkno
   }
   const query = String(args.templateName ?? '').toLowerCase();
   const matches = ctx.templates.filter((template) => template.name.toLowerCase().includes(query));
-  if (!matches.length) return { error: `Không có template nào khớp với "${args.templateName}"`, available: ctx.templates.map((template) => template.name) };
+  if (!matches.length) return { error: `Không có mẫu nào khớp với "${args.templateName}"`, available: ctx.templates.map((template) => template.name) };
   const template = matches[0];
   const state = ctx.getState();
   const track = resolveTrackId(state, args.track ?? 'V1', 'video') ?? defaultTrackId(state, 'video');
