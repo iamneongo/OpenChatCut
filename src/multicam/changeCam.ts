@@ -193,10 +193,10 @@ export function planPersistentCamSwitch(args: {
   }
   const sourceEnd = angle.source.startFrame + angle.source.durationInFrames;
   if (fromFrame < angle.source.startFrame || toFrame > sourceEnd) {
-    return { error: 'target angle source does not cover the complete switch range' };
+    return { error: 'nguồn góc máy đích không bao phủ toàn bộ phạm vi chuyển' };
   }
   const otherAngles = group.angles.filter((entry) => entry.id !== angle.id && entry.source.kind === 'video');
-  if (!otherAngles.length) return { error: 'multicam group needs at least two video angles to switch' };
+  if (!otherAngles.length) return { error: 'nhóm multicam cần ít nhất hai góc máy video để chuyển' };
 
   const groupItems = multicamItemsForGroup(state, group);
   const currentTargets = multicamItemsForAngle(state, group, angle);
@@ -218,7 +218,7 @@ export function planPersistentCamSwitch(args: {
   if (!affectedTracks) return { error: 'không thể lập kế hoạch đầy đủ cho thao tác chuyển multicam' };
   for (const item of groupItems) affectedTracks.add(item.track);
   if ([...affectedTracks].some((track) => state.tracks?.[track]?.locked)) {
-    return { error: 'a multicam angle track is locked' };
+    return { error: 'rãnh của góc máy multicam đang bị khóa' };
   }
 
   const restored = applyPlannedActions(state, restore);
@@ -240,14 +240,14 @@ export function planPersistentCamSwitch(args: {
 
   const selectedAfter = multicamItemsForAngle(working, group, angle);
   if (uncoveredRanges(selectedAfter, fromFrame, toFrame).length > 0) {
-    return { error: 'selected multicam angle does not cover the complete switch range' };
+    return { error: 'góc máy multicam đã chọn không bao phủ toàn bộ phạm vi chuyển' };
   }
   const groupItemsAfter = multicamItemsForGroup(working, group);
   const othersAfter = groupItemsAfter.filter((item) =>
     (item.multicamAngleId !== undefined && otherAngleIds.has(item.multicamAngleId))
     || otherItemIds.has(item.id));
   if (coveredFrames(othersAfter, fromFrame, toFrame) !== 0) {
-    return { error: 'other multicam angles still cover the switch range' };
+    return { error: 'các góc máy multicam khác vẫn bao phủ phạm vi chuyển' };
   }
 
   const decision = {

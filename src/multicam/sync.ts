@@ -78,7 +78,7 @@ async function decodeMono(src: string): Promise<{ samples: Float32Array; sampleR
     const channels: Float32Array[] = [];
     for (let c = 0; c < audio.numberOfChannels; c++) channels.push(audio.getChannelData(c));
     const samples = prepareSignal(channels, audio.length, audio.sampleRate);
-    if (samples.length < 64) return { error: 'audio too short' };
+    if (samples.length < 64) return { error: 'âm thanh quá ngắn' };
     return { samples, sampleRate: TARGET_RATE };
   } catch (e) {
     return { error: e instanceof Error ? e.message : String(e) };
@@ -210,13 +210,13 @@ export async function runMulticamSync(args: {
 
   if (audioFollowers.length) {
     const refSrc = resolveSrc(refItem, state.assets);
-    const refDecoded = refSrc ? await decodeMono(refSrc) : { error: 'no media src' };
+    const refDecoded = refSrc ? await decodeMono(refSrc) : { error: 'không có nguồn tư liệu' };
     if ('error' in refDecoded) {
       skippedItemIds.push(...audioFollowers.map((item) => item.id));
     } else {
       for (const follower of audioFollowers) {
         const src = resolveSrc(follower, state.assets);
-        const decoded = src ? await decodeMono(src) : { error: 'no media src' };
+        const decoded = src ? await decodeMono(src) : { error: 'không có nguồn tư liệu' };
         if ('error' in decoded) {
           skippedItemIds.push(follower.id);
           continue;
@@ -301,10 +301,10 @@ export async function runMulticamSync(args: {
     offsets,
     groupId: persisted.group.id,
     message: status === 'partial'
-      ? `Multicam group saved; aligned ${placements.length} angle(s), skipped ${skippedItemIds.length}.`
+      ? `Đã lưu nhóm multicam; đã căn chỉnh ${placements.length} góc máy, bỏ qua ${skippedItemIds.length}.`
       : status === 'already_synced'
-        ? `Multicam group saved; ${placements.length + 1} angles were already aligned.`
-        : `Multicam group saved and aligned ${syncedItemIds.length} angle${syncedItemIds.length === 1 ? '' : 's'}.`,
+        ? `Đã lưu nhóm multicam; ${placements.length + 1} góc máy đã được căn chỉnh từ trước.`
+        : `Đã lưu nhóm multicam và căn chỉnh ${syncedItemIds.length} góc máy.`,
     ...(changed ? { nextState: persisted.state } : {}),
   };
 }
