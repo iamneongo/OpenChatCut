@@ -20,7 +20,7 @@ assert.equal(localizeDesignFontRole('accent', 'zh'), '强调字体');
 assert.equal(localizeDesignFontRole('callout', 'zh'), '标注字体');
 assert.equal(localizeDesignFontRole('impact', 'zh'), '冲击字体');
 assert.equal(localizeDesignRole('primary', 'vi'), 'màu chính');
-assert.equal(localizeDesignFontRole('Chinese heading', 'vi'), 'font tiêu đề tiếng Trung');
+assert.equal(localizeDesignFontRole('Chinese heading', 'vi'), 'phông chữ tiêu đề tiếng Trung');
 assert.equal(localizeDesignFontRole('accent', 'en'), 'accent');
 assert.equal(
   localizeDesignStyleGuide(modern.style.styleGuide ?? '', 'zh'),
