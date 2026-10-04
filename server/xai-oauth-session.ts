@@ -189,7 +189,7 @@ export async function refreshTokens(session: XaiSession): Promise<XaiSession> {
     } catch {
       // Non-JSON failure keeps the status only.
     }
-    throw new Error(`refresh HTTP ${response.status}${code ? ` · ${code.slice(0, 60)}` : ''}`);
+    throw new Error(`Làm mới phiên đăng nhập thất bại (HTTP ${response.status})${code ? ` · ${code.slice(0, 60)}` : ''}`);
   }
   const payload = (await response.json()) as Record<string, unknown>;
   const access = nonEmptyString(payload.access_token);

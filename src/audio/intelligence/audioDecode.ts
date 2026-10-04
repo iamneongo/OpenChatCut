@@ -117,7 +117,7 @@ async function fetchAudioBytes(src: string, signal?: AbortSignal): Promise<Array
   const timer = setTimeout(() => controller.abort('audio fetch timed out'), FETCH_TIMEOUT_MS);
   try {
     const response = await fetch(src, { cache: 'no-store', signal: controller.signal });
-    if (!response.ok) throw new Error(`HTTP ${response.status} ${response.statusText}`.trim());
+    if (!response.ok) throw new Error(`Tải nguồn âm thanh thất bại (HTTP ${response.status})`);
     const declared = Number(response.headers.get('content-length'));
     if (Number.isFinite(declared) && declared > MAX_SOURCE_BYTES) throw sourceLimitError();
     return await readLimitedResponseBytes(response);
