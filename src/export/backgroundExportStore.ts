@@ -245,7 +245,7 @@ export function createExportJobStore(now: () => number = Date.now): ExportJobSto
       const controller = controllers.get(jobId);
       if (committedJobs.has(jobId)) return false;
       if (!controller || controller.signal.aborted) return false;
-      controller.abort(new DOMException('Export cancelled', 'AbortError'));
+      controller.abort(new DOMException('Đã hủy bản xuất', 'AbortError'));
       if (committingJobs.has(jobId)) {
         cancelRequestedJobs.add(jobId);
         return true;

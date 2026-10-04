@@ -96,7 +96,7 @@ function wait(milliseconds: number, signal?: AbortSignal): Promise<void> {
     }, milliseconds);
     const onAbort = () => {
       clearTimeout(timer);
-      reject(signal?.reason ?? new DOMException('Export cancelled', 'AbortError'));
+      reject(signal?.reason ?? new DOMException('Đã hủy bản xuất', 'AbortError'));
     };
     signal?.addEventListener('abort', onAbort, { once: true });
   });

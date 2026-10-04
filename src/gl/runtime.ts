@@ -39,7 +39,7 @@ function compile(gl: WebGL2RenderingContext, type: number, src: string): WebGLSh
   gl.shaderSource(sh, src);
   gl.compileShader(sh);
   if (!gl.getShaderParameter(sh, gl.COMPILE_STATUS)) {
-    const log = gl.getShaderInfoLog(sh) ?? 'unknown error';
+    const log = gl.getShaderInfoLog(sh) ?? 'lỗi không xác định';
     gl.deleteShader(sh);
     throw new Error(`biên dịch shader thất bại: ${log}`);
   }
@@ -59,7 +59,7 @@ function link(gl: WebGL2RenderingContext, frag: string): WebGLProgram {
   gl.deleteShader(vs);
   gl.deleteShader(fs);
   if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) {
-    const log = gl.getProgramInfoLog(prog) ?? 'unknown error';
+    const log = gl.getProgramInfoLog(prog) ?? 'lỗi không xác định';
     gl.deleteProgram(prog);
     throw new Error(`liên kết program thất bại: ${log}`);
   }

@@ -209,7 +209,7 @@ function recoveredContext(
 ): ServerExportContext {
   const options: UseExportWorkflowOptions = {
     state: record.state,
-    projectName: 'Recovered export',
+    projectName: 'Bản xuất đã khôi phục',
     projectId: record.projectId,
     base: record.base,
     tab: record.format,

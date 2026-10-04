@@ -176,7 +176,7 @@ async function poll(
       }
       return { text: d.text ?? words.map((w: { text: string }) => w.text).join(''), words, utterances };
     }
-    if (d.status === 'error') throw new Error(t('转写服务报错：{error}', { error: d.error ?? 'unknown error' }));
+    if (d.status === 'error') throw new Error(t('转写服务报错：{error}', { error: d.error ?? 'lỗi không xác định' }));
     const waited = Math.max(0, Math.round((ASSEMBLYAI_POLL_DEADLINE_MS - (deadline - Date.now())) / 1000));
     onWait?.(t('正在云端转写（{status}，已等待 {seconds}s）', {
       status: String(d.status),

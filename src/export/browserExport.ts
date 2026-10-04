@@ -62,7 +62,7 @@ export type VideoExportWithFallback<T> =
   | { engine: 'server'; value: T; reason: string };
 
 function abortError(): DOMException {
-  return new DOMException('Browser export cancelled', 'AbortError');
+  return new DOMException('Đã hủy bản xuất trên trình duyệt', 'AbortError');
 }
 
 export function isAbortError(error: unknown): boolean {

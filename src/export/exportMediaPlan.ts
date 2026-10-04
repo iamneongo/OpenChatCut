@@ -305,7 +305,7 @@ async function readableFromBrowser(reference: ExportMediaReference, fetcher: typ
     return {
       ...reference,
       code: 'unsupported_source',
-      message: `Browser export cannot read local file source: ${reference.source}`,
+      message: `Bản xuất trên trình duyệt không thể đọc nguồn tệp cục bộ: ${reference.source}`,
     };
   }
   let response: Response | undefined;
@@ -323,14 +323,14 @@ async function readableFromBrowser(reference: ExportMediaReference, fetcher: typ
       ...reference,
       code: response.status === 404 || htmlFallback ? 'missing_source' : 'unreadable',
       message: htmlFallback
-        ? `Media source resolved to HTML instead of media (HTTP ${response.status}): ${reference.source}`
-        : `Media source is not readable (HTTP ${response.status}): ${reference.source}`,
+        ? `Nguồn tư liệu trả về HTML thay vì tư liệu (HTTP ${response.status}): ${reference.source}`
+        : `Không thể đọc nguồn tư liệu (HTTP ${response.status}): ${reference.source}`,
     };
   } catch (error) {
     return {
       ...reference,
       code: 'unreadable',
-      message: `Media source is not readable: ${reference.source} (${error instanceof Error ? error.message : String(error)})`,
+      message: `Không thể đọc nguồn tư liệu: ${reference.source} (${error instanceof Error ? error.message : String(error)})`,
     };
   } finally {
     await response?.body?.cancel().catch(() => undefined);
