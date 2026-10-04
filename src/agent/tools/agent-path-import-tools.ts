@@ -12,10 +12,10 @@ export const AGENT_PATH_IMPORT_SCHEMAS: AgentToolSchema[] = [
   {
     name: 'browse_local_media',
     description: [
-      'Duyệt thư mục cục bộ hoặc tìm tên tệp media cục bộ trước khi nhập vào kho media.',
-      'Chỉ dùng trên desktop. Mặc định bắt đầu từ thư mục home; đường dẫn tuyệt đối có thể trỏ đến ổ đĩa ngoài.',
+      'Duyệt thư mục cục bộ hoặc tìm tên tệp tư liệu cục bộ trước khi nhập vào kho tư liệu.',
+      'Chỉ dùng trên máy tính. Mặc định bắt đầu từ thư mục chính; đường dẫn tuyệt đối có thể trỏ đến ổ đĩa ngoài.',
       'Quyền truy cập cục bộ được bật mặc định; thiết lập AGENT_IMPORT_ROOTS sẽ giới hạn phạm vi truy cập.',
-      'Trả về thư mục, đường dẫn media được hỗ trợ, kích thước và thời điểm sửa đổi mà không nhập tệp.',
+      'Trả về thư mục, đường dẫn tư liệu được hỗ trợ, kích thước và thời điểm sửa đổi mà không nhập tệp.',
       'Dùng recursive cùng query/kind để tìm ứng viên, sau đó dùng import_assets cho các tệp đã chọn.',
       'Dùng nextOffset để lấy thêm kết quả. Nếu kết quả bị cắt, hãy duyệt các thư mục con hẹp hơn; không theo liên kết tượng trưng.',
     ].join(' '),
@@ -33,11 +33,11 @@ export const AGENT_PATH_IMPORT_SCHEMAS: AgentToolSchema[] = [
   },
   {
     name: 'import_assets',
-    description: 'Nhập một batch các đường dẫn media cục bộ đã chọn vào kho media. Chỉ dùng trên desktop. Quyền truy cập cục bộ được bật mặc định; AGENT_IMPORT_ROOTS sẽ giới hạn phạm vi. Dùng lại quy trình phân tích media thông thường và bỏ qua nội dung trùng lặp. Hãy dùng browse_local_media để tìm đường dẫn trước.',
+    description: 'Nhập một lô đường dẫn tư liệu cục bộ đã chọn vào kho tư liệu. Chỉ dùng trên máy tính. Quyền truy cập cục bộ được bật mặc định; AGENT_IMPORT_ROOTS sẽ giới hạn phạm vi. Dùng lại quy trình phân tích tư liệu thông thường và bỏ qua nội dung trùng lặp. Hãy dùng browse_local_media để tìm đường dẫn trước.',
     input_schema: {
       type: 'object',
       properties: {
-        paths: { type: 'array', minItems: 1, maxItems: 100, items: { type: 'string', minLength: 1 }, description: 'Đường dẫn tuyệt đối của các tệp media đã chọn.' },
+        paths: { type: 'array', minItems: 1, maxItems: 100, items: { type: 'string', minLength: 1 }, description: 'Đường dẫn tuyệt đối của các tệp tư liệu đã chọn.' },
       },
       required: ['paths'],
     },
@@ -45,14 +45,14 @@ export const AGENT_PATH_IMPORT_SCHEMAS: AgentToolSchema[] = [
   {
     name: 'import_asset',
     description: [
-      'Nhập MỘT tệp media cục bộ (video/audio/image) vào kho media bằng đường dẫn tuyệt đối trên ổ đĩa.',
-      'Chỉ dùng trong ứng dụng desktop; quyền truy cập cục bộ được bật mặc định. AGENT_IMPORT_ROOTS sẽ giới hạn phạm vi.',
+      'Nhập MỘT tệp tư liệu cục bộ (video/âm thanh/hình ảnh) vào kho tư liệu bằng đường dẫn tuyệt đối trên ổ đĩa.',
+      'Chỉ dùng trong ứng dụng máy tính; quyền truy cập cục bộ được bật mặc định. AGENT_IMPORT_ROOTS sẽ giới hạn phạm vi.',
       'Trả về tư liệu đã nhập vào kho; các bản trùng đã có trong kho sẽ được bỏ qua.',
     ].join(' '),
     input_schema: {
       type: 'object',
       properties: {
-        path: { type: 'string', description: 'Đường dẫn tuyệt đối đến tệp media.' },
+        path: { type: 'string', description: 'Đường dẫn tuyệt đối đến tệp tư liệu.' },
       },
       required: ['path'],
     },
@@ -60,15 +60,15 @@ export const AGENT_PATH_IMPORT_SCHEMAS: AgentToolSchema[] = [
   {
     name: 'import_folder',
     description: [
-      'Nhập mọi tệp media được hỗ trợ trong một thư mục cục bộ (đệ quy, có giới hạn) vào kho media.',
-      'Chỉ dùng trong ứng dụng desktop; quyền truy cập cục bộ được bật mặc định. AGENT_IMPORT_ROOTS sẽ giới hạn phạm vi.',
+      'Nhập mọi tệp tư liệu được hỗ trợ trong một thư mục cục bộ (đệ quy, có giới hạn) vào kho tư liệu.',
+      'Chỉ dùng trong ứng dụng máy tính; quyền truy cập cục bộ được bật mặc định. AGENT_IMPORT_ROOTS sẽ giới hạn phạm vi.',
       'Trả về tư liệu đã nhập, số lượng bản trùng, tên tệp không được hỗ trợ và lỗi theo từng tệp.',
       'Tài liệu (txt/md/docx/pdf) sẽ được báo là không hỗ trợ ở đây; hãy đính kèm chúng vào cuộc trò chuyện.',
     ].join(' '),
     input_schema: {
       type: 'object',
       properties: {
-        path: { type: 'string', description: 'Đường dẫn tuyệt đối đến thư mục media.' },
+        path: { type: 'string', description: 'Đường dẫn tuyệt đối đến thư mục tư liệu.' },
       },
       required: ['path'],
     },
@@ -112,8 +112,8 @@ export async function browseLocalMediaResult(
   api: LocalMediaBrowseApi,
 ): Promise<Record<string, unknown>> {
   if (name !== 'browse_local_media') return { error: `Công cụ không xác định: ${name}` };
-  if (!isAgentLocalMediaRequest(args)) return { error: 'Yêu cầu duyệt media cục bộ không hợp lệ' };
-  if (!api.browseLocalMedia) return { error: 'browse_local_media chỉ khả dụng trong ứng dụng desktop' };
+  if (!isAgentLocalMediaRequest(args)) return { error: 'Yêu cầu duyệt tư liệu cục bộ không hợp lệ' };
+  if (!api.browseLocalMedia) return { error: 'browse_local_media chỉ khả dụng trong ứng dụng máy tính' };
   try {
     return { ok: true, ...await api.browseLocalMedia(args) };
   } catch (error) {
@@ -133,7 +133,7 @@ export async function execAgentPathImportTool(
   const api = desktopApi();
   if (!api?.importAgentPaths) {
     return {
-      error: 'Nhập media cục bộ chỉ khả dụng trong ứng dụng desktop; '
+      error: 'Nhập tư liệu cục bộ chỉ khả dụng trong ứng dụng máy tính; '
         + 'hãy dùng giao diện tải lên của kho tư liệu hoặc thư mục theo dõi trong trình duyệt',
     };
   }

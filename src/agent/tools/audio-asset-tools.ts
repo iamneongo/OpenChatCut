@@ -49,11 +49,11 @@ export function execAudioAssetTool(name: string, args: Args, ctx: AgentContext):
   const resolvedTrack = resolveTrackId(state, requestedTrack, 'audio');
   if (args.track != null && !resolvedTrack) {
     return {
-      error: `Track âm thanh "${String(args.track)}" chưa tồn tại. Hãy tạo trước bằng edit_track action=create json={"trackType":"audio","name":"${String(args.track)}"} (hoặc bỏ qua track để đặt lên track âm thanh mặc định).`,
+      error: `Rãnh âm thanh "${String(args.track)}" chưa tồn tại. Hãy tạo trước bằng edit_track action=create json={"trackType":"audio","name":"${String(args.track)}"} (hoặc bỏ qua track để đặt lên rãnh âm thanh mặc định).`,
     };
   }
   const track = resolvedTrack ?? defaultTrackId(state, 'audio');
-  if (!track) return { error: 'Chưa có track âm thanh; hãy tạo bằng edit_track action=create json={"trackType":"audio"}' };
+  if (!track) return { error: 'Chưa có rãnh âm thanh; hãy tạo bằng edit_track action=create json={"trackType":"audio"}' };
   const placed = ctx.commands.addAudio(commandAudio(asset), {
     track,
     startFrame: typeof args.startFrame === 'number' ? args.startFrame : undefined,

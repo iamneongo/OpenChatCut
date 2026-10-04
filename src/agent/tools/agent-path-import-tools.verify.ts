@@ -25,7 +25,7 @@ for (const name of ['import_asset', 'import_folder']) {
 (globalThis as unknown as { window?: unknown }).window = {};
 try {
   const browserResult = await execAgentPathImportTool('import_asset', { path: '/Volumes/素材盘/A.mp4' }, {} as AgentContext);
-  assert.match(String(browserResult.error), /desktop app only/, 'browser gets the desktop-only error');
+  assert.match(String(browserResult.error), /chỉ khả dụng trong ứng dụng máy tính/, 'browser gets the desktop-only error');
   assert.equal('ok' in browserResult, false, 'browser path never reports success');
 } finally {
   delete (globalThis as unknown as { window?: unknown }).window;
@@ -42,7 +42,7 @@ const desktopBridge = {
 (globalThis as unknown as { window?: unknown }).window = { openChatCutDesktop: desktopBridge };
 try {
   const empty = await execAgentPathImportTool('import_asset', { path: '   ' }, {} as AgentContext);
-  assert.match(String(empty.error), /path is required/, 'blank path rejected');
+  assert.match(String(empty.error), /Cần có path/, 'blank path rejected');
   assert.equal(desktopBridge.calls.length, 0, 'no bridge call for a blank path');
 } finally {
   delete (globalThis as unknown as { window?: unknown }).window;
@@ -133,7 +133,7 @@ try {
 (globalThis as unknown as { window?: unknown }).window = { openChatCutDesktop: desktopBridge };
 try {
   const noProject = await execAgentPathImportTool('import_folder', { path: '/Volumes/素材盘' }, { getProjectId: () => undefined } as unknown as AgentContext);
-  assert.match(String(noProject.error), /no open project/, 'missing project rejected');
+  assert.match(String(noProject.error), /Chưa mở dự án/, 'missing project rejected');
 } finally {
   delete (globalThis as unknown as { window?: unknown }).window;
 }
@@ -184,7 +184,7 @@ try {
   let reads = 0;
   const switchedContext = { ...projectCtx, getProjectId: () => ++reads === 1 ? 'project-84' : 'another-project' } as AgentContext;
   const switched = await execAgentPathImportTool('import_assets', { paths: ['/media/take.mp4'] }, switchedContext);
-  assert.match(String(switched.error), /project changed/);
+  assert.match(String(switched.error), /Dự án đang hoạt động đã thay đổi/);
   assert.equal(addedAssets.length, 2, 'switching projects cannot publish imported assets into another pool');
 } finally {
   delete (globalThis as unknown as { window?: unknown }).window;
