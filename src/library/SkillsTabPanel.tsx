@@ -4,7 +4,7 @@
 // search box, per-card edit (name/summary/body via modal) and delete.
 import { useEffect, useMemo, useState } from 'react';
 import { localizedCatalogText, useT } from '../i18n/locale';
-import { allCreativeSkills, setCustomSkills, findSkill } from '../agent/skills/skills-catalog';
+import { allCreativeSkills, findSkill, localizedSkillSummary, setCustomSkills } from '../agent/skills/skills-catalog';
 import { loadCustomSkills, saveCustomSkill, deleteCustomSkill } from '../persist/skillStore';
 import type { CustomSkill } from '../persist/skillStore';
 import type { SkillDefinition } from '../agent/skills/skill-types';
@@ -84,7 +84,7 @@ export function SkillsTabPanel({
               className="cc-creative-mode-row cc-creative-mode-card"
               data-active={creativeMode === skill.id}
               aria-pressed={creativeMode === skill.id}
-              title={t(skill.summary)}
+              title={localizedSkillSummary(skill)}
             >
               <span className="cc-creative-mode-icon"><IconWand /></span>
               <span className="cc-creative-mode-copy">
@@ -92,7 +92,7 @@ export function SkillsTabPanel({
                   <strong>{skillName(skill)}</strong>
                   {!BUILTIN_IDS.has(skill.slug) && <em>{t('自定义')}</em>}
                 </span>
-                <small>{t(skill.summary)}</small>
+                <small>{localizedSkillSummary(skill)}</small>
               </span>
               {creativeMode === skill.id && <span className="cc-creative-mode-check">✓</span>}
             </button>
