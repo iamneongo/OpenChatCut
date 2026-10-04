@@ -640,7 +640,7 @@ export const VI: Record<string, string> = {
   '转场': 'Chuyển cảnh',
   '插件': 'Gói mở rộng',
   '扩展': 'Gói mở rộng',
-  '交叉淡化': 'Mờ chéo',
+  '交叉淡化': 'Chuyển âm chéo',
   '人声隔离失败': 'Tách giọng thất bại',
   '人声隔离处理中…': 'Đang tách giọng…',
   '人声隔离已应用': 'Đã áp dụng tách giọng',
