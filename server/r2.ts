@@ -442,9 +442,14 @@ export async function presignGetUpload(
 
 /** Test connection probe: HeadBucket synthetic response (bucket exists + authentication passed = 200).
  * S3 errors are mapped to the corresponding HTTP status to classifyStatus; network layer errors are thrown to networkMessage as they are.*/
-export async function r2Probe(get: Get, locale: UiLocale = 'zh'): Promise<Response> {
+export async function r2Probe(get: Get, locale: UiLocale = 'vi'): Promise<Response> {
   const cfg = r2Config(get, { ignoreEnabled: true });
-  if (!cfg) return new Response('missing config', { status: 400 });
+  if (!cfg) {
+    const message = locale === 'vi' ? 'Thiếu cấu hình lưu trữ'
+      : locale === 'en' ? 'Missing storage configuration'
+        : '缺少存储配置';
+    return new Response(message, { status: 400 });
+  }
   try {
     await clientFor(cfg).send(new HeadBucketCommand({ Bucket: cfg.bucket }));
     return new Response('', { status: 200 });
