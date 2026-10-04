@@ -48,7 +48,7 @@ export const TRANSCRIPT_TOOL_SCHEMAS: AgentToolSchema[] = [
       type: 'object',
       properties: {
         query: { type: 'string', description: 'Văn bản cần tìm.' },
-        asset: { type: 'string', description: 'Id asset hoặc tiền tố id. Bỏ qua để tìm trong toàn bộ dự án.' },
+        asset: { type: 'string', description: 'ID tư liệu hoặc tiền tố ID. Bỏ qua để tìm trong toàn bộ dự án.' },
         track: { type: 'string', description: 'Bí danh rãnh (V1/A1/...) hoặc id rãnh. Giới hạn tìm kiếm trong rãnh đó.' },
         fuzzy: { type: 'boolean', description: 'Khớp theo cửa sổ token (cho phép có từ đệm giữa các token).' },
         includeWordTimestamps: { type: 'boolean', description: 'Bao gồm timestamp từng từ trong mỗi kết quả (mặc định false). Thêm block Words với thời điểm bắt đầu -> kết thúc của từng từ. Dùng khi đồng bộ nhịp animation với lời nói (ví dụ nhịp nội bộ MG khớp với từ đang được nói).' },
@@ -98,7 +98,7 @@ export const TRANSCRIPT_TOOL_SCHEMAS: AgentToolSchema[] = [
         },
         gapIndex: {
           type: 'number',
-          description: 'Index bắt đầu từ 0 trong các khoảng có thể liệt kê của clip (lấy từ list). Thay thế cho afterWordIndex.',
+          description: 'Chỉ số bắt đầu từ 0 trong các khoảng có thể liệt kê của đoạn (lấy từ list). Thay thế cho afterWordIndex.',
         },
         maxSeconds: {
           type: 'number',

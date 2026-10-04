@@ -70,7 +70,7 @@ assert.match(String(missingTimeline.error ?? ''), /timeline/i, 'unknown timeline
 const schemaDescription = READ_PROJECT_TOOL_SCHEMAS[0]!.description ?? '';
 assert.match(schemaDescription, /session agent nhắm tới/);
 assert.match(schemaDescription, /sẽ trả lỗi/);
-assert.match(schemaDescription, /mảng item\/asset rỗng/);
+assert.match(schemaDescription, /mảng đoạn\/tư liệu rỗng/);
 assert.match(schemaDescription, /selectedId/);
 
 console.log('read-project-tools.verify: session targeting and documented failure/filter semantics ok');

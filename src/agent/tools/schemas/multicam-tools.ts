@@ -15,7 +15,7 @@ export const MULTICAM_TOOL_SCHEMAS: AgentToolSchema[] = [
         itemIds: {
           type: 'array',
           items: { type: 'string' },
-          description: 'ID mục trên dòng thời gian cho mọi góc (reference + follower). Tối thiểu 2.',
+          description: 'ID đoạn trên dòng thời gian cho mọi góc (reference + follower). Tối thiểu 2.',
         },
         referenceItemId: {
           type: 'string',
@@ -27,7 +27,7 @@ export const MULTICAM_TOOL_SCHEMAS: AgentToolSchema[] = [
         },
         masterItemId: {
           type: 'string',
-          description: 'ID mục góc chương trình/chính tùy chọn. Mặc định referenceItemId.',
+          description: 'ID đoạn góc chương trình/chính tùy chọn. Mặc định referenceItemId.',
         },
       },
       required: ['itemIds'],
@@ -69,7 +69,7 @@ export const MULTICAM_TOOL_SCHEMAS: AgentToolSchema[] = [
     description: [
       'Tạo hoặc xóa quan hệ chỉnh sửa dòng thời gian bền vững trong một thay đổi có thể hoàn tác.',
       'action=link ghép thao tác move, trim và remove của A/V; action=sync_lock giữ timing group qua move trực tiếp',
-      'và chỉnh sửa ripple; action=unlink xóa các membership đã chọn. Truyền từ 2 itemId trở lên cho link/sync_lock.',
+      'và chỉnh sửa ripple; action=unlink xóa các thành viên đã chọn. Truyền từ 2 itemId trở lên cho link/sync_lock.',
     ].join(' '),
     input_schema: {
       type: 'object',

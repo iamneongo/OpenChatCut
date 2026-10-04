@@ -29,8 +29,8 @@ export const CAPTIONS_TOOL_SCHEMAS: AgentToolSchema[] = [
       "- animation: chuyển động burn-in xác định, dùng chung cho xem trước/xuất; đặt `motionPreset` là none, fade-up, pop, word-pop hoặc karaoke-pulse.\n" +
       "- layout: đặt toàn bộ khối qua `json` {preset:\"bottom-center|top-center|center|…3×3\", offsetXRatio, offsetYRatio, scale, rotation, opacity}; transform cũng có thể lồng trong `{transforms:{scale,rotation,opacity}}`.\n" +
       "- display_text: ghi đè DISPLAY theo từng từ qua `json` {overrides:[{wordRef, text, hidden, forcePageBreak}], clearOverrides} — lấy wordRef opaque từ read_captions. wordIndex vẫn là phương án dự phòng cũ; wordRef ổn định khi nhóm lại và đổi thứ tự nguồn. Đặt clear:true trên mục để xóa từ đó theo một trong hai selector. Không tác động transcript.\n" +
-      "- source_set / source_add / source_remove / source_list: chọn rãnh/mục đã chép lời mà phụ đề đọc (json {mode:\"timeline\"} cho mọi âm thanh nghe được, hoặc {sources:[{trackId|itemId}]}).\n" +
-      "  Mục nhiều nguồn nhận trackOrder bắt đầu từ 0. source_update có thể di chuyển source hiện có với {sourceId|index, trackOrder}; source_list trả về thứ tự hình ảnh đã chuẩn hóa.\n" +
+      "- source_set / source_add / source_remove / source_list: chọn rãnh/đoạn đã chép lời mà phụ đề đọc (json {mode:\"timeline\"} cho mọi âm thanh nghe được, hoặc {sources:[{trackId|itemId}]}).\n" +
+      "  Đoạn nhiều nguồn nhận trackOrder bắt đầu từ 0. source_update có thể di chuyển source hiện có với {sourceId|index, trackOrder}; source_list trả về thứ tự hình ảnh đã chuẩn hóa.\n" +
       "- language_mode / bilingual: đổi ngôn ngữ caption — json {mode:\"original|translation|bilingual\", languageCode} (tạo bản dịch trước bằng manage_transcript translate).\n" +
       "- track: trackId rãnh nguồn đơn cũ hoặc trackOrder nội bộ bắt đầu từ 0 (ưu tiên source_set cho văn bản nguồn hiển thị).\n" +
       "- layout_policy / positions / source_update: sắp xếp, tạo phong cách, ẩn và đổi thứ tự từng rãnh nguồn. preset_* quản lý phong cách phụ đề người dùng đã lưu.",

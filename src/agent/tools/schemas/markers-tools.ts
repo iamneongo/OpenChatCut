@@ -10,7 +10,7 @@ export const MARKERS_TOOL_SCHEMAS: AgentToolSchema[] = [
       'scope=project neo vào frame trên thước; scope=item neo vào một đoạn.',
       'action: list tất cả | create một mốc hoặc batch markers[] | update một mốc hoặc batch updates[] | delete.',
       'Với note dựa trên transcript, truyền transcriptSegments dùng id segment [sN] của Active Script cùng notePrefix tùy chọn thay vì tự viết note.',
-      'fromFrame mặc định là đầu đoạn đầu tiên được chọn nếu không truyền rõ, còn nội dung ghi chú được sao chép từ output read_script.',
+      'fromFrame mặc định là đầu đoạn đầu tiên được chọn nếu không truyền rõ, còn nội dung ghi chú được sao chép từ đầu ra read_script.',
       `color phải là một trong ${COLORS.join('/')}.`,
     ].join(' '),
     input_schema: {
@@ -25,7 +25,7 @@ export const MARKERS_TOOL_SCHEMAS: AgentToolSchema[] = [
         scope: { type: 'string', enum: ['project', 'item'], description: 'item yêu cầu itemId; mặc định project.' },
         itemId: { type: 'string', description: 'ID đoạn cần neo khi scope=item.' },
         markerId: { type: 'string', description: 'Id mốc đích cho update/delete.' },
-        transcriptSegments: { type: 'string', description: 'Id/phạm vi đoạn Active Script từ timeline.md, ví dụ "3-4"; nội dung ghi chú được sao chép từ output read_script.' },
+        transcriptSegments: { type: 'string', description: 'ID/phạm vi đoạn Active Script từ timeline.md, ví dụ "3-4"; nội dung ghi chú được sao chép từ đầu ra read_script.' },
         transcriptTrack: { type: 'string', description: 'Bộ lọc rãnh cho transcriptSegments, ví dụ V1 hoặc A1.' },
         notePrefix: { type: 'string', description: 'Tiền tố nhãn tùy chọn khi transcriptSegments tạo nội dung note.' },
         markers: {

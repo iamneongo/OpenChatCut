@@ -18,14 +18,14 @@ export const MG_VIDEO_TOOL_SCHEMAS: AgentToolSchema[] = [
   {
     name: 'register_converted_video',
     description:
-      'Nhập bản kết xuất MG→video đã hoàn tất thành asset video trong kho tư liệu — bước 2 của quy trình chuyển MG→video. Sau khi track_export báo kết xuất hoàn tất, gọi với renderId (ưu tiên) để đưa output kết xuất vào kho tư liệu thành asset video thật; backend cục bộ tự phân giải output, không cần URL tải. outputUrl chỉ là phương án dự phòng khi không có renderId. Trả về id asset video (chạy lại sẽ dùng lại cùng asset). Sau đó đặt video bằng edit_item (thêm video item tham chiếu videoAssetId trả về).',
+      'Nhập bản kết xuất MG→video đã hoàn tất thành tư liệu video trong kho tư liệu — bước 2 của quy trình chuyển MG→video. Sau khi track_export báo kết xuất hoàn tất, gọi với renderId (ưu tiên) để đưa output kết xuất vào kho tư liệu thành tư liệu video thật; backend cục bộ tự phân giải output, không cần URL tải. outputUrl chỉ là phương án dự phòng khi không có renderId. Trả về ID tư liệu video (chạy lại sẽ dùng lại cùng tư liệu). Sau đó đặt video bằng edit_item (thêm đoạn video tham chiếu videoAssetId trả về).',
     input_schema: {
       type: 'object',
       properties: {
-        mgAssetId: { type: 'string', description: 'Id asset motion graphic nguồn (mgAssetId của đoạn đã chuyển đổi).' },
+        mgAssetId: { type: 'string', description: 'ID tư liệu motion graphic nguồn (mgAssetId của đoạn đã chuyển đổi).' },
         renderId: { type: 'string', description: 'Id kết xuất của thao tác chuyển đổi (ưu tiên; truyền sau khi track_export báo kết xuất hoàn tất).' },
-        outputUrl: { type: 'string', description: 'URL output kết xuất thô — chỉ dùng dự phòng khi không có renderId.' },
-        name: { type: 'string', description: 'Tên hiển thị asset trong kho tư liệu (mặc định "<MG name> (video)").' },
+        outputUrl: { type: 'string', description: 'URL đầu ra kết xuất thô — chỉ dùng dự phòng khi không có renderId.' },
+        name: { type: 'string', description: 'Tên hiển thị tư liệu trong kho tư liệu (mặc định "<MG name> (video)").' },
         durationInFrames: { type: 'number', description: 'Thời lượng tính bằng frame (mặc định theo độ dài MG nguồn nếu bỏ qua).' },
       },
       required: ['mgAssetId'],
@@ -38,10 +38,10 @@ export const MG_VIDEO_TOOL_SCHEMAS: AgentToolSchema[] = [
     input_schema: {
       type: 'object',
       properties: {
-        itemId: { type: 'string', description: 'Id item MG trên dòng thời gian (chấp nhận tiền tố). Ưu tiên.' },
-        itemIds: { type: 'array', items: { type: 'string' }, description: 'Batch: nhiều id/tiền tố item MG.' },
-        assetId: { type: 'string', description: 'Id/tiền tố asset MG — xuất instance đầu tiên đã đặt trên dòng thời gian.' },
-        assetIds: { type: 'array', items: { type: 'string' }, description: 'Batch: nhiều id/tiền tố asset MG.' },
+        itemId: { type: 'string', description: 'ID đoạn MG trên dòng thời gian (chấp nhận tiền tố). Ưu tiên.' },
+        itemIds: { type: 'array', items: { type: 'string' }, description: 'Lô: nhiều ID/tiền tố đoạn MG.' },
+        assetId: { type: 'string', description: 'ID/tiền tố tư liệu MG — xuất instance đầu tiên đã đặt trên dòng thời gian.' },
+        assetIds: { type: 'array', items: { type: 'string' }, description: 'Lô: nhiều ID/tiền tố tư liệu MG.' },
         filenameMode: {
           type: 'string',
           enum: ['asset', 'xml'],

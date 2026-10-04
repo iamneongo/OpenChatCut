@@ -11,7 +11,7 @@ export const SCENE_DETECTION_TOOL_SCHEMAS: AgentToolSchema[] = [{
   input_schema: {
     type: 'object',
     properties: {
-      itemId: { type: 'string', description: 'ID mục video/gif trên dòng thời gian (chấp nhận tiền tố). Bắt buộc cho markers/split.' },
+      itemId: { type: 'string', description: 'ID đoạn video/gif trên dòng thời gian (chấp nhận tiền tố). Bắt buộc cho markers/split.' },
       assetId: { type: 'string', description: 'ID tư liệu video/gif trong kho tư liệu (chấp nhận tiền tố). Chỉ báo cáo trừ khi đồng thời truyền itemId.' },
       threshold: { type: 'number', description: 'Ngưỡng độ nhạy cảnh 0.05–0.95; thấp hơn sẽ tìm nhiều thay đổi hơn. Mặc định 0.3.' },
       minSceneSeconds: { type: 'number', description: 'Khoảng cách tối thiểu giữa các điểm cắt. Mặc định 0.75s.' },
