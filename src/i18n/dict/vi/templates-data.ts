@@ -5,7 +5,7 @@ export default {
   '竖屏·金句卡片': 'Dọc · thẻ câu nói nổi bật',
   '竖屏·姓名条': 'Dọc · dải tên',
   '竖屏·关注引导': 'Dọc · lời kêu gọi theo dõi',
-  '竖屏·步骤条': 'Dọc · thanh tiến trình bước',
+  '竖屏·步骤条': 'Dọc · thanh tiến trình theo bước',
   '竖屏·数字大字报': 'Dọc · chữ số lớn nổi bật',
   '竖屏·章节进度': 'Dọc · tiến độ chương',
   '竖屏·价格标签': 'Dọc · nhãn giá',
