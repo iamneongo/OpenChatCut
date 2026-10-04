@@ -21,7 +21,7 @@ export default {
   '口播·侧栏拼贴（横）': 'Video người nói · ảnh ghép chia đôi (ngang)',
   '口播·便签五五分（竖）': 'Video người nói · bố cục ghi chú chia đôi (dọc)',
   '口播·点阵五五分（竖）': 'Video người nói · bố cục chấm bi chia đôi (dọc)',
-  '口播·牛皮纸圆窗（竖）': 'Video người nói · cửa sổ tròn giấy kraft (dọc)',
+  '口播·牛皮纸圆窗（竖）': 'Video người nói · cửa sổ tròn trên giấy kraft (dọc)',
   '口播·羊皮纸（横）': 'Video người nói · giấy da (ngang)',
   '口播·奶油拍立得（竖）': 'Video người nói · ảnh lấy ngay tông kem (dọc)',
 } as const;
