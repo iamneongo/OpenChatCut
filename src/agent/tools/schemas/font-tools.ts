@@ -4,7 +4,7 @@ export const FONT_TOOL_SCHEMAS: AgentToolSchema[] = [
   {
     name: 'search_fonts',
     description: [
-      'Tìm trong catalog font mà renderer cục bộ/headless có thể tải (Google Fonts được đóng gói trong ứng dụng',
+      'Tìm trong danh mục phông chữ mà bộ kết xuất cục bộ/headless có thể tải (Google Fonts được đóng gói trong ứng dụng',
       '+ các font chữ Hán của foundry được đóng gói cục bộ, source:"bundled"). Dùng khi export báo font không được hỗ trợ',
       'hoặc khi chọn fontFamily cho item đồ họa chuyển động / phụ đề. Kết quả trả về tên family chuẩn',
       'để dùng nguyên văn. Tìm theo chuỗi con trong tên family VÀ alias tên gốc',

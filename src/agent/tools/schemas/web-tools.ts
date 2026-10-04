@@ -9,11 +9,11 @@ export const WEB_TOOL_SCHEMAS: AgentToolSchema[] = [
   {
     name: 'web_browser',
     description: [
-      'Scrape một trang web qua Firecrawl (web_browser → Firecrawl /scrape).',
+      'Trích xuất một trang web qua Firecrawl (web_browser → Firecrawl /scrape).',
       'formats: markdown (mặc định), html, rawHtml, images, links, branding, summary, screenshot, videos.',
-      'branding = bộ nhận diện thương hiệu native (màu/font/logo); summary = tóm tắt trang native.',
-      'screenshot được tự động lưu vào media pool dưới dạng screenshotAssetId khi có thể.',
-      'Với nhiều URL đã biết dùng web_batch_scrape; khám phá site dùng web_map; crawl nhiều trang dùng web_crawl; tìm kiếm dùng web_search.',
+      'branding = bộ nhận diện thương hiệu gốc (màu/phông chữ/logo); summary = tóm tắt trang gốc.',
+      'screenshot được tự động lưu vào kho tư liệu dưới dạng screenshotAssetId khi có thể.',
+      'Với nhiều URL đã biết dùng web_batch_scrape; khám phá trang dùng web_map; quét nhiều trang dùng web_crawl; tìm kiếm dùng web_search.',
     ].join(' '),
     input_schema: {
       type: 'object',
@@ -24,16 +24,16 @@ export const WEB_TOOL_SCHEMAS: AgentToolSchema[] = [
           items: { type: 'string', enum: [...FORMAT_ENUM] },
           description: "Mặc định ['markdown'].",
         },
-        onlyMainContent: { type: 'boolean', description: 'Bỏ nav/footer (mặc định true).' },
-        fullPage: { type: 'boolean', description: 'Screenshot toàn trang khi format có screenshot.' },
+        onlyMainContent: { type: 'boolean', description: 'Bỏ thanh điều hướng/chân trang (mặc định true).' },
+        fullPage: { type: 'boolean', description: 'Chụp toàn trang khi format có screenshot.' },
         waitFor: { type: 'number', description: 'Số ms chờ trước khi trích xuất (0–10000).' },
         timeout: { type: 'number', description: 'Timeout ms (tối đa 60000).' },
         country: { type: 'string', description: "Mã quốc gia địa lý, ví dụ 'US'." },
-        query: { type: 'string', description: 'Prompt trích xuất có cấu trúc bằng ngôn ngữ tự nhiên.' },
+        query: { type: 'string', description: 'Lời nhắc trích xuất có cấu trúc bằng ngôn ngữ tự nhiên.' },
         schema: { description: 'Schema JSON cho trích xuất có cấu trúc.' },
         actions: {
           type: 'array',
-          description: 'Action trên trang Firecrawl trước khi scrape (click/wait/scroll/…), tối đa 10. '
+          description: 'Thao tác trên trang Firecrawl trước khi trích xuất (click/wait/scroll/…), tối đa 10. '
             + 'Với type=executeJavascript, script KHÔNG ĐƯỢC chứa return ở cấp cao nhất '
             + '(Firecrawl sẽ từ chối với SyntaxError: Illegal return statement) — viết script '
             + 'dưới dạng biểu thức thuần hoặc bọc trong IIFE như (() => { ... })().',
@@ -51,10 +51,10 @@ export const WEB_TOOL_SCHEMAS: AgentToolSchema[] = [
   {
     name: 'web_search',
     description: [
-      'Tìm kiếm web qua Firecrawl /search (API chính thức). Trả về title, URL, description;',
-      'mặc định cũng scrape markdown cho từng kết quả (scrapeMarkdown=true).',
+      'Tìm kiếm web qua Firecrawl /search (API chính thức). Trả về tiêu đề, URL, mô tả;',
+      'mặc định cũng trích xuất markdown cho từng kết quả (scrapeMarkdown=true).',
       'Dùng toán tử site: / filetype: trong query khi hữu ích. Ưu tiên cách này thay vì tự đoán URL.',
-      'Sau đó dùng web_browser với URL cụ thể để scrape sâu/screenshot.',
+      'Sau đó dùng web_browser với URL cụ thể để trích xuất sâu/chụp màn hình.',
     ].join(' '),
     input_schema: {
       type: 'object',
@@ -79,7 +79,7 @@ export const WEB_TOOL_SCHEMAS: AgentToolSchema[] = [
     name: 'web_map',
     description: [
       'Khám phá URL trên website qua Firecrawl /map (API chính thức). Tìm sitemap+link nhanh,',
-      'KHÔNG tải toàn bộ nội dung trang. Dùng search để xếp hạng theo độ liên quan của path.',
+      'KHÔNG tải toàn bộ nội dung trang. Dùng search để xếp hạng theo độ liên quan của đường dẫn.',
       'Sau đó dùng web_browser hoặc web_crawl với các URL đã chọn để lấy nội dung.',
     ].join(' '),
     input_schema: {
@@ -102,8 +102,8 @@ export const WEB_TOOL_SCHEMAS: AgentToolSchema[] = [
   {
     name: 'web_crawl',
     description: [
-      'Crawl nhiều trang từ URL bắt đầu qua Firecrawl /crawl (API chính thức).',
-      'Khởi chạy job và chờ (poll) tới khi hoàn tất hoặc tới maxWaitMs.',
+      'Quét nhiều trang từ URL bắt đầu qua Firecrawl /crawl (API chính thức).',
+      'Khởi chạy tác vụ và chờ (poll) tới khi hoàn tất hoặc tới maxWaitMs.',
       'Trả về markdown rút gọn cho từng trang. Giữ limit nhỏ (mặc định 10, tối đa 50).',
       'Với một trang dùng web_browser; chỉ cần danh sách URL thì dùng web_map.',
     ].join(' '),
@@ -143,8 +143,8 @@ export const WEB_TOOL_SCHEMAS: AgentToolSchema[] = [
   {
     name: 'web_batch_scrape',
     description: [
-      'Batch-scrape nhiều URL đã biết qua Firecrawl /batch/scrape (API v2 chính thức).',
-      'Khởi chạy job và chờ (poll) tới khi hoàn tất hoặc tới maxWaitMs.',
+      'Trích xuất hàng loạt nhiều URL đã biết qua Firecrawl /batch/scrape (API v2 chính thức).',
+      'Khởi chạy tác vụ và chờ (poll) tới khi hoàn tất hoặc tới maxWaitMs.',
       'Tối đa 15 URL mỗi lần gọi. formats: markdown (mặc định), summary, branding, links, html.',
       'Dùng khi đã có sẵn danh sách URL (ví dụ từ web_search hoặc web_map).',
       'Với một trang dùng web_browser; để khám phá URL từ seed dùng web_crawl hoặc web_map.',
@@ -155,7 +155,7 @@ export const WEB_TOOL_SCHEMAS: AgentToolSchema[] = [
         urls: {
           type: 'array',
           items: { type: 'string' },
-          description: 'Danh sách URL trang cần scrape (1–15).',
+          description: 'Danh sách URL trang cần trích xuất (1–15).',
         },
         formats: {
           type: 'array',

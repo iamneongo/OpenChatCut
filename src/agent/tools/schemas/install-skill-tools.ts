@@ -4,7 +4,7 @@ import type { AgentToolSchema } from '../../tool-schema';
 export const INSTALL_SKILL_TOOL_SCHEMAS: AgentToolSchema[] = [
   {
     name: 'install_skill',
-    description: 'Cài một kho skill từ GitHub vào thư mục skill trên máy (~/.openchatcut/skills/<slug>/), bao gồm đầy đủ SKILL.md và references/scripts/assets/examples. Sau khi cài, skill sẽ tự xuất hiện trong panel “Skill” của thư viện; có thể kích hoạt bằng /skill:<slug> hoặc từ panel. repo nhận GitHub URL hoặc owner/repo (ví dụ "Jane-xiaoer/paper-collage-ad-codex"). slug là tùy chọn, mặc định lấy name trong SKILL.md hoặc tên repo.',
+    description: 'Cài một kho skill từ GitHub vào thư mục skill trên máy (~/.openchatcut/skills/<slug>/), bao gồm đầy đủ SKILL.md và references/scripts/assets/examples. Sau khi cài, skill sẽ tự xuất hiện trong bảng “Skill” của thư viện; có thể kích hoạt bằng /skill:<slug> hoặc từ bảng. repo nhận URL GitHub hoặc owner/repo (ví dụ "Jane-xiaoer/paper-collage-ad-codex"). slug là tùy chọn, mặc định lấy name trong SKILL.md hoặc tên repo.',
     input_schema: {
       type: 'object',
       properties: {

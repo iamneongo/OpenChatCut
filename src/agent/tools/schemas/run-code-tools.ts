@@ -4,7 +4,7 @@ export const RUN_CODE_TOOL_SCHEMAS: AgentToolSchema[] = [
   {
     name: 'run_code',
     description:
-      'Chạy lệnh shell trong sandbox Linux cô lập (e2b) — dùng cho script đi kèm skill, dò/chuyển mã media bằng ffmpeg/ffprobe hoặc node/python. Có thể ghi file input trước (files[]) và đọc file output sau (outputs[]). Sandbox không thể tác động timeline editor; áp dụng kết quả bằng các editor tool. Gọi khi skill đã tải yêu cầu chạy script hoặc command. '
+      'Chạy lệnh shell trong sandbox Linux cô lập (e2b) — dùng cho script đi kèm skill, dò/chuyển mã tư liệu bằng ffmpeg/ffprobe hoặc node/python. Có thể ghi tệp đầu vào trước (files[]) và đọc tệp đầu ra sau (outputs[]). Sandbox không thể tác động dòng thời gian của trình biên tập; áp dụng kết quả bằng các công cụ biên tập. Gọi khi skill đã tải yêu cầu chạy script hoặc command. '
       + 'Không dùng cho flex crop, job chỉ giữ một vùng hoặc đo mép clip (dùng edit_item transform.crop). Người dùng không cần cấm tool này trong prompt. Nếu sandbox không nằm trong capabilities đã cấu hình, không gọi tool.',
     input_schema: {
       type: 'object',
@@ -13,7 +13,7 @@ export const RUN_CODE_TOOL_SCHEMAS: AgentToolSchema[] = [
         command: { type: 'string', description: 'Lệnh shell cần chạy, ví dụ "ffmpeg -version" hoặc "node process-media.mjs in.mp4".' },
         files: {
           type: 'array',
-          description: 'File input ghi vào sandbox trước khi chạy. Mỗi item có path đích và content inline HOẶC url để tải: URL media pool/asset cục bộ như "/media/uploads/x.mp4" (app phục vụ) hoặc URL công khai "https://…". Dùng để đưa media thật vào ffprobe/ffmpeg. (URL công khai cũng có thể được probe trực tiếp bằng cách truyền vào ffprobe mà không cần files.)',
+          description: 'Tệp đầu vào ghi vào sandbox trước khi chạy. Mỗi mục có đường dẫn đích và nội dung inline HOẶC URL để tải: URL kho tư liệu/tư liệu cục bộ như "/media/uploads/x.mp4" (ứng dụng phục vụ) hoặc URL công khai "https://…". Dùng để đưa tư liệu thật vào ffprobe/ffmpeg. (URL công khai cũng có thể được probe trực tiếp bằng cách truyền vào ffprobe mà không cần files.)',
           items: {
             type: 'object',
             additionalProperties: false,
@@ -25,7 +25,7 @@ export const RUN_CODE_TOOL_SCHEMAS: AgentToolSchema[] = [
             required: ['path'],
           },
         },
-        outputs: { type: 'array', description: 'Path các file cần đọc lại sau khi chạy.', items: { type: 'string' } },
+        outputs: { type: 'array', description: 'Đường dẫn các tệp cần đọc lại sau khi chạy.', items: { type: 'string' } },
       },
       required: ['command'],
     },
