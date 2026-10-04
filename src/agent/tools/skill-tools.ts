@@ -1,6 +1,6 @@
 export { SKILL_TOOL_SCHEMAS, SKILL_TOOL_NAMES } from './schemas/skill-tools';
 import type { AgentContext } from '../context';
-import { CREATIVE_SKILLS, findSkill, setCustomSkills } from '../skills/skills-catalog';
+import { CREATIVE_SKILLS, findSkill, localizedSkillSummary, setCustomSkills } from '../skills/skills-catalog';
 import { parseSkillFrontmatter } from '../skills/skill-frontmatter';
 import type { SkillDefinition } from '../skills/skill-types';
 import { listCustomSkills, saveCustomSkill, deleteCustomSkill, type CustomSkill } from '../../persist/skillStore';
@@ -19,7 +19,7 @@ const brief = (skill: SkillDefinition) => ({
   slug: skill.slug,
   name: skill.name,
   nameZh: skill.nameZh,
-  summary: skill.summary,
+  summary: localizedSkillSummary(skill),
   scenarios: skill.scenarios,
 });
 
