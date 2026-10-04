@@ -137,7 +137,7 @@ export function buildLibraryItems(templates: Tpl[]): LibraryItem[] {
     category: 'audio-fx',
     description: 'Khử ồn giọng nói mã nguồn mở (khử ồn phổ bằng ffmpeg). Gắn denoisedSrc; src của đoạn gốc không thay đổi.',
     group: 'voice',
-    usage: 'isolate_voice itemId=<clip> action=apply strength?=70 — không dùng edit_item (khử ồn theo từng đoạn, không phải mục để đặt trong thư viện). action=clear để xóa. Giao diện thư viện: 资源库 → 音频效果.',
+    usage: 'isolate_voice itemId=<clip> action=apply strength?=70 — không dùng edit_item (khử ồn theo từng đoạn, không phải mục để đặt trong thư viện). action=clear để xóa. Giao diện thư viện: Thư viện → Hiệu ứng âm thanh.',
   });
   items.push({
     id: AUDIO_FX_ISOLATE_LIGHT,
