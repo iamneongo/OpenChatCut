@@ -4,6 +4,7 @@ import { CREATIVE_SKILLS, findSkill, localizedSkillSummary, setCustomSkills } fr
 import { parseSkillFrontmatter } from '../skills/skill-frontmatter';
 import type { SkillDefinition } from '../skills/skill-types';
 import { listCustomSkills, saveCustomSkill, deleteCustomSkill, type CustomSkill } from '../../persist/skillStore';
+import { localizedCatalogText } from '../../i18n/locale';
 
 // manage_skill maintains selectable custom skills. Skill bodies are resolved by
 // load_skill after selection; built-in skills remain read-only.
@@ -17,7 +18,7 @@ const isBuiltin = (id: string): boolean => CREATIVE_SKILLS.some((s) => s.id === 
 const brief = (skill: SkillDefinition) => ({
   id: skill.id,
   slug: skill.slug,
-  name: skill.name,
+  name: localizedCatalogText(skill.name, skill.nameZh, undefined, skill.nameVi),
   nameZh: skill.nameZh,
   summary: localizedSkillSummary(skill),
   scenarios: skill.scenarios,
