@@ -31,7 +31,7 @@ export function buildSubmitImageArgs(args: GenerateArgs): SubmitImageArgs {
   };
   if (model === 'fal') {
     for (const key of ['width', 'height', 'quality', 'maskAssetId', 'background', 'moderation', 'inputFidelity', 'outputFormat', 'outputCompression', 'seed', 'promptOptimizer']) {
-      if (args[key] !== undefined) throw new Error(`${key} is not supported by the Fal image integration`);
+      if (args[key] !== undefined) throw new Error(`${key} không được Fal hỗ trợ trong tích hợp tạo ảnh`);
     }
     return { ...shared, imageSize: args.imageSize as SubmitImageArgs['imageSize'] };
   }
@@ -227,7 +227,7 @@ const grokVideo = (args: GenerateArgs): SubmitVideoArgs => videoBase(args, 'grok
 
 const falVideo = (args: GenerateArgs): SubmitVideoArgs => {
   for (const key of ['mode', 'refVideoMode', 'promptOptimizer', 'fastPretreatment', 'seed', 'cameraFixed', 'watermark', 'returnLastFrame', 'executionExpiresAfter', 'priority', 'multiPrompts', 'shotType']) {
-    if (args[key] !== undefined) throw new Error(`${key} is not supported by the Fal video integration`);
+    if (args[key] !== undefined) throw new Error(`${key} không được Fal hỗ trợ trong tích hợp tạo video`);
   }
   return ({
   ...videoBase(args, 'fal'), falModel: str(args.falModel), ratio: str(args.ratio),
