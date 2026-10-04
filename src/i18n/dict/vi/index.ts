@@ -1615,7 +1615,7 @@ export const VI: Record<string, string> = {
   'MiniMax 海螺': 'MiniMax Hailuo',
   '选择 Fal.ai 作为默认厂商，然后选择模型。聊天中指定的模型优先于此默认值。': 'Chọn Fal.ai làm nhà cung cấp mặc định, sau đó chọn mô hình. Mô hình được chỉ định trong cuộc trò chuyện sẽ ưu tiên hơn mặc định này.',
   '对话与工具调用的核心，未配置无法对话。': 'Nền tảng cốt lõi cho trò chuyện và gọi công cụ; chưa cấu hình thì không thể trò chuyện.',
-  'submit_image · 文生图 / 图生图，任一厂商即可。': 'submit_image · tạo ảnh từ văn bản / ảnh, dùng nhà cung cấp bất kỳ.',
+  'submit_image · 文生图 / 图生图，任一厂商即可。': 'submit_image · tạo ảnh từ văn bản / biến đổi ảnh, dùng nhà cung cấp bất kỳ.',
   'submit_voice · 文字转配音，任一厂商即可。': 'submit_voice · chuyển văn bản thành giọng đọc, dùng nhà cung cấp bất kỳ.',
   'submit_video · 文 / 图生视频，任一厂商即可。': 'submit_video · tạo video từ văn bản/ảnh, dùng nhà cung cấp bất kỳ.',
   'submit_music · 文字 / 成片生成配乐，任一厂商即可。': 'submit_music · tạo nhạc từ văn bản/video thành phẩm, dùng nhà cung cấp bất kỳ.',
