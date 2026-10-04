@@ -95,7 +95,7 @@ export async function execUploadProgress(args: Args, ctx: AgentContext): Promise
       target: 'upload',
       action: 'wait',
       assets: current,
-      ...(pending.length ? { stillRunning: pending, note: 'timeout or still uploading' } : {}),
+      ...(pending.length ? { stillRunning: pending, note: 'đã hết thời gian chờ hoặc vẫn đang tải lên' } : {}),
     };
   }
 
@@ -104,7 +104,7 @@ export async function execUploadProgress(args: Args, ctx: AgentContext): Promise
     target: 'upload',
     action: 'status',
     assets: statuses,
-    note: 'blob: placeholders = running; /media/uploads probed for reachability; ready assets can export.',
+    note: 'blob: tư liệu giữ chỗ = đang chạy; /media/uploads đã được kiểm tra khả năng truy cập; tư liệu sẵn sàng có thể xuất.',
   };
 }
 
@@ -182,8 +182,8 @@ export async function execVisualAnalysisProgress(
       action: 'wait',
       assets: reports,
       ...(pending.length
-        ? { stillRunning: pending, note: 'timeout or still warming contact sheet' }
-        : { note: 'visual analysis ready; use view_asset_frames / view_timeline_frames to SEE frames' }),
+        ? { stillRunning: pending, note: 'đã hết thời gian chờ hoặc vẫn đang chuẩn bị bảng liên hệ' }
+        : { note: 'phân tích hình ảnh đã sẵn sàng; dùng view_asset_frames / view_timeline_frames để XEM khung hình' }),
     };
   }
 
@@ -192,7 +192,7 @@ export async function execVisualAnalysisProgress(
     target: 'visual-analysis',
     action: 'status',
     assets: reports,
-    note: 'running = warming; succeeded = source ready for view_asset_frames. Actual vision still uses frame tools.',
+    note: 'running = đang chuẩn bị; succeeded = nguồn đã sẵn sàng cho view_asset_frames. Việc xem hình thực tế vẫn dùng các công cụ khung hình.',
   };
 }
 

@@ -118,7 +118,7 @@ export function shakeStaleToolResults(messages: readonly ModelMessage[]): ModelM
       const text = safeJson(candidate.output);
       if (text.length < STALE_TOOL_RESULT_MIN_CHARS) return part;
       changed = true;
-      return { ...part, output: { type: 'text', value: `[stale tool result from ${String(candidate.toolName ?? 'unknown')} omitted to save context; ${text.length} chars, reread with a narrow filter or id if needed]` } };
+      return { ...part, output: { type: 'text', value: `[đã lược bỏ kết quả công cụ cũ từ ${String(candidate.toolName ?? 'không rõ')} để tiết kiệm ngữ cảnh; ${text.length} ký tự, hãy đọc lại bằng bộ lọc hoặc ID hẹp nếu cần]` } };
     });
     return changed ? { ...message, content } as ModelMessage : message;
   });

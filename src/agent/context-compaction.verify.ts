@@ -75,7 +75,7 @@ const pressured = await prepareContext(options(noPressure, async () => {
   return 'unused';
 }));
 assert.equal(shakeSummaryCalls, 0, 'the mechanical trim alone must recover the budget without a summary');
-assert.match(JSON.stringify(pressured.messages[0]), /stale tool result from read_timeline/,
+assert.match(JSON.stringify(pressured.messages[0]), /đã lược bỏ kết quả công cụ cũ từ read_timeline/,
   'under pressure the stale tool result becomes a stub');
 assert.equal(pressured.messages.length, noPressure.length, 'shaking preserves the message count');
 const maxInputUsage = (inputTokens: number) => ({
@@ -102,7 +102,7 @@ await assert.rejects(
     maxInputTokens: 700,
     previousUsage: maxInputUsage(701),
   }),
-  /current request is too large/,
+  /Yêu cầu hiện tại quá lớn so với cửa sổ ngữ cảnh/,
   'the model input ceiling triggers compaction independently of total context',
 );
 const missingBreakdown = await prepareContext({
@@ -148,7 +148,7 @@ await assert.rejects(
       noCacheInputTokens: 600,
     },
   }),
-  /current request is too large/,
+  /Yêu cầu hiện tại quá lớn so với cửa sổ ngữ cảnh/,
   'a high uncached ratio lowers the soft ceiling before the hard model limit',
 );
 
@@ -222,12 +222,12 @@ assert.equal(compactedByInputLimit.usage.compacted, true);
 
 await assert.rejects(
   prepareContext(options([message('user', 'X'.repeat(4_000))], async () => 'unused')),
-  /current request is too large/,
+  /Yêu cầu hiện tại quá lớn so với cửa sổ ngữ cảnh/,
   'one oversized current turn is not silently discarded',
 );
 await assert.rejects(
   prepareContext(options(history, async () => '   ')),
-  /empty context summary/,
+  /Model trả về bản tóm tắt ngữ cảnh trống/,
   'an empty checkpoint cannot replace prior history',
 );
 
@@ -427,7 +427,7 @@ const shakeMessages: ModelMessage[] = [
   { role: 'tool', content: [{ type: 'tool-result', toolCallId: 'c2', toolName: 'read_timeline', output: { type: 'json', value: { data: 'y'.repeat(5_000) } } }] },
 ];
 const shaken = shakeStaleToolResults(shakeMessages);
-assert.match(JSON.stringify((shaken[2] as { content: unknown[] }).content), /stale tool result from read_project/,
+assert.match(JSON.stringify((shaken[2] as { content: unknown[] }).content), /đã lược bỏ kết quả công cụ cũ từ read_project/,
   'tool results older than the recency window become one-line stubs');
 assert.match(JSON.stringify((shaken[9] as { content: unknown[] }).content), /yyyy/,
   'recent tool results stay verbatim');
