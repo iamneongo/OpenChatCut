@@ -499,7 +499,7 @@ export const VI: Record<string, string> = {
   '完成': 'Hoàn tất',
   // Export panel
   '导出设置': 'Cài đặt xuất',
-  '发布工作台': 'Không gian xuất bản',
+  '发布工作台': 'Không gian phát hành',
   '成片': 'Video hoàn chỉnh',
   '音轨': 'Rãnh âm thanh',
   '动态图层': 'Lớp đồ họa chuyển động',
@@ -830,7 +830,7 @@ export const VI: Record<string, string> = {
   '选择创作工作流': 'Chọn quy trình sáng tạo',
   '自由创作': 'Tự do sáng tạo',
   '不限定工作流，根据当前目标灵活执行。': 'Không giới hạn quy trình, linh hoạt thực hiện theo mục tiêu hiện tại.',
-  '专业工作流': 'Quy trình chuyên nghiệp',
+  '专业工作流': 'Quy trình chuyên biệt',
   '增强中…': 'Đang cải thiện…',
   '增强提示词': 'Cải thiện lời nhắc',
   '发送 (Enter)': 'Gửi (Enter)',
