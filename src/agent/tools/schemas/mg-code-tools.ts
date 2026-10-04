@@ -4,17 +4,17 @@ export const MG_CODE_TOOL_SCHEMAS: AgentToolSchema[] = [
   {
     name: 'create_motion_graphic_from_code',
     description: [
-      'Tạo asset Motion Graphic mới từ code React/JSX inline.',
+      'Tạo tư liệu đồ họa chuyển động mới từ mã React/JSX inline.',
       'Bắt buộc: code, name, width, height. Thời lượng qua durationInFrames hoặc durationInSeconds.',
       'JSX HOÀN CHỈNH phải nằm trong một lần gọi này — không khai báo trước rồi điền sau; gọi không có code sẽ bị từ chối.',
-      'Code phải vượt qua sandbox MG cục bộ (giống edit_asset). Không tự đặt lên timeline —',
+      'Mã phải vượt qua sandbox MG cục bộ (giống edit_asset). Không tự đặt lên dòng thời gian —',
       'dùng edit_item / add_motion_graphic / manage_media_pool để đặt sau đó.',
     ].join(' '),
     input_schema: {
       type: 'object',
       properties: {
-        code: { type: 'string', description: 'React/JSX Motion Graphic inline. Không phải path file.' },
-        name: { type: 'string', description: 'Tên hiển thị asset.' },
+        code: { type: 'string', description: 'React/JSX đồ họa chuyển động inline. Không phải đường dẫn tệp.' },
+        name: { type: 'string', description: 'Tên hiển thị tư liệu.' },
         width: { type: 'number', description: 'Chiều rộng hộp tự nhiên tính bằng pixel.' },
         height: { type: 'number', description: 'Chiều cao hộp tự nhiên tính bằng pixel.' },
         durationInFrames: {
