@@ -99,7 +99,7 @@ function mutateItem(name: string, args: Args, ctx: AgentContext): unknown {
   if (name === 'move_item') {
     const kind = item.kind === 'audio' ? 'audio' : 'video';
     const track = args.track === undefined ? undefined : resolveTrackId(ctx.getState(), args.track, kind);
-    if (args.track !== undefined && !track) return { error: `Không có track tương thích với ${args.track}` };
+    if (args.track !== undefined && !track) return { error: `Không có rãnh tương thích với ${args.track}` };
     ctx.commands.moveItem(item.id, { track: track ?? undefined, startFrame: args.startFrame as number });
     return { ok: true, itemId: item.id };
   }

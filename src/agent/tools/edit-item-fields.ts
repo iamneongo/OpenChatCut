@@ -177,8 +177,8 @@ export function rejectUnknownFields(
     ) {
       return (
         `trường không xác định "${key}" trong cập nhật effect.\n\n`
-        + 'Để đổi âm lượng/thời lượng/fade của clip, hãy dùng cập nhật generic với đúng kind của clip — không dùng type:"effect".\n'
-        + 'Ví dụ: updates:[{type:"audio", itemId:"…", volume:0.3}] hoặc type:"video" cho clip video.\n'
+        + 'Để đổi âm lượng/thời lượng/fade của đoạn, hãy dùng cập nhật generic với đúng kind của đoạn — không dùng type:"effect".\n'
+        + 'Ví dụ: updates:[{type:"audio", itemId:"…", volume:0.3}] hoặc type:"video" cho đoạn video.\n'
         + 'Cập nhật effect chỉ nhận: type, targetItemId, id, effectId, assetId, propertyOverrides.'
       );
     }

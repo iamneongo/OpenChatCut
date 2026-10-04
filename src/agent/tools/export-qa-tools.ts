@@ -43,9 +43,9 @@ async function resolveExportSrc(args: Args): Promise<ResolvedExport | { error: s
   const job = await fetchRenderJob(renderId);
   if (!('ok' in job)) return job;
   if (job.status !== 'completed') {
-    return { error: `tác vụ render ${job.renderId} đang ở trạng thái ${job.status}; hãy chờ hoàn tất trước khi kiểm tra` };
+    return { error: `tác vụ kết xuất ${job.renderId} đang ở trạng thái ${job.status}; hãy chờ hoàn tất trước khi kiểm tra` };
   }
-  if (!job.downloadUrl) return { error: `tác vụ render ${job.renderId} không có đường dẫn đầu ra` };
+  if (!job.downloadUrl) return { error: `tác vụ kết xuất ${job.renderId} không có đường dẫn đầu ra` };
   return {
     src: job.downloadUrl,
     expected: {
