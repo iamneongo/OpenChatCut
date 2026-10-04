@@ -3,18 +3,18 @@ import type { AgentToolSchema } from '../../tool-schema';
 const TARGET_PROPERTIES = {
   itemId: {
     type: 'string',
-    description: 'Id clip audio/video trên timeline (chấp nhận tiền tố duy nhất). Dùng asset trong media pool cùng mapping trim/speed của clip.',
+    description: 'ID đoạn âm thanh/video trên dòng thời gian (chấp nhận tiền tố duy nhất). Dùng tư liệu trong kho tư liệu cùng ánh xạ trim/speed của đoạn.',
   },
   assetId: {
     type: 'string',
-    description: 'Id asset trong media pool (chấp nhận tiền tố duy nhất). Dùng itemId khi cần mapping theo timeline.',
+    description: 'ID tư liệu trong kho tư liệu (chấp nhận tiền tố duy nhất). Dùng itemId khi cần ánh xạ theo dòng thời gian.',
   },
 } as const;
 
 const PLAN_PROPERTIES = {
   itemId: {
     type: 'string',
-    description: 'Id clip audio/video BGM trên timeline (chấp nhận tiền tố duy nhất).',
+    description: 'ID đoạn âm thanh/video BGM trên dòng thời gian (chấp nhận tiền tố duy nhất).',
   },
   timing: {
     type: 'string',
@@ -40,7 +40,7 @@ const PLAN_PROPERTIES = {
     type: 'array',
     items: { type: 'string' },
     maxItems: 64,
-    description: 'Id/tiền tố clip video tùy chọn để giới hạn target. Mặc định các clip video chồng lên phạm vi.',
+    description: 'ID/tiền tố đoạn video tùy chọn để giới hạn mục tiêu. Mặc định là các đoạn video chồng lên phạm vi.',
   },
 } as const;
 
@@ -85,9 +85,9 @@ export const MUSIC_INTELLIGENCE_TOOL_SCHEMAS: AgentToolSchema[] = [
   {
     name: 'analyze_music',
     description: [
-      'Chạy model Beat This + CLAP đã cài trên thiết bị cho asset media pool hoặc clip timeline và chờ hoàn tất.',
+      'Chạy mô hình Beat This + CLAP đã cài trên thiết bị cho tư liệu trong kho hoặc đoạn trên dòng thời gian và chờ hoàn tất.',
       'Trả về BPM, meter, độ tin cậy, tag, section và các điểm beat/downbeat giới hạn ở dạng gọn; không bao giờ lộ embedding.',
-      'Mặc định dùng lại cache hợp lệ; đặt force để tính lại. Tool này không tải model pack và không sửa timeline.',
+      'Mặc định dùng lại bộ nhớ đệm hợp lệ; đặt force để tính lại. Công cụ này không tải gói mô hình và không sửa dòng thời gian.',
     ].join(' '),
     input_schema: {
       type: 'object',

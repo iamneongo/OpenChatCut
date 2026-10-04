@@ -4,27 +4,27 @@ export const ISOLATE_VOICE_TOOL_SCHEMAS: AgentToolSchema[] = [
   {
     name: 'isolate_voice',
     description:
-      'Tách giọng nói bằng AI: giảm nhiễu nền trên clip video/audio để lời nói rõ hơn. ' +
+      'Tách giọng nói bằng AI: giảm nhiễu nền trên đoạn video/âm thanh để lời nói rõ hơn. ' +
       'action=apply (mặc định) tạo artifact tách giọng ffmpeg full-wet bất biến và gắn vào denoisedSrc; strength điều khiển playback dry/wet không phá hủy trong khi src master giữ nguyên. ' +
-      'action=attach trỏ clip tới asset audio hiện có sau khi kiểm tra denoisedAssetId và sourceAssetId. ' +
-      'action=clear xóa tách giọng và khôi phục audio gốc. ' +
+      'action=attach trỏ đoạn tới tư liệu âm thanh hiện có sau khi kiểm tra denoisedAssetId và sourceAssetId. ' +
+      'action=clear xóa tách giọng và khôi phục âm thanh gốc. ' +
       'strength 0..100 (mặc định 70). Yêu cầu source /media/uploads (upload/finalize trước).',
     input_schema: {
       type: 'object',
       properties: {
-        itemId: { type: 'string', description: 'Id clip video/audio đích (chấp nhận tiền tố).' },
+        itemId: { type: 'string', description: 'ID đoạn video/âm thanh đích (chấp nhận tiền tố).' },
         action: {
           type: 'string',
           enum: ['apply', 'attach', 'clear'],
-          description: 'apply = chạy tách giọng; attach = dùng asset audio đã tách hiện có; clear = tháo liên kết.',
+          description: 'apply = chạy tách giọng; attach = dùng tư liệu âm thanh đã tách hiện có; clear = tháo liên kết.',
         },
         sourceAssetId: {
           type: 'string',
-          description: 'attach: id hoặc tiền tố duy nhất của asset audio/video nguồn. Phải khớp source của clip đích.',
+          description: 'attach: ID hoặc tiền tố duy nhất của tư liệu âm thanh/video nguồn. Phải khớp nguồn của đoạn đích.',
         },
         denoisedAssetId: {
           type: 'string',
-          description: 'attach: id hoặc tiền tố duy nhất của asset audio hiện có chứa audio full-source đã tách.',
+          description: 'attach: ID hoặc tiền tố duy nhất của tư liệu âm thanh hiện có chứa âm thanh toàn nguồn đã tách.',
         },
         strength: {
           type: 'number',
