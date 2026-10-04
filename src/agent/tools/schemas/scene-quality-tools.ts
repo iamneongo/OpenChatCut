@@ -20,7 +20,7 @@ export const SCENE_QUALITY_TOOL_SCHEMAS: AgentToolSchema[] = [
             properties: {
               type: { type: 'string', description: 'Dạng cảnh, ví dụ video, image, text_card, chart.' },
               description: { type: 'string', description: 'Mô tả hình ảnh cụ thể.' },
-              shotIntent: { type: 'string', description: 'Lý do shot này tồn tại.' },
+              shotIntent: { type: 'string', description: 'Lý do cảnh quay này tồn tại.' },
               informationRole: { type: 'string', description: 'Cảnh này truyền đạt điều gì.' },
             },
             required: ['type'],

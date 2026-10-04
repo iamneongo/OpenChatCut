@@ -15,19 +15,19 @@ export const MULTICAM_TOOL_SCHEMAS: AgentToolSchema[] = [
         itemIds: {
           type: 'array',
           items: { type: 'string' },
-          description: 'Id item timeline cho mọi góc (reference + follower). Tối thiểu 2.',
+          description: 'ID mục trên dòng thời gian cho mọi góc (reference + follower). Tối thiểu 2.',
         },
         referenceItemId: {
           type: 'string',
-          description: 'Id góc reference tùy chọn (phải nằm trong itemIds). Mặc định là clip video đầu tiên.',
+          description: 'ID góc reference tùy chọn (phải nằm trong itemIds). Mặc định là đoạn video đầu tiên.',
         },
         groupId: {
           type: 'string',
-          description: 'Id group multicam hiện có cần cập nhật. Bỏ qua để tạo hoặc tìm group từ các item đã chọn.',
+          description: 'ID nhóm multicam hiện có cần cập nhật. Bỏ qua để tạo hoặc tìm nhóm từ các mục đã chọn.',
         },
         masterItemId: {
           type: 'string',
-          description: 'Id item góc program/master tùy chọn. Mặc định referenceItemId.',
+          description: 'ID mục góc program/master tùy chọn. Mặc định referenceItemId.',
         },
       },
       required: ['itemIds'],
@@ -46,16 +46,16 @@ export const MULTICAM_TOOL_SCHEMAS: AgentToolSchema[] = [
       properties: {
         groupId: {
           type: 'string',
-          description: 'Id group multicam bền vững. Ưu tiên hơn itemIds.',
+          description: 'ID nhóm multicam bền vững. Ưu tiên hơn itemIds.',
         },
         targetAngleId: {
           type: 'string',
-          description: 'Id góc bền vững (hoặc id item gốc) cần hiển thị.',
+          description: 'ID góc bền vững (hoặc ID mục gốc) cần hiển thị.',
         },
         itemIds: {
           type: 'array',
           items: { type: 'string' },
-          description: 'Tra cứu group cũ: id hiện tại/gốc của các góc đã truyền trước đó vào multicam_sync.',
+          description: 'Tra cứu nhóm cũ: ID hiện tại/gốc của các góc đã truyền trước đó vào multicam_sync.',
         },
         targetItemId: { type: 'string', description: 'Alias cũ của targetAngleId.' },
         fromSeconds: { type: 'number', description: 'Thời điểm bắt đầu chuyển, tính bằng giây trên timeline.' },
@@ -76,7 +76,7 @@ export const MULTICAM_TOOL_SCHEMAS: AgentToolSchema[] = [
       properties: {
         action: { type: 'string', enum: ['link', 'sync_lock', 'unlink'] },
         itemIds: { type: 'array', items: { type: 'string' } },
-        anchorItemId: { type: 'string', description: 'Anchor tùy chọn; mặc định là item đã phân giải đầu tiên.' },
+        anchorItemId: { type: 'string', description: 'Mục neo tùy chọn; mặc định là mục đã phân giải đầu tiên.' },
       },
       required: ['action', 'itemIds'],
     },
