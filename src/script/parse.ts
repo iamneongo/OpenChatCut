@@ -27,7 +27,7 @@ export interface ParsedScript {
 }
 
 const err = (line: number, msg: string): never => {
-  throw new Error(`timeline.md 第 ${line} 行: ${msg}`);
+  throw new Error(`timeline.md dòng ${line}: ${msg}`);
 };
 
 /** split a row body into kept/struck runs by ~~...~~ markers */

@@ -19,14 +19,14 @@ function prepareTimelineTemplates(state: TimelineState): Promise<void> {
       await prepareTemplate(item.code as string);
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
-      throw new Error(`${item.name} — compile error:\n${message}`);
+      throw new Error(`${item.name} — lỗi biên dịch:\n${message}`);
     }
   })).then(() => undefined);
 }
 
 export function TimelineReadinessGate({ state, dependencies = [], children }: TimelineReadinessGateProps) {
   const [readinessStates] = useState(() => [state, ...dependencies]);
-  const [handle] = useState(() => delayRender('Preparing project fonts and templates'));
+  const [handle] = useState(() => delayRender('Đang chuẩn bị phông chữ và mẫu của dự án'));
   const [ready, setReady] = useState(false);
   const [error, setError] = useState<string | null>(null);
   useEffect(() => {
