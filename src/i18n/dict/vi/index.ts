@@ -500,7 +500,7 @@ export const VI: Record<string, string> = {
   // Export panel
   '导出设置': 'Cài đặt xuất',
   '发布工作台': 'Không gian phát hành',
-  '成片': 'Video hoàn chỉnh',
+  '成片': 'Video thành phẩm',
   '音轨': 'Rãnh âm thanh',
   '动态图层': 'Lớp đồ họa chuyển động',
   '字幕稿': 'Tệp phụ đề',
@@ -522,7 +522,7 @@ export const VI: Record<string, string> = {
   '高质量': 'Chất lượng cao',
   '码率模式': 'Chế độ tốc độ bit',
   '自定义码率': 'Tốc độ bit tùy chỉnh',
-  '导出成片': 'Xuất video',
+  '导出成片': 'Xuất video thành phẩm',
   '提取音轨': 'Trích xuất âm thanh',
   '下载字幕': 'Tải phụ đề',
   '生成剪辑工程': 'Tạo dự án biên tập',
