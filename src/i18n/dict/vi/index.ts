@@ -540,7 +540,7 @@ export const VI: Record<string, string> = {
   '圆形蒙版': 'Mặt nạ hình tròn',
   'CRT 复古显像管': 'CRT hoài cổ',
   'ASCII 字符雨': 'Mưa ký tự ASCII',
-  '手持运镜': 'Chuyển động máy cầm tay',
+  '手持运镜': 'Chuyển động máy quay cầm tay',
   '移轴镜头': 'Ống kính nghiêng–dịch chuyển',
   '色度键/绿幕': 'Khóa màu / phông xanh',
   '暗角': 'Tối viền',
