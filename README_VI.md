@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  <strong>Tiếng Việt</strong> · <a href="README.md">English</a> · <a href="README_ZH.md">Tiếng Trung giản thể</a>
+  <strong>Tiếng Việt</strong> · <a href="README.md">Tiếng Anh</a> · <a href="README_ZH.md">Tiếng Trung giản thể</a>
 </p>
 
 OpenChatCut là một trình chỉnh sửa video có dòng thời gian thực, nơi Codex, Claude Code và tác nhân AI tích hợp có thể đọc, chỉnh sửa và xuất dự án video mà vẫn giữ khả năng chỉnh sửa tiếp.
