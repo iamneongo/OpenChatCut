@@ -533,7 +533,7 @@ export const VI: Record<string, string> = {
   '正在保存…': 'Đang lưu…',
   '已取消导出': 'Đã hủy xuất',
   // Effects, LUTs and visual parameters
-  '黑底叠加': 'Khóa nền đen',
+  '黑底叠加': 'Lớp phủ nền đen',
   '局部马赛克': 'Làm vỡ điểm ảnh cục bộ',
   '放大镜': 'Kính phóng đại',
   '方形蒙版': 'Mặt nạ hình chữ nhật',
