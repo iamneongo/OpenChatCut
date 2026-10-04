@@ -19,8 +19,8 @@ OpenChatCut là một trình chỉnh sửa video có dòng thời gian thực, n
 - Dòng thời gian nhiều lớp cho video, hình ảnh, âm thanh, phụ đề và đồ họa chuyển động.
 - Nhập tư liệu, chép lời, cắt lời nói, tạo phụ đề và chỉnh sửa theo đề xuất của tác nhân AI.
 - Hỗ trợ xuất video, âm thanh, phụ đề, FCPXML và bản nháp CapCut/JianYing.
-- Dữ liệu dự án ưu tiên lưu cục bộ trong trình duyệt hoặc ứng dụng desktop.
-- Giao diện hỗ trợ tiếng Việt, tiếng Anh, tiếng Trung giản thể, tiếng Ý và tiếng Nga; bản fork này mặc định tiếng Việt.
+- Dữ liệu dự án ưu tiên lưu cục bộ trong trình duyệt hoặc ứng dụng máy tính.
+- Giao diện hỗ trợ tiếng Việt, tiếng Anh, tiếng Trung giản thể, tiếng Ý và tiếng Nga; bản rẽ nhánh này mặc định tiếng Việt.
 
 Trang web: [openchatcut.com](https://openchatcut.com)
 
@@ -33,7 +33,7 @@ npm install
 npm run dev
 ```
 
-Mở địa chỉ localhost mà Vite hiển thị trong terminal. Để chạy bản desktop:
+Mở địa chỉ localhost mà Vite hiển thị trong cửa sổ dòng lệnh. Để chạy ứng dụng máy tính:
 
 ```bash
 npm run desktop:dev
