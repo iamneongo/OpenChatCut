@@ -182,9 +182,9 @@ function updatedOwnedStyle(current: DesignStyle, spec: DesignToolArgs): DesignSt
 }
 
 async function updateOwned(args: DesignToolArgs, id: string): Promise<unknown> {
-  if (findPreset(id)) return { error: 'Không thể cập nhật style có sẵn trong catalog' };
+  if (findPreset(id)) return { error: 'Không thể cập nhật phong cách có sẵn trong danh mục' };
   const owned = (await loadOwnedStyles()).find((style) => style.id === id);
-  if (!owned) return { error: `Không có style tự tạo "${id}"` };
+  if (!owned) return { error: `Không có phong cách tự tạo "${id}"` };
   const spec = parseSpec(args.patch ?? args.designSpec);
   if (isSpecError(spec)) return spec;
   const style = updatedOwnedStyle(owned.style, spec);
@@ -226,7 +226,7 @@ function styleForSave(args: DesignToolArgs, ctx: AgentContext): DesignStyle | { 
   if (isSpecError(spec)) return spec;
   const style = normalizeStyle(spec);
   if (style.colors.length === 0 && style.fonts.length === 0 && !style.styleGuide) {
-    return { error: 'designSpec trống: cần ít nhất một màu, phông chữ hoặc styleGuide' };
+    return { error: 'designSpec trống: cần ít nhất một màu, phông chữ hoặc hướng dẫn phong cách' };
   }
   return style;
 }
@@ -246,9 +246,9 @@ async function saveStyle(args: DesignToolArgs, ctx: AgentContext): Promise<unkno
 async function deleteStyle(args: DesignToolArgs): Promise<unknown> {
   const id = String(args.presetId ?? '').trim();
   if (!id) return { error: 'delete cần "presetId" (mã style tự tạo)' };
-  if (findPreset(id)) return { error: 'Không thể xóa style có sẵn trong catalog' };
+  if (findPreset(id)) return { error: 'Không thể xóa phong cách có sẵn trong danh mục' };
   const owned = await loadOwnedStyles();
-  if (!owned.some((style) => style.id === id)) return { error: `Không có style tự tạo "${id}"` };
+  if (!owned.some((style) => style.id === id)) return { error: `Không có phong cách tự tạo "${id}"` };
   await deleteOwnedStyle(id);
   return { ok: true, deleted: id };
 }

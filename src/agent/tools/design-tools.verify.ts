@@ -127,7 +127,7 @@ assert.strictEqual(draft.getDoc().designStyle?.colors.find((c) => c.role === 'pr
 
 // deleting a catalog id is rejected — only owned styles can be deleted
 const delCatalog = await execDesignTool('manage_design_style', { action: 'delete', presetId: DESIGN_STYLE_PRESETS[0].id }, ctx) as { error?: string };
-assert.ok(delCatalog.error?.includes("can't be deleted"));
+assert.ok(delCatalog.error?.includes('Không thể xóa phong cách có sẵn trong danh mục'));
 
 // deleting an unknown id errors
 const delUnknown = await execDesignTool('manage_design_style', { action: 'delete', presetId: 'nope' }, ctx) as { error?: string };

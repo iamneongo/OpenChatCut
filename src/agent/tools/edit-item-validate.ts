@@ -223,8 +223,8 @@ function validateTransitionAdd(ctx: AgentContext, entry: Entry): OpResult {
   const outgoing = findAdjacentOutgoing(state.items, incoming);
   if (!outgoing) {
     return {
-      error: `Không có clip liền trước ${incoming.id} trên track ${incoming.track}`,
-      hint: 'Transition nằm tại điểm cắt giữa hai clip hình ảnh trên cùng track',
+      error: `Không có đoạn liền trước ${incoming.id} trên rãnh ${incoming.track}`,
+      hint: 'Chuyển cảnh nằm tại điểm cắt giữa hai đoạn hình ảnh trên cùng rãnh',
     };
   }
   const requestedOutgoing = entry.outgoingItemId
@@ -272,11 +272,11 @@ function validateAudioAdd(ctx: AgentContext, entry: Entry): OpResult {
   const resolvedTrack = resolveTrackId(state, requestedTrack, 'audio');
   if ((entry.track != null || entry.trackId != null) && !resolvedTrack) {
     return {
-      error: `Track âm thanh "${String(requestedTrack)}" chưa tồn tại. Hãy tạo trước bằng edit_track action=create json={"trackType":"audio","name":"${String(requestedTrack)}"} (hoặc bỏ qua track để đặt lên track âm thanh mặc định).`,
+      error: `Rãnh âm thanh "${String(requestedTrack)}" chưa tồn tại. Hãy tạo trước bằng edit_track action=create json={"trackType":"audio","name":"${String(requestedTrack)}"} (hoặc bỏ qua track để đặt lên rãnh âm thanh mặc định).`,
     };
   }
   const track = resolvedTrack ?? defaultTrackId(state, 'audio');
-  if (!track) return { error: 'Chưa có track âm thanh; hãy tạo bằng edit_track action=create json={"trackType":"audio"}' };
+  if (!track) return { error: 'Chưa có rãnh âm thanh; hãy tạo bằng edit_track action=create json={"trackType":"audio"}' };
   const startFrame = typeof entry.fromFrame === 'number'
     ? entry.fromFrame
     : typeof entry.startFrame === 'number' ? entry.startFrame : undefined;
@@ -297,7 +297,7 @@ function validateMgAdd(ctx: AgentContext, entry: Entry): OpResult {
   if (!template) return { error: `Motion graphic không xác định: ${id}`, hint: 'browse_library category=motion-graphics' };
   const state = ctx.getState();
   const track = resolveTrackId(state, entry.track ?? entry.trackId ?? 'V1', 'video') ?? defaultTrackId(state, 'video');
-  if (!track) return { error: 'Không có track video; hãy tạo bằng edit_track trước' };
+  if (!track) return { error: 'Không có rãnh video; hãy tạo bằng edit_track trước' };
   const startFrame = typeof entry.fromFrame === 'number'
     ? entry.fromFrame
     : typeof entry.startFrame === 'number' ? entry.startFrame : undefined;

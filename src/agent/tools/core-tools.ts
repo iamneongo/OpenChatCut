@@ -67,7 +67,7 @@ function execTemplateCatalog(name: string, args: Args, ctx: AgentContext): unkno
   const template = matches[0];
   const state = ctx.getState();
   const track = resolveTrackId(state, args.track ?? 'V1', 'video') ?? defaultTrackId(state, 'video');
-  if (!track) return { error: 'Chưa có track video; hãy tạo bằng edit_track trước' };
+  if (!track) return { error: 'Chưa có rãnh video; hãy tạo bằng edit_track trước' };
   const startFrame = typeof args.startFrame === 'number' ? args.startFrame : undefined;
   ctx.commands.addMotionGraphic(template, { track, startFrame, ripple: args.ripple === true });
   return { ok: true, added: template.name, trackId: track, track: trackAlias(ctx.getState(), track) };
@@ -117,7 +117,7 @@ function generatedAsset(args: Args, code: string, ctx: AgentContext): MediaAsset
 
 async function createMotionGraphic(args: Args, ctx: AgentContext): Promise<unknown> {
   const description = String(args.prompt ?? args.description ?? '').trim();
-  if (!description) return { error: 'Cần có prompt (hoặc description)' };
+  if (!description) return { error: 'Cần có lời nhắc (hoặc description)' };
   let code: string;
   try {
     code = await generateMgCode(description, designStyleHint(ctx.getDoc().designStyle));
@@ -136,7 +136,7 @@ async function createMotionGraphic(args: Args, ctx: AgentContext): Promise<unkno
     ok: true, status: 'succeeded', jobId: `mg_${asset.id}`, assetId: asset.id,
     name: asset.name, kind: asset.kind, durationInFrames: asset.durationInFrames,
     width: asset.width, height: asset.height,
-    note: 'Tư liệu motion graphic hiện chỉ nằm trong kho media (hợp đồng submit_*). Đặt bằng edit_item với adds:[{type:"motion-graphic",assetId:"<mã tư liệu>",trackId?,fromFrame?}]. Với mẫu trong catalog, dùng library:motion-graphic:<templateId> hoặc add_motion_graphic.',
+    note: 'Tư liệu đồ họa chuyển động hiện chỉ nằm trong kho tư liệu (hợp đồng submit_*). Đặt bằng edit_item với adds:[{type:"motion-graphic",assetId:"<mã tư liệu>",trackId?,fromFrame?}]. Với mẫu trong danh mục, dùng library:motion-graphic:<templateId> hoặc add_motion_graphic.',
   };
 }
 
