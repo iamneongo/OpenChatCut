@@ -169,7 +169,7 @@ export async function handleExportDestinationPut(
         await streamRequest(req, temporary);
       }
       if ((await stat(temporary)).size === 0) {
-        throw new ExportDestinationError(422, 'export file is empty', {
+        throw new ExportDestinationError(422, 'tệp xuất đang rỗng', {
           code: 'export_output_empty', retryable: true,
         });
       }

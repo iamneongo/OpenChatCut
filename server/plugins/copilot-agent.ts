@@ -76,7 +76,7 @@ function readBody(req: IncomingMessage, limit: number): Promise<Buffer> {
   };
   const onEnd = () => { cleanup(); resolve(Buffer.concat(chunks)); };
   const onError = () => fail(new HttpError(400, 'body request không hợp lệ'));
-  const onAborted = () => fail(new HttpError(400, 'request body aborted'));
+  const onAborted = () => fail(new HttpError(400, 'thân request đã bị hủy'));
   req.on('data', onData);
   req.once('end', onEnd);
   req.once('error', onError);

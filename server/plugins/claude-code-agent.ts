@@ -84,7 +84,7 @@ function readBody(req: IncomingMessage, limit: number): Promise<Buffer> {
   };
   const onEnd = () => { cleanup(); resolve(Buffer.concat(chunks)); };
   const onError = () => fail(new HttpError(400, 'body request không hợp lệ'));
-  const onAborted = () => fail(new HttpError(400, 'request body aborted'));
+  const onAborted = () => fail(new HttpError(400, 'thân request đã bị hủy'));
   req.on('data', onData);
   req.once('end', onEnd);
   req.once('error', onError);
@@ -166,7 +166,7 @@ async function claudeCodeStatus(): Promise<ClaudeCodeAgentStatus> {
       installed: true,
       version: installation.version,
       account: null,
-      error: 'Could not read Claude Code sign-in status.',
+      error: 'Không thể đọc trạng thái đăng nhập Claude Code.',
     };
   }
   return { installed: true, version: installation.version, account };

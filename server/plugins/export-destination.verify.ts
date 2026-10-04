@@ -100,7 +100,7 @@ try {
     (error) => error instanceof Error
       && 'code' in error
       && error.code === 'export_output_empty'
-      && error.message === 'export file is empty',
+      && error.message === 'tệp xuất đang rỗng',
   );
   assert.equal(
     await readFile(join(directory, 'clip.mp4'), 'utf8'),
@@ -124,7 +124,7 @@ try {
       response(),
       (name) => name === 'empty-source.mp4' ? emptySource : null,
     ),
-    /export file is empty/,
+    /tệp xuất đang rỗng/,
   );
   await assert.rejects(
     () => handleExportDestinationPut(

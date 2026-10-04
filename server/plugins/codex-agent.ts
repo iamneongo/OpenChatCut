@@ -85,7 +85,7 @@ function readBody(req: IncomingMessage, limit: number): Promise<Buffer> {
   };
   const onEnd = () => { cleanup(); resolve(Buffer.concat(chunks)); };
   const onError = () => fail(new HttpError(400, 'body request không hợp lệ'));
-  const onAborted = () => fail(new HttpError(400, 'request body aborted'));
+  const onAborted = () => fail(new HttpError(400, 'thân request đã bị hủy'));
   req.on('data', onData);
   req.once('end', onEnd);
   req.once('error', onError);
@@ -240,7 +240,7 @@ async function codexModels(): Promise<CodexAgentModelsResponse> {
     return { models: mapCodexModels(response) };
   } catch (error) {
     const message = error instanceof CodexTimeoutError
-      ? 'Codex model discovery timed out. Try again after Codex finishes starting.'
+      ? 'Tìm model Codex hết thời gian chờ. Hãy thử lại sau khi Codex khởi động xong.'
       : error instanceof HttpError
         ? error.message
         : 'Không thể tìm model Codex. Hãy thử lại.';

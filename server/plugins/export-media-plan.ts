@@ -146,14 +146,14 @@ async function materializeRemote(
       return issueFor(
         reference,
         'missing_source',
-        `Media source resolved to HTML instead of media (HTTP ${response.status}): ${reference.source}`,
+        `Nguồn media trả về HTML thay vì media (HTTP ${response.status}): ${reference.source}`,
       );
     }
     if (response.status !== 200 || !response.body) {
       return issueFor(
         reference,
         response.status === 404 ? 'missing_source' : 'unreadable',
-        `Media source is not readable (HTTP ${response.status}): ${reference.source}`,
+        `Không thể đọc nguồn media (HTTP ${response.status}): ${reference.source}`,
       );
     }
     const declaredLength = Number(response.headers.get('content-length'));
