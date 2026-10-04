@@ -11,7 +11,7 @@ export default {
   '竖屏·价格标签': 'Dọc · nhãn giá',
   '竖屏·封面大字': 'Dọc · chữ lớn trên bìa',
   '竖屏·清单勾选': 'Dọc · danh sách đánh dấu hoàn thành',
-  '竖屏·前后对比条': 'Dọc · thanh so sánh trước/sau',
+  '竖屏·前后对比条': 'Dọc · thanh so sánh trước và sau',
   '竖屏·便签贴纸': 'Dọc · nhãn dán ghi chú',
   '竖屏·互动提示': 'Dọc · gợi ý tương tác',
   '竖屏·期数角标': 'Dọc · huy hiệu số tập',
