@@ -7,7 +7,7 @@ export const MARKERS_TOOL_SCHEMAS: AgentToolSchema[] = [
     name: 'manage_markers',
     description: [
       'Quản lý mốc chú thích/TODO trên dòng thời gian theo contract marker-note-v2. Marker là điểm khi durationFrames=0 hoặc bỏ qua, nếu không sẽ là một khoảng.',
-      'scope=project neo vào frame trên thước; scope=item neo vào một đoạn.',
+      'scope=project neo vào khung trên thước; scope=item neo vào một đoạn.',
       'action: list tất cả | create một mốc hoặc lô markers[] | update một mốc hoặc lô updates[] | delete.',
       'Với note dựa trên transcript, truyền transcriptSegments dùng id segment [sN] của Active Script cùng notePrefix tùy chọn thay vì tự viết note.',
       'fromFrame mặc định là đầu đoạn đầu tiên được chọn nếu không truyền rõ, còn nội dung ghi chú được sao chép từ đầu ra read_script.',

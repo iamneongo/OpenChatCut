@@ -37,7 +37,7 @@ export const MEDIA_POOL_TOOL_SCHEMAS: AgentToolSchema[] = [{
         description:
           'relink_asset: đường dẫn tư liệu thay thế (cùng nguồn gốc /media/uploads/… sau khi tải lại, hoặc URL tư liệu khác của dự án có thể truy cập). Khi thay tệp cục bộ, ưu tiên tải lại + finalize_uploaded_asset với cùng assetId.',
       },
-      durationInFrames: { type: 'number', description: 'relink_asset: thời lượng mới tính bằng frame, tùy chọn khi đã biết.' },
+      durationInFrames: { type: 'number', description: 'relink_asset: thời lượng mới tính bằng khung, tùy chọn khi đã biết.' },
       width: { type: 'number', description: 'relink_asset: chiều rộng pixel, tùy chọn.' },
       height: { type: 'number', description: 'relink_asset: chiều cao pixel, tùy chọn.' },
       sourceFilename: { type: 'string', description: 'relink_asset: tên tệp gốc tùy chọn để giữ danh tính trong NLE.' },

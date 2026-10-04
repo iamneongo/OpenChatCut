@@ -86,9 +86,9 @@ export const WEB_TOOL_SCHEMAS: AgentToolSchema[] = [
       type: 'object',
       properties: {
         url: { type: 'string', description: 'URL site gốc cần lập bản đồ.' },
-        search: { type: 'string', description: 'Path/từ khóa tùy chọn để xếp hạng kết quả (ví dụ blog).' },
+        search: { type: 'string', description: 'Đường dẫn/từ khóa tùy chọn để xếp hạng kết quả (ví dụ blog).' },
         limit: { type: 'number', description: 'Số link tối đa 1–500 (mặc định 100).' },
-        includeSubdomains: { type: 'boolean', description: 'Bao gồm subdomain (mặc định true).' },
+        includeSubdomains: { type: 'boolean', description: 'Bao gồm tên miền phụ (mặc định true).' },
         ignoreQueryParameters: { type: 'boolean', description: 'Bỏ URL có ?query (mặc định true).' },
         sitemap: {
           type: 'string',
@@ -127,7 +127,7 @@ export const WEB_TOOL_SCHEMAS: AgentToolSchema[] = [
           items: { type: 'string' },
           description: 'Mẫu regex đường dẫn cần loại trừ.',
         },
-        allowSubdomains: { type: 'boolean', description: 'Theo dõi subdomain (mặc định false).' },
+        allowSubdomains: { type: 'boolean', description: 'Theo dõi tên miền phụ (mặc định false).' },
         crawlEntireDomain: {
           type: 'boolean',
           description: 'Theo dõi link nội bộ ngang hàng/cha, không chỉ link con (mặc định false).',

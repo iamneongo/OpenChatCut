@@ -4,10 +4,10 @@ export const FRAMES_TOOL_SCHEMAS: AgentToolSchema[] = [
   {
     name: 'view_timeline_frames',
     description: [
-      'Kết xuất frame tĩnh của một bản dựng dòng thời gian (bao gồm cả chỉnh sửa nháp/chưa công bố).',
+      'Kết xuất khung hình tĩnh của một bản dựng dòng thời gian (bao gồm cả chỉnh sửa nháp/chưa công bố).',
       'frames và seconds là tọa độ DÒNG THỜI GIAN TUYỆT ĐỐI, không phải vị trí trong tư liệu nguồn.',
       'Dùng sau các chỉnh sửa hình ảnh (MG/text, transition, zoom, filter, tỷ lệ khung hình, phụ đề) để kiểm tra kết quả bản dựng.',
-      'Truyền tọa độ chính xác hoặc count; nếu không có, công cụ lấy mẫu đều (mặc định 4, tối đa 8). Nhiều frame sẽ được gộp thành bảng liên hệ có nhãn khi có thể.',
+      'Truyền tọa độ chính xác hoặc count; nếu không có, công cụ lấy mẫu đều (mặc định 4, tối đa 8). Nhiều khung hình sẽ được gộp thành bảng liên hệ có nhãn khi có thể.',
     ].join(' '),
     input_schema: {
       type: 'object',
@@ -27,7 +27,7 @@ export const FRAMES_TOOL_SCHEMAS: AgentToolSchema[] = [
       'Kiểm tra tư liệu NGUỒN và xem bảng liên hệ có nhãn; các tọa độ này không bao giờ trỏ tới dòng thời gian đã dựng.',
       'Truyền assetId để lấy toàn bộ nguồn trong kho, hoặc itemId để giới hạn mẫu vào vùng nguồn hiển thị của đoạn đã đặt (có tính srcInFrame + playbackRate).',
       'sourceTimesMs, frames, seconds và fromSeconds/toSeconds đều là tọa độ TƯ LIỆU NGUỒN. Khi có itemId, mẫu bị kẹp vào vùng nguồn hiển thị của đoạn.',
-      'Dùng để chọn/kiểm tra chất lượng nguồn; dùng view_timeline_frames để kiểm tra bản dựng dòng thời gian. Âm thanh không có frame.',
+      'Dùng để chọn/kiểm tra chất lượng nguồn; dùng view_timeline_frames để kiểm tra bản dựng dòng thời gian. Âm thanh không có khung hình.',
       'Quét rộng mặc định = 6 điểm giữa vùng nguồn, tối đa 8. Tái sử dụng bảng liên hệ thay vì lấy mẫu lặp lại cùng vùng. Video tải lên đã hoàn tất ưu tiên ffmpeg; đường dẫn blob/image/MG dùng trình duyệt hoặc Remotion.',
     ].join(' '),
     input_schema: {

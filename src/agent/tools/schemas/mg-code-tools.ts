@@ -19,7 +19,7 @@ export const MG_CODE_TOOL_SCHEMAS: AgentToolSchema[] = [
         height: { type: 'number', description: 'Chiều cao hộp tự nhiên tính bằng pixel.' },
         durationInFrames: {
           type: 'number',
-          description: 'Thời lượng tính bằng frame trên dòng thời gian (loại trừ lẫn nhau với durationInSeconds).',
+          description: 'Thời lượng tính bằng khung trên dòng thời gian (loại trừ lẫn nhau với durationInSeconds).',
         },
         durationInSeconds: {
           type: 'number',
@@ -28,7 +28,7 @@ export const MG_CODE_TOOL_SCHEMAS: AgentToolSchema[] = [
         description: { type: 'string', description: 'Mô tả dành cho người dùng, tùy chọn (lưu trong props).' },
         properties: {
           type: 'array',
-          description: 'Props có thể chỉnh sửa: { key, label?, type?, defaultValue }[].',
+          description: 'Thuộc tính có thể chỉnh sửa: { key, label?, type?, defaultValue }[].',
           items: {},
         },
         projectId: { type: 'string', description: 'Bỏ qua; dùng dự án đang hoạt động.' },

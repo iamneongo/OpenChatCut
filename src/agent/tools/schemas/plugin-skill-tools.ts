@@ -22,7 +22,7 @@ export const PLUGIN_SKILL_TOOL_SCHEMAS: AgentToolSchema[] = [
         offset: {
           type: 'integer',
           minimum: 0,
-          description: 'Offset ký tự UTF-16 để phân trang file; không được cắt đôi surrogate pair.',
+          description: 'Vị trí ký tự UTF-16 để phân trang tệp; không được cắt đôi cặp thay thế.',
         },
         limit: {
           type: 'integer',

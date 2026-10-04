@@ -12,7 +12,7 @@ export const EFFECT_TOOL_SCHEMAS: AgentToolSchema[] = [
         targetItemId: { type: 'string', description: 'ID đoạn cần tác động (chấp nhận tiền tố). Bắt buộc cho add/update/remove. Phải là đoạn video hoặc hình ảnh.' },
         effectId: { type: 'string', description: 'update/remove: id instance hiệu ứng đích. Bỏ qua để chọn hiệu ứng đầu tiên.' },
         assetId: { type: 'string', description: 'add: hiệu ứng cần thêm, ví dụ "builtin:fx-luma-key". Lấy id từ action="list" hoặc browse_library.' },
-        propertyOverrides: { type: 'object', description: 'add/update: patch một phần. Property số dùng number; màu dùng mảng RGB trong 0..1, ví dụ {"color":[1,0,0]}. Bỏ qua để dùng mặc định.' },
+        propertyOverrides: { type: 'object', description: 'add/update: bản vá một phần. Thuộc tính số dùng kiểu số; màu dùng mảng RGB trong 0..1, ví dụ {"color":[1,0,0]}. Bỏ qua để dùng mặc định.' },
       },
       required: ['action'],
     },
