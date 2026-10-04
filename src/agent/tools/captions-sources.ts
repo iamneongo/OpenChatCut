@@ -92,7 +92,7 @@ export function sourceList(c: CaptionsData, s: TimelineState): Result {
       itemId: it.id, track: trackAlias(s, it.track), name: it.name,
       translations: (it.variants ?? []).filter((v) => v.kind === 'translation').map((v) => v.lang),
     })),
-    note: 'Trong auto-stack, các nguồn được kết xuất từ trên xuống theo thứ tự danh sách (mục đầu tiên ở trên cùng); dùng positions / source_update để đặt vị trí hoặc kiểu hiển thị cho từng nguồn.',
+    note: 'Trong chế độ tự xếp chồng, các nguồn được kết xuất từ trên xuống theo thứ tự danh sách (mục đầu tiên ở trên cùng); dùng positions / source_update để đặt vị trí hoặc kiểu hiển thị cho từng nguồn.',
   };
 }
 
