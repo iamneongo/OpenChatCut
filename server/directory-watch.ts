@@ -194,12 +194,12 @@ export class DirectoryWatchSession {
     }
     if (disposition === 'accepted') {
       if (publication.state === 'rejected') throw new Error('quyền nhập thư mục không khả dụng');
-      if (publication.state === 'uncommitted') throw new Error('publication nhập thư mục chưa được giữ chỗ');
+      if (publication.state === 'uncommitted') throw new Error('bản ghi nhập thư mục chưa được giữ chỗ');
       if (publication.state === 'reserved') this.publications.set(importId, { ...publication, state: 'committed' });
       return;
     }
     if (publication.state === 'rejected') return;
-    if (publication.state === 'committed') throw new Error('publication nhập thư mục đã được commit');
+    if (publication.state === 'committed') throw new Error('bản ghi nhập thư mục đã được ghi nhận');
     await this.dependencies.removeFiles(publication.paths);
     if (this.publications.get(importId) === publication) this.publications.set(importId, { ...publication, state: 'rejected' });
   }

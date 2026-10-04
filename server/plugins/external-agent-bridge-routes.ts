@@ -64,13 +64,13 @@ export async function readBridgeJson(
   for await (const chunk of req) {
     const buffer = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk);
     total += buffer.length;
-    if (total > maxBodyBytes) throw new Error('thân request quá lớn');
+    if (total > maxBodyBytes) throw new Error('thân yêu cầu quá lớn');
     chunks.push(buffer);
   }
   const text = Buffer.concat(chunks).toString('utf8') || '{}';
   const parsed: unknown = JSON.parse(text);
   if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
-      throw new Error('thân request phải là một đối tượng JSON');
+      throw new Error('thân yêu cầu phải là một đối tượng JSON');
   }
   return parsed as Record<string, unknown>;
 }

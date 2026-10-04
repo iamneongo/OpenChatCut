@@ -23,7 +23,7 @@ function replaceControlCharacters(value: string): string {
 
 /** Called only by Electron main after its native picker or trusted restore has validated the directory. */
 export function createExportDirectoryGrant(directory: string): ExportDirectoryGrantDescriptor {
-  if (!isAbsolute(directory)) throw new Error('thư mục export phải là đường dẫn tuyệt đối');
+  if (!isAbsolute(directory)) throw new Error('thư mục xuất phải là đường dẫn tuyệt đối');
   const normalized = resolve(directory);
   const grantId = randomBytes(32).toString('base64url');
   const label = replaceControlCharacters(basename(normalized) || normalized);

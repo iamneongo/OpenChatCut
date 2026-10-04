@@ -367,7 +367,7 @@ export async function exportJianyingDraft(
   const resolved = videos.map((clip) => ({ clip, file: resolveMediaPath(clip.src) }));
   const missing = resolved.filter((entry) => !entry.file).map((entry) => entry.clip.src);
   if (missing.length > 0) {
-    return { ok: false, draftName: '', draftPath: '', addedVideos: 0, addedAudios: 0, captions: 0, warnings, error: `không tìm thấy tệp media cục bộ: ${missing.slice(0, 3).join(', ')}` };
+    return { ok: false, draftName: '', draftPath: '', addedVideos: 0, addedAudios: 0, captions: 0, warnings, error: `không tìm thấy tệp tư liệu cục bộ: ${missing.slice(0, 3).join(', ')}` };
   }
   const named = String(request.draftName || `OpenChatCut-${new Date().toISOString().slice(0, 16).replace(/[:T]/g, '')}`)
     .replace(/[\\/]/g, '')

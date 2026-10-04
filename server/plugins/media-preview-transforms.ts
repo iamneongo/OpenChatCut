@@ -18,7 +18,7 @@ const FFMPEG_TIMEOUT_MS = 5 * 60_000;
 const MAX_STRIP_WIDTH = 2048;
 
 function abortError(): Error {
-  const error = new Error('request tạo dẫn xuất đã bị hủy');
+  const error = new Error('yêu cầu tạo dẫn xuất đã bị hủy');
   error.name = 'AbortError';
   return error;
 }

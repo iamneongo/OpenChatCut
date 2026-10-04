@@ -63,7 +63,7 @@ function validateOwnershipClaim(
     || ownership.ownerKind !== 'browser'
     || ownership.ownerId !== binding.editorInstanceId
     || ownership.baseRevision !== binding.baseRevision
-  ) throw new Error('claim quyền sở hữu editor không khớp với đăng ký');
+  ) throw new Error('yêu cầu quyền sở hữu trình chỉnh sửa không khớp với đăng ký');
 }
 
 function bindingChanged(

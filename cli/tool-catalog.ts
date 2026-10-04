@@ -40,9 +40,9 @@ export function requireHeadlessTool(tool: string): void {
   if (headlessToolNames().has(tool)) return;
   const known = TOOL_SCHEMAS.some((schema) => schema.name === tool);
   throw new CliError(
-    `Cannot run ${tool}: ${known ? 'it is not in the headless tool subset' : 'no such tool'}. `
-    + 'Run `occ tools ls --all` to see the surface; browser-backed tools need the editor open '
-    + 'and are driven over MCP instead.',
+    `Không thể chạy ${tool}: ${known ? 'công cụ này không thuộc nhóm công cụ ngoại tuyến' : 'không có công cụ này'}. `
+    + 'Chạy `occ tools ls --all` để xem đầy đủ; các công cụ cần trình duyệt phải có trình chỉnh sửa đang mở '
+    + 'và được điều khiển qua MCP.',
   );
 }
 
@@ -51,27 +51,27 @@ export function parseJsonObject(text: string, label: string): Record<string, unk
   try {
     parsed = JSON.parse(text);
   } catch (error) {
-    throw new UsageError(`${label} is not valid JSON: ${error instanceof Error ? error.message : String(error)}`);
+    throw new UsageError(`${label} không phải JSON hợp lệ: ${error instanceof Error ? error.message : String(error)}`);
   }
   if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
-    throw new UsageError(`${label} must be a JSON object`);
+    throw new UsageError(`${label} phải là một đối tượng JSON`);
   }
   return parsed as Record<string, unknown>;
 }
 
 export function parseToolOp(value: unknown, index: number): ToolOp {
   if (!value || typeof value !== 'object' || Array.isArray(value)) {
-    throw new UsageError(`ops[${index}] must be an object with "tool" and optional "args"`);
+    throw new UsageError(`ops[${index}] phải là đối tượng có "tool" và "args" tùy chọn`);
   }
   const record = value as Record<string, unknown>;
   const tool = record.tool;
   if (typeof tool !== 'string' || !tool.trim()) {
-    throw new UsageError(`ops[${index}].tool must be a tool name`);
+    throw new UsageError(`ops[${index}].tool phải là tên công cụ`);
   }
   requireHeadlessTool(tool);
   const args = record.args === undefined ? {} : record.args;
   if (!args || typeof args !== 'object' || Array.isArray(args)) {
-    throw new UsageError(`ops[${index}].args must be a JSON object`);
+    throw new UsageError(`ops[${index}].args phải là một đối tượng JSON`);
   }
   return { tool, args: args as Record<string, unknown> };
 }
@@ -81,10 +81,10 @@ export function parseToolOps(text: string): ToolOp[] {
   try {
     parsed = JSON.parse(text);
   } catch (error) {
-    throw new UsageError(`--ops is not valid JSON: ${error instanceof Error ? error.message : String(error)}`);
+    throw new UsageError(`--ops không phải JSON hợp lệ: ${error instanceof Error ? error.message : String(error)}`);
   }
   if (!Array.isArray(parsed) || parsed.length === 0) {
-    throw new UsageError('--ops must be a non-empty JSON array of {tool, args} entries');
+    throw new UsageError('--ops phải là mảng JSON không rỗng gồm các mục {tool, args}');
   }
   return parsed.map(parseToolOp);
 }

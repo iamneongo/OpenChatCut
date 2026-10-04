@@ -63,7 +63,7 @@ async function readJson(req: IncomingMessage): Promise<ProgressRequest> {
   for await (const chunk of req) {
     const bytes = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk);
     total += bytes.length;
-    if (total > 100_000) throw new Error('thân request quá lớn');
+    if (total > 100_000) throw new Error('thân yêu cầu quá lớn');
     chunks.push(bytes);
   }
   return JSON.parse(Buffer.concat(chunks).toString('utf8')) as ProgressRequest;

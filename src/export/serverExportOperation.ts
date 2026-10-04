@@ -199,7 +199,7 @@ interface ResumePersistedServerExportsOptions {
   t: Translate;
 }
 
-const RESELECT_RECOVERY_DESTINATION = 'Quyền của đích export đã hết hiệu lực, hãy chọn lại vị trí xuất rồi thử lại';
+const RESELECT_RECOVERY_DESTINATION = 'Quyền của đích xuất đã hết hiệu lực, hãy chọn lại vị trí xuất rồi thử lại';
 
 function recoveredContext(
   record: PersistedServerExportJob,

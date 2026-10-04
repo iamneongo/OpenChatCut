@@ -276,7 +276,7 @@ export class NativeAsrService {
 
     this.settle(requestId, error);
     this.resetWorker();
-    const interrupted = new Error('worker ASR native dừng vì request đã bị hủy');
+    const interrupted = new Error('worker ASR native dừng vì yêu cầu đã bị hủy');
     for (const [pendingRequestId] of this.pending) this.settle(pendingRequestId, interrupted);
   }
 

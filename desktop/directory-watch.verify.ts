@@ -41,7 +41,7 @@ const [committedFile] = committedStart.files;
 assert.ok(committedFile);
 await assert.rejects(
   committedSession.acknowledge(committedFile.importId, 'accepted'),
-  /publication nhập thư mục chưa được giữ chỗ/,
+  /bản ghi nhập thư mục chưa được giữ chỗ/,
   'ownership cannot finalize before the renderer reserves the publication',
 );
 await committedSession.acknowledge(committedFile.importId, 'reserved');
@@ -439,7 +439,7 @@ const destination = createHarness();
 const destinationSession = sessionFor(destination, 'destination');
 await destinationSession.start();
 destination.setDestination('/media/changed');
-await assert.rejects(destinationSession.activate(), /media destination changed/);
+await assert.rejects(destinationSession.activate(), /đích media đã thay đổi/);
 destination.tree.set(ROOT, [entry('ignored.mp4')]);
 destination.fireWatch();
 assert.equal(destination.events.length, 0, 'MEDIA_DIR changes must stop the watch before publication');

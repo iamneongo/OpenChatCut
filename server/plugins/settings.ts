@@ -58,7 +58,7 @@ async function readBody(req: IncomingMessage): Promise<Record<string, unknown>> 
   for await (const chunk of req) {
     const buf = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk);
     total += buf.length;
-    if (total > 100_000) throw new Error('thân request quá lớn');
+    if (total > 100_000) throw new Error('thân yêu cầu quá lớn');
     chunks.push(buf);
   }
   if (chunks.length === 0) return {};
@@ -68,9 +68,9 @@ async function readBody(req: IncomingMessage): Promise<Record<string, unknown>> 
   } catch {
     // Generic message on purpose: V8's SyntaxError can echo the raw body (which may
     // contain a key value) and our catch-all logs error messages.
-    throw new Error('thân request chứa JSON không hợp lệ');
+    throw new Error('thân yêu cầu chứa JSON không hợp lệ');
   }
-  if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) throw new Error('thân request phải là một đối tượng JSON');
+  if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) throw new Error('thân yêu cầu phải là một đối tượng JSON');
   return parsed as Record<string, unknown>;
 }
 

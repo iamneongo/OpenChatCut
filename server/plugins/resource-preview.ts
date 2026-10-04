@@ -42,7 +42,7 @@ function readJsonBody(req: IncomingMessage): Promise<unknown> {
     req.on("data", (chunk: Buffer) => {
       size += chunk.length;
       if (size > MAX_BODY_BYTES) {
-        reject(new Error("thân request quá lớn"));
+        reject(new Error("thân yêu cầu quá lớn"));
         req.destroy();
         return;
       }
@@ -52,7 +52,7 @@ function readJsonBody(req: IncomingMessage): Promise<unknown> {
       try {
         resolve(JSON.parse(Buffer.concat(chunks).toString("utf8")));
       } catch {
-        reject(new Error("thân request chứa JSON không hợp lệ"));
+        reject(new Error("thân yêu cầu chứa JSON không hợp lệ"));
       }
     });
     req.on("error", reject);

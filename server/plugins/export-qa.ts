@@ -51,7 +51,7 @@ function readJson(req: IncomingMessage): Promise<unknown> {
     req.on('data', (chunk: Buffer) => {
       size += chunk.length;
       if (size > MAX_JSON_BYTES) {
-        reject(new Error('thân request quá lớn'));
+        reject(new Error('thân yêu cầu quá lớn'));
         req.destroy();
         return;
       }

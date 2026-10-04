@@ -15,6 +15,6 @@ export async function runWhereCommand(commandLine: CommandLine, json: boolean): 
   writeStdout(`profile      ${report.profileId} (${report.mode})`);
   writeStdout(`library      ${report.rootDir}`);
   writeStdout(`projects     ${report.projectStoreIndex}`);
-  writeStdout(`media        ${report.mediaDir}`);
+  writeStdout(`tư liệu      ${report.mediaDir}`);
   writeStdout(`keystore     ${report.keystorePath}`);
 }

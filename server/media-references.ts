@@ -47,7 +47,7 @@ export async function registerMediaReference(
   sourcePath: string,
 ): Promise<void> {
   const canonicalSource = await realpath(sourcePath);
-  if (!(await stat(canonicalSource)).isFile()) throw new Error('nguồn media cục bộ phải là một tệp');
+  if (!(await stat(canonicalSource)).isFile()) throw new Error('nguồn tư liệu cục bộ phải là một tệp');
   const references = join(directory, MEDIA_REFERENCE_DIRECTORY);
   const manifest = mediaReferenceManifestPath(directory, name);
   const temporary = join(references, `.${name}.${randomUUID()}.tmp`);

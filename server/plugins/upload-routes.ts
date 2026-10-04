@@ -134,7 +134,7 @@ async function handleHydrate(
     if (!resolved) {
       sendError(res, 404, r2Config()
         ? `R2 object not found: ${name}`
-        : `không tìm thấy media cục bộ và R2 đang tắt: ${name}`);
+        : `không tìm thấy tư liệu cục bộ và R2 đang tắt: ${name}`);
       return;
     }
     if (!resolved.cached) logger.info(`[upload/hydrate] ${name} (${resolved.bytes} bytes)`);

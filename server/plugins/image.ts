@@ -232,7 +232,7 @@ async function readJson(req: IncomingMessage): Promise<ImageRequest> {
   for await (const chunk of req) {
     const buf = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk);
     total += buf.length;
-    if (total > 1_000_000) throw new Error('thân request quá lớn');
+    if (total > 1_000_000) throw new Error('thân yêu cầu quá lớn');
     chunks.push(buf);
   }
   return JSON.parse(Buffer.concat(chunks).toString('utf8')) as ImageRequest;

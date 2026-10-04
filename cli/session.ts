@@ -44,7 +44,7 @@ function editSessionIdOf(begun: unknown): string {
     ? begun.editSessionId
     : undefined;
   if (typeof id !== 'string' || !id) {
-    throw new CliError('The edit session did not return an id; nothing was written.');
+    throw new CliError('Phiên chỉnh sửa không trả về ID; chưa có dữ liệu nào được ghi.');
   }
   return id;
 }

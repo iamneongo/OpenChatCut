@@ -23,7 +23,7 @@ export interface PreviewSourceProbe {
 export interface PreviewProcessOutput { stdout: string; stderr: string }
 
 function abortError(): Error {
-  const error = new Error('request tạo dẫn xuất đã bị hủy');
+  const error = new Error('yêu cầu tạo dẫn xuất đã bị hủy');
   error.name = 'AbortError';
   return error;
 }

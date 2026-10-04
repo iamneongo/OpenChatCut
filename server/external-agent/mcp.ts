@@ -420,7 +420,7 @@ export async function handleMcpRequest(
     try {
       parsedBody = await readMcpPostBody(req);
     } catch (error) {
-      const message = error instanceof Error ? error.message : 'thân request MCP không hợp lệ';
+      const message = error instanceof Error ? error.message : 'thân yêu cầu MCP không hợp lệ';
       sendSessionError(res, /vượt quá|exceeds/.test(message) ? 413 : 400, message);
       return;
     }

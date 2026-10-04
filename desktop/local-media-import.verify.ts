@@ -200,7 +200,7 @@ try {
   );
   await assert.rejects(
     mainHandler(undefined, bridgeSourcePath, join('nested', bridgeFile.name)),
-    /invalid local media filename/,
+    /tên tệp tư liệu cục bộ không hợp lệ/,
     'main must reject nested or traversal filenames',
   );
   assert.equal(mainImportCalls.length, 1, 'invalid IPC payloads must not reach the filesystem importer');

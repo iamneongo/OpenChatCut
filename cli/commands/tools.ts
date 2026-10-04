@@ -57,7 +57,7 @@ function invocationArgs(commandLine: CommandLine): Record<string, unknown> {
 }
 
 async function callCommand(line: CommandLine, commandLine: CommandLine, json: boolean): Promise<void> {
-  const tool = requirePositional(line, 0, 'tool name');
+  const tool = requirePositional(line, 0, 'tên công cụ');
   requireHeadlessTool(tool);
   const project = await resolveProject(projectReference(line, 1));
   const summary = flagText(commandLine, 'summary');

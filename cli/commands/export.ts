@@ -25,9 +25,9 @@ export async function runExportCommand(
     case 'jianying':
       return jianyingCommand(line, commandLine, json);
     case undefined:
-      throw new UsageError('export cần một đích: jianying');
+      throw new UsageError('xuất cần một đích: jianying');
     default:
-      throw new UsageError(`đích export không xác định "${subcommand}" (thử: jianying)`);
+      throw new UsageError(`đích xuất không xác định "${subcommand}" (thử: jianying)`);
   }
 }
 
@@ -46,6 +46,6 @@ async function jianyingCommand(line: CommandLine, commandLine: CommandLine, json
     ops: [op],
     apply: true,
     json,
-    label: 'jianying draft export',
+    label: 'bản xuất JianYing',
   });
 }

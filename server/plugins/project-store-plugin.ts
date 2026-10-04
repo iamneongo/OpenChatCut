@@ -9,12 +9,12 @@ async function readBody(req: IncomingMessage): Promise<Record<string, unknown>> 
   for await (const chunk of req) {
     const buffer = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk);
     total += buffer.length;
-    if (total > MAX_BODY_BYTES) throw new Error('thân request quá lớn');
+    if (total > MAX_BODY_BYTES) throw new Error('thân yêu cầu quá lớn');
     chunks.push(buffer);
   }
   const parsed: unknown = JSON.parse(Buffer.concat(chunks).toString('utf8') || '{}');
   if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
-    throw new Error('thân request phải là một đối tượng JSON');
+    throw new Error('thân yêu cầu phải là một đối tượng JSON');
   }
   return parsed as Record<string, unknown>;
 }

@@ -42,7 +42,7 @@ export function resolveProbeSource(source: string): ProbeSource {
     const name = trimmed.slice(UPLOAD_PREFIX.length);
     if (!isSafeUploadName(name)) return { error: `đường dẫn cục bộ không hợp lệ ${trimmed}` };
     const path = resolveUploadFile(name);
-    return path ? { kind: 'local', path } : { error: `không tìm thấy media cục bộ: ${name}` };
+    return path ? { kind: 'local', path } : { error: `không tìm thấy tư liệu cục bộ: ${name}` };
   }
   if (trimmed.startsWith('/')) {
     const path = resolveProductAsset(trimmed);

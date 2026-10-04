@@ -456,7 +456,7 @@ function sendRouteError(res: ServerResponse, error: unknown): void {
     return;
   }
   const message = error instanceof Error ? error.message : String(error);
-  sendJson(res, message === 'thân request quá lớn' ? 413 : 400, { error: message });
+  sendJson(res, message === 'thân yêu cầu quá lớn' ? 413 : 400, { error: message });
 }
 
 function mountedUrl(req: IncomingMessage): URL {

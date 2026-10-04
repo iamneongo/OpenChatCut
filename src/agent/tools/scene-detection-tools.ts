@@ -28,7 +28,7 @@ function sourceFor(ctx: AgentContext, args: Args): { asset: MediaAsset | null; i
   const src = item?.src ?? asset?.src ?? '';
   if (!src) return { error: 'itemId hoặc assetId là bắt buộc và phải trỏ tới video nguồn' };
   if (!src.startsWith('/media/uploads/')) {
-    return { error: 'phát hiện cảnh cần media cục bộ đã lưu dưới /media/uploads; hãy tải lên hoặc liên kết lại tư liệu trước' };
+    return { error: 'phát hiện cảnh cần tư liệu cục bộ đã lưu dưới /media/uploads; hãy tải lên hoặc liên kết lại tư liệu trước' };
   }
   return { asset, item, src };
 }

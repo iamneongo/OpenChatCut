@@ -31,6 +31,6 @@ export async function runEditCommand(commandLine: CommandLine, json: boolean): P
     apply: flagBoolean(commandLine, 'apply'),
     ...(summary ? { summary } : {}),
     json,
-    label: `${ops.length} operation(s)`,
+    label: `${ops.length} thao tác`,
   });
 }

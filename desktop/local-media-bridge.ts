@@ -47,10 +47,10 @@ export function createLocalMediaImportHandler(importMedia: LocalMediaImporter): 
   return async (_event, ...args) => {
     const [sourcePath, originalName] = args;
     if (typeof sourcePath !== 'string' || !isAbsolute(sourcePath)) {
-      throw new Error('nguồn media cục bộ phải là một đường dẫn tuyệt đối');
+      throw new Error('nguồn tư liệu cục bộ phải là một đường dẫn tuyệt đối');
     }
     if (typeof originalName !== 'string' || !originalName || basename(originalName) !== originalName) {
-      throw new Error('tên tệp media cục bộ không hợp lệ');
+      throw new Error('tên tệp tư liệu cục bộ không hợp lệ');
     }
     return importMedia(sourcePath, originalName);
   };

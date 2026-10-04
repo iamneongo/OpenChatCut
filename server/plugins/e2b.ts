@@ -32,7 +32,7 @@ export async function resolveE2bFileBytes(file: E2bFile): Promise<string | Array
       const name = clean.slice('media/uploads/'.length);
       if (!isSafeUploadName(name)) throw new Error(`đường dẫn cục bộ không hợp lệ ${url}`);
       const hit = resolveUploadFile(name);
-      if (!hit) throw new Error(`không tìm thấy media cục bộ: ${name}`);
+      if (!hit) throw new Error(`không tìm thấy tư liệu cục bộ: ${name}`);
       const data = await readFile(hit);
       return data.buffer.slice(data.byteOffset, data.byteOffset + data.byteLength) as ArrayBuffer;
     }
@@ -81,7 +81,7 @@ async function readJson(req: IncomingMessage): Promise<E2bRequest> {
   for await (const chunk of req) {
     const bytes = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk);
     total += bytes.length;
-    if (total > MAX_BODY) throw new Error('thân request quá lớn');
+    if (total > MAX_BODY) throw new Error('thân yêu cầu quá lớn');
     chunks.push(bytes);
   }
   return JSON.parse(Buffer.concat(chunks).toString('utf8')) as E2bRequest;

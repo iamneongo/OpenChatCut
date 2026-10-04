@@ -84,7 +84,7 @@ function readJson(req: IncomingMessage, max = MAX_JSON): Promise<Record<string, 
   req.on('data', (c: Buffer) => {
     size += c.length;
     if (size > max) {
-      reject(new Error('thân request quá lớn'));
+      reject(new Error('thân yêu cầu quá lớn'));
       req.destroy();
       return;
     }
