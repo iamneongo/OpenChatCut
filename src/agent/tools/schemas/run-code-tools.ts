@@ -4,8 +4,8 @@ export const RUN_CODE_TOOL_SCHEMAS: AgentToolSchema[] = [
   {
     name: 'run_code',
     description:
-      'Chạy lệnh shell trong sandbox Linux cô lập (e2b) — dùng cho script đi kèm skill, dò/chuyển mã tư liệu bằng ffmpeg/ffprobe hoặc node/python. Có thể ghi tệp đầu vào trước (files[]) và đọc tệp đầu ra sau (outputs[]). Sandbox không thể tác động dòng thời gian của trình biên tập; áp dụng kết quả bằng các công cụ biên tập. Gọi khi skill đã tải yêu cầu chạy script hoặc command. '
-      + 'Không dùng cho flex crop, job chỉ giữ một vùng hoặc đo mép clip (dùng edit_item transform.crop). Người dùng không cần cấm tool này trong prompt. Nếu sandbox không nằm trong capabilities đã cấu hình, không gọi tool.',
+      'Chạy lệnh shell trong hộp cát Linux cô lập (e2b) — dùng cho script đi kèm kỹ năng, dò/chuyển mã tư liệu bằng ffmpeg/ffprobe hoặc node/python. Có thể ghi tệp đầu vào trước (files[]) và đọc tệp đầu ra sau (outputs[]). Hộp cát không thể tác động dòng thời gian của trình biên tập; áp dụng kết quả bằng các công cụ biên tập. Gọi khi kỹ năng đã tải yêu cầu chạy script hoặc lệnh. '
+      + 'Không dùng cho flex crop, tác vụ chỉ giữ một vùng hoặc đo mép đoạn (dùng edit_item transform.crop). Người dùng không cần cấm công cụ này trong prompt. Nếu hộp cát không nằm trong capabilities đã cấu hình, không gọi công cụ.',
     input_schema: {
       type: 'object',
       additionalProperties: false,

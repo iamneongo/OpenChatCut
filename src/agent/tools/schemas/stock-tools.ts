@@ -10,9 +10,9 @@ export const STOCK_TOOL_SCHEMAS: AgentToolSchema[] = [
     name: 'download_media',
     description: [
       'Tải tệp tư liệu từ URL công khai vào kho tư liệu của dự án.',
-      'Nhận một url hoặc mảng url. Type được suy ra từ extension / Content-Type; truyền type để ghi đè.',
-      'Local-dev: máy chủ tải dữ liệu vào /media/uploads (đóng vai S3). Trả về { failed, succeeded, results } giống push_asset.',
-      'Tuần tự: mỗi lần gọi có cửa sổ 75s để bắt đầu URL, nên truyền tối đa 3 URL mỗi lần và gọi lại cho phần còn lại. Host không truy cập được sẽ là dòng failed, không bao giờ fallback sang remote.',
+      'Nhận một URL hoặc mảng URL. Loại được suy ra từ phần mở rộng / Content-Type; truyền type để ghi đè.',
+      'Môi trường local-dev: máy chủ tải dữ liệu vào /media/uploads (đóng vai S3). Trả về { failed, succeeded, results } giống push_asset.',
+      'Tuần tự: mỗi lần gọi có cửa sổ 75 giây để bắt đầu URL, nên truyền tối đa 3 URL mỗi lần và gọi lại cho phần còn lại. Máy chủ không truy cập được sẽ là dòng failed, không bao giờ dự phòng sang nguồn từ xa.',
       'Mỗi dòng thành công có probe (thời lượng, kích thước, fps, rãnh âm thanh/video, codec, qualityRisks) được đo bằng ffprobe cục bộ lúc nhập — không gọi probe_media cho tệp vừa tải. Dữ liệu không phải tư liệu đọc được sẽ lỗi not_media và không bao giờ vào kho.',
     ].join(' '),
     input_schema: {
@@ -47,9 +47,9 @@ export const STOCK_TOOL_SCHEMAS: AgentToolSchema[] = [
     name: 'push_asset',
     description: [
       'Đăng ký URL tư liệu http(s) công khai thành tư liệu của dự án.',
-      'filePath = URL công khai (chuỗi hoặc mảng). Local-dev sẽ tải vào /media/uploads khi có thể.',
+      'filePath = URL công khai (chuỗi hoặc mảng). Môi trường local-dev sẽ tải vào /media/uploads khi có thể.',
       'type có thể là motion-graphic (kèm duration / durationInFrames / properties). type effect/transition không phải tư liệu trong kho ở đây.',
-      'KHÔNG truyền path filesystem cục bộ. Trả về { failed, succeeded, results: [{ assetId, name, type, success } | { error, success:false }] }.',
+      'KHÔNG truyền đường dẫn hệ thống tệp cục bộ. Trả về { failed, succeeded, results: [{ assetId, name, type, success } | { error, success:false }] }.',
     ].join(' '),
     input_schema: {
       type: 'object',
@@ -78,7 +78,7 @@ export const STOCK_TOOL_SCHEMAS: AgentToolSchema[] = [
         height: { type: 'number' },
         properties: {
           type: 'array',
-          description: 'Property chỉnh sửa được của motion-graphic (object có key, label, type, defaultValue).',
+          description: 'Thuộc tính chỉnh sửa được của motion-graphic (object có key, label, type, defaultValue).',
           items: {},
         },
         projectId: {
@@ -113,9 +113,9 @@ export const STOCK_TOOL_SCHEMAS: AgentToolSchema[] = [
     name: 'search_stock_media',
     description: [
       'Tìm B-roll, ảnh, âm thanh hoặc nhạc trên các nền tảng tư liệu được tuyển chọn; trả về kết quả thống nhất có importUrl.',
-      'kind=any|video|audio|music|image (mặc định video). platforms là danh sách provider phân tách bằng dấu phẩy, tùy chọn.',
+      'kind=any|video|audio|music|image (mặc định video). platforms là danh sách nhà cung cấp phân tách bằng dấu phẩy, tùy chọn.',
       'Dùng category để thu hẹp ý định và horizontal|square|vertical cho hướng khung; tên orientation cũ vẫn được chấp nhận.',
-      'Tổ hợp provider/type không hỗ trợ sẽ bị bỏ qua kèm cảnh báo. Ưu tiên key chính thức; tìm hình ảnh đủ điều kiện có thể fallback qua Firecrawl.',
+      'Tổ hợp nhà cung cấp/type không hỗ trợ sẽ bị bỏ qua kèm cảnh báo. Ưu tiên khóa chính thức; tìm hình ảnh đủ điều kiện có thể dự phòng qua Firecrawl.',
       'Khi thành công, truyền importUrl của kết quả vào download_media hoặc push_asset.',
     ].join(' '),
     input_schema: {
@@ -124,7 +124,7 @@ export const STOCK_TOOL_SCHEMAS: AgentToolSchema[] = [
         query: { type: 'string', minLength: 1 },
         category: {
           type: 'string',
-          description: 'Category tùy chọn, như business, nature, technology, whoosh, piano hoặc ambient.',
+          description: 'Nhóm tùy chọn, như business, nature, technology, whoosh, piano hoặc ambient.',
         },
         kind: {
           type: 'string',
