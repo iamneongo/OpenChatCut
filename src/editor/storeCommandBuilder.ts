@@ -79,7 +79,7 @@ export function buildCommands(dispatch: ProjectDispatch, getDoc: () => ProjectDo
     if (!at?.overwrite) {
       const add: AtomicAction = { type: 'add', item, startFrame: at?.startFrame, ripple: at?.ripple };
       const actions = [...trackCreates, ...before, add];
-      dispatch(actions.length > 1 ? { type: 'batch', label: 'Add media', actions } : add);
+      dispatch(actions.length > 1 ? { type: 'batch', label: 'Thêm tư liệu', actions } : add);
       return;
     }
     // Planning replaces the full state, so include staged tracks and assets
@@ -87,7 +87,7 @@ export function buildCommands(dispatch: ProjectDispatch, getDoc: () => ProjectDo
     const doc = [...trackCreates, ...before].reduce(projectReduce, getDoc());
     const state = { ...activeTimeline(doc), assets: doc.assets };
     const plan = planOverwrite(state, item, at.startFrame ?? 0, () => uid('item'));
-    if (plan) dispatch({ type: 'batch', label: 'Overwrite clip', actions: [...trackCreates, ...before, ...plan.actions] });
+    if (plan) dispatch({ type: 'batch', label: 'Ghi đè đoạn', actions: [...trackCreates, ...before, ...plan.actions] });
   };
   const commitRelink = (
     action: Extract<AtomicAction, { type: 'pool.relinkAsset' | 'relinkTimelineItem' }>,
@@ -146,20 +146,20 @@ export function buildCommands(dispatch: ProjectDispatch, getDoc: () => ProjectDo
       renameMediaAssets: (entries) => dispatch({
         type: 'batch',
         actions: entries.map(({ id, name }) => ({ type: 'pool.updateAsset', id, patch: { name } })),
-        label: 'Rename media',
+        label: 'Đổi tên tư liệu',
       }),
       setMediaAssetFavorite: (id, favorite) => dispatch({ type: 'pool.updateAsset', id, patch: { favorite } }),
       setMediaAssetsFavorite: (ids, favorite) => dispatch({
         type: 'batch',
         actions: ids.map((id) => ({ type: 'pool.updateAsset', id, patch: { favorite } })),
-        label: favorite ? 'Favorite media' : 'Unfavorite media',
+        label: favorite ? 'Đánh dấu tư liệu yêu thích' : 'Bỏ đánh dấu tư liệu yêu thích',
       }),
       editMediaAsset: (id, patch) => dispatch({ type: 'pool.updateAsset', id, patch }),
       removeMediaAsset: (id) => dispatch({ type: 'pool.removeAsset', id }),
       removeMediaAssets: (ids) => dispatch({
         type: 'batch',
         actions: ids.map((id) => ({ type: 'pool.removeAsset', id })),
-        label: 'Delete media',
+        label: 'Xóa tư liệu',
       }),
       canonicalizeMediaAsset: (duplicateId, canonicalId) => dispatch({
         type: 'pool.canonicalizeAsset',
@@ -412,7 +412,7 @@ export function buildCommands(dispatch: ProjectDispatch, getDoc: () => ProjectDo
         const id = uid('track');
         dispatch({
           type: 'batch',
-          label: 'Create caption track',
+          label: 'Tạo rãnh phụ đề',
           actions: [
             { type: 'track.create', track: { id, kind: 'caption', name: opts?.name }, order: opts?.order },
             { type: 'setCaptions', captions, track: id },
@@ -433,7 +433,7 @@ export function buildCommands(dispatch: ProjectDispatch, getDoc: () => ProjectDo
         const id = uid('track');
         dispatch({
           type: 'batch',
-          label: 'Create caption track',
+          label: 'Tạo rãnh phụ đề',
           actions: [
             { type: 'track.create', track: { id, kind: 'caption' } },
             { type: 'setCaptions', captions, track: id },

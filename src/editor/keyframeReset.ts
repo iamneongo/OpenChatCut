@@ -32,6 +32,6 @@ export function keyframeResetBatch(
   if (resetVolume) actions.push({ type: 'setVolume', id, volume: 1 });
   return {
     actions,
-    label: props.length === 1 ? `Reset ${props[0]}` : 'Reset transform',
+    label: props.length === 1 ? `Đặt lại ${props[0]}` : 'Đặt lại biến đổi',
   };
 }
