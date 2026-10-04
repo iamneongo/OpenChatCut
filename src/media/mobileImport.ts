@@ -23,7 +23,7 @@ function jpegName(name: string): string {
 
 async function convertHeic(record: MobileUploadRecord): Promise<File> {
   const response = await fetch(record.path);
-  if (!response.ok) throw new Error(`HTTP ${response.status}`);
+  if (!response.ok) throw new Error(`Không thể tải tệp HEIC từ điện thoại (HTTP ${response.status})`);
   const converted = await heicTo({ blob: await response.blob(), type: 'image/jpeg', quality: HEIC_JPEG_QUALITY });
   const jpeg = Array.isArray(converted) ? converted[0] : converted;
   if (!(jpeg instanceof Blob)) throw new Error(t('HEIC 转换失败'));

@@ -19,7 +19,7 @@ export interface MobileUploadSession {
 async function sessionRequest(path: string, init?: RequestInit): Promise<MobileUploadSession> {
   const response = await fetch(`/api/mobile-upload${path}`, init);
   const body = await response.json().catch(() => null) as (MobileUploadSession & { error?: string }) | null;
-  if (!response.ok || !body) throw new Error(body?.error ?? `HTTP ${response.status}`);
+  if (!response.ok || !body) throw new Error(body?.error ?? `Yêu cầu tải media từ điện thoại thất bại (HTTP ${response.status})`);
   return body;
 }
 

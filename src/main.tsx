@@ -24,7 +24,7 @@ loadProjectFonts();
 void hydratePlugins().catch(() => {});
 
 const root = document.getElementById('root');
-if (!root) throw new Error('no #root');
+if (!root) throw new Error('Thiếu phần tử #root của ứng dụng');
 const isTranscriptWindow = new URLSearchParams(window.location.search).has('transcript-window');
 void localeReady.then(() => {
   createRoot(root).render(
