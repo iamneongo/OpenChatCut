@@ -186,7 +186,7 @@ export function buildCommands(dispatch: ProjectDispatch, getDoc: () => ProjectDo
             height: 1080,
             props: { color: at?.color ?? '#1a1a1a' },
           },
-        }, 'Add solid');
+        }, 'Thêm đoạn màu đơn');
         return id;
       },
       setDesignStyle: (style) => dispatch({ type: 'design.set', style }),
@@ -259,7 +259,7 @@ export function buildCommands(dispatch: ProjectDispatch, getDoc: () => ProjectDo
               align,
             },
           },
-        }, 'Add title');
+        }, 'Thêm tiêu đề');
         return id;
       },
       addAsset: (asset: MediaAsset, durationFps = projectFps()) => dispatch({ type: 'addAsset', asset, durationFps }),
@@ -319,7 +319,7 @@ export function buildCommands(dispatch: ProjectDispatch, getDoc: () => ProjectDo
         const sourceStartFrame = Math.max(0, Math.round(at?.sourceStartFrame ?? 0));
         const availableSourceFrames = Math.max(0, sourceDuration - sourceStartFrame);
         if (availableSourceFrames <= 0) {
-          return { ok: false, error: `Timeline ${timelineId} has no source frames available from frame ${sourceStartFrame}` };
+          return { ok: false, error: `Timeline ${timelineId} không còn khung nguồn từ khung ${sourceStartFrame}` };
         }
         const requestedSourceFrames = Math.min(
           availableSourceFrames,
@@ -343,14 +343,14 @@ export function buildCommands(dispatch: ProjectDispatch, getDoc: () => ProjectDo
             srcInFrame: sourceStartFrame,
             playbackRate,
           },
-        }, 'Add sequence');
+        }, 'Thêm sequence');
         return { ok: true, itemId: id };
       },
       updateItemProps: (id, patch) => dispatch({ type: 'updateProps', id, patch }),
       moveItem: (id, to) => {
         const item = activeTimeline(getDoc()).items.find((candidate) => candidate.id === id);
         const track = to.track && item ? pickTrack(to.track, item.kind === 'audio' ? 'audio' : 'video') : to.track;
-        dispatchWithTracks({ type: 'move', id, ...to, track }, 'Move clip');
+        dispatchWithTracks({ type: 'move', id, ...to, track }, 'Di chuyển đoạn');
       },
       setItemTiming: (id, timing) => dispatch({ type: 'retime', id, ...timing }),
       slipItem: (id, deltaInFrames) => {
