@@ -12,12 +12,12 @@
   <strong>Tiếng Việt</strong> · <a href="README.md">English</a> · <a href="README_ZH.md">Tiếng Trung giản thể</a>
 </p>
 
-OpenChatCut là một trình chỉnh sửa video có timeline thực, nơi Codex, Claude Code và tác nhân AI tích hợp có thể đọc, chỉnh sửa và xuất dự án video mà vẫn giữ khả năng chỉnh sửa tiếp.
+OpenChatCut là một trình chỉnh sửa video có dòng thời gian thực, nơi Codex, Claude Code và tác nhân AI tích hợp có thể đọc, chỉnh sửa và xuất dự án video mà vẫn giữ khả năng chỉnh sửa tiếp.
 
 ## Điểm chính
 
-- Timeline nhiều lớp cho video, hình ảnh, âm thanh, phụ đề và motion graphic.
-- Nhập media, chép lời, cắt lời nói, tạo phụ đề và chỉnh sửa theo đề xuất của Agent.
+- Dòng thời gian nhiều lớp cho video, hình ảnh, âm thanh, phụ đề và đồ họa chuyển động.
+- Nhập tư liệu, chép lời, cắt lời nói, tạo phụ đề và chỉnh sửa theo đề xuất của tác nhân AI.
 - Hỗ trợ xuất video, âm thanh, phụ đề, FCPXML và bản nháp CapCut/JianYing.
 - Dữ liệu dự án ưu tiên lưu cục bộ trong trình duyệt hoặc ứng dụng desktop.
 - Giao diện hỗ trợ tiếng Việt, tiếng Anh, tiếng Trung giản thể, tiếng Ý và tiếng Nga; bản fork này mặc định tiếng Việt.
@@ -48,7 +48,7 @@ npx tsc -b --pretty false
 
 ## Phát triển
 
-Các thay đổi bản địa hóa nằm chủ yếu trong `src/i18n/dict/vi/`. Chuỗi giao diện dùng khóa tiếng Trung của dự án gốc; tên template, âm thanh và preset được dịch qua các bảng dữ liệu riêng để không làm thay đổi dữ liệu canonical trong project.
+Các thay đổi bản địa hóa nằm chủ yếu trong `src/i18n/dict/vi/`. Chuỗi giao diện dùng khóa tiếng Trung của dự án gốc; tên mẫu, âm thanh và thiết lập sẵn được dịch qua các bảng dữ liệu riêng để không làm thay đổi dữ liệu chuẩn trong dự án.
 
 Nếu phát hiện chuỗi chưa được Việt hóa, hãy mở issue kèm đường dẫn màn hình hoặc file liên quan.
 
