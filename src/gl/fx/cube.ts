@@ -39,29 +39,29 @@ export function parseCube(text: string): CubeLut {
       size = n;
       continue;
     }
-    if (line.startsWith('LUT_1D_SIZE')) throw new Error('1D LUT (.cube LUT_1D_SIZE) not supported');
+    if (line.startsWith('LUT_1D_SIZE')) throw new Error('Không hỗ trợ LUT 1D (.cube LUT_1D_SIZE)');
     if (line.startsWith('DOMAIN_MIN') || line.startsWith('DOMAIN_MAX')) {
       const parts = line.split(/\s+/).slice(1).map(Number);
-      if (parts.length !== 3 || parts.some(Number.isNaN)) throw new Error(`Malformed ${line.split(/\s+/)[0]}: ${line}`);
+      if (parts.length !== 3 || parts.some(Number.isNaN)) throw new Error(`Dòng ${line.split(/\s+/)[0]} không đúng định dạng: ${line}`);
       const target = line.startsWith('DOMAIN_MIN') ? domainMin : domainMax;
       target[0] = parts[0]; target[1] = parts[1]; target[2] = parts[2];
       continue;
     }
     const parts = line.split(/\s+/);
-    if (parts.length !== 3) throw new Error(`Expected 3 floats per data line, got ${parts.length}: "${line}"`);
+    if (parts.length !== 3) throw new Error(`Mỗi dòng dữ liệu phải có 3 số thực, nhưng nhận được ${parts.length}: "${line}"`);
     for (const p of parts) {
       const n = Number(p);
-      if (Number.isNaN(n)) throw new Error(`Non-numeric value: "${p}"`);
+      if (Number.isNaN(n)) throw new Error(`Giá trị không phải số: "${p}"`);
       values.push(n);
     }
   }
 
-  if (size === null) throw new Error('thiếu header LUT_3D_SIZE');
+  if (size === null) throw new Error('Thiếu phần đầu LUT_3D_SIZE');
   const expected = size * size * size * 3;
-  if (values.length !== expected) throw new Error(`Expected ${expected} values for ${size}³ LUT, got ${values.length}`);
+  if (values.length !== expected) throw new Error(`LUT ${size}³ cần ${expected} giá trị, nhưng nhận được ${values.length}`);
   const span: [number, number, number] = [domainMax[0] - domainMin[0], domainMax[1] - domainMin[1], domainMax[2] - domainMin[2]];
   if (span[0] <= 0 || span[1] <= 0 || span[2] <= 0) {
-    throw new Error('DOMAIN_MAX must be strictly greater than DOMAIN_MIN on every channel');
+    throw new Error('DOMAIN_MAX phải lớn hơn nghiêm ngặt DOMAIN_MIN trên mọi kênh');
   }
   const data = new Float32Array(expected);
   for (let i = 0; i < values.length; i += 3) {
