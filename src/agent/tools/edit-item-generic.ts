@@ -194,7 +194,7 @@ export function validateGenericUpdate(
   if (trackRaw !== undefined) {
     const kind = it.kind === 'audio' ? 'audio' : 'video';
     const track = resolveTrackId(state, trackRaw, kind);
-    if (!track) return { error: `Không có track ${kind} tương thích với "${String(trackRaw)}"` };
+    if (!track) return { error: `Không có rãnh ${kind} tương thích với "${String(trackRaw)}"` };
     plan.track = track;
   }
   // fromFrame is canonical; startFrame remains an alias for local and legacy tools.
@@ -218,7 +218,7 @@ export function validateGenericUpdate(
     if (parsed.error) return { error: parsed.error };
     for (const prop of Object.keys(parsed.keyframes!) as KeyframeProp[]) {
       if (!supportsKeyframeProperty(it, prop)) {
-        return { error: `keyframes.${prop} không được hỗ trợ trên clip ${it.kind}` };
+        return { error: `keyframes.${prop} không được hỗ trợ trên đoạn ${it.kind}` };
       }
     }
     plan.keyframes = parsed.keyframes;
@@ -226,13 +226,13 @@ export function validateGenericUpdate(
   if (entry.filters !== undefined) {
     const visual = it.kind === 'video' || it.kind === 'image' || it.kind === 'gif' || it.kind === 'svg'
       || it.kind === 'text' || it.kind === 'solid' || it.kind === 'motion-graphic';
-    if (!visual) return { error: `Không hỗ trợ filters trên clip ${it.kind}` };
+    if (!visual) return { error: `Không hỗ trợ filters trên đoạn ${it.kind}` };
     const parsed = parseFiltersArg(entry.filters);
     if (parsed.error) return { error: parsed.error };
     plan.filters = parsed.filters;
   }
   if (entry.transform !== undefined) {
-    if (it.kind === 'audio') return { error: 'Không hỗ trợ transform trên clip âm thanh' };
+    if (it.kind === 'audio') return { error: 'Không hỗ trợ transform trên đoạn âm thanh' };
     const parsed = parseTransformArg(entry.transform, { width: state.width, height: state.height });
     if (parsed.error) return { error: parsed.error };
     const patch = { ...parsed.transform };
@@ -355,7 +355,7 @@ export function validateAuthoredAdd(
   }
   const track = resolveTrackId(state, entry.track ?? entry.trackId ?? 'V1', 'video')
     ?? defaultTrackId(state, 'video');
-  if (!track) return { error: 'Không có track video để đặt — hãy tạo bằng edit_track trước' };
+  if (!track) return { error: 'Không có rãnh video để đặt — hãy tạo bằng edit_track trước' };
   const startFrame = finiteNum(entry.startFrame) ?? finiteNum(entry.fromFrame);
   const durationInFrames = finiteNum(entry.durationInFrames);
   const name = typeof entry.name === 'string' && entry.name.trim() ? entry.name.trim() : undefined;
@@ -434,7 +434,7 @@ export function validateGenericAdd(
   const family = type === 'audio' ? 'audio' : 'video';
   const track = resolveTrackId(state, entry.track ?? entry.trackId ?? (family === 'audio' ? 'A1' : 'V1'), family)
     ?? defaultTrackId(state, family);
-  if (!track) return { error: `Không có track ${family} để đặt — hãy tạo bằng edit_track trước` };
+  if (!track) return { error: `Không có rãnh ${family} để đặt — hãy tạo bằng edit_track trước` };
   const startFrame = finiteNum(entry.startFrame) ?? finiteNum(entry.fromFrame);
   const durationInFrames = finiteNum(entry.durationInFrames);
   const sourceWindow = validateSourceWindow(type, asset, state.fps || 30, entry, durationInFrames);

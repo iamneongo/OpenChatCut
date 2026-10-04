@@ -260,7 +260,7 @@ export function buildPagedSkillResult(
   limit = DEFAULT_PAGE_CHARS,
   resultBudgetChars = MAX_SKILL_RESULT_CHARS,
 ): PluginSkillLoadResult {
-  if (!isSafeRelativePath(file)) return { error: `Unsafe skill file path: ${file}` };
+  if (!isSafeRelativePath(file)) return { error: `Đường dẫn tệp kỹ năng không an toàn: ${file}` };
   const validated = validatedSkillSource(source);
   if ('error' in validated) return validated;
   const { available } = validated;
@@ -394,7 +394,7 @@ export function execPluginSkillTool(
   _ctx?: AgentContext,
   harness?: HarnessToolExecutionContext,
 ): PluginSkillLoadResult {
-  if (name !== 'load_skill') return { error: `tool không được nhận diện: ${name}` };
+  if (name !== 'load_skill') return { error: `công cụ không được nhận diện: ${name}` };
   const slug = typeof args.name === 'string' ? args.name.trim() : '';
   if (!slug) return { error: 'name phải là skill id không rỗng.' };
   const source = builtInSource(slug) ?? creativeSource(slug);

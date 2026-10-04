@@ -95,7 +95,7 @@ export async function execMulticamTool(name: string, args: Args, ctx: AgentConte
   if (name === 'manage_link_group') return execManageLinkGroup(args, ctx);
   if (name !== 'multicam_sync') return { error: `Công cụ không xác định: ${name}` };
   const rawIds = Array.isArray(args.itemIds) ? args.itemIds.map(String) : [];
-  if (rawIds.length < 2) return { error: 'itemIds cần ít nhất 2 clip' };
+  if (rawIds.length < 2) return { error: 'itemIds cần ít nhất 2 đoạn' };
   const ref = args.referenceItemId !== undefined ? String(args.referenceItemId) : undefined;
   if (ref && !rawIds.some((id) => id === ref || id.startsWith(ref) || ref.startsWith(id))) {
     return { error: 'referenceItemId phải nằm trong itemIds' };
@@ -113,7 +113,7 @@ export async function execMulticamTool(name: string, args: Args, ctx: AgentConte
     const hit = state.items.find((x) => x.id === id || x.id.startsWith(id));
     if (!hit) return { error: `Không tìm thấy item: ${id}` };
     if (!canMulticamItem(hit)) return { error: `item ${hit.id} không phải video/audio có media` };
-    if (state.tracks?.[hit.track]?.locked) return { error: `track ${hit.track} đang bị khóa` };
+    if (state.tracks?.[hit.track]?.locked) return { error: `rãnh ${hit.track} đang bị khóa` };
     resolved.push(hit.id);
   }
   const resolvedRef = ref
@@ -200,7 +200,7 @@ export function execChangeCam(args: Args, ctx: Pick<AgentContext, 'getState' | '
       entry.id === targetRef || entry.itemId === targetRef
       || entry.id.startsWith(targetRef) || entry.itemId.startsWith(targetRef));
     if (!targetRef || !angle) return { error: 'targetAngleId phải là một góc trong nhóm multicam' };
-    if (angle.source.kind !== 'video') return { error: `Các góc change_cam phải là clip video; ${angle.itemId} là ${angle.source.kind}` };
+    if (angle.source.kind !== 'video') return { error: `Các góc change_cam phải là đoạn video; ${angle.itemId} là ${angle.source.kind}` };
     const fps = state.fps || 30;
     const fromSecondsRaw = Number(args.fromSeconds);
     if (!Number.isFinite(fromSecondsRaw) || fromSecondsRaw < 0) return { error: 'fromSeconds phải là số hữu hạn ≥ 0' };
@@ -240,7 +240,7 @@ export function execChangeCam(args: Args, ctx: Pick<AgentContext, 'getState' | '
       message: `Đã chuyển góc multicam bền vững sang "${angle.label}" trong khoảng ${sec(fromFrame)}–${sec(toFrame)} giây`,
     };
   }
-  if (rawIds.length < 2) return { error: 'itemIds cần ít nhất 2 clip góc máy (mục tiêu + các góc khác)' };
+  if (rawIds.length < 2) return { error: 'itemIds cần ít nhất 2 đoạn góc máy (mục tiêu + các góc khác)' };
   const group: TimelineItem[] = [];
   for (const id of rawIds) {
     const hit = state.items.find((x) => x.id === id || x.id.startsWith(id));

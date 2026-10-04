@@ -125,7 +125,7 @@ async function register(args: Args, ctx: AgentContext): Promise<unknown> {
     const job = await fetchRenderJob(renderId);
     if (!('ok' in job)) return { error: job.error };
     if (!job.downloadUrl) {
-      return { error: `Render ${renderId} chưa hoàn tất (trạng thái: ${job.status}); trước hết hãy chờ bằng track_export action=wait hoặc truyền outputUrl thay thế` };
+      return { error: `Kết xuất ${renderId} chưa hoàn tất (trạng thái: ${job.status}); trước hết hãy chờ bằng track_export action=wait hoặc truyền outputUrl thay thế` };
     }
     outputUrl = job.downloadUrl;
   } else {
@@ -348,7 +348,7 @@ async function exportProres(args: Args, ctx: AgentContext): Promise<unknown> {
     return { error: error instanceof Error ? error.message : String(error) };
   }
   const targets = resolveMotionGraphicExportTargets(state, args, ctx.getDoc().assets ?? [], ctx.templates);
-  if (!targets.length) return { error: 'không tìm thấy clip hoặc tư liệu MG; hãy truyền itemId (được ưu tiên) hoặc assetId' };
+  if (!targets.length) return { error: 'không tìm thấy đoạn hoặc tư liệu MG; hãy truyền itemId (được ưu tiên) hoặc assetId' };
   const plan = buildMotionGraphicExportPlan(targets, args);
   const { exported, failed } = await runMotionGraphicExportPlan(state, plan);
   return {
@@ -372,5 +372,5 @@ export async function execMgVideoTool(name: string, args: Args, ctx: AgentContex
   if (name === 'convert_motion_graphic_to_video') return convert(args, ctx);
   if (name === 'register_converted_video') return register(args, ctx);
   if (name === 'export_motion_graphic_prores') return exportProres(args, ctx);
-  return { error: `tool không được nhận diện: ${name}` };
+  return { error: `công cụ không được nhận diện: ${name}` };
 }

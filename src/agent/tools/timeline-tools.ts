@@ -66,7 +66,7 @@ export async function execTimelineTool(name: string, args: Args, ctx: AgentConte
 
     case 'duplicate': {
       const src = findTimeline(doc, args.timelineId);
-      if (!src) return { error: `Không tìm thấy timeline ${args.timelineId}`, available: doc.timelines.map((t) => ({ id: t.id, name: t.name })) };
+      if (!src) return { error: `Không tìm thấy dòng thời gian ${args.timelineId}`, available: doc.timelines.map((t) => ({ id: t.id, name: t.name })) };
       const newId = ctx.commands.duplicateTimeline(src.id, {
         name: typeof args.name === 'string' ? args.name : undefined,
         activate: args.activate !== false,
@@ -78,14 +78,14 @@ export async function execTimelineTool(name: string, args: Args, ctx: AgentConte
 
     case 'switch': {
       const t = findTimeline(doc, args.timelineId);
-      if (!t) return { error: `Không tìm thấy timeline ${args.timelineId}`, available: doc.timelines.map((x) => ({ id: x.id, name: x.name })) };
+      if (!t) return { error: `Không tìm thấy dòng thời gian ${args.timelineId}`, available: doc.timelines.map((x) => ({ id: x.id, name: x.name })) };
       ctx.commands.switchTimeline(t.id);
       return { ok: true, active: describe(t, ctx.getDoc()) };
     }
 
     case 'update': {
       const t = args.timelineId ? findTimeline(doc, args.timelineId) : findTimeline(doc, doc.activeTimelineId);
-      if (!t) return { error: `Không tìm thấy timeline ${args.timelineId}` };
+      if (!t) return { error: `Không tìm thấy dòng thời gian ${args.timelineId}` };
       const changed: string[] = [];
       if (typeof args.name === 'string' && args.name.trim()) {
         ctx.commands.renameTimeline(t.id, args.name.trim());
@@ -113,9 +113,9 @@ export async function execTimelineTool(name: string, args: Args, ctx: AgentConte
 
     case 'insert': {
       const target = findTimeline(doc, args.timelineId);
-      if (!target) return { error: `Không tìm thấy timeline ${args.timelineId}`, available: doc.timelines.map((t) => ({ id: t.id, name: t.name })) };
+      if (!target) return { error: `Không tìm thấy dòng thời gian ${args.timelineId}`, available: doc.timelines.map((t) => ({ id: t.id, name: t.name })) };
       const owner = findTimeline(doc, doc.activeTimelineId);
-      if (!owner) return { error: `Không tìm thấy timeline đang hoạt động ${doc.activeTimelineId}` };
+      if (!owner) return { error: `Không tìm thấy dòng thời gian đang hoạt động ${doc.activeTimelineId}` };
       const referenceError = sequenceReferenceError(doc, owner.id, target.id);
       if (referenceError) return { error: referenceError.message, sequenceError: referenceError.toJSON() };
       const addResult = ctx.commands.addSequence(target.id, {

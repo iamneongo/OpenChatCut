@@ -81,7 +81,7 @@ export async function execTrackTool(name: string, args: Args, ctx: AgentContext)
 
     case 'update': {
       const id = resolveTrackId(state, args.trackId);
-      if (!id) return { error: `Không tìm thấy track ${args.trackId}`, tracks: list(state) };
+      if (!id) return { error: `Không tìm thấy rãnh ${args.trackId}`, tracks: list(state) };
       const data = payload(args.json);
       if ('error' in data) return data;
       const patch: TrackUpdate = {};
@@ -104,30 +104,30 @@ export async function execTrackTool(name: string, args: Args, ctx: AgentContext)
     case 'delete': {
       const refs = Array.isArray(args.trackIds) && args.trackIds.length ? args.trackIds : [args.trackId];
       const ids = refs.map((ref) => resolveTrackId(state, ref));
-      if (ids.some((id) => !id)) return { error: 'Một hoặc nhiều track không tồn tại', tracks: list(state) };
+      if (ids.some((id) => !id)) return { error: 'Một hoặc nhiều rãnh không tồn tại', tracks: list(state) };
       const unique = [...new Set(ids as TrackId[])];
       const busy = unique.filter((id) => state.items.some((item) => item.track === id)
         || (state.transitions ?? []).some((transition) => transition.trackId === id)
         || !!captionsOnTrack(state, id));
-      if (busy.length) return { error: 'Track không trống', tracks: busy.map((id) => describe(state, id)) };
+      if (busy.length) return { error: 'Rãnh không trống', tracks: busy.map((id) => describe(state, id)) };
       ctx.commands.deleteTracks(unique);
       return { ok: true, deleted: unique, tracks: list(ctx.getState()) };
     }
 
     case 'tighten': {
       const id = resolveTrackId(state, args.trackId);
-      if (!id) return { error: `Không tìm thấy track ${args.trackId}`, tracks: list(state) };
-      if (trackKind(state, id) === 'caption') return { error: 'Track phụ đề không chứa clip media' };
-      if (state.tracks?.[id]?.locked) return { error: 'Track đang bị khóa' };
+      if (!id) return { error: `Không tìm thấy rãnh ${args.trackId}`, tracks: list(state) };
+      if (trackKind(state, id) === 'caption') return { error: 'Rãnh phụ đề không chứa đoạn media' };
+      if (state.tracks?.[id]?.locked) return { error: 'Rãnh đang bị khóa' };
       ctx.commands.tightenTrack(id);
       return { ok: true, track: describe(ctx.getState(), id) };
     }
 
     case 'reorder_items': {
       const id = resolveTrackId(state, args.trackId);
-      if (!id) return { error: `Không tìm thấy track ${args.trackId}`, tracks: list(state) };
-      if (trackKind(state, id) === 'caption') return { error: 'Track phụ đề không chứa clip media' };
-      if (state.tracks?.[id]?.locked) return { error: 'Track đang bị khóa' };
+      if (!id) return { error: `Không tìm thấy rãnh ${args.trackId}`, tracks: list(state) };
+      if (trackKind(state, id) === 'caption') return { error: 'Rãnh phụ đề không chứa đoạn media' };
+      if (state.tracks?.[id]?.locked) return { error: 'Rãnh đang bị khóa' };
       const data = payload(args.json);
       if ('error' in data) return data;
       const raw = data.itemIds ?? data.orderedIds;
