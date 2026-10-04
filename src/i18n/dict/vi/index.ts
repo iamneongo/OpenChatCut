@@ -286,7 +286,7 @@ export const VI: Record<string, string> = {
   '保存失败 ({n})': 'Lưu thất bại ({n})',
   '有未保存改动，再按一次关闭将丢弃': 'Có thay đổi chưa lưu — nhấn đóng lần nữa để loại bỏ',
   '密钥仅存本机': 'Khóa chỉ được lưu trên máy này',
-  '不进浏览器。': 'Không gửi vào trình duyệt.',
+  '不进浏览器。': 'Không bao giờ gửi vào trình duyệt.',
   'Agent 模型': 'Mô hình tác nhân AI',
   'Agent 大脑': 'Bộ não tác nhân AI',
   'AI 生成': 'Tạo bằng AI',
@@ -2668,6 +2668,6 @@ export const VI: Record<string, string> = {
   '低频冲击点，适合切点、标题砸入、重点强调。': 'Cú nhấn tần số thấp, phù hợp điểm cắt, tiêu đề đập vào hoặc nhấn thông tin chính.',
   '清脆 UI 点击，适合按钮、选中、确认操作反馈。': 'Âm nhấp giao diện trong và gọn, phù hợp phản hồi nút, chọn hoặc xác nhận thao tác.',
   '成功完成提示音，适合任务完成、发布成功、正向反馈。': 'Âm báo hoàn tất thành công, phù hợp hoàn thành tác vụ, đăng thành công hoặc phản hồi tích cực.',
-  '当前环境不支持素材预览上传': 'Môi trường hiện tại không hỗ trợ tải lên tài nguyên để xem trước.',
-  'style 忽略字段': 'Đã bỏ qua trường kiểu hiển thị',
+  '当前环境不支持素材预览上传': 'Môi trường hiện tại không hỗ trợ tải tư liệu lên để xem trước.',
+  'style 忽略字段': 'Đã bỏ qua các trường kiểu hiển thị',
 };
