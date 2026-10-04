@@ -4,7 +4,7 @@ export const MULTICAM_TOOL_SCHEMAS: AgentToolSchema[] = [
   {
     name: 'multicam_sync',
     description: [
-      'Đồng bộ multicam bền vững. Ưu tiên source timecode đã chuẩn hóa, sau đó capture clock, rồi fallback sang',
+      'Đồng bộ nhiều góc máy bền vững. Ưu tiên mã thời gian nguồn đã chuẩn hóa, sau đó đồng hồ ghi hình, rồi dự phòng bằng',
       'tương quan audio theo từng góc máy. Tạo hoặc cập nhật group bền vững với reference/master, snapshot nguồn,',
       'offset, độ tin cậy và bằng chứng đồng bộ; mọi placement và metadata được commit thành một thay đổi trạng thái có thể undo.',
       'Mọi góc máy được chọn phải dùng cùng playback rate; hãy thống nhất rate trước khi thử lại sync bị từ chối.',
@@ -19,7 +19,7 @@ export const MULTICAM_TOOL_SCHEMAS: AgentToolSchema[] = [
         },
         referenceItemId: {
           type: 'string',
-          description: 'ID góc reference tùy chọn (phải nằm trong itemIds). Mặc định là đoạn video đầu tiên.',
+          description: 'ID góc tham chiếu tùy chọn (phải nằm trong itemIds). Mặc định là đoạn video đầu tiên.',
         },
         groupId: {
           type: 'string',
@@ -27,7 +27,7 @@ export const MULTICAM_TOOL_SCHEMAS: AgentToolSchema[] = [
         },
         masterItemId: {
           type: 'string',
-          description: 'ID mục góc program/master tùy chọn. Mặc định referenceItemId.',
+          description: 'ID mục góc chương trình/chính tùy chọn. Mặc định referenceItemId.',
         },
       },
       required: ['itemIds'],
@@ -57,9 +57,9 @@ export const MULTICAM_TOOL_SCHEMAS: AgentToolSchema[] = [
           items: { type: 'string' },
           description: 'Tra cứu nhóm cũ: ID hiện tại/gốc của các góc đã truyền trước đó vào multicam_sync.',
         },
-        targetItemId: { type: 'string', description: 'Alias cũ của targetAngleId.' },
-        fromSeconds: { type: 'number', description: 'Thời điểm bắt đầu chuyển, tính bằng giây trên timeline.' },
-        toSeconds: { type: 'number', description: 'Thời điểm kết thúc (không bao gồm), tính bằng giây trên timeline. Mặc định: cuối source đích.' },
+        targetItemId: { type: 'string', description: 'Bí danh cũ của targetAngleId.' },
+        fromSeconds: { type: 'number', description: 'Thời điểm bắt đầu chuyển, tính bằng giây trên dòng thời gian.' },
+        toSeconds: { type: 'number', description: 'Thời điểm kết thúc (không bao gồm), tính bằng giây trên dòng thời gian. Mặc định: cuối nguồn đích.' },
       },
       required: ['fromSeconds'],
     },
@@ -67,7 +67,7 @@ export const MULTICAM_TOOL_SCHEMAS: AgentToolSchema[] = [
   {
     name: 'manage_link_group',
     description: [
-      'Tạo hoặc xóa quan hệ chỉnh sửa timeline bền vững trong một thay đổi có thể undo.',
+      'Tạo hoặc xóa quan hệ chỉnh sửa dòng thời gian bền vững trong một thay đổi có thể hoàn tác.',
       'action=link ghép thao tác move, trim và remove của A/V; action=sync_lock giữ timing group qua move trực tiếp',
       'và chỉnh sửa ripple; action=unlink xóa các membership đã chọn. Truyền từ 2 itemId trở lên cho link/sync_lock.',
     ].join(' '),
