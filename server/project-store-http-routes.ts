@@ -48,17 +48,17 @@ async function readBody(req: IncomingMessage): Promise<Record<string, unknown>> 
   for await (const chunk of req) {
     const buffer = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk);
     total += buffer.length;
-    if (total > MAX_BODY_BYTES) throw new Error('thân request quá lớn');
+    if (total > MAX_BODY_BYTES) throw new Error('thân yêu cầu quá lớn');
     chunks.push(buffer);
   }
   let parsed: unknown;
   try {
     parsed = JSON.parse(Buffer.concat(chunks).toString('utf8') || '{}');
   } catch {
-    throw new Error('thân request chứa JSON không hợp lệ');
+    throw new Error('thân yêu cầu chứa JSON không hợp lệ');
   }
   if (parsed === null || typeof parsed !== 'object' || Array.isArray(parsed)) {
-    throw new Error('thân request phải là một đối tượng JSON');
+    throw new Error('thân yêu cầu phải là một đối tượng JSON');
   }
   return parsed as Record<string, unknown>;
 }
@@ -99,7 +99,7 @@ async function handleAgentRuntimeWrite(
 ): Promise<void> {
   const body = await readBody(req);
   if (!isProjectStoreRequest(body) || body.operation !== 'agent-runtime-write') {
-    throw new Error('request ghi runtime Agent không hợp lệ');
+    throw new Error('yêu cầu ghi runtime Agent không hợp lệ');
   }
   sendProjectStoreJson(res, 200, await operations.writeAgentRuntime(body));
 }
@@ -111,7 +111,7 @@ async function handleProjectDocumentWrite(
 ): Promise<void> {
   const body = await readBody(req);
   if (!isProjectStoreRequest(body) || body.operation !== 'project-document-write') {
-    throw new Error('request ghi tài liệu project không hợp lệ');
+    throw new Error('yêu cầu ghi tài liệu dự án không hợp lệ');
   }
   sendProjectStoreJson(res, 200, await operations.writeProjectDocument(body));
 }
@@ -123,7 +123,7 @@ async function handleAgentRunLease(
 ): Promise<void> {
   const body = await readBody(req);
   if (!isProjectStoreRequest(body) || body.operation !== 'agent-run-lease') {
-    throw new Error('request lease lượt chạy Agent không hợp lệ');
+    throw new Error('yêu cầu thuê lượt chạy Agent không hợp lệ');
   }
   sendProjectStoreJson(res, 200, await operations.updateAgentRunLease(body));
 }
@@ -134,7 +134,7 @@ async function handleExportRecoveryLease(
 ): Promise<void> {
   const body = await readBody(req);
   if (!isProjectStoreRequest(body) || body.operation !== 'export-recovery-lease') {
-    throw new Error('request lease khôi phục export không hợp lệ');
+    throw new Error('yêu cầu thuê khôi phục bản xuất không hợp lệ');
   }
   sendProjectStoreJson(res, 200, await operations.updateExportRecoveryLease(body));
 }
@@ -146,7 +146,7 @@ async function handleAgentSessionRotate(
 ): Promise<void> {
   const body = await readBody(req);
   if (!isProjectStoreRequest(body) || body.operation !== 'agent-session-rotate') {
-    throw new Error('request xoay vòng phiên Agent không hợp lệ');
+    throw new Error('yêu cầu xoay vòng phiên Agent không hợp lệ');
   }
   sendProjectStoreJson(res, 200, await operations.rotateAgentSession(body.projectId));
 }
@@ -157,7 +157,7 @@ async function handleMerge(
   operations: ProjectStoreHttpOperations,
 ): Promise<void> {
   const body = await readBody(req);
-  if (!isProjectStoreEntries(body.entries)) throw new Error('các entry của kho project không hợp lệ');
+  if (!isProjectStoreEntries(body.entries)) throw new Error('các mục của kho dự án không hợp lệ');
   const merged = await operations.mergeEntries(body.entries);
   const projects = merged.entries.projects;
   sendProjectStoreJson(res, 200, { version: 1, entries: projects === undefined ? {} : { projects } });
@@ -170,7 +170,7 @@ async function handleProjectPurge(
 ): Promise<void> {
   const body = await readBody(req);
   if (!isProjectStoreRequest(body) || body.operation !== 'purge-project') {
-    throw new Error('request xóa project không hợp lệ');
+    throw new Error('yêu cầu xóa dự án không hợp lệ');
   }
   await operations.purgeProject(body.projectId);
   sendProjectStoreJson(res, 200, { ok: true });
@@ -206,7 +206,7 @@ async function handleEntryMutation(
     const body = await readBody(req);
     if (!isProjectStoreKey(body.key) || !Object.hasOwn(body, 'value')) throw new Error('entry không hợp lệ');
     if (isProjectDocumentKey(body.key)) {
-      throw new Error('ghi tài liệu project yêu cầu quyền sở hữu chính tắc');
+    throw new Error('ghi tài liệu dự án yêu cầu quyền sở hữu chính tắc');
     }
     await operations.setEntry(body.key, body.value);
     sendProjectStoreJson(res, 200, { ok: true });

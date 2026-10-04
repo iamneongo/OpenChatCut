@@ -139,7 +139,7 @@ export function rescopeAgentRuntimeSnapshot(
   projectId: string,
   proposal?: StoredProposalRecord,
 ): AgentRuntimeSnapshot {
-  if (!PROJECT_ID.test(projectId)) throw new Error('project id runtime Agent được nhập không hợp lệ.');
+  if (!PROJECT_ID.test(projectId)) throw new Error('ID dự án runtime Agent được nhập không hợp lệ.');
   validateProposalRuntimeTransfer(snapshot, proposal);
   const pendingRunId = proposal?.phase !== 'settled' ? proposal?.proposal.agentRunId : undefined;
   const pendingProposalId = proposal?.phase !== 'settled' ? proposal?.proposal.id : undefined;

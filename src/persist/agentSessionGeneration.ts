@@ -93,7 +93,7 @@ export async function rotateAgentSessionGeneration(projectId: string): Promise<s
   let record: AgentSessionGenerationRecord;
   if (projectStoreRemoteAvailable()) {
     if (!projectStoreWriteCredential()) {
-      throw new Error('kho project dùng chung đang ở chế độ chỉ đọc (chưa kết nối phiên editor), ngữ cảnh Agent chưa được dọn dẹp');
+      throw new Error('kho dự án dùng chung đang ở chế độ chỉ đọc (chưa kết nối phiên chỉnh sửa), ngữ cảnh Agent chưa được dọn dẹp');
     }
     const response = await requestProjectStore({
       operation: 'agent-session-rotate',

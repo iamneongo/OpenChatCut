@@ -100,7 +100,7 @@ export async function deleteMediaBlob(src: string): Promise<void> {
 }
 function assertMediaImportNamespace(namespace: string): void {
   if (!namespace.startsWith(MEDIA_IMPORT_PREFIX) || !namespace.endsWith('/')) {
-    throw new Error('namespace tạm nhập media không hợp lệ');
+    throw new Error('không gian tên nhập tư liệu tạm không hợp lệ');
   }
 }
 
@@ -140,7 +140,7 @@ async function allocateImportedMediaSrc(
     const candidate = `/media/uploads/import-${importId}-${index.toString(36)}-${sha256.slice(0, 24)}${extension}`;
     if (await mediaIdentityState(candidate, sha256) !== 'conflict') return candidate;
   }
-  throw new Error('không thể cấp tên media riêng biệt cho gói project');
+  throw new Error('không thể cấp tên tư liệu riêng biệt cho gói dự án');
 }
 
 /** Allocate an opaque namespace whose records cannot collide with real media src keys. */
@@ -163,9 +163,9 @@ export async function stageMediaBlobImport(
   meta?: MediaBlobWriteMeta,
 ): Promise<StagedMediaBlobImportEntry> {
   assertMediaImportNamespace(namespace);
-  if (!packageSrc.startsWith('/media/uploads/')) throw new Error('src media trong gói project không hợp lệ');
+  if (!packageSrc.startsWith('/media/uploads/')) throw new Error('src tư liệu trong gói dự án không hợp lệ');
   const bytes = data.size;
-  if (bytes <= 0 || bytes > MAX_TOTAL_CACHE_BYTES) throw new Error('kích thước media trong gói project không hợp lệ');
+  if (bytes <= 0 || bytes > MAX_TOTAL_CACHE_BYTES) throw new Error('kích thước tư liệu trong gói dự án không hợp lệ');
   const sha256 = await sha256Blob(data);
   const name = meta?.name ?? (
     typeof File !== 'undefined' && data instanceof File
@@ -179,7 +179,7 @@ export async function stageMediaBlobImport(
     const previousBytes = existing.find((record) => record.src === tempSrc)?.bytes ?? 0;
     if (existing.reduce((total, record) => total + record.bytes, 0) - previousBytes + bytes
       > MAX_TOTAL_CACHE_BYTES) {
-    throw new Error('không đủ chỗ lưu tạm cho media trong gói project');
+    throw new Error('không đủ chỗ lưu tạm cho tư liệu trong gói dự án');
     }
     const timestamp = Date.now();
     await idbPut({
@@ -243,7 +243,7 @@ async function clearPublishedMediaIdentity(publication: MediaBlobImportPublicati
 }
 async function deleteImportedServerMedia(created: CreatedServerMediaPublication): Promise<void> {
   if (!created.src.startsWith('/media/uploads/')) {
-    throw new Error(`đường dẫn media server của gói project không hợp lệ: ${created.src}`);
+    throw new Error(`đường dẫn tư liệu máy chủ của gói dự án không hợp lệ: ${created.src}`);
   }
   const name = created.src.slice('/media/uploads/'.length);
   const query = new URLSearchParams({ name, rollbackToken: created.rollbackToken });
@@ -252,7 +252,7 @@ async function deleteImportedServerMedia(created: CreatedServerMediaPublication)
   });
   if (response.ok) return;
   const info = (await response.json().catch(() => null)) as { error?: string } | null;
-  throw new Error(info?.error ?? `rollback media server thất bại (${response.status}): ${created.src}`);
+  throw new Error(info?.error ?? `khôi phục tư liệu máy chủ thất bại (${response.status}): ${created.src}`);
 }
 
 /** Finalize a successful import by clearing CAS identities and temporary records. */
@@ -310,16 +310,16 @@ export async function publishMediaBlobImport(
   try {
     for (const entry of entries) {
       if (seen.has(entry.src) || entry.tempSrc !== mediaImportKey(namespace, entry.src)) {
-        throw new Error(`danh sách phát hành media gói project không hợp lệ: ${entry.src}`);
+        throw new Error(`danh sách phát hành tư liệu gói dự án không hợp lệ: ${entry.src}`);
       }
       seen.add(entry.src);
       const staged = await enqueueSourceWrite(entry.tempSrc, () => idbGet(entry.tempSrc));
-      if (!staged) throw new Error(`thiếu mục media tạm của gói project: ${entry.src}`);
+      if (!staged) throw new Error(`thiếu mục tư liệu tạm của gói dự án: ${entry.src}`);
       const created = await enqueueSourceWrite(entry.src, async () => {
         const previous = await idbGet(entry.src);
         if (previous) {
           if (await sha256Blob(previous.blob) !== entry.sha256) {
-            throw new Error(`đích media gói project đã bị nội dung khác chiếm dụng: ${entry.src}`);
+        throw new Error(`đích tư liệu gói dự án đã bị nội dung khác chiếm dụng: ${entry.src}`);
           }
           return false;
         }
@@ -336,13 +336,13 @@ export async function publishMediaBlobImport(
       });
       published.push({ ...entry, created });
       if (await sha256Blob(staged.blob) !== entry.sha256) {
-        throw new Error(`hash mục media tạm của gói project không khớp: ${entry.src}`);
+        throw new Error(`hash mục tư liệu tạm của gói dự án không khớp: ${entry.src}`);
       }
       const record = { ...staged, src: entry.src };
       const existingServerHash = await serverMediaHash(entry.src);
       if (existingServerHash !== null) {
         if (existingServerHash !== entry.sha256) {
-          throw new Error(`đích media server của gói project đã bị nội dung khác chiếm dụng: ${entry.src}`);
+          throw new Error(`đích tư liệu máy chủ của gói dự án đã bị nội dung khác chiếm dụng: ${entry.src}`);
         }
         continue;
       }
@@ -354,14 +354,14 @@ export async function publishMediaBlobImport(
       if (!uploaded.created) {
         createdServerMedia.pop();
         if (await serverMediaHash(uploaded.path) !== entry.sha256) {
-        throw new Error(`xung đột cạnh tranh tại đích media server của gói project: ${uploaded.path}`);
+        throw new Error(`xung đột cạnh tranh tại đích tư liệu máy chủ của gói dự án: ${uploaded.path}`);
         }
       }
       if (uploaded.created && uploaded.rollbackToken !== rollbackToken) {
-        throw new Error(`rollback token media server của gói project không khớp: ${uploaded.path}`);
+        throw new Error(`mã khôi phục tư liệu máy chủ của gói dự án không khớp: ${uploaded.path}`);
       }
       if (uploaded.path !== entry.src) {
-        throw new Error(`media gói project chưa được phát hành theo src an toàn: ${entry.src}`);
+        throw new Error(`tư liệu gói dự án chưa được phát hành theo src an toàn: ${entry.src}`);
       }
     }
     return { namespace, entries: published, createdServerMedia };
@@ -369,7 +369,7 @@ export async function publishMediaBlobImport(
     try {
       await rollbackMediaBlobImport({ namespace, entries: published, createdServerMedia });
     } catch (rollbackError) {
-      throw new AggregateError([error, rollbackError], 'phát hành media gói project thất bại, rollback hoặc dọn dẹp chưa hoàn tất');
+      throw new AggregateError([error, rollbackError], 'phát hành tư liệu gói dự án thất bại, khôi phục hoặc dọn dẹp chưa hoàn tất');
     }
     throw error;
   }

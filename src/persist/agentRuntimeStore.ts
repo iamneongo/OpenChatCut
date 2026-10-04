@@ -67,7 +67,7 @@ const terminal = (status: AgentRunStatus) =>
   !['running', 'waiting_approval', 'awaiting_user'].includes(status);
 
 function requireProjectId(projectId: string): void {
-  if (!PROJECT_ID.test(projectId)) throw new Error('project id runtime Agent không hợp lệ.');
+  if (!PROJECT_ID.test(projectId)) throw new Error('ID dự án runtime Agent không hợp lệ.');
 }
 function enqueue<T>(projectId: string, work: () => Promise<T>): Promise<T> {
   const previous = queues.get(projectId) ?? Promise.resolve();
@@ -314,12 +314,12 @@ export async function publishAgentRuntimeSnapshot(snapshot: AgentRuntimeSnapshot
   }
   await enqueue(projectId, () => withProjectLock(projectId, async () => {
     const key = runtimeKey(projectId, sessionGeneration);
-    if (await kvGet(key) !== undefined) throw new Error('runtime Agent đã tồn tại trong project được nhập.');
+    if (await kvGet(key) !== undefined) throw new Error('runtime Agent đã tồn tại trong dự án được nhập.');
     const written: string[] = [];
     try {
       for (const artifact of imported.artifacts) {
         const artifactKey = agentArtifactKey(projectId, artifact.artifactId, sessionGeneration);
-        if (await kvGet(artifactKey) !== undefined) throw new Error('artifact Agent đã tồn tại trong project được nhập.');
+        if (await kvGet(artifactKey) !== undefined) throw new Error('artifact Agent đã tồn tại trong dự án được nhập.');
         await kvSet(artifactKey, artifact); written.push(artifactKey);
       }
       await kvSet(key, imported.sidecar);
