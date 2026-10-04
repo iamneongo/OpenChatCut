@@ -22,7 +22,7 @@ OpenChatCut là một trình chỉnh sửa video có dòng thời gian thực, n
 - Dữ liệu dự án ưu tiên lưu cục bộ trong trình duyệt hoặc ứng dụng desktop.
 - Giao diện hỗ trợ tiếng Việt, tiếng Anh, tiếng Trung giản thể, tiếng Ý và tiếng Nga; bản fork này mặc định tiếng Việt.
 
-Website: [openchatcut.com](https://openchatcut.com)
+Trang web: [openchatcut.com](https://openchatcut.com)
 
 ## Chạy từ mã nguồn
 
