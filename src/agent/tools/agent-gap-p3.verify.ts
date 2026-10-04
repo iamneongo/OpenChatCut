@@ -146,7 +146,7 @@ assert.equal(lockedRelinkPlan.plan, 'relinkMedia');
 const lockedRelinkResult = applyGeneric(lockedRelinkPlan, lockedRelinkDraft.commands);
 assert.equal(lockedRelinkResult?.ok, false, JSON.stringify(lockedRelinkResult));
 assert.equal(lockedRelinkResult?.code, 'no-document-change');
-assert.match(String(lockedRelinkResult?.error), /did not change/);
+assert.match(String(lockedRelinkResult?.error), /không thay đổi/);
 assert.equal(lockedRelinkDraft.getState().items[0]?.src, v1.src, 'locked-track Agent relink must not mutate');
 assert.equal(lockedRelinkDraft.takeActions().length, 0, 'locked-track Agent relink must not settle an edit action');
 

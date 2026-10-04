@@ -27,7 +27,7 @@ function resolveTargets(state: TimelineState, refs: string[]): { targets: Timeli
     if (hits.length === 1) {
       const item = hits[0]!;
       if (!isAutoGradeTarget(item, state)) {
-        missing.push(`${ref} (không đủ điều kiện: cần video/image/gif đã mở khóa trong /media/uploads)`);
+        missing.push(`${ref} (không đủ điều kiện: cần video/hình ảnh/gif đã mở khóa trong /media/uploads)`);
       } else {
         targets.push(item);
       }
@@ -51,8 +51,8 @@ export async function execAutoGradeTool(name: string, args: Args, ctx: AgentCont
   if (!targets.length) {
     return {
       error: missing.length
-        ? `không có clip đủ điều kiện; vấn đề: ${missing.join('; ')}`
-        : 'không có clip đủ điều kiện — cần video/image/gif đã mở khóa với src /media/uploads (hãy nhập media trước)',
+        ? `không có đoạn đủ điều kiện; vấn đề: ${missing.join('; ')}`
+        : 'không có đoạn đủ điều kiện — cần video/hình ảnh/gif đã mở khóa với src /media/uploads (hãy nhập tư liệu trước)',
       missing,
     };
   }

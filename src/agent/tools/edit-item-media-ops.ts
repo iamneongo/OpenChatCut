@@ -44,9 +44,9 @@ export function validateMediaSourceUpdate(state: TimelineState, entry: Record<st
     return { ok: false, error: `Không tìm thấy item: ${String(itemRef ?? '')}`, code: 'unknown-item' };
   }
   const src = String(entry.src ?? '').trim();
-  if (!src) return { error: `${op} cần có src (đường dẫn hoặc URL media thay thế)` };
+  if (!src) return { error: `${op} cần có src (đường dẫn hoặc URL tư liệu thay thế)` };
   if (src.startsWith('blob:') || src.startsWith('file:')) {
-    return { error: 'src phải là đường dẫn media của dự án hoặc URL https, không phải URL blob:/file:' };
+    return { error: 'src phải là đường dẫn tư liệu của dự án hoặc URL https, không phải URL blob:/file:' };
   }
   if (op === 'replace_media') {
     return {
@@ -55,11 +55,11 @@ export function validateMediaSourceUpdate(state: TimelineState, entry: Record<st
       kind: item.kind,
       itemId: item.id,
       src,
-      note: 'Thay clip bằng vỏ video trên cùng track/start/duration (đường kết xuất MG/text); effects/transform sẽ bị loại bỏ.',
+      note: 'Thay đoạn bằng vỏ video trên cùng rãnh/start/duration (đường kết xuất MG/text); hiệu ứng/biến đổi sẽ bị loại bỏ.',
     };
   }
   if (item.kind === 'motion-graphic' || item.kind === 'text' || item.kind === 'solid') {
-    return { error: 'relink_media dành cho clip có file (video/audio/image/gif/svg); dùng replace_media để kết xuất MG/text thành video' };
+    return { error: 'relink_media dành cho đoạn có tệp (video/audio/image/gif/svg); dùng replace_media để kết xuất MG/text thành video' };
   }
   const name = typeof entry.name === 'string' && entry.name.trim() ? entry.name.trim() : undefined;
   const sourceFilename = typeof entry.sourceFilename === 'string' && entry.sourceFilename.trim()
@@ -79,6 +79,6 @@ export function validateMediaSourceUpdate(state: TimelineState, entry: Record<st
     ...(durationInFrames !== undefined && durationInFrames > 0 ? { durationInFrames: Math.round(durationInFrames) } : {}),
     ...(width !== undefined && width > 0 ? { width: Math.round(width) } : {}),
     ...(height !== undefined && height > 0 ? { height: Math.round(height) } : {}),
-    note: 'Relink chỉ ở cấp clip: tách khỏi asset gốc trong kho (đã xóa sourceAssetId). Nên dùng manage_media_pool relink_asset để cập nhật kho và mọi clip liên kết.',
+    note: 'Liên kết lại chỉ ở cấp đoạn: tách khỏi tư liệu gốc trong kho (đã xóa sourceAssetId). Nên dùng manage_media_pool relink_asset để cập nhật kho và mọi đoạn liên kết.',
   };
 }
