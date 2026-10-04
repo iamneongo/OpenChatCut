@@ -1632,7 +1632,7 @@ export const VI: Record<string, string> = {
   '留空会使用内置模型目录；未知模型使用保守回退值。': 'Để trống sẽ dùng danh mục mô hình tích hợp; mô hình không xác định dùng giá trị dự phòng an toàn.',
   'API Base URL': 'URL cơ sở của API',
   'API Key（Nano Banana）': 'Khóa API (Nano Banana)',
-  '音色资源 ID': 'ID tài nguyên giọng nói',
+  '音色资源 ID': 'ID giọng nói',
   '豆包': 'Doubao',
   '可灵': 'Kling',
   '{name}（未配置）': '{name} (chưa cấu hình)',
