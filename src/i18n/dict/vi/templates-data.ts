@@ -18,7 +18,7 @@ export default {
   '口播·米色格纹（横）': 'Video người nói · caro màu be (ngang)',
   '口播·奶咖横线（横）': 'Video người nói · đường kẻ ngang màu cà phê sữa (ngang)',
   '口播·黑板报（横）': 'Video người nói · bảng đen (ngang)',
-  '口播·侧栏拼贴（横）': 'Video người nói · ảnh ghép bên hông (ngang)',
+  '口播·侧栏拼贴（横）': 'Video người nói · ảnh ghép chia đôi (ngang)',
   '口播·便签五五分（竖）': 'Video người nói · bố cục ghi chú chia đôi (dọc)',
   '口播·点阵五五分（竖）': 'Video người nói · bố cục chấm bi chia đôi (dọc)',
   '口播·牛皮纸圆窗（竖）': 'Video người nói · cửa sổ tròn giấy kraft (dọc)',
