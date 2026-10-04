@@ -9,6 +9,7 @@ import {
 import type { ProjectDoc, TimelineState } from '../editor/types';
 import { resolveTimelineRenderPlan } from '../editor/sequenceGraph';
 import { isPreviewable } from './clipPreview';
+import { localizedCatalogText } from '../i18n/locale';
 
 export interface PreviewProxySource {
   src: string;
@@ -58,7 +59,14 @@ function notify(entry: ProxyEntry): void {
 
 async function responseError(response: Response): Promise<string> {
   const body = await response.json().catch(() => null) as { error?: unknown } | null;
-  return typeof body?.error === 'string' ? body.error : `preview proxy request failed (${response.status})`;
+  return typeof body?.error === 'string'
+    ? body.error
+    : localizedCatalogText(
+      `preview proxy request failed (${response.status})`,
+      `预览代理请求失败（${response.status}）`,
+      undefined,
+      `Yêu cầu proxy xem trước thất bại (${response.status})`,
+    );
 }
 
 function failedResponse(src: string, error: unknown): PreviewProxyResponse {
@@ -106,7 +114,10 @@ export function requestPreviewProxy(src: string, force = false): Promise<void> {
   return loadProxy(src, force, proxyEntry(src));
 }
 
-export function reportPreviewPlaybackFailure(src: string, error = 'preview media failed to play'): void {
+export function reportPreviewPlaybackFailure(
+  src: string,
+  error = localizedCatalogText('preview media failed to play', '预览媒体播放失败', undefined, 'Media xem trước phát thất bại'),
+): void {
   if (!isPreviewable(src)) return;
   const entry = proxyEntry(src);
   if (entry.response?.proxy.status !== 'ready') {

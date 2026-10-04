@@ -306,7 +306,7 @@ class NativeSemanticWorkerAdapter {
     }
     const message = response.type === 'error' && typeof response.message === 'string'
       ? response.message
-      : 'Semantic browser bootstrap failed';
+      : 'Khởi tạo semantic worker trên trình duyệt thất bại';
     this.retryBootstrapOrFail(new Error(message));
   }
 
