@@ -1505,7 +1505,7 @@ export const VI: Record<string, string> = {
   '可继续编辑的工程': 'Dự án có thể tiếp tục chỉnh sửa',
   '生成带轨道与素材引用的 FCPXML，交给 Premiere Pro 或达芬奇继续制作。': 'Tạo FCPXML gồm rãnh và tham chiếu tư liệu để tiếp tục sản xuất trong Premiere Pro hoặc DaVinci.',
   '当前 FCPXML 会保留背景参数，但不生成图层': 'FCPXML hiện tại giữ tham số nền nhưng không tạo lớp',
-  'OpenChatCut 会把 {n} 个片段的背景填充开关与百分比写入 FCPXML 元数据，但目标剪辑软件不会据此还原模糊图层；如需完全一致，请同时导出成片。': 'OpenChatCut ghi trạng thái bật/tắt và phần trăm lấp nền của {n} đoạn vào siêu dữ liệu FCPXML, nhưng phần mềm dựng đích sẽ không khôi phục lớp làm mờ từ đó; muốn giống hoàn toàn, hãy xuất cả video thành phẩm.',
+  'OpenChatCut 会把 {n} 个片段的背景填充开关与百分比写入 FCPXML 元数据，但目标剪辑软件不会据此还原模糊图层；如需完全一致，请同时导出成片。': 'OpenChatCut ghi trạng thái bật/tắt và phần trăm lấp nền của {n} đoạn vào siêu dữ liệu FCPXML, nhưng phần mềm dựng video đích sẽ không khôi phục lớp làm mờ từ đó; muốn giống hoàn toàn, hãy xuất cả video thành phẩm.',
   '同时打包动态图层': 'Đóng gói cùng lớp đồ họa chuyển động',
   '额外生成带透明通道的 ProRes 4444 MOV。': 'Kết xuất thêm ProRes 4444 MOV có kênh alpha.',
   '导出为 MP3 音频，视频轨道将被忽略。': 'Xuất âm thanh MP3, rãnh video sẽ được bỏ qua.',
