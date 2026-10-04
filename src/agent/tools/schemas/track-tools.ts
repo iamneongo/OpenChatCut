@@ -4,11 +4,11 @@ export const TRACK_TOOL_SCHEMAS: AgentToolSchema[] = [{
   name: 'edit_track',
   description:
     'Quản lý rãnh. Các action: list | create | update | delete | tighten | reorder_items. '
-    + 'Track có id ổn định cùng alias C1/C2/V1/A1, các alias này có thể đánh số lại sau khi chèn. '
+    + 'Rãnh có ID ổn định cùng bí danh C1/C2/V1/A1, các bí danh này có thể đánh số lại sau khi chèn. '
     + 'create nhận json với trackType video/audio/caption, cùng count/order/name/role/audioRouting tùy chọn. '
-    + 'Mỗi track caption sở hữu dữ liệu caption riêng. update thay đổi order/hidden/muted/locked/name/role/audioRouting — locked sẽ khóa lane. '
-    + 'delete chỉ xóa track rỗng. tighten đóng các khoảng trống giữa các clip media. '
-    + 'reorder_items xếp các clip trên một track theo thứ tự item id được truyền (mảng json.itemIds hoặc json.orderedIds), bắt đầu từ startFrame sớm nhất trong nhóm đó.',
+    + 'Mỗi rãnh phụ đề sở hữu dữ liệu phụ đề riêng. update thay đổi order/hidden/muted/locked/name/role/audioRouting — locked sẽ khóa rãnh. '
+    + 'delete chỉ xóa rãnh rỗng. tighten đóng các khoảng trống giữa các đoạn tư liệu. '
+    + 'reorder_items xếp các đoạn trên một rãnh theo thứ tự ID mục được truyền (mảng json.itemIds hoặc json.orderedIds), bắt đầu từ startFrame sớm nhất trong nhóm đó.',
   input_schema: {
     type: 'object',
     properties: {
