@@ -19,9 +19,9 @@ async function providerError(response: Response): Promise<string> {
   const text = await response.text();
   try {
     const data = JSON.parse(text) as { message?: string; error?: { message?: string } };
-    return data.error?.message ?? data.message ?? `video provider failed (${response.status})`;
+    return data.error?.message ?? data.message ?? `nhà cung cấp video thất bại (${response.status})`;
   } catch {
-    return text.slice(0, 300) || `video provider failed (${response.status})`;
+    return text.slice(0, 300) || `nhà cung cấp video thất bại (${response.status})`;
   }
 }
 

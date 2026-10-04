@@ -24,13 +24,13 @@ let alphaSeq = 0; // filename disambiguator for transcoded outputs
 export async function resolveE2bFileBytes(file: E2bFile): Promise<string | ArrayBuffer> {
   if (file.content !== undefined) return file.content;
   const url = file.url;
-  if (!url) throw new Error(`file ${file.path} needs content or url`);
+  if (!url) throw new Error(`tệp ${file.path} cần có nội dung hoặc URL`);
   if (url.startsWith('/')) {
     const clean = url.replace(/^\/+/, '');
     // User uploads (may live outside public/ via MEDIA_DIR)
     if (clean.startsWith('media/uploads/')) {
       const name = clean.slice('media/uploads/'.length);
-      if (!isSafeUploadName(name)) throw new Error(`illegal local path ${url}`);
+      if (!isSafeUploadName(name)) throw new Error(`đường dẫn cục bộ không hợp lệ ${url}`);
       const hit = resolveUploadFile(name);
       if (!hit) throw new Error(`không tìm thấy media cục bộ: ${name}`);
       const data = await readFile(hit);

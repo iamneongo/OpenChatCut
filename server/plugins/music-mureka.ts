@@ -93,8 +93,8 @@ async function requestFor(input: ValidMusicRequest, options: MusicOptions) {
 
 function checkModelCompatibility(model: string, input: ValidMusicRequest): void {
   if (!/mureka-o2/i.test(model)) return;
-  if (input.mode === 'instrumental' || input.mode === 'soundtrack') throw new Error(`Mureka ${input.mode} does not support mureka-o2`);
-  if (input.vocalId || input.melodyId) throw new Error('mureka-o2 does not support vocalId or melodyId');
+  if (input.mode === 'instrumental' || input.mode === 'soundtrack') throw new Error(`Mureka không hỗ trợ ${input.mode} trên mureka-o2`);
+  if (input.vocalId || input.melodyId) throw new Error('mureka-o2 không hỗ trợ vocalId hoặc melodyId');
 }
 
 export async function generateMureka(

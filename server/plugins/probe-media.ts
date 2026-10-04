@@ -82,7 +82,7 @@ function runFfprobe(path: string): Promise<string> {
 export async function probeMediaFile(path: string): Promise<Record<string, unknown>> {
   const stdout = await runFfprobe(path);
   const parsed: unknown = JSON.parse(stdout || '{}');
-  if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) throw new Error('ffprobe produced no JSON');
+  if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) throw new Error('ffprobe không trả về JSON');
   return parsed as Record<string, unknown>;
 }
 

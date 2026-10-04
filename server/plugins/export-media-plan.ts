@@ -226,7 +226,7 @@ async function checkLocalReference(
   options.signal?.throwIfAborted();
   if (reference.source.startsWith('data:')) return null;
   if (reference.source.startsWith('blob:')) {
-    return issueFor(reference, 'unsupported_source', `Blob URL is not readable by the export server: ${reference.source}`);
+      return issueFor(reference, 'unsupported_source', `Máy chủ xuất không đọc được Blob URL: ${reference.source}`);
   }
   // Local filesystem paths are NOT renderable media sources.
   //
@@ -256,13 +256,13 @@ async function checkLocalReference(
   try {
     pathname = decodeURIComponent(rawPathname);
   } catch {
-    return issueFor(reference, 'unsupported_source', `Media source has invalid path encoding: ${reference.source}`);
+      return issueFor(reference, 'unsupported_source', `Nguồn media có mã hóa đường dẫn không hợp lệ: ${reference.source}`);
   }
   const uploadPrefix = '/media/uploads/';
   if (pathname.startsWith(uploadPrefix)) {
     const name = pathname.slice(uploadPrefix.length);
     if (!isSafeUploadName(name)) {
-      return issueFor(reference, 'unsupported_source', `Media upload name is unsafe: ${reference.source}`);
+      return issueFor(reference, 'unsupported_source', `Tên tệp media tải lên không an toàn: ${reference.source}`);
     }
     const local = options.resolveUpload(name);
     if (local) {
@@ -284,9 +284,9 @@ async function checkLocalReference(
         `Media upload could not be restored: ${reference.source} (${error instanceof Error ? error.message : String(error)})`,
       );
     }
-    if (!hydrated) return issueFor(reference, 'missing_source', `Media upload is missing: ${reference.source}`);
+    if (!hydrated) return issueFor(reference, 'missing_source', `Thiếu tệp media tải lên: ${reference.source}`);
     if (isHtmlContentType(hydrated.contentType)) {
-      return issueFor(reference, 'missing_source', `Media upload resolved to HTML instead of media: ${reference.source}`);
+      return issueFor(reference, 'missing_source', `Tệp media tải lên trả về HTML thay vì media: ${reference.source}`);
     }
     const readable = await readableFile(hydrated.file);
     options.signal?.throwIfAborted();
@@ -295,12 +295,12 @@ async function checkLocalReference(
       : issueFor(reference, 'unreadable', `Restored media upload is not readable: ${reference.source}`);
   }
   if (!pathname.startsWith('/')) {
-    return issueFor(reference, 'unsupported_source', `Relative media source is not mapped for export: ${reference.source}`);
+    return issueFor(reference, 'unsupported_source', `Nguồn media tương đối chưa được ánh xạ để xuất: ${reference.source}`);
   }
   const candidate = resolve(options.publicDirectory, `.${pathname}`);
   const escaped = relative(options.publicDirectory, candidate);
   if (escaped === '..' || escaped.startsWith(`..${sep}`) || isAbsolute(escaped)) {
-    return issueFor(reference, 'unsupported_source', `Media source escapes the public directory: ${reference.source}`);
+    return issueFor(reference, 'unsupported_source', `Nguồn media thoát khỏi thư mục công khai: ${reference.source}`);
   }
   const readable = await readableFile(candidate);
   options.signal?.throwIfAborted();

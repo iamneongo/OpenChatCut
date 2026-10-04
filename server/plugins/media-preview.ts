@@ -246,7 +246,7 @@ async function handleFilmstrip(req: IncomingMessage, res: ServerResponse, logErr
       await runDerivative(req, res, cache, async (signal) => {
         if (existsSync(cache)) return;
         const probeResult = await probe(hit.file, signal);
-        if (!probeResult.width || !probeResult.height) throw new Error('not a video');
+        if (!probeResult.width || !probeResult.height) throw new Error('không phải video');
         await atomicPreviewBuild(cache, (tmp) => buildFilmstrip(hit.file, probeResult, tmp, signal));
       });
     }
@@ -275,7 +275,7 @@ async function handleMediaFrame(req: IncomingMessage, res: ServerResponse, logEr
       await runDerivative(req, res, cache, async (signal) => {
         if (existsSync(cache)) return;
         const probeResult = await probe(hit.file, signal);
-        if (!probeResult.width || !probeResult.height) throw new Error('not a video');
+        if (!probeResult.width || !probeResult.height) throw new Error('không phải video');
         const time = Math.min(requested, Math.max(0, probeResult.durationMs / 1000 - 0.001));
         await atomicPreviewBuild(cache, (tmp) => buildFrame(hit.file, time, tmp, signal));
       });
@@ -297,7 +297,7 @@ async function handleMediaPoster(req: IncomingMessage, res: ServerResponse, logE
       await runDerivative(req, res, cache, async (signal) => {
         if (existsSync(cache)) return;
         const probeResult = await probe(hit.file, signal);
-        if (!probeResult.width || !probeResult.height) throw new Error('not a video');
+        if (!probeResult.width || !probeResult.height) throw new Error('không phải video');
         const time = Math.min(1, Math.max(0, probeResult.durationMs / 2000));
         await atomicPreviewBuild(cache, (tmp) => buildFrame(hit.file, time, tmp, signal));
       });

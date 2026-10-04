@@ -158,7 +158,7 @@ export async function buildFilmstrip(file: string, probeResult: Probe, out: stri
       ], signal);
     }
     const present = cells.filter((cell) => existsSync(cell.path));
-    if (!present.length) throw new Error('no frames extracted');
+    if (!present.length) throw new Error('không trích xuất được khung hình nào');
     await run(ffmpegBin(), [
       '-nostdin', '-hide_banner', '-loglevel', 'error', '-y',
       '-i', join(work, 'f-%03d.jpg'), '-vf', `tile=${present.length}x1`,
