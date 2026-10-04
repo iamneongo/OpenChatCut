@@ -101,11 +101,11 @@ export const GENERATE_TOOL_SCHEMAS: AgentToolSchema[] = [
         provider: { type: 'string', enum: ['elevenlabs', 'sonilo'], description: 'Mặc định là elevenlabs (lời nhắc văn bản). sonilo tạo SFX khớp với video từ sourceAssetId thay vì lời nhắc.' },
         prompt: { type: 'string', description: 'Mô tả chi tiết âm thanh. Bắt buộc với elevenlabs; sonilo không dùng.' },
         durationSeconds: { type: 'number', minimum: 0.5, maximum: 30, description: 'Chỉ dành cho ElevenLabs. Tùy chọn 0.5–30 giây; bỏ qua để ElevenLabs tự chọn thời lượng.' },
-        promptInfluence: { type: 'number', minimum: 0, maximum: 1, description: 'Chỉ dành cho ElevenLabs. Mức bám theo prompt; mặc định là 0.3.' },
+        promptInfluence: { type: 'number', minimum: 0, maximum: 1, description: 'Chỉ dành cho ElevenLabs. Mức bám theo lời nhắc; mặc định là 0.3.' },
         loop: { type: 'boolean', description: 'Chỉ dành cho ElevenLabs. Tạo vòng lặp liền mạch; cần mô hình eleven_text_to_sound_v2 đã cấu hình.' },
         outputFormat: { type: 'string', description: 'Chỉ dành cho ElevenLabs. Enum codec_sample-rate_bitrate chính thức, ví dụ mp3_44100_128, opus_48000_128, pcm_44100.' },
         sourceAssetId: { type: 'string', description: 'Chỉ dành cho Sonilo. Tư liệu video của dự án (bản cắt đã kết xuất, ≤3 phút) dùng để tạo SFX.' },
-        name: { type: 'string', description: 'Tên tư liệu tùy chọn trong kho media.' },
+        name: { type: 'string', description: 'Tên tư liệu tùy chọn trong kho tư liệu.' },
       },
     },
   },
@@ -120,7 +120,7 @@ export const GENERATE_TOOL_SCHEMAS: AgentToolSchema[] = [
         mode: { type: 'string', enum: ['instrumental', 'song', 'prompt-song', 'soundtrack', 'track', 't2m', 'cover', 'v2m'], description: 'Mureka: instrumental/song/prompt-song/soundtrack/track. MiniMax: t2m/cover. Atlas Cloud: t2m. Sonilo: v2m (video-to-music).' },
         lyrics: { type: 'string', maxLength: 5000, description: 'Lời bài hát Mureka song/track hoặc MiniMax t2m/cover. Giới hạn theo nhà cung cấp được kiểm tra.' },
         isInstrumental: { type: 'boolean', description: 'Chỉ dành cho t2m của MiniMax hoặc Atlas Cloud. Ép tạo nhạc không lời.' },
-        lyricsOptimizer: { type: 'boolean', description: 'Chỉ dành cho MiniMax t2m. Tự tạo lời từ prompt.' },
+        lyricsOptimizer: { type: 'boolean', description: 'Chỉ dành cho MiniMax t2m. Tự tạo lời từ lời nhắc.' },
         sampleRate: { type: 'integer', description: 'Chỉ dành cho MiniMax hoặc Atlas Cloud. Một trong 16000/24000/32000/44100; mặc định 44100.' },
         bitrate: { type: 'integer', description: 'Chỉ dành cho MiniMax hoặc Atlas Cloud. Một trong 32000/64000/128000/256000; mặc định 256000.' },
         audioFormat: { type: 'string', enum: ['mp3', 'wav', 'pcm', 'flac'], description: 'MiniMax/Atlas Cloud: mp3/wav/pcm. Mureka: mp3/wav/flac. Mặc định mp3.' },
@@ -128,10 +128,10 @@ export const GENERATE_TOOL_SCHEMAS: AgentToolSchema[] = [
         coverFeatureId: { type: 'string', description: 'Chỉ dành cho MiniMax cover. ID đặc trưng đã tiền xử lý; cần lyrics và không dùng cùng referenceAssetId.' },
         count: { type: 'integer', minimum: 1, maximum: 3, description: 'Chỉ dành cho Mureka. Số kết quả; mặc định là 1 (mặc định API chính thức là 2).' },
         stream: { type: 'boolean', description: 'Chỉ dành cho Mureka. Bật giai đoạn phát trực tuyến của nhà cung cấp; OpenChatCut vẫn lưu tệp cuối bền vững.' },
-        styles: { type: 'array', items: { type: 'string', enum: ['pop', 'rock', 'jazz', 'r&b', 'edm', 'ambient', 'folk', 'latin', 'k-pop', 'j-pop', 'house', 'gospel', 'lo-fi'] }, description: 'Phong cách prompt-song của Mureka.' },
+        styles: { type: 'array', items: { type: 'string', enum: ['pop', 'rock', 'jazz', 'r&b', 'edm', 'ambient', 'folk', 'latin', 'k-pop', 'j-pop', 'house', 'gospel', 'lo-fi'] }, description: 'Phong cách bài hát tạo từ lời nhắc của Mureka.' },
         gender: { type: 'string', enum: ['female', 'male'], description: 'Giới tính giọng hát ưu tiên cho lyrics-song của Mureka.' },
         referenceId: { type: 'string', description: 'ID tham chiếu song/prompt-song của Mureka.' },
-        instrumentalId: { type: 'string', description: 'ID tệp nhạc không lời của Mureka; dùng thay cho prompt.' },
+        instrumentalId: { type: 'string', description: 'ID tệp nhạc không lời của Mureka; dùng thay cho lời nhắc.' },
         vocalId: { type: 'string', description: 'ID giọng hát đã clone của Mureka.' },
         melodyId: { type: 'string', description: 'ID giai điệu lyrics-song của Mureka; không thể dùng cùng các điều khiển khác.' },
         sourceAssetId: { type: 'string', description: 'Tư liệu ảnh/video soundtrack của Mureka, tư liệu âm thanh ở chế độ track hoặc tư liệu video v2m của Sonilo (bản cắt đã kết xuất, ≤6 phút).' },
@@ -142,7 +142,7 @@ export const GENERATE_TOOL_SCHEMAS: AgentToolSchema[] = [
         generateStartMs: { type: 'integer', minimum: 0, description: 'Điểm bắt đầu đoạn nguồn của track Mureka tính bằng ms.' },
         generateEndMs: { type: 'integer', minimum: 0, description: 'Điểm kết thúc đoạn nguồn của track Mureka tính bằng ms.' },
         vocalGender: { type: 'string', enum: ['female', 'male'], description: 'Chỉ dành cho track Vocals của Mureka.' },
-        name: { type: 'string', description: 'Tên tư liệu tùy chọn trong kho media.' },
+        name: { type: 'string', description: 'Tên tư liệu tùy chọn trong kho tư liệu.' },
       },
     },
   },
@@ -152,11 +152,11 @@ export const GENERATE_TOOL_SCHEMAS: AgentToolSchema[] = [
     input_schema: {
       type: 'object',
       properties: {
-        model: { type: 'string', enum: ['seedance2', 'kling', 'hailuo', 'byteplus', 'grok-imagine-video', 'ofox', 'fal'], description: 'hailuo là MiniMax: 6 hoặc 10 giây; firstFrame tùy chọn; lastFrame được phép khi có firstFrame; không hỗ trợ nhiều tham chiếu hoặc nhiều shot. 1080p chỉ dành cho 6 giây. byteplus là BytePlus ModelArk Seedance — cùng dạng request/giới hạn với seedance2. grok-imagine-video là xAI Grok Imagine: chỉ text-to-video, 1–15 giây, có track âm thanh, không tham chiếu/frame. ofox là gateway đa mô hình OFox (Seedance/Wan và các mô hình khác dùng chung một key): 2–30 giây với giới hạn theo mô hình do API kiểm tra; hỗ trợ firstFrame (và lastFrame tùy chọn), hoặc tối đa 9 refImages (frames và refImages không dùng đồng thời); chưa hỗ trợ refVideos/refAudios.' }, // minimax: hailuo enum
+        model: { type: 'string', enum: ['seedance2', 'kling', 'hailuo', 'byteplus', 'grok-imagine-video', 'ofox', 'fal'], description: 'hailuo là MiniMax: 6 hoặc 10 giây; firstFrame tùy chọn; lastFrame được phép khi có firstFrame; không hỗ trợ nhiều tham chiếu hoặc nhiều cảnh. 1080p chỉ dành cho 6 giây. byteplus là BytePlus ModelArk Seedance — cùng dạng yêu cầu/giới hạn với seedance2. grok-imagine-video là xAI Grok Imagine: chỉ text-to-video, 1–15 giây, có rãnh âm thanh, không tham chiếu/frame. ofox là cổng trung gian đa mô hình OFox (Seedance/Wan và các mô hình khác dùng chung một khóa): 2–30 giây với giới hạn theo mô hình do API kiểm tra; hỗ trợ firstFrame (và lastFrame tùy chọn), hoặc tối đa 9 refImages (frames và refImages không dùng đồng thời); chưa hỗ trợ refVideos/refAudios.' }, // minimax: hailuo enum
         falModel: { type: 'string', enum: FAL_VIDEO_MODELS.map((model) => model.id), description: `Với model=fal, chọn một mô hình video Fal trong danh mục; bỏ qua sẽ dùng mặc định Fal đã lưu. ${FAL_VIDEO_MODELS.map((model) => `${model.id}: ${falModelSummary(model)}`).join('; ')}. Bỏ qua duration/resolution để dùng mặc định của mô hình.` },
         prompt: { type: 'string', description: 'Bắt buộc với tạo thông thường và Kling intelligence; bỏ qua với Kling customize.' },
         name: { type: 'string', description: 'Tên tư liệu tùy chọn trong kho tư liệu.' },
-        durationSeconds: { anyOf: [{ type: 'number' }, { type: 'string' }], description: 'Với Fal, xem giới hạn falModel và bỏ qua để dùng mặc định mô hình. Provider gốc: số giây nguyên, 2–15 cho Seedance, 3–15 cho Kling, chính xác 6 hoặc 10 cho Hailuo (Hailuo 1080p → chỉ 6), 1–15 cho grok-imagine-video, 2–30 cho ofox (giới hạn theo mô hình do API kiểm tra).' }, // minimax: hailuo durations
+        durationSeconds: { anyOf: [{ type: 'number' }, { type: 'string' }], description: 'Với Fal, xem giới hạn falModel và bỏ qua để dùng mặc định mô hình. Nhà cung cấp gốc: số giây nguyên, 2–15 cho Seedance, 3–15 cho Kling, chính xác 6 hoặc 10 cho Hailuo (Hailuo 1080p → chỉ 6), 1–15 cho grok-imagine-video, 2–30 cho ofox (giới hạn theo mô hình do API kiểm tra).' }, // minimax: hailuo durations
         ratio: { type: 'string', description: 'Seedance: 16:9, 4:3, 1:1, 3:4, 9:16, 21:9, adaptive. Kling: 16:9, 9:16, 1:1. grok-imagine-video: 16:9, 9:16, 1:1, 4:3, 3:4, 3:2, 2:3. ofox: 16:9, 9:16, 1:1, 4:3, 3:4, 3:2, 2:3, 21:9, 9:21. Không gửi cho hailuo.' },
         resolution: { type: 'string', enum: [...new Set(['480p', '512p', '720p', '1080p', '4k', ...FAL_VIDEO_MODELS.flatMap((model) => model.constraints.resolutions)])], description: 'Seedance: 480p/720p (mặc định)/1080p/4k. Hailuo: 512p (Hailuo-02), 720p→API 768P, 1080p (chỉ 6 giây). Kling: kết hợp với mode std/pro. grok-imagine-video: 480p (mặc định)/720p/1080p. ofox: 480p/720p (mặc định)/1080p, hỗ trợ theo mô hình do API kiểm tra.' },
         mode: { type: 'string', enum: ['std', 'pro'], description: 'Chỉ dành cho Kling; std=720p, pro=1080p.' },
@@ -171,7 +171,7 @@ export const GENERATE_TOOL_SCHEMAS: AgentToolSchema[] = [
         generateAudio: { type: 'boolean', description: 'Seedance/BytePlus/OFox. Tạo âm thanh đồng bộ; mặc định true với mô hình hỗ trợ âm thanh.' },
         seed: { type: 'integer', description: 'Seedance/BytePlus/OFox. Seed ngẫu nhiên; khả năng tái lập phụ thuộc mô hình.' },
         cameraFixed: { type: 'boolean', description: 'Chỉ dành cho Seedance/BytePlus. Khóa chuyển động camera; mặc định false.' },
-        watermark: { type: 'boolean', description: 'Chỉ dành cho Seedance/BytePlus. Thêm watermark của provider; mặc định false.' },
+        watermark: { type: 'boolean', description: 'Chỉ dành cho Seedance/BytePlus. Thêm hình mờ của nhà cung cấp; mặc định false.' },
         returnLastFrame: { type: 'boolean', description: 'Chỉ dành cho Seedance/BytePlus. Lưu last frame trả về thành một tư liệu ảnh bổ sung.' },
         executionExpiresAfter: { type: 'integer', minimum: 3600, maximum: 259200, description: 'Chỉ dành cho Seedance/BytePlus. Thời hạn job tính bằng giây.' },
         priority: { type: 'integer', minimum: 0, maximum: 9, description: 'Chỉ dành cho Seedance/BytePlus. Độ ưu tiên trong hàng đợi.' },
@@ -187,7 +187,7 @@ export const GENERATE_TOOL_SCHEMAS: AgentToolSchema[] = [
   },
   {
     name: 'track_progress',
-    description: 'Xem hoặc chờ các job tạo bất đồng bộ do Sonilo submit_sound, submit_music và submit_video trả về. Kết quả thành công được thêm vào kho media của dự án đúng một lần.',
+    description: 'Xem hoặc chờ các tác vụ tạo bất đồng bộ do Sonilo submit_sound, submit_music và submit_video trả về. Kết quả thành công được thêm vào kho tư liệu của dự án đúng một lần.',
     input_schema: {
       type: 'object',
       properties: {
@@ -202,7 +202,7 @@ export const GENERATE_TOOL_SCHEMAS: AgentToolSchema[] = [
   },
   {
     name: 'rerun_generation',
-    description: 'Chạy lại rõ ràng một tác vụ tạo đã theo dõi trước đó bằng đầy đủ tham số submit ban đầu. ID operation/job chính xác được ưu tiên; chỉ chấp nhận tiền tố khi duy nhất. Các dòng cũ chỉ có tóm tắt và tiền tố mơ hồ sẽ bị từ chối trước khi gọi provider.',
+    description: 'Chạy lại rõ ràng một tác vụ tạo đã theo dõi trước đó bằng đầy đủ tham số submit ban đầu. ID operation/job chính xác được ưu tiên; chỉ chấp nhận tiền tố khi duy nhất. Các dòng cũ chỉ có tóm tắt và tiền tố mơ hồ sẽ bị từ chối trước khi gọi nhà cung cấp.',
     input_schema: {
       type: 'object',
       properties: {
@@ -264,7 +264,7 @@ export const GENERATE_TOOL_SCHEMAS: AgentToolSchema[] = [
         motionGraphicRenderKeys: {
           type: 'array',
           items: { type: 'string' },
-          description: 'Xuất XML nâng cao: các khóa render do export_motion_graphic_prores trả về với filenameMode=xml. Đoạn MG tương ứng sẽ trở thành tham chiếu media; các đoạn MG khác giữ dạng placeholder.',
+          description: 'Xuất XML nâng cao: các khóa kết xuất do export_motion_graphic_prores trả về với filenameMode=xml. Đoạn MG tương ứng sẽ trở thành tham chiếu tư liệu; các đoạn MG khác giữ dạng chỗ giữ chỗ.',
         },
       },
     },
