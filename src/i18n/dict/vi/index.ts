@@ -339,7 +339,7 @@ export const VI: Record<string, string> = {
   '全部引擎（含云端付费）': 'Tất cả bộ máy (gồm dịch vụ đám mây trả phí)',
   '网络代理': 'Máy chủ trung gian mạng',
   '界面': 'Giao diện',
-  '界面缩放': 'Tỷ lệ giao diện',
+  '界面缩放': 'Thu phóng giao diện',
   '本地模型': 'Mô hình cục bộ',
   'Codex 模型': 'Mô hình Codex',
   'Copilot 模型': 'Mô hình Copilot',
