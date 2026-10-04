@@ -5,15 +5,15 @@ export const LAYOUT_TOOL_SCHEMAS: AgentToolSchema[] = [
   {
     name: 'apply_layout',
     description: [
-      'Sắp xếp các đoạn hình ảnh vào bố cục nhiều video có tên (chia màn hình / picture-in-picture / lưới) trong MỘT bước có thể hoàn tác.',
+      'Sắp xếp các đoạn hình ảnh vào bố cục nhiều video có tên (chia màn hình / hình trong hình / lưới) trong MỘT bước có thể hoàn tác.',
       'Chọn bố cục và gán đoạn cho từng ô; công cụ tự tính scale/position/crop để mỗi đoạn LẤP ĐẦY ô',
-      'từ mép này đến mép kia mà KHÔNG kéo giãn (mode=cover cắt layer; anchorX/anchorY 0..1 chọn phía cần giữ, mặc định ở giữa).',
+      'từ mép này đến mép kia mà KHÔNG kéo giãn (mode=cover cắt lớp; anchorX/anchorY 0..1 chọn phía cần giữ, mặc định ở giữa).',
       'mode=fit dùng letterbox thay vì cắt. layout=full đưa một đoạn về toàn khung (xóa crop/scale của bố cục).',
       'Bố cục và ô: full(full) · 2up-horizontal(left,right) · 2up-vertical(top,bottom) · 3up-horizontal(left,center,right)',
       '· grid-4(top-left,top-right,bottom-left,bottom-right) · pip(main,inset; insetCorner/insetSize/insetMargin điều chỉnh cửa sổ nhỏ).',
       'Gán ít ô hơn tổng số ô vẫn được (các ô khác để trống). Thứ tự xếp lớp theo thứ tự rãnh (hàng dòng thời gian phía trên kết xuất ở trên),',
       'vì vậy hãy đặt đoạn inset của pip ở hàng CAO HƠN main — kết quả sẽ báo nếu không đúng. Các đoạn phải chồng thời gian để nhìn thấy cùng lúc.',
-      'Công cụ hoạt động trên lớp canvas: với fit=contain của dòng thời gian, nguồn có tỷ lệ khác canvas vẫn giữ letterbox riêng bên trong ô.',
+      'Công cụ hoạt động trên lớp khung hình: với fit=contain của dòng thời gian, nguồn có tỷ lệ khác khung hình vẫn giữ letterbox riêng bên trong ô.',
       'Sau khi áp dụng, kiểm tra bằng view_timeline_frames.',
     ].join(' '),
     input_schema: {

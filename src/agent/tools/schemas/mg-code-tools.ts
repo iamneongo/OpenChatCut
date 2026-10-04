@@ -19,7 +19,7 @@ export const MG_CODE_TOOL_SCHEMAS: AgentToolSchema[] = [
         height: { type: 'number', description: 'Chiều cao hộp tự nhiên tính bằng pixel.' },
         durationInFrames: {
           type: 'number',
-          description: 'Thời lượng tính bằng frame timeline (loại trừ lẫn nhau với durationInSeconds).',
+          description: 'Thời lượng tính bằng frame trên dòng thời gian (loại trừ lẫn nhau với durationInSeconds).',
         },
         durationInSeconds: {
           type: 'number',
