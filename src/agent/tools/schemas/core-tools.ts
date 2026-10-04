@@ -6,36 +6,36 @@ export const CORE_TOOL_SCHEMAS: AgentToolSchema[] = [
   jianyingExportToolSchema,
   {
     name: 'read_timeline',
-    description: 'Đọc timeline hiện tại: fps và mọi clip, gồm liên kết media chuẩn (sourceAssetId, resolvedSourceAssetId, linkStatus), khoảng nguồn chính xác (srcInFrame, sourceStartFrame, sourceDurationInFrames, sourceEndFrameExclusive) và trạng thái có thể chỉnh sửa (keyframes, transform, filters, volume, fades). Gọi tool này trước để xem trạng thái hiện tại rồi mới chỉnh sửa.',
+    description: 'Đọc dòng thời gian hiện tại: fps và mọi đoạn, gồm liên kết tư liệu chuẩn (sourceAssetId, resolvedSourceAssetId, linkStatus), khoảng nguồn chính xác (srcInFrame, sourceStartFrame, sourceDurationInFrames, sourceEndFrameExclusive) và trạng thái có thể chỉnh sửa (keyframes, transform, filters, volume, fades). Gọi công cụ này trước để xem trạng thái hiện tại rồi mới chỉnh sửa.',
     input_schema: { type: 'object', properties: {} },
   },
   {
     name: 'list_templates',
-    description: 'Khám phá template đồ họa chuyển động. Không có tham số: trả về danh sách category kèm số lượng. Có category: trả về tên các template trong đó. Có khoảng 211 template, nên ưu tiên truyền category hoặc dùng search_templates thay vì liệt kê tất cả.',
+    description: 'Khám phá mẫu đồ họa chuyển động. Không có tham số: trả về danh sách category kèm số lượng. Có category: trả về tên các mẫu trong đó. Có khoảng 211 mẫu, nên ưu tiên truyền category hoặc dùng search_templates thay vì liệt kê tất cả.',
     input_schema: { type: 'object', properties: { category: { type: 'string', description: 'Category tùy chọn cần liệt kê (ví dụ "title-cards", "lower-thirds").' } } },
   },
   {
     name: 'search_templates',
-    description: 'Tìm gần đúng template theo tên/từ khóa category. Dùng tool này để tìm một template cụ thể trong khoảng 211 template.',
+    description: 'Tìm gần đúng mẫu theo tên/từ khóa category. Dùng công cụ này để tìm một mẫu cụ thể trong khoảng 211 mẫu.',
     input_schema: { type: 'object', properties: { query: { type: 'string' } }, required: ['query'] },
   },
   {
     name: 'add_motion_graphic',
-    description: 'Thêm template đồ họa chuyển động thành clip mới. Clip được đặt ở cuối track nếu không truyền startFrame. ripple:true tạo chỗ trống — các clip cùng track tại/sau startFrame dịch sang phải theo độ dài clip mới thay vì chồng lên nhau (insert edit).',
+    description: 'Thêm mẫu đồ họa chuyển động thành đoạn mới. Đoạn được đặt ở cuối rãnh nếu không truyền startFrame. ripple:true tạo chỗ trống — các đoạn cùng rãnh tại/sau startFrame dịch sang phải theo độ dài đoạn mới thay vì chồng lên nhau (insert edit).',
     input_schema: {
       type: 'object',
       properties: {
-        templateName: { type: 'string', description: 'Tên template (khớp gần đúng với list_templates).' },
-        track: { type: 'string', description: 'Alias hoặc id ổn định của track video hiện tại (mặc định V1).' },
+        templateName: { type: 'string', description: 'Tên mẫu (khớp gần đúng với list_templates).' },
+        track: { type: 'string', description: 'Bí danh hoặc ID ổn định của rãnh video hiện tại (mặc định V1).' },
         startFrame: { type: 'number', description: 'Frame bắt đầu chính xác, tùy chọn; bỏ qua để nối vào cuối.' },
-        ripple: { type: 'boolean', description: 'Insert edit: đẩy các clip cùng track tại/sau startFrame sang phải để tạo chỗ.' },
+        ripple: { type: 'boolean', description: 'Insert edit: đẩy các đoạn cùng rãnh tại/sau startFrame sang phải để tạo chỗ.' },
       },
       required: ['templateName'],
     },
   },
   {
     name: 'update_item_props',
-    description: 'Thay đổi một hoặc nhiều prop có thể chỉnh sửa của clip (ví dụ text, màu). Chỉ dùng prop có trong schema của template.',
+    description: 'Thay đổi một hoặc nhiều prop có thể chỉnh sửa của đoạn (ví dụ chữ, màu). Chỉ dùng prop có trong schema của mẫu.',
     input_schema: {
       type: 'object',
       properties: {
@@ -47,12 +47,12 @@ export const CORE_TOOL_SCHEMAS: AgentToolSchema[] = [
   },
   {
     name: 'move_item',
-    description: 'Di chuyển clip sang track khác và/hoặc frame bắt đầu khác.',
+    description: 'Di chuyển đoạn sang rãnh khác và/hoặc frame bắt đầu khác.',
     input_schema: {
       type: 'object',
       properties: {
         itemId: { type: 'string', minLength: 1 },
-        track: { type: 'string', description: 'Alias hoặc id ổn định của track tương thích hiện tại.' },
+        track: { type: 'string', description: 'Bí danh hoặc ID ổn định của rãnh tương thích hiện tại.' },
         startFrame: { type: 'number' },
       },
       required: ['itemId'],
@@ -60,7 +60,7 @@ export const CORE_TOOL_SCHEMAS: AgentToolSchema[] = [
   },
   {
     name: 'set_item_timing',
-    description: 'Đổi timing clip: thay frame bắt đầu và/hoặc thời lượng (tính bằng frame), và/hoặc đặt fade-in / fade-out. Dùng để cắt ngắn, kéo dài hoặc tạo fade cho clip. Fade tính bằng GIÂY (theo ngữ nghĩa fadeIn/fadeOut của edit_item) — clip video fade opacity, clip âm thanh fade volume; 0 xóa fade. ripple:true dịch các clip cùng track phía sau khi mép phải thay đổi (rút ngắn thì đóng khoảng trống; kéo dài thì đẩy sang phải).',
+    description: 'Đổi timing đoạn: thay frame bắt đầu và/hoặc thời lượng (tính bằng frame), và/hoặc đặt fade-in / fade-out. Dùng để cắt ngắn, kéo dài hoặc tạo fade cho đoạn. Fade tính bằng GIÂY (theo ngữ nghĩa fadeIn/fadeOut của edit_item) — đoạn video fade opacity, đoạn âm thanh fade volume; 0 xóa fade. ripple:true dịch các đoạn cùng rãnh phía sau khi mép phải thay đổi (rút ngắn thì đóng khoảng trống; kéo dài thì đẩy sang phải).',
     input_schema: {
       type: 'object',
       properties: {
@@ -69,41 +69,41 @@ export const CORE_TOOL_SCHEMAS: AgentToolSchema[] = [
         durationInFrames: { type: 'number' },
         fadeInSeconds: { type: 'number', description: 'Độ dài fade-in tính bằng giây (0 để xóa).' },
         fadeOutSeconds: { type: 'number', description: 'Độ dài fade-out tính bằng giây (0 để xóa).' },
-        ripple: { type: 'boolean', description: 'Khi duration/start làm mép phải dịch chuyển, dịch các clip cùng track phía sau theo cùng delta.' },
+        ripple: { type: 'boolean', description: 'Khi duration/start làm mép phải dịch chuyển, dịch các đoạn cùng rãnh phía sau theo cùng delta.' },
       },
       required: ['itemId'],
     },
   },
   {
     name: 'duplicate_item',
-    description: 'Nhân bản clip (bản sao được nối vào cuối track của nó).',
+    description: 'Nhân bản đoạn (bản sao được nối vào cuối rãnh của nó).',
     input_schema: { type: 'object', properties: { itemId: { type: 'string', minLength: 1 } }, required: ['itemId'] },
   },
   {
     name: 'remove_item',
-    description: 'Xóa clip khỏi timeline. ripple:true cũng đóng khoảng trống — các clip phía sau trên cùng track dịch sang trái theo độ dài clip bị xóa (ripple delete); mặc định giữ lại khoảng trống.',
+    description: 'Xóa đoạn khỏi dòng thời gian. ripple:true cũng đóng khoảng trống — các đoạn phía sau trên cùng rãnh dịch sang trái theo độ dài đoạn bị xóa (ripple delete); mặc định giữ lại khoảng trống.',
     input_schema: { type: 'object', properties: { itemId: { type: 'string', minLength: 1 }, ripple: { type: 'boolean' } }, required: ['itemId'] },
   },
   {
     name: 'split_item',
-    description: 'Tách clip thành hai tại frame tuyệt đối được chỉ định.',
+    description: 'Tách đoạn thành hai tại frame tuyệt đối được chỉ định.',
     input_schema: { type: 'object', properties: { itemId: { type: 'string', minLength: 1 }, atFrame: { type: 'number' } }, required: ['itemId', 'atFrame'] },
   },
   {
     name: 'list_audio',
-    description: 'Liệt kê asset âm thanh có sẵn (nhạc / SFX) có thể đặt trên track âm thanh A1/A2.',
+    description: 'Liệt kê tư liệu âm thanh có sẵn (nhạc / SFX) có thể đặt trên rãnh âm thanh A1/A2.',
     input_schema: { type: 'object', properties: {} },
   },
   {
     name: 'add_audio',
-    description: 'Thêm asset âm thanh (nhạc/SFX) thành clip trên track âm thanh (A1/A2). Clip được nối vào cuối track nếu không truyền startFrame.',
+    description: 'Thêm tư liệu âm thanh (nhạc/SFX) thành đoạn trên rãnh âm thanh (A1/A2). Đoạn được nối vào cuối rãnh nếu không truyền startFrame.',
     input_schema: {
       type: 'object',
       properties: {
-        audioName: { type: 'string', description: 'Tên asset âm thanh (khớp gần đúng với list_audio).' },
-        track: { type: 'string', description: 'Alias hoặc id ổn định của track âm thanh hiện tại (mặc định A1).' },
+        audioName: { type: 'string', description: 'Tên tư liệu âm thanh (khớp gần đúng với list_audio).' },
+        track: { type: 'string', description: 'Bí danh hoặc ID ổn định của rãnh âm thanh hiện tại (mặc định A1).' },
         startFrame: { type: 'number', description: 'Frame bắt đầu chính xác, tùy chọn; bỏ qua để nối vào cuối.' },
-        ripple: { type: 'boolean', description: 'Insert edit: đẩy các clip cùng track tại/sau startFrame sang phải để tạo chỗ.' },
+        ripple: { type: 'boolean', description: 'Insert edit: đẩy các đoạn cùng rãnh tại/sau startFrame sang phải để tạo chỗ.' },
       },
       required: ['audioName'],
     },
@@ -114,9 +114,9 @@ export const CORE_TOOL_SCHEMAS: AgentToolSchema[] = [
     name: 'submit_motion_graphic',
     description: [
       'Gửi một job sinh Motion Graphic.',
-      'Tạo MỘT asset đồ họa chuyển động trong media pool từ brief; KHÔNG đặt asset lên timeline.',
+      'Tạo MỘT tư liệu đồ họa chuyển động trong kho tư liệu từ brief; KHÔNG đặt tư liệu lên dòng thời gian.',
       'Sau khi thành công, đặt bằng edit_item với adds:[{type:"motion-graphic", assetId, trackId?, fromFrame?}].',
-      'Ưu tiên template trong thư viện (browse_library / add_motion_graphic) nếu phù hợp; chỉ dùng tool này cho hình ảnh hoàn toàn mới.',
+      'Ưu tiên mẫu trong thư viện (browse_library / add_motion_graphic) nếu phù hợp; chỉ dùng công cụ này cho hình ảnh hoàn toàn mới.',
       'Chỉ gọi khi người dùng nói rõ muốn tạo MG mới.',
     ].join(' '),
     input_schema: {
@@ -153,7 +153,7 @@ export const CORE_TOOL_SCHEMAS: AgentToolSchema[] = [
   },
   {
     name: 'clear_timeline',
-    description: 'Xóa TẤT CẢ clip khỏi timeline. Chỉ dùng khi người dùng nói rõ muốn bắt đầu lại / xóa mọi thứ.',
+    description: 'Xóa TẤT CẢ đoạn khỏi dòng thời gian. Chỉ dùng khi người dùng nói rõ muốn bắt đầu lại / xóa mọi thứ.',
     input_schema: { type: 'object', properties: {} },
   },
   {
@@ -163,7 +163,7 @@ export const CORE_TOOL_SCHEMAS: AgentToolSchema[] = [
       type: 'object',
       properties: {
         ratio: { type: 'string', enum: ['16:9', '9:16', '1:1', '4:3', '3:4'] },
-        fit: { type: 'string', enum: ['contain', 'cover'], description: 'Cách các clip hiện có thích ứng với tỷ lệ mới.' },
+        fit: { type: 'string', enum: ['contain', 'cover'], description: 'Cách các đoạn hiện có thích ứng với tỷ lệ mới.' },
       },
       required: ['ratio'],
     },
