@@ -99,7 +99,7 @@ export async function editCaptions(args: Args, ctx: AgentContext): Promise<Resul
   const s = ctx.getState();
   const requested = str(args.captionTrackId) || str(args.captionsItemId);
   const target = requested ? resolveTrackId(s, requested, 'caption') : defaultTrackId(s, 'caption');
-  if (requested && !target) return { error: `Không tìm thấy track phụ đề ${requested}` };
+  if (requested && !target) return { error: `Không tìm thấy rãnh phụ đề ${requested}` };
   const c = target ? captionsOnTrack(s, target) : s.captions ?? null;
   if (target) {
     const commands = ctx.commands;
@@ -136,7 +136,7 @@ export async function editCaptions(args: Args, ctx: AgentContext): Promise<Resul
     const currentSource = c?.sourceItemId ? s.items.find((item) => item.id === c.sourceItemId) : undefined;
     if (!hasOperationalTranscript(currentSource) && transcribed[0]) base.sourceItemId = transcribed[0].id;
     if (c) ctx.commands.updateCaptions(base); else ctx.commands.setCaptions(base);
-    return { ok: true, enabled: true, template, pacing, note: 'Phụ đề đọc từ nguồn đã neo; để dùng TẤT CẢ track có âm thanh, hãy dùng action=source_set {mode:"timeline"}.' };
+    return { ok: true, enabled: true, template, pacing, note: 'Phụ đề đọc từ nguồn đã neo; để dùng TẤT CẢ rãnh có âm thanh, hãy dùng action=source_set {mode:"timeline"}.' };
   }
   if (action === 'disable') {
     if (c) ctx.commands.updateCaptions({ enabled: false });
@@ -148,7 +148,7 @@ export async function editCaptions(args: Args, ctx: AgentContext): Promise<Resul
       ok: true,
       action,
       captionsHidden: true,
-      note: 'Lớp phủ đã ẩn (captionsHidden). Dữ liệu track phụ đề vẫn được giữ; dùng show_overlay để khôi phục.',
+      note: 'Lớp phủ đã ẩn (captionsHidden). Dữ liệu rãnh phụ đề vẫn được giữ; dùng show_overlay để khôi phục.',
     };
   }
   if (action === 'show_overlay') {
@@ -157,7 +157,7 @@ export async function editCaptions(args: Args, ctx: AgentContext): Promise<Resul
       ok: true,
       action,
       captionsHidden: false,
-      note: 'Lớp phủ đang hiển thị. Nếu track đã bị tắt bằng action=disable, hãy bật lại trước.',
+      note: 'Lớp phủ đang hiển thị. Nếu rãnh đã bị tắt bằng action=disable, hãy bật lại trước.',
     };
   }
 
@@ -211,11 +211,11 @@ export async function editCaptions(args: Args, ctx: AgentContext): Promise<Resul
       : requestedOrder === undefined ? null : trackIds[requestedOrder] ?? null;
     if (!stableTrackId) {
       return { error: requestedOrder === undefined
-        ? 'track cần trackId hoặc trackOrder (hoặc list:true). Để chọn nội dung phụ đề hiển thị, nên dùng source_set.'
+        ? 'Rãnh cần trackId hoặc trackOrder (hoặc list:true). Để chọn nội dung phụ đề hiển thị, nên dùng source_set.'
         : `trackOrder ${requestedOrder} nằm ngoài phạm vi (0..${Math.max(0, trackIds.length - 1)})` };
     }
     const it = firstTranscribedOnTrack(s, stableTrackId);
-    if (!it) return { error: `Không có clip đã chép lời trên track ${trackAlias(s, stableTrackId)}` };
+    if (!it) return { error: `Không có đoạn đã chép lời trên rãnh ${trackAlias(s, stableTrackId)}` };
     ctx.commands.updateCaptions({ sourceItemId: it.id, sources: undefined, sourceMode: 'item' });
     return { ok: true, trackId: trackAlias(s, stableTrackId), trackOrder: trackIds.indexOf(stableTrackId), sourceItemId: it.id };
   }

@@ -312,7 +312,7 @@ assert.equal(draft3.getState().captions?.layout?.anchor, 'top-center');
 await execCaptionsTool('edit_captions', { action: 'language_mode', json: { mode: 'original' } }, ctx3);
 assert.equal(draft3.getState().captions?.bilingual, false);
 const noVar = await execCaptionsTool('edit_captions', { action: 'language_mode', json: { mode: 'translation', languageCode: 'en' } }, ctx3) as { error?: string };
-assert.ok(noVar.error?.includes('variant'), 'translation without a variant asks to translate first');
+assert.ok(noVar.error?.includes('chưa có biến thể bản chép lời'), 'translation without a variant asks to translate first');
 
 // 三兄弟已是真实现(captions-lanes.ts;详测在 captions-lanes.check.ts)——这里只验派发通了
 const pos = await execCaptionsTool('edit_captions', { action: 'positions', json: {} }, ctx3) as { error?: string; unsupported?: boolean };

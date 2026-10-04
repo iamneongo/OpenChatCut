@@ -42,7 +42,7 @@ export async function execCaptionsTool(name: string, args: Args, ctx: AgentConte
           hasCaptions: !!entry.captions,
         })),
       };
-      if (requested && !target) return { error: `Không tìm thấy track phụ đề ${requested}` };
+      if (requested && !target) return { error: `Không tìm thấy rãnh phụ đề ${requested}` };
       if (!c || !c.enabled) return { enabled: false, note: 'Phụ đề đang tắt; hãy gọi edit_captions để bật trước' };
       const words = resolveCaptionWords(c, s.items, s.fps);
       if (!words.length) return {
@@ -50,7 +50,7 @@ export async function execCaptionsTool(name: string, args: Args, ctx: AgentConte
         template: c.template,
         pacing: c.pacing,
         motionPreset: c.motionPreset ?? 'none',
-        note: 'Track nguồn không có từ chép lời',
+        note: 'Rãnh nguồn không có từ chép lời',
       };
       const indices = resolveCaptionWordIndices(c, s.items, s.fps);
       const wordRefs = resolveCaptionWordRefs(c, s.items, s.fps);

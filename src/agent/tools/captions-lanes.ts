@@ -57,7 +57,7 @@ export function matchEntries(entries: CaptionSourceEntry[], sel: Json, s: Timeli
     const hits = entries.flatMap((entry, index) => (entry.id === id ? [index] : []));
     return hits.length === 1
       ? hits
-      : { error: hits.length ? `sourceId "${id}" không duy nhất` : `Không có source với id "${id}" (dùng source_list để tra sourceId)` };
+      : { error: hits.length ? `sourceId "${id}" không duy nhất` : `Không có nguồn với id "${id}" (dùng source_list để tra sourceId)` };
   }
   const idx = num(sel.index);
   if (idx !== undefined) {
@@ -66,27 +66,27 @@ export function matchEntries(entries: CaptionSourceEntry[], sel: Json, s: Timeli
       ? { error: `index ${idx} chỉ dành cho dữ liệu cũ; hãy dùng sourceId "${entries[idx]!.id}"` }
       : [idx];
   }
-  if (str(sel.speakerId)) return { error: 'Không hỗ trợ selector speakerId: không có lane riêng cho từng người nói; hãy chọn theo track hoặc item' };
+  if (str(sel.speakerId)) return { error: 'Không hỗ trợ selector speakerId: không có rãnh riêng cho từng người nói; hãy chọn theo track hoặc item' };
   const slotId = str(sel.slotId);
   if (slotId) {
     const hits = entries.flatMap((e, i) => (e.slotId === slotId ? [i] : []));
-    return hits.length ? hits : { error: `Không có source nào được ghim vào slot "${slotId}"` };
+    return hits.length ? hits : { error: `Không có nguồn nào được ghim vào slot "${slotId}"` };
   }
   const label = str(sel.label);
   if (label) {
     const hits = entries.flatMap((e, i) => (e.label === label ? [i] : []));
-    return hits.length ? hits : { error: `Không có source nào mang nhãn "${label}"` };
+    return hits.length ? hits : { error: `Không có nguồn nào mang nhãn "${label}"` };
   }
   const variant = sel.variant && typeof sel.variant === 'object' ? (sel.variant as Json) : undefined;
   if (variant) {
     const lang = str(variant.languageCode);
     const hits = entries.flatMap((e, i) => (e.variant && (!lang || e.variant.languageCode === lang) ? [i] : []));
-    return hits.length ? hits : { error: `Không có source biến thể bản dịch${lang ? ` cho "${lang}"` : ''}` };
+    return hits.length ? hits : { error: `Không có nguồn biến thể bản dịch${lang ? ` cho "${lang}"` : ''}` };
   }
   const itemId = str(sel.itemId);
   if (itemId) {
     const hits = entries.flatMap((e, i) => (e.itemId === itemId || e.itemId.startsWith(itemId) ? [i] : []));
-    return hits.length ? hits : { error: `Không có source trên item "${itemId}"` };
+    return hits.length ? hits : { error: `Không có nguồn trên mục "${itemId}"` };
   }
   const assetId = str(sel.assetId);
   if (assetId) {
@@ -99,9 +99,9 @@ export function matchEntries(entries: CaptionSourceEntry[], sel: Json, s: Timeli
     const tid = resolveTrackId(s, track) ?? track;
     const onTrack = new Set(s.items.filter((it) => it.track === tid).map((it) => it.id));
     const hits = entries.flatMap((e, i) => (onTrack.has(e.itemId) ? [i] : []));
-    return hits.length ? hits : { error: `Không có source trên track "${track}"` };
+    return hits.length ? hits : { error: `Không có nguồn trên rãnh "${track}"` };
   }
-  return { error: 'Thiếu selector: mỗi mục cần một trong index / sourceId / trackId / itemId / label / variant để định vị lane; ví dụ {"index":0}, {"trackId":"A2"} hoặc {"variant":{"languageCode":"en"}}; dùng source_list để tra sourceId' };
+  return { error: 'Thiếu selector: mỗi mục cần một trong index / sourceId / trackId / itemId / label / variant để định vị rãnh; ví dụ {"index":0}, {"trackId":"A2"} hoặc {"variant":{"languageCode":"en"}}; dùng source_list để tra sourceId' };
 }
 
 const entrySummary = (e: CaptionSourceEntry, i: number) => ({
@@ -125,7 +125,7 @@ export function execLayoutPolicy(json: Json, c: CaptionsData, ctx: AgentContext)
       patch.layoutPolicy = { mode, ...(cap !== undefined ? { maxVisibleSources: Math.max(1, Math.floor(cap)) } : {}) } as CaptionLayoutPolicy;
     } else if (mode === 'manual-slots') {
       const raw = Array.isArray(json.slots) ? json.slots : null;
-      if (!raw?.length) return { error: 'manual-slots cần bảng slot, ví dụ {"mode":"manual-slots","slots":[{"id":"top","anchor":"top-center","offsetYRatio":0.08},{"id":"bottom","anchor":"bottom-center","offsetYRatio":-0.08}]}; sau đó dùng source_update để gán slotId cho lane' };
+      if (!raw?.length) return { error: 'manual-slots cần bảng slot, ví dụ {"mode":"manual-slots","slots":[{"id":"top","anchor":"top-center","offsetYRatio":0.08},{"id":"bottom","anchor":"bottom-center","offsetYRatio":-0.08}]}; sau đó dùng source_update để gán slotId cho rãnh' };
       const slots: CaptionSlot[] = [];
       for (const sl of raw) {
         const o = (sl ?? {}) as Json;
@@ -155,9 +155,9 @@ export function execLayoutPolicy(json: Json, c: CaptionsData, ctx: AgentContext)
 /** action=positions — call multiple sources in one call (same anchor point = same block stack).*/
 export function execPositions(json: Json, c: CaptionsData, ctx: AgentContext, s: TimelineState): Result {
   const raw = Array.isArray(json.positions) ? json.positions : null;
-  if (!raw?.length) return { error: 'Ví dụ positions (có thể sao chép rồi sửa số): {"positions":[{"index":0,"anchor":"top-center","offsetYRatio":0.08},{"index":1,"anchor":"bottom-center","offsetYRatio":-0.08}]} — mỗi mục = selector (index/sourceId/trackId/variant…)+ anchor (3×3); các source cùng anchor sẽ xếp chồng thành một khối' };
+  if (!raw?.length) return { error: 'Ví dụ positions (có thể sao chép rồi sửa số): {"positions":[{"index":0,"anchor":"top-center","offsetYRatio":0.08},{"index":1,"anchor":"bottom-center","offsetYRatio":-0.08}]} — mỗi mục = selector (index/sourceId/trackId/variant…)+ anchor (3×3); các nguồn cùng anchor sẽ xếp chồng thành một khối' };
   const entries = ensureEntries(c, s);
-  if (!entries.length) return { error: 'Hiện chưa có source phụ đề: hãy gọi edit_captions action=enable (hoặc source_set để chỉ định sources) trước khi định vị' };
+  if (!entries.length) return { error: 'Hiện chưa có nguồn phụ đề: hãy gọi edit_captions action=enable (hoặc source_set để chỉ định sources) trước khi định vị' };
   const placed: Result[] = [];
   for (const p of raw) {
     const o = (p ?? {}) as Json;
@@ -171,7 +171,7 @@ export function execPositions(json: Json, c: CaptionsData, ctx: AgentContext, s:
     }
   }
   ctx.commands.updateCaptions({ sourceEntries: entries, sources: undefined, sourceMode: 'item' });
-  return { ok: true, placed, note: 'Nhiều source cùng anchor sẽ xếp chồng thành một khối phụ đề tại anchor đó; muốn đặt left/top theo pixel cho cả khối, dùng action=layout' };
+  return { ok: true, placed, note: 'Nhiều nguồn cùng anchor sẽ xếp chồng thành một khối phụ đề tại anchor đó; muốn đặt left/top theo pixel cho cả khối, dùng action=layout' };
 }
 
 /** action=source_update — Change the presentation of single/multiple sources according to the selector (without moving the caption track/item).*/
@@ -179,7 +179,7 @@ export function execSourceUpdate(json: Json, c: CaptionsData, ctx: AgentContext,
   const raw = Array.isArray(json.updates) ? json.updates : (json.update ? [json.update] : null);
   if (!raw?.length) return { error: 'Ví dụ source_update (có thể sao chép rồi sửa số): {"updates":[{"index":0,"anchor":"bottom-center","offsetYRatio":-0.08},{"trackId":"A2","visible":false},{"index":1,"style":{"sizePx":54,"color":"#fff"}}]} — mỗi mục = selector + trường cần sửa (visible/anchor/offsetXRatio/offsetYRatio/slotId/style/preset/variant); dùng source_list để tra sourceId' };
   let entries = ensureEntries(c, s);
-  if (!entries.length) return { error: 'Hiện chưa có source phụ đề: hãy gọi edit_captions action=enable (hoặc source_set để chỉ định sources)' };
+  if (!entries.length) return { error: 'Hiện chưa có nguồn phụ đề: hãy gọi edit_captions action=enable (hoặc source_set để chỉ định sources)' };
   const updated: Result[] = [];
   const notes: string[] = [];
   for (const u of raw) {
