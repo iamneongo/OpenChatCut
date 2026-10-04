@@ -113,7 +113,7 @@ export const CORE_TOOL_SCHEMAS: AgentToolSchema[] = [
     // (media pool), no timeline placement.
     name: 'submit_motion_graphic',
     description: [
-      'Gửi một job sinh Motion Graphic.',
+      'Gửi một tác vụ sinh Motion Graphic.',
       'Tạo MỘT tư liệu đồ họa chuyển động trong kho tư liệu từ brief; KHÔNG đặt tư liệu lên dòng thời gian.',
       'Sau khi thành công, đặt bằng edit_item với adds:[{type:"motion-graphic", assetId, trackId?, fromFrame?}].',
       'Ưu tiên mẫu trong thư viện (browse_library / add_motion_graphic) nếu phù hợp; chỉ dùng công cụ này cho hình ảnh hoàn toàn mới.',
@@ -122,9 +122,9 @@ export const CORE_TOOL_SCHEMAS: AgentToolSchema[] = [
     input_schema: {
       type: 'object',
       properties: {
-        prompt: { type: 'string', description: 'Brief về nội dung/hành động cần hiển thị hoặc animate.' },
-        description: { type: 'string', description: 'Alias cục bộ của prompt.' },
-        name: { type: 'string', description: 'Tên hiển thị ngắn trong media pool.' },
+        prompt: { type: 'string', description: 'Mô tả ngắn về nội dung/hành động cần hiển thị hoặc tạo chuyển động.' },
+        description: { type: 'string', description: 'Bí danh cục bộ của prompt.' },
+        name: { type: 'string', description: 'Tên hiển thị ngắn trong kho tư liệu.' },
         durationSeconds: { type: 'number', minimum: 0.5, maximum: 600, description: 'Thời lượng tính bằng giây (mặc định 3).' },
         durationInFrames: { type: 'number', minimum: 15, maximum: 36000, description: 'Thời lượng tính bằng frame (ghi đè durationSeconds khi được đặt).' },
         width: { type: 'number', minimum: 16, maximum: 8192, description: 'Chiều rộng tự nhiên tính bằng px (mặc định 1920).' },
@@ -158,7 +158,7 @@ export const CORE_TOOL_SCHEMAS: AgentToolSchema[] = [
   },
   {
     name: 'set_aspect_ratio',
-    description: 'Đổi canvas sang tỷ lệ khung hình khác để chuyển video ngang sang dọc (cùng ngữ nghĩa ratio+fit với manage_timelines). Ví dụ chuyển video 16:9 thành dọc cho Shorts/Reels. fit: contain (letterbox) giữ toàn bộ nội dung; cover (fill+crop) lấp đầy khung và cắt hai bên.',
+    description: 'Đổi khung hình sang tỷ lệ khác để chuyển video ngang sang dọc (cùng ngữ nghĩa ratio+fit với manage_timelines). Ví dụ chuyển video 16:9 thành dọc cho Shorts/Reels. fit: contain (letterbox) giữ toàn bộ nội dung; cover (fill+crop) lấp đầy khung và cắt hai bên.',
     input_schema: {
       type: 'object',
       properties: {
