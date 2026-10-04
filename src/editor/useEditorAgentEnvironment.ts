@@ -81,7 +81,7 @@ function useApplyInspectorSelection(
   return (
     makeActions: Parameters<typeof planInspectorBatch>[2],
     supports?: Parameters<typeof planInspectorBatch>[3],
-    label = 'Inspector multi-edit',
+    label = 'Chỉnh nhiều thuộc tính đã chọn',
   ): boolean => {
     const snapshot = stateRef.current;
     const ids = selectedIdsOf(snapshot);

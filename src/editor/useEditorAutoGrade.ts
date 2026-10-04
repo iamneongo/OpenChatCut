@@ -142,7 +142,7 @@ function useApplyAutoGrade(
       type: 'setFilters' as const,
       id: recommendation.itemId,
       patch: recommendation.analysis.filters,
-    })), 'Apply automatic color correction');
+    })), 'Áp dụng tự động cân màu');
     const applied = session.recommendations.length;
     setSession(null);
     showAppToast(t('已将自动校色应用到 {n} 个片段', { n: applied }));
