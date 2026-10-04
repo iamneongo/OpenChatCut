@@ -27,13 +27,13 @@ const RESOLUTIONS = ['480p', '720p', '1080p', '4k'] as const;
 
 function oneOf<T extends string>(value: string, allowed: readonly T[], flag: string): T {
   if ((allowed as readonly string[]).includes(value)) return value as T;
-  throw new UsageError(`--${flag} must be one of ${allowed.join(', ')}`);
+  throw new UsageError(`--${flag} phải là một trong các giá trị ${allowed.join(', ')}`);
 }
 
 function positiveNumber(input: string, flag: string): number {
   const value = Number(input);
   if (!Number.isFinite(value) || value <= 0) {
-    throw new UsageError(`--${flag} expects a positive number, got "${input}"`);
+    throw new UsageError(`--${flag} cần số dương, nhưng nhận "${input}"`);
   }
   return value;
 }
@@ -45,7 +45,7 @@ export async function runRenderCommand(commandLine: CommandLine, json: boolean):
   setUploadsDirProvider(uploadDir);
   const outPath = flagText(commandLine, 'out');
   if (outPath === undefined || !outPath.trim()) {
-    throw new UsageError('render needs --out <file> (for example: occ render --out cut.mp4)');
+    throw new UsageError('render cần --out <file> (ví dụ: occ render --out cut.mp4)');
   }
   const quiet = flagBoolean(commandLine, 'quiet');
   const project = await resolveProject(projectReference(commandLine));
@@ -53,7 +53,7 @@ export async function runRenderCommand(commandLine: CommandLine, json: boolean):
   const timelineId = flagText(commandLine, 'timeline') ?? doc.activeTimelineId;
   const timeline = doc.timelines.find((candidate) => candidate.id === timelineId);
   if (!timeline) {
-    throw new CliError(`Project ${project.name} has no timeline ${timelineId}.\n${
+    throw new CliError(`Dự án ${project.name} không có dòng thời gian ${timelineId}.\n${
       doc.timelines.map((candidate) => `  ${candidate.id}  ${candidate.name}`).join('\n')}`);
   }
   const format = oneOf(flagText(commandLine, 'format') ?? 'video', FORMATS, 'format');
@@ -113,7 +113,7 @@ export async function runRenderCommand(commandLine: CommandLine, json: boolean):
         ...await h264RenderOptions(plan.media.codec),
         ...(quiet ? {} : {
           onProgress: (progress: number) => {
-            writeStderr(`rendering ${Math.round(progress * 100)}%`);
+            writeStderr(`đang kết xuất ${Math.round(progress * 100)}%`);
           },
         }),
       });
@@ -154,5 +154,5 @@ export async function runRenderCommand(commandLine: CommandLine, json: boolean):
     return;
   }
   writeStdout(`${outPath}  ${(size / (1024 * 1024)).toFixed(1)}MB  ${plan.media.codec}  ${
-    plan.durationSeconds.toFixed(2)}s  ${plan.totalFrames} frames`);
+    plan.durationSeconds.toFixed(2)}s  ${plan.totalFrames} khung hình`);
 }

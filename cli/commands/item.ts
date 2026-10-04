@@ -46,9 +46,9 @@ export async function runItemCommand(
     case 'duplicate':
       return duplicateCommand(line, commandLine, json);
     case undefined:
-      throw new UsageError('item needs a subcommand: move | trim | split | rm | dup');
+      throw new UsageError('item cần một lệnh con: move | trim | split | rm | dup');
     default:
-      throw new UsageError(`unknown item subcommand "${subcommand}"`);
+      throw new UsageError(`lệnh con của item không xác định "${subcommand}"`);
   }
 }
 
@@ -87,7 +87,7 @@ async function moveCommand(line: CommandLine, commandLine: CommandLine, json: bo
   const start = flagText(commandLine, 'start');
   if (start !== undefined) args.startFrame = parseFrames(start, target.fps, 'start');
   if (track === undefined && start === undefined) {
-    throw new UsageError('item move needs --track and/or --start');
+    throw new UsageError('item move cần --track và/hoặc --start');
   }
   await commit(line, target, json, [{ tool: 'move_item', args }], 'move clip');
 }
@@ -105,7 +105,7 @@ async function trimCommand(line: CommandLine, commandLine: CommandLine, json: bo
   if (fadeOut !== undefined) args.fadeOutSeconds = Number(fadeOut);
   if (flagBoolean(commandLine, 'ripple')) args.ripple = true;
   if (Object.keys(args).length === 1) {
-    throw new UsageError('item trim needs --start, --duration, --fade-in or --fade-out');
+    throw new UsageError('item trim cần --start, --duration, --fade-in hoặc --fade-out');
   }
   await commit(line, target, json, [{ tool: 'set_item_timing', args }], 'retime clip');
 }
@@ -113,7 +113,7 @@ async function trimCommand(line: CommandLine, commandLine: CommandLine, json: bo
 async function splitCommand(line: CommandLine, commandLine: CommandLine, json: boolean): Promise<void> {
   const target = await clipTarget(line);
   const at = flagText(commandLine, 'at');
-  if (at === undefined) throw new UsageError('item split needs --at <frame|4s>');
+  if (at === undefined) throw new UsageError('item split cần --at <frame|4s>');
   await commit(line, target, json, [{
     tool: 'split_item',
     args: { itemId: target.itemId, atFrame: parseFrames(at, target.fps, 'at') },

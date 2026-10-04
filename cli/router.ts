@@ -38,8 +38,8 @@ export async function runCommand(commandLine: CommandLine): Promise<void> {
     case 'where':
       return runWhereCommand(commandLine, json);
     case undefined:
-      throw new UsageError('missing command');
+      throw new UsageError('thiếu lệnh');
     default:
-      throw new UsageError(`unknown command "${group}"`);
+      throw new UsageError(`lệnh không xác định "${group}"`);
   }
 }

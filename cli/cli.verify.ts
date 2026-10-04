@@ -328,10 +328,10 @@ try {
   // 15. bad references and bad flags fail loudly
   const missingProject = occ(['timeline', 'show', 'no-such-project']);
   assert.equal(missingProject.status, 1);
-  assert.match(missingProject.stderr, /No project matches/);
+  assert.match(missingProject.stderr, /Không có dự án phù hợp/);
   const unknownFlag = occ(['project', 'list', '--wat']);
   assert.equal(unknownFlag.status, 2);
-  assert.match(unknownFlag.stderr, /unknown flag --wat/);
+  assert.match(unknownFlag.stderr, /cờ không xác định --wat/);
 
   // 16. an installed plugin pack reaches the headless catalog too
   const packId = 'occ-fixture-pack';
@@ -434,7 +434,7 @@ try {
   assert.match(missingOut.stderr, /--out/);
   const badTimeline = occ(['render', created.id, '--out', join(HOME, 'x.mp4'), '--timeline', 'nope', '--dry-run']);
   assert.equal(badTimeline.status, 1);
-  assert.match(badTimeline.stderr, /no timeline nope/);
+  assert.match(badTimeline.stderr, /không có dòng thời gian nope/);
 
   // The render command must serve media from the selected library, just as the
   // export planner does. A disposable prebuilt directory exercises the real

@@ -25,9 +25,9 @@ export async function runExportCommand(
     case 'jianying':
       return jianyingCommand(line, commandLine, json);
     case undefined:
-      throw new UsageError('export needs a target: jianying');
+      throw new UsageError('export cần một đích: jianying');
     default:
-      throw new UsageError(`unknown export target "${subcommand}" (try: jianying)`);
+      throw new UsageError(`đích export không xác định "${subcommand}" (thử: jianying)`);
   }
 }
 

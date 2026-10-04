@@ -57,7 +57,7 @@ function reportError(error: unknown): number {
     return EXIT_FAILURE;
   }
   const message = error instanceof Error ? `${error.message}\n${error.stack ?? ''}` : String(error);
-  writeStderr(`unexpected failure: ${message}`);
+  writeStderr(`lỗi không mong đợi: ${message}`);
   return EXIT_FAILURE;
 }
 

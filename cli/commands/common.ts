@@ -17,7 +17,7 @@ export function projectReference(commandLine: CommandLine, index = 0): string | 
 export function requirePositional(commandLine: CommandLine, index: number, label: string): string {
   const value = commandLine.positionals[index];
   if (value === undefined || !value.trim()) {
-    throw new UsageError(`missing ${label}`);
+    throw new UsageError(`thiếu ${label}`);
   }
   return value;
 }
@@ -31,14 +31,14 @@ export function parseSize(input: string): [number, number] {
     return [width, height];
   }
   const pair = /^(\d{2,5})\s*[x×]\s*(\d{2,5})$/i.exec(input.trim());
-  if (!pair) throw new UsageError(`--size expects WIDTHxHEIGHT (for example 1920x1080), got "${input}"`);
+  if (!pair) throw new UsageError(`--size cần WIDTHxHEIGHT (ví dụ 1920x1080), nhưng nhận "${input}"`);
   return [Number(pair[1]), Number(pair[2])];
 }
 
 export function positiveInteger(input: string, flag: string): number {
   const value = Number(input);
   if (!Number.isInteger(value) || value <= 0) {
-    throw new UsageError(`--${flag} expects a positive integer, got "${input}"`);
+    throw new UsageError(`--${flag} cần số nguyên dương, nhưng nhận "${input}"`);
   }
   return value;
 }
@@ -50,5 +50,5 @@ export function parseFrames(input: string, fps: number, flag: string): number {
   if (seconds) return Math.round(Number(seconds[1]) * fps);
   const frames = /^([0-9]+)f?$/.exec(text);
   if (frames) return Number(frames[1]);
-  throw new UsageError(`--${flag} expects frames (240) or seconds (4s), got "${input}"`);
+  throw new UsageError(`--${flag} cần số khung hình (240) hoặc số giây (4s), nhưng nhận "${input}"`);
 }

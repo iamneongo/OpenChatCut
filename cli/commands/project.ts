@@ -40,9 +40,9 @@ export async function runProjectCommand(
     case 'new':
       return newCommand(line, commandLine, json);
     case undefined:
-      throw new UsageError('project needs a subcommand: list | show | new');
+      throw new UsageError('project cần một lệnh con: list | show | new');
     default:
-      throw new UsageError(`unknown project subcommand "${subcommand}"`);
+      throw new UsageError(`lệnh con của project không xác định "${subcommand}"`);
   }
 }
 
@@ -54,16 +54,16 @@ async function listCommand(commandLine: CommandLine, json: boolean): Promise<voi
     return;
   }
   if (projects.length === 0) {
-    writeStdout('No projects yet. Create one: occ project new "My project"');
+    writeStdout('Chưa có dự án. Tạo dự án bằng: occ project new "Tên dự án"');
     return;
   }
   writeStdout(renderTable(
-    ['ID', 'NAME', 'UPDATED', 'STATE'],
+    ['MÃ', 'TÊN', 'CẬP NHẬT', 'TRẠNG THÁI'],
     projects.map((project) => [
       project.id,
       project.name,
       formatTimestamp(project.updatedAt),
-      project.deletedAt ? 'deleted' : 'active',
+      project.deletedAt ? 'đã xóa' : 'đang hoạt động',
     ]),
   ));
 }
@@ -81,10 +81,10 @@ async function showCommand(line: CommandLine, commandLine: CommandLine, json: bo
     return;
   }
   writeStdout(`${project.name}  (${project.id})`);
-  writeStdout(`updated ${formatTimestamp(project.updatedAt)}  |  version ${doc.version}  |  assets ${doc.assets.length}`);
+  writeStdout(`cập nhật ${formatTimestamp(project.updatedAt)}  |  phiên bản ${doc.version}  |  tài nguyên ${doc.assets.length}`);
   writeStdout('');
   writeStdout(renderTable(
-    ['TIMELINE', 'NAME', 'FPS', 'SIZE', 'CLIPS', 'DURATION', 'TRACKS'],
+    ['DÒNG THỜI GIAN', 'TÊN', 'FPS', 'KÍCH THƯỚC', 'ĐOẠN', 'THỜI LƯỢNG', 'RÃNH'],
     timelines.map((timeline) => [
       `${timeline.id}${timeline.active ? ' *' : ''}`,
       timeline.name,
@@ -103,7 +103,7 @@ async function newCommand(line: CommandLine, commandLine: CommandLine, json: boo
   const widthFlag = flagText(commandLine, 'width');
   const heightFlag = flagText(commandLine, 'height');
   if ((widthFlag === undefined) !== (heightFlag === undefined)) {
-    throw new UsageError('--width and --height go together; use --size 1920x1080 for the common case');
+    throw new UsageError('--width và --height phải đi cùng nhau; trường hợp thông dụng hãy dùng --size 1920x1080');
   }
   const [width, height] = sizeFlag
     ? parseSize(sizeFlag)
@@ -121,5 +121,5 @@ async function newCommand(line: CommandLine, commandLine: CommandLine, json: boo
     printJson(project);
     return;
   }
-  writeStdout(`created ${project.id}  ${project.name}`);
+  writeStdout(`đã tạo ${project.id}  ${project.name}`);
 }

@@ -19,7 +19,7 @@ export async function runEditCommand(commandLine: CommandLine, json: boolean): P
   rejectUnknownFlags(commandLine, FLAGS);
   const raw = flagText(commandLine, 'ops');
   if (raw === undefined) {
-    throw new UsageError('edit needs --ops \'[{"tool":"set_aspect_ratio","args":{"ratio":"9:16"}}]\' (or --ops @ops.json)');
+    throw new UsageError('edit cần --ops \'[{"tool":"set_aspect_ratio","args":{"ratio":"9:16"}}]\' (hoặc --ops @ops.json)');
   }
   const ops = parseToolOps(raw.startsWith('@') ? readFileSync(raw.slice(1), 'utf8') : raw);
   const summary = flagText(commandLine, 'summary');

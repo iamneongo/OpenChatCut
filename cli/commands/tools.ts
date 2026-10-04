@@ -30,9 +30,9 @@ export async function runToolsCommand(
     case 'call':
       return callCommand(line, commandLine, json);
     case undefined:
-      throw new UsageError('tools needs a subcommand: ls | call');
+      throw new UsageError('tools cần một lệnh con: ls | call');
     default:
-      throw new UsageError(`unknown tools subcommand "${subcommand}"`);
+      throw new UsageError(`lệnh con của tools không xác định "${subcommand}"`);
   }
 }
 
@@ -47,7 +47,7 @@ function listCommand(commandLine: CommandLine, json: boolean): void {
     writeStdout(`${row.name.padEnd(width)}  ${row.headless ? 'headless' : 'browser '}  ${row.description.slice(0, 90)}`);
   }
   writeStdout('');
-  writeStdout(`${rows.length} tool(s). Browser-only tools need the editor open; run \`occ tools ls --all\` for the full surface.`);
+  writeStdout(`${rows.length} công cụ. Công cụ chỉ chạy trên trình duyệt cần mở trình biên tập; chạy \`occ tools ls --all\` để xem đầy đủ.`);
 }
 
 function invocationArgs(commandLine: CommandLine): Record<string, unknown> {

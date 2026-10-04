@@ -48,7 +48,7 @@ function candidates(projects: readonly ProjectHandle[]): string {
 export async function resolveProject(reference?: string): Promise<ProjectHandle> {
   const projects = await listProjects();
   if (projects.length === 0) {
-    throw new CliError('No projects yet. Create one: occ project new "My project"');
+    throw new CliError('Chưa có dự án. Tạo dự án bằng: occ project new "Tên dự án"');
   }
   if (reference === undefined) return projects[0] as ProjectHandle;
 
@@ -58,24 +58,24 @@ export async function resolveProject(reference?: string): Promise<ProjectHandle>
   const byPrefix = projects.filter((project) => project.id.startsWith(reference));
   if (byPrefix.length === 1) return byPrefix[0] as ProjectHandle;
   if (byPrefix.length > 1) {
-    throw new CliError(`Project id prefix "${reference}" is ambiguous:\n${candidates(byPrefix)}`);
+    throw new CliError(`Tiền tố mã dự án "${reference}" trùng với nhiều dự án:\n${candidates(byPrefix)}`);
   }
 
   const byName = projects.filter((project) => project.name === reference);
   if (byName.length === 1) return byName[0] as ProjectHandle;
   if (byName.length > 1) {
-    throw new CliError(`Project name "${reference}" is ambiguous:\n${candidates(byName)}`);
+    throw new CliError(`Tên dự án "${reference}" trùng với nhiều dự án:\n${candidates(byName)}`);
   }
 
-  throw new CliError(`No project matches "${reference}".\n${candidates(projects)}`);
+  throw new CliError(`Không có dự án phù hợp với "${reference}".\n${candidates(projects)}`);
 }
 
 export async function readProjectDoc(projectId: string): Promise<ProjectDoc> {
   const entry = await getStoredEntry(`project:${projectId}`);
-  if (!entry.found) throw new CliError(`Project ${projectId} has no stored document.`);
+  if (!entry.found) throw new CliError(`Dự án ${projectId} không có tài liệu được lưu.`);
   const migrated = runProjectMigrations(entry.value);
   if (!migrated) {
-    throw new CliError(`Project ${projectId} has an unsupported or corrupt document; open it once in the app.`);
+    throw new CliError(`Dự án ${projectId} có tài liệu không được hỗ trợ hoặc bị hỏng; hãy mở dự án một lần trong ứng dụng.`);
   }
   return migrated.doc;
 }

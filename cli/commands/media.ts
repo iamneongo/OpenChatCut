@@ -22,7 +22,7 @@ export async function runMediaCommand(
     case 'list':
       return listCommand(line, json);
     case undefined:
-      throw new Error('media needs a subcommand: ls');
+      throw new Error('media cần một lệnh con: ls');
     default:
       return importHint(subcommand);
   }
@@ -31,9 +31,9 @@ export async function runMediaCommand(
 /** Import lives in the app (upload UI) or the desktop agent tools; say so plainly. */
 function importHint(subcommand: string): Promise<void> {
   return Promise.reject(new Error(
-    `media ${subcommand} is not available yet: headless import needs the upload receipt and `
-    + 'normalize-media chain the browser owns. Use the app\'s media pool, or the desktop agent '
-    + 'tools import_asset / import_folder.',
+    `media ${subcommand} hiện chưa khả dụng: nhập không cần trình duyệt cần biên nhận tải lên và `
+    + 'chuỗi normalize-media do trình duyệt quản lý. Hãy dùng kho phương tiện của ứng dụng hoặc '
+    + 'các công cụ tác tử trên máy tính import_asset / import_folder.',
   ));
 }
 
@@ -56,11 +56,11 @@ async function listCommand(line: CommandLine, json: boolean): Promise<void> {
     return;
   }
   if (assets.length === 0) {
-    writeStdout(`No media in ${project.name}. Import files in the app's media pool.`);
+    writeStdout(`Chưa có phương tiện trong ${project.name}. Nhập tệp từ kho phương tiện của ứng dụng.`);
     return;
   }
   writeStdout(renderTable(
-    ['ASSET', 'KIND', 'NAME', 'DURATION', 'SIZE', 'SRC'],
+    ['TÀI NGUYÊN', 'LOẠI', 'TÊN', 'THỜI LƯỢNG', 'KÍCH THƯỚC', 'NGUỒN'],
     assets.map((asset) => [
       asset.id,
       asset.kind,

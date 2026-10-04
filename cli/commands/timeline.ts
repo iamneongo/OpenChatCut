@@ -22,9 +22,9 @@ export async function runTimelineCommand(
     case 'items':
       return itemsCommand(line, commandLine, json);
     case undefined:
-      throw new UsageError('timeline needs a subcommand: show | items');
+      throw new UsageError('timeline cần một lệnh con: show | items');
     default:
-      throw new UsageError(`unknown timeline subcommand "${subcommand}"`);
+      throw new UsageError(`lệnh con của timeline không xác định "${subcommand}"`);
   }
 }
 
@@ -37,7 +37,7 @@ async function showCommand(line: CommandLine, json: boolean): Promise<void> {
     return;
   }
   writeStdout(renderTable(
-    ['TIMELINE', 'NAME', 'FPS', 'SIZE', 'CLIPS', 'DURATION', 'TRACKS'],
+    ['DÒNG THỜI GIAN', 'TÊN', 'FPS', 'KÍCH THƯỚC', 'ĐOẠN', 'THỜI LƯỢNG', 'RÃNH'],
     timelines.map((timeline) => [
       `${timeline.id}${timeline.active ? ' *' : ''}`,
       timeline.name,
@@ -58,7 +58,7 @@ async function itemsCommand(line: CommandLine, commandLine: CommandLine, json: b
     ? doc.timelines.find((candidate) => candidate.id === timelineId)
     : activeTimelineOf(doc);
   if (!timeline) {
-    throw new CliError(`Project ${project.id} has no timeline ${timelineId}.\nTimelines:\n${
+    throw new CliError(`Dự án ${project.id} không có dòng thời gian ${timelineId}.\nCác dòng thời gian:\n${
       doc.timelines.map((candidate) => `  ${candidate.id}  ${candidate.name}`).join('\n')}`);
   }
   const track = flagText(commandLine, 'track');
@@ -68,11 +68,11 @@ async function itemsCommand(line: CommandLine, commandLine: CommandLine, json: b
     return;
   }
   if (items.length === 0) {
-    writeStdout(`No clips${track ? ` on track ${track}` : ''} in ${timeline.id} (${timeline.name}).`);
+    writeStdout(`Chưa có đoạn${track ? ` trên rãnh ${track}` : ''} trong ${timeline.id} (${timeline.name}).`);
     return;
   }
   writeStdout(renderTable(
-    ['CLIP', 'TRACK', 'KIND', 'NAME', 'START', 'FRAMES', 'DURATION', 'SOURCE'],
+    ['ĐOẠN', 'RÃNH', 'LOẠI', 'TÊN', 'BẮT ĐẦU', 'KHUNG HÌNH', 'THỜI LƯỢNG', 'NGUỒN'],
     items.map((item) => [
       item.id,
       item.track,

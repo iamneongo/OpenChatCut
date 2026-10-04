@@ -45,7 +45,7 @@ export function parseCommandLine(argv: readonly string[]): CommandLine {
 export function flagText(commandLine: CommandLine, name: string): string | undefined {
   const value = commandLine.flags.get(name);
   if (value === undefined) return undefined;
-  if (value === true) throw new UsageError(`--${name} needs a value`);
+  if (value === true) throw new UsageError(`--${name} cần một giá trị`);
   return value;
 }
 
@@ -54,20 +54,20 @@ export function flagBoolean(commandLine: CommandLine, name: string): boolean {
   if (value === undefined) return false;
   if (value === true || value === 'true') return true;
   if (value === 'false') return false;
-  throw new UsageError(`--${name} takes no value`);
+  throw new UsageError(`--${name} không nhận giá trị`);
 }
 
 export function rejectUnknownFlags(commandLine: CommandLine, allowed: readonly string[]): void {
   const known = new Set(allowed);
   const unknown = [...commandLine.flags.keys()].filter((name) => !known.has(name));
   if (unknown.length > 0) {
-    throw new UsageError(`unknown flag ${unknown.map((name) => `--${name}`).join(', ')}`);
+    throw new UsageError(`cờ không xác định ${unknown.map((name) => `--${name}`).join(', ')}`);
   }
 }
 
 export function positional(commandLine: CommandLine, index: number, label: string): string {
   const value = commandLine.positionals[index];
-  if (value === undefined || !value.trim()) throw new UsageError(`missing ${label}`);
+  if (value === undefined || !value.trim()) throw new UsageError(`thiếu ${label}`);
   return value;
 }
 
