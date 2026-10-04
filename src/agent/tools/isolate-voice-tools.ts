@@ -42,7 +42,7 @@ export async function execIsolateVoiceTool(
   const item = findItem(state.items, args.itemId);
   if (!item) {
     return {
-      error: `Không tìm thấy clip ${args.itemId ?? '(thiếu itemId)'}`,
+      error: `Không tìm thấy đoạn ${args.itemId ?? '(thiếu itemId)'}`,
       available: state.items
         .filter((it) => it.kind === 'video' || it.kind === 'audio')
         .map((it) => ({ itemId: it.id, name: it.name, kind: it.kind })),
@@ -75,7 +75,7 @@ export async function execIsolateVoiceTool(
     }
     if (!item.src || item.src !== sourceAsset.src) {
       return {
-        error: 'sourceAssetId không khớp với nguồn của clip đích',
+        error: 'sourceAssetId không khớp với nguồn của đoạn đích',
         itemSrc: item.src ?? null,
         sourceAssetId: sourceAsset.id,
         sourceSrc: sourceAsset.src,
@@ -115,7 +115,7 @@ export async function execIsolateVoiceTool(
   if (args.sourceAssetId) {
     const sourceMatch = findAsset(ctx.getDoc().assets ?? [], args.sourceAssetId);
     if (!sourceMatch.asset) return { error: `sourceAssetId: ${sourceMatch.error}`, candidates: sourceMatch.candidates };
-    if (sourceMatch.asset.src !== item.src) return { error: 'sourceAssetId không khớp với nguồn của clip đích' };
+    if (sourceMatch.asset.src !== item.src) return { error: 'sourceAssetId không khớp với nguồn của đoạn đích' };
   }
 
   const src = item.src ?? '';

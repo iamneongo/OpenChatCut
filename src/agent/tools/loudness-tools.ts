@@ -29,8 +29,8 @@ export async function execLoudnessTool(name: string, args: Args, ctx: AgentConte
   const items = findAudioItems(ctx, args.itemId);
   if (items.length === 0) {
     return args.itemId
-      ? { error: `Không tìm thấy clip âm thanh ${args.itemId}` }
-      : { ok: true, normalized: [], target, note: 'Timeline không có clip âm thanh' };
+      ? { error: `Không tìm thấy đoạn âm thanh ${args.itemId}` }
+      : { ok: true, normalized: [], target, note: 'Dòng thời gian không có đoạn âm thanh' };
   }
 
   const normalized: { itemId: string; measuredLufs: number; gain: number }[] = [];

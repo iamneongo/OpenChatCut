@@ -44,7 +44,7 @@ function findClip(ctx: AgentContext, args: Args): TimelineItem | null {
 async function convert(args: Args, ctx: AgentContext): Promise<unknown> {
   const item = findClip(ctx, args);
   if (!item) return { error: 'Không tìm thấy clip; hãy truyền itemId (ưu tiên) hoặc assetId' };
-  if (item.kind === 'audio') return { error: 'Clip âm thanh không có video để kết xuất; convert áp dụng cho clip motion-graphic/video/image' };
+  if (item.kind === 'audio') return { error: 'Đoạn âm thanh không có video để kết xuất; convert áp dụng cho đoạn motion-graphic/video/image' };
 
   const state = ctx.getState();
   const wantAlpha = ALPHA_CAPABLE.has(item.kind) && args.opaque !== true;
@@ -116,7 +116,7 @@ async function register(args: Args, ctx: AgentContext): Promise<unknown> {
   const mgQuery = typeof args.mgAssetId === 'string' ? args.mgAssetId.trim() : '';
   if (!mgQuery) return { error: 'Cần có mgAssetId (mã tư liệu motion graphic nguồn)' };
   const mg = resolveMgSource(ctx, mgQuery);
-  if (!mg) return { error: `Không có tư liệu/mẫu/clip motion graphic khớp với "${mgQuery}"` };
+  if (!mg) return { error: `Không có tư liệu/mẫu/đoạn motion graphic khớp với "${mgQuery}"` };
 
   // renderId (preferred) → resolve the finished render's output from the local job records.
   let outputUrl = '';

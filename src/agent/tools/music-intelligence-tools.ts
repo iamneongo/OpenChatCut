@@ -213,8 +213,8 @@ async function syncCuts(args: Args, ctx: AgentContext): Promise<unknown> {
       changed: false,
       analysisRef: built.plan.analysisRef,
       reason: prepared.lockedIds.length
-        ? 'Tất cả clip mục tiêu đều nằm trên track bị khóa; hãy mở khóa rồi thử lại'
-        : 'Không có điểm cắt nào nằm trong clip video có thể chỉnh sửa',
+        ? 'Tất cả đoạn mục tiêu đều nằm trên rãnh bị khóa; hãy mở khóa rồi thử lại'
+        : 'Không có điểm cắt nào nằm trong đoạn video có thể chỉnh sửa',
       lockedTargetIds: prepared.lockedIds.slice(0, MAX_MUSIC_PLAN_TARGETS),
     };
   }
@@ -247,13 +247,13 @@ async function syncImages(args: Args, ctx: AgentContext): Promise<unknown> {
       ok: true,
       changed: false,
       analysisRef: built.plan.analysisRef,
-      reason: `Track video mục tiêu ${built.plan.track} đang bị khóa; hãy mở khóa hoặc chọn track khác`,
+      reason: `Rãnh video mục tiêu ${built.plan.track} đang bị khóa; hãy mở khóa hoặc chọn rãnh khác`,
       track: built.plan.track,
     };
   }
   if (prepared.conflictingItemIds.length) {
     return {
-      error: `Track video mục tiêu ${built.plan.track} đã có nội dung trong khoảng yêu cầu; hãy chọn track trống`,
+      error: `Rãnh video mục tiêu ${built.plan.track} đã có nội dung trong khoảng yêu cầu; hãy chọn rãnh trống`,
       changed: false,
       track: built.plan.track,
       conflictingItemIds: prepared.conflictingItemIds.slice(0, MAX_MUSIC_PLAN_TARGETS),

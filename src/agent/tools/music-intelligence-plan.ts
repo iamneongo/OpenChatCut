@@ -322,7 +322,7 @@ function planRange(item: TimelineItem, options: MusicPlanOptions): MusicEditPlan
   const itemEnd = item.startFrame + item.durationInFrames;
   const fromFrame = Math.max(item.startFrame, Math.round(options.fromFrame ?? item.startFrame));
   const toFrame = Math.min(itemEnd, Math.round(options.toFrame ?? itemEnd));
-  if (toFrame <= fromFrame) throw new Error('Khoảng timeline yêu cầu không giao với clip BGM');
+  if (toFrame <= fromFrame) throw new Error('Khoảng dòng thời gian yêu cầu không giao với đoạn BGM');
   return { fromFrame, toFrame };
 }
 
@@ -427,11 +427,11 @@ function selectedImageAssets(
 function imageTrack(state: TimelineState, requested?: string): string {
   if (requested !== undefined) {
     const track = resolveTrackId(state, requested, 'video');
-    if (!track) throw new Error(`Không tìm thấy track video "${requested}"; hãy gọi edit_track với action=list`);
+    if (!track) throw new Error(`Không tìm thấy rãnh video "${requested}"; hãy gọi edit_track với action=list`);
     return track;
   }
   const track = resolveTrackId(state, 'V1', 'video') ?? defaultTrackId(state, 'video');
-  if (!track) throw new Error('không có track video để đặt ảnh — hãy tạo một track bằng edit_track trước');
+  if (!track) throw new Error('không có rãnh video để đặt ảnh — hãy tạo một rãnh bằng edit_track trước');
   return track;
 }
 

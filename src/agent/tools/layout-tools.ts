@@ -61,9 +61,9 @@ export function execLayoutTool(name: string, args: Args, ctx: AgentContext): unk
   const items = new Map(state.items.map((it) => [it.id, it] as const));
   for (const { itemId } of assignments) {
     const item = items.get(itemId);
-    if (!item) return { error: `không tìm thấy item "${itemId}" trên timeline đang hoạt động` };
+    if (!item) return { error: `không tìm thấy đoạn "${itemId}" trên dòng thời gian đang hoạt động` };
     if (!PLACEABLE_KINDS.has(item.kind)) {
-      return { error: `item "${itemId}" là ${item.kind} — apply_layout chỉ đặt clip hình ảnh toàn khung (video/image/gif/svg)` };
+      return { error: `đoạn "${itemId}" là ${item.kind} — apply_layout chỉ đặt đoạn hình ảnh toàn khung (video/image/gif/svg)` };
     }
   }
 
@@ -97,7 +97,7 @@ export function execLayoutTool(name: string, args: Args, ctx: AgentContext): unk
       const mainRow = order.indexOf(items.get(mainId)!.track);
       const insetRow = order.indexOf(items.get(insetId)!.track);
       if (mainRow >= 0 && insetRow >= 0 && insetRow >= mainRow) {
-        notes.push('inset clip is not on a higher timeline row than main — it will render BEHIND the full-frame clip; move it to an upper video track');
+        notes.push('Đoạn inset không nằm ở hàng dòng thời gian cao hơn đoạn chính — nó sẽ nằm SAU đoạn toàn khung; hãy chuyển lên rãnh video phía trên');
       }
     }
   }

@@ -231,7 +231,7 @@ function state(items: TimelineItem[], tracks: TimelineState['tracks'] = {}): Tim
       images,
       { timing: 'beat', density: 'dense', track: 'V99' },
     ),
-    /Không tìm thấy track video "V99"/,
+    /Không tìm thấy rãnh video "V99"/,
     'an invalid explicit target track must not silently fall back to V1',
   );
 }
@@ -428,8 +428,8 @@ function state(items: TimelineItem[], tracks: TimelineState['tracks'] = {}): Tim
       analysisRef: musicAnalysisRef(analysis),
     }, ctx) as { error?: string; modelPacks?: Array<{ id: string }> };
     assert.ok(result.error, 'missing packs must reject');
-    assert.ok(result.error!.includes('设置 → 本地模型 → 节拍与音乐分析'), 'error must carry the settings guidance (zh)');
-    assert.ok(result.error!.includes('Settings → Local models → Beat and music analysis'), 'error must carry the settings guidance (en)');
+    assert.ok(result.error!.includes('Cài đặt → Mô hình cục bộ → Nhịp và phân tích âm nhạc'), 'error must carry the settings guidance (vi)');
+    assert.ok(result.error!.includes('Mô hình cục bộ → Beat and music analysis'), 'error must carry the settings guidance fallback (en)');
     assert.equal(result.modelPacks?.length, 2, 'the missing pack ids must be reported');
   } finally {
     globalThis.fetch = previousFetch;

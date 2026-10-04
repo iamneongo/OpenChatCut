@@ -48,7 +48,7 @@ function resolveTranscriptSegments(state: TimelineState, spec: string, trackFilt
   if (!sns) return { error: `Không thể phân tích transcriptSegments "${spec}" — dùng số [sN] từ read_script, ví dụ "3", "3-5" hoặc "2,4-6"` };
   const model = buildModel(state);
   const tracks = trackFilter ? model.filter((t) => t.track.toLowerCase() === trackFilter.toLowerCase()) : model;
-  if (trackFilter && !tracks.length) return { error: `transcriptTrack "${trackFilter}" không tồn tại hoặc track này không có nội dung` };
+  if (trackFilter && !tracks.length) return { error: `transcriptTrack "${trackFilter}" không tồn tại hoặc rãnh này không có nội dung` };
 
   // Each transcribed region (= a transcribed clip) is indexed by sn; candidate = region containing all selected segments
   const candidates: { track: string; itemId: string; rows: Map<number, SegRow> }[] = [];
@@ -69,7 +69,7 @@ function resolveTranscriptSegments(state: TimelineState, spec: string, trackFilt
 
   const cand = candidates[0]!;
   const item = state.items.find((it) => it.id === cand.itemId);
-  if (!hasOperationalTranscript(item)) return { error: `clip ${cand.itemId} tương ứng với vùng transcript không còn transcript hiện tại; hãy chạy lại read_script` };
+  if (!hasOperationalTranscript(item)) return { error: `đoạn ${cand.itemId} tương ứng với vùng transcript không còn bản chép lời hiện tại; hãy chạy lại read_script` };
   const deleted = new Set(item.deletedWordIdx ?? []);
   const mapper = makeWordFrameMapper(item, state.fps);
   const firstRow = cand.rows.get(sns[0]!)!;

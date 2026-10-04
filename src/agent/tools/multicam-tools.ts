@@ -245,8 +245,8 @@ export function execChangeCam(args: Args, ctx: Pick<AgentContext, 'getState' | '
   for (const id of rawIds) {
     const hit = state.items.find((x) => x.id === id || x.id.startsWith(id));
     if (!hit) return { error: `Không tìm thấy item: ${id}` };
-    if (hit.kind !== 'video') return { error: `Các góc change_cam phải là clip video; ${hit.id} là ${hit.kind}` };
-    if (state.tracks?.[hit.track]?.locked) return { error: `track ${hit.track} đang bị khóa` };
+    if (hit.kind !== 'video') return { error: `Các góc change_cam phải là đoạn video; ${hit.id} là ${hit.kind}` };
+    if (state.tracks?.[hit.track]?.locked) return { error: `rãnh ${hit.track} đang bị khóa` };
     if (!group.some((g) => g.id === hit.id)) group.push(hit);
   }
   const targetRef = String(args.targetItemId ?? '');
@@ -269,7 +269,7 @@ export function execChangeCam(args: Args, ctx: Pick<AgentContext, 'getState' | '
   const others = group.filter((it) => !isTargetAngle(it));
   if (!others.length) return { error: 'itemIds phải có ít nhất một góc khác ngoài mục tiêu' };
   if (coveredFrames(targets, fromFrame, toFrame) === 0) {
-    return { error: 'Góc mục tiêu không có clip trong khoảng chuyển — chuyển cảnh sẽ hiển thị màu đen' };
+    return { error: 'Góc mục tiêu không có đoạn trong khoảng chuyển — chuyển cảnh sẽ hiển thị màu đen' };
   }
 
   const plan = planCamSwitch(targets, others, fromFrame, toFrame, () => crypto.randomUUID());

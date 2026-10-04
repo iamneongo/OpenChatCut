@@ -144,8 +144,8 @@ export async function execTrackTool(name: string, args: Args, ctx: AgentContext)
         if (hits.length !== 1) {
           return {
             error: hits.length === 0
-              ? `item ${ref} not on track ${trackAlias(state, id)}`
-              : `ambiguous item prefix ${ref}`,
+              ? `Đoạn ${ref} không nằm trên rãnh ${trackAlias(state, id)}`
+              : `Tiền tố đoạn ${ref} không đủ rõ`,
           };
         }
         orderedIds.push(hits[0]!.id);
