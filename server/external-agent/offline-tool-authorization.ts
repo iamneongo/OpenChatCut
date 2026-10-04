@@ -26,7 +26,7 @@ export function assertOfflineToolAllowed(
   if (!isExternalServerDirectTool(name)) {
     throw new ExternalEditorCallError(
       'rejected',
-      `Tool ${name} requires the browser editor. Open ${editorUrl} for visual/canvas inspection, generation, upload, network, preset, render, or export tools.`,
+      `Công cụ ${name} yêu cầu trình chỉnh sửa trên trình duyệt. Hãy mở ${editorUrl} để dùng các công cụ kiểm tra hình ảnh/khung vẽ, tạo nội dung, tải lên, mạng, preset, kết xuất hoặc xuất tệp.`,
     );
   }
   if (!isExternalServerDirectCall(name, args)) {

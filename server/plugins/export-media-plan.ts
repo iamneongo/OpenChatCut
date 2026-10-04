@@ -158,7 +158,7 @@ async function materializeRemote(
     }
     const declaredLength = Number(response.headers.get('content-length'));
     if (Number.isFinite(declaredLength) && declaredLength > options.maxMaterializedBytes) {
-      return issueFor(reference, 'unreadable', `Media source exceeds the materialization limit: ${reference.source}`);
+      return issueFor(reference, 'unreadable', `Nguồn media vượt giới hạn vật chất hóa: ${reference.source}`);
     }
 
     await mkdir(options.uploadDirectory, { recursive: true });
@@ -209,7 +209,7 @@ async function materializeRemote(
     return issueFor(
       reference,
       'unreadable',
-      `Media source could not be materialized: ${reference.source} (${error instanceof Error ? error.message : String(error)})`,
+      `Không thể vật chất hóa nguồn media: ${reference.source} (${error instanceof Error ? error.message : String(error)})`,
     );
   } finally {
     await response?.body?.cancel().catch(() => undefined);

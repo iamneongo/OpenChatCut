@@ -88,7 +88,7 @@ function readJson(req: IncomingMessage, max = MAX_JSON): Promise<unknown> {
     size += chunk.length;
     if (size > max) {
       chunks.length = 0;
-      deferred.reject(new NormalizeBodyTooLargeError('body too large'));
+      deferred.reject(new NormalizeBodyTooLargeError('thân yêu cầu quá lớn'));
       // Keep draining the request so the client can receive the error response.
     } else {
       chunks.push(chunk);

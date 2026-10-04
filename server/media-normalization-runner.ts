@@ -111,7 +111,7 @@ function acceptedResult(options: NormalizeMediaFileOptions, meta: ProbeMeta): No
     path: options.publicSrc,
     outputPath: options.inputPath,
     normalized: false,
-    reason: 'source accepted',
+    reason: 'nguồn đã được chấp nhận',
     bytes: meta.size,
     width: meta.width,
     height: meta.height,

@@ -35,13 +35,13 @@ export function projectMcpReply(value: unknown): unknown {
   if (!sanitized) {
     throw new ExternalEditorCallError(
       'failed',
-      'The external result could not be serialized safely.',
+      'Không thể tuần tự hóa an toàn kết quả bên ngoài.',
     );
   }
   if (sanitized.originalChars > TOOL_ARTIFACT_THRESHOLD) {
     throw new ExternalEditorCallError(
       'failed',
-      'The external result was too large and no recoverable artifact reference was available.',
+      'Kết quả bên ngoài quá lớn và không có tham chiếu tệp kết quả nào có thể khôi phục.',
     );
   }
   const projected = JSON.parse(sanitized.body) as unknown;

@@ -22,13 +22,13 @@ function sendJson(res: ServerResponse, status: number, body: unknown): void {
 
 async function readJson(req: IncomingMessage): Promise<{ src?: unknown }> {
   const declared = Number(req.headers['content-length'] ?? 0);
-  if (Number.isFinite(declared) && declared > MAX_JSON_BYTES) throw new BodyTooLargeError('body too large');
+  if (Number.isFinite(declared) && declared > MAX_JSON_BYTES) throw new BodyTooLargeError('thân yêu cầu quá lớn');
   const chunks: Buffer[] = [];
   let total = 0;
   for await (const chunk of req) {
     const bytes = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk);
     total += bytes.length;
-    if (total > MAX_JSON_BYTES) throw new BodyTooLargeError('body too large');
+    if (total > MAX_JSON_BYTES) throw new BodyTooLargeError('thân yêu cầu quá lớn');
     chunks.push(bytes);
   }
   return JSON.parse(Buffer.concat(chunks).toString('utf8') || '{}') as { src?: unknown };

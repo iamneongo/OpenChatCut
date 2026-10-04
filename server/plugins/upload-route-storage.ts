@@ -93,7 +93,7 @@ async function handleDeleteUpload(req: IncomingMessage, res: ServerResponse): Pr
       }
       if (failures.length) {
         const detail = failures.map((error) => error instanceof Error ? error.message : String(error)).join('; ');
-        throw new AggregateError(failures, `upload delete incomplete: ${detail}`);
+        throw new AggregateError(failures, `xóa tệp tải lên chưa hoàn tất: ${detail}`);
       }
       return {
         ok: true,
@@ -117,7 +117,7 @@ function rejectDeclaredSize(req: IncomingMessage, res: ServerResponse, maxBytes:
     return true;
   }
   if (declared === 0) {
-    sendError(res, 400, 'body rỗng');
+    sendError(res, 400, 'thân yêu cầu rỗng');
     req.resume();
     return true;
   }

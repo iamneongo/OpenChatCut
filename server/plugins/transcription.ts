@@ -51,7 +51,7 @@ function hasBinaryContentType(req: IncomingMessage): boolean {
 function assertDeclaredAudioSize(req: IncomingMessage): void {
   const declared = Number(req.headers['content-length'] ?? 0);
   if (Number.isFinite(declared) && declared > MAX_TRANSCRIPTION_BYTES) {
-    throw new TranscriptionRequestError(413, 'audio body is too large (maximum 100 MiB)');
+    throw new TranscriptionRequestError(413, 'thân âm thanh quá lớn (tối đa 100 MiB)');
   }
 }
 
@@ -62,7 +62,7 @@ async function readAudio(req: IncomingMessage): Promise<Buffer> {
     const bytes = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk);
     total += bytes.length;
     if (total > MAX_TRANSCRIPTION_BYTES) {
-      throw new TranscriptionRequestError(413, 'audio body is too large (maximum 100 MiB)');
+      throw new TranscriptionRequestError(413, 'thân âm thanh quá lớn (tối đa 100 MiB)');
     }
     chunks.push(bytes);
   }

@@ -68,7 +68,7 @@ async function handleUploadWrite(
     const declaredBytes = contentLengthOf(req);
     if (handoff && declaredBytes !== null && declaredBytes !== handoff.expectedBytes) {
       req.resume();
-      sendError(res, 400, 'upload byte size does not match handoff');
+      sendError(res, 400, 'kích thước byte tải lên không khớp thông tin bàn giao');
       return;
     }
     const directory = uploadDir();
@@ -95,7 +95,7 @@ async function handleUploadWrite(
     if (bytes === 0) {
       await unlink(partPath).catch(() => {});
       partPath = undefined;
-      sendError(res, 400, 'body rỗng');
+      sendError(res, 400, 'thân yêu cầu rỗng');
       return;
     }
     await enqueueUploadMutation(name, async () => {

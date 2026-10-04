@@ -325,14 +325,14 @@ export function normalizeReason(
   }
   if (!optimize) return null;
   if (meta.width > MAX_DIMENSION || meta.height > MAX_DIMENSION) {
-    return `dimensions ${meta.width}x${meta.height} exceed ${MAX_DIMENSION}px`;
+    return `kích thước ${meta.width}x${meta.height} vượt quá ${MAX_DIMENSION}px`;
   }
   if (meta.sourceBitrate > 0) {
     const efficient = Math.max(targetBitrate * 1.15, SKIP_MAX_SOURCE_BITRATE_BPS);
-    if (meta.sourceBitrate > efficient) return 'source bitrate exceeds efficient threshold';
+    if (meta.sourceBitrate > efficient) return 'tốc độ bit nguồn vượt ngưỡng hiệu quả';
   }
   // Very large files even if "compatible" (e.g. long 1080p high quality) — soft cap ~1.5GB
-  if (meta.size > LARGE_SOURCE_BYTES) return 'source file larger than 1.5GB';
+  if (meta.size > LARGE_SOURCE_BYTES) return 'tệp nguồn lớn hơn 1,5 GB';
   return null;
 }
 

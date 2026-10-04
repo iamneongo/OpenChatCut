@@ -41,12 +41,12 @@ function defaultBrowserProjectId(): string {
   if (!connected.length) {
     throw new ExternalEditorCallError(
       'rejected',
-      'No OpenChatCut editor is connected. Call target_project with an existing project id for offline editing, or open the editor.',
+      'Chưa có trình chỉnh sửa OpenChatCut nào được kết nối. Hãy gọi target_project với ID dự án hiện có để chỉnh sửa ngoại tuyến, hoặc mở trình chỉnh sửa.',
     );
   }
   throw new ExternalEditorCallError(
     'rejected',
-    'Multiple OpenChatCut projects are open; call target_project with the intended project.',
+    'Có nhiều dự án OpenChatCut đang mở; hãy gọi target_project với dự án cần dùng.',
   );
 }
 
