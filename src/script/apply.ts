@@ -231,7 +231,7 @@ export function applyScript(getState: () => TimelineState, commands: Cmds, md: s
   }
   for (const plan of silencePlans) {
     commands.setGapCap(plan.row.itemId, plan.row.afterWordIndex, plan.maxMs);
-    changes.push(`${items.get(plan.row.itemId)?.name ?? plan.row.itemId}: 调整停顿`);
+    changes.push(`${items.get(plan.row.itemId)?.name ?? plan.row.itemId}: điều chỉnh khoảng nghỉ`);
   }
   for (const id of removeIds) commands.removeItem(id);
   // repack: body order = playback order; frames re-derived from live durations.
