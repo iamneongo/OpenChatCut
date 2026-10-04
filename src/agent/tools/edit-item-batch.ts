@@ -39,7 +39,7 @@ function failedBatch(
     failed: 1,
     results,
     error,
-    note: 'Không có bản nháp nào được công bố. Hãy sửa mục được báo lỗi rồi thử lại toàn bộ batch.',
+    note: 'Không có bản nháp nào được công bố. Hãy sửa mục được báo lỗi rồi thử lại toàn bộ lô.',
   };
 }
 
