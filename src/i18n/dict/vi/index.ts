@@ -2560,7 +2560,7 @@ export const VI: Record<string, string> = {
   '下拍定位': 'Định vị phách mạnh',
   'BPM 与拍号': 'BPM và nhịp số',
   '节拍能量': 'Năng lượng nhịp',
-  '音乐语义向量': 'Vector ngữ nghĩa âm nhạc',
+  '音乐语义向量': 'Vectơ ngữ nghĩa âm nhạc',
   '音乐相似度': 'Độ tương đồng âm nhạc',
   '建议内存 {memory}': 'Bộ nhớ khuyến nghị {memory}',
   '安装中 {pct}%（{done}/{total} 个文件）': 'Đang cài {pct}% ({done}/{total} tệp)',
