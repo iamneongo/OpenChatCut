@@ -3,16 +3,16 @@ import type { AgentToolSchema } from '../../tool-schema';
 export const VERSION_TOOL_SCHEMAS: AgentToolSchema[] = [{
   name: 'manage_versions',
   description:
-    'Lịch sử phiên bản có tên của dự án (panel Version History): liệt kê checkpoint, lưu dự án hiện tại thành snapshot có tên, '
-    + 'khôi phục snapshot bằng cách thay thế toàn bộ dự án (propose→confirm, cùng luồng với undo), hoặc xóa phiên bản đã lưu. '
-    + 'Phiên bản là các mốc giữa những lần làm việc — không phải undo stack chi tiết. restore thay thế toàn bộ dự án đang mở.',
+    'Lịch sử phiên bản có tên của dự án (bảng Lịch sử phiên bản): liệt kê checkpoint, lưu dự án hiện tại thành ảnh chụp có tên, '
+    + 'khôi phục ảnh chụp bằng cách thay thế toàn bộ dự án (propose→confirm, cùng luồng với undo), hoặc xóa phiên bản đã lưu. '
+    + 'Phiên bản là các mốc giữa những lần làm việc — không phải ngăn xếp hoàn tác chi tiết. restore thay thế toàn bộ dự án đang mở.',
   input_schema: {
     type: 'object',
     properties: {
       action: {
         type: 'string',
         enum: ['list', 'save', 'restore', 'delete'],
-        description: 'list snapshot; save tài liệu hiện tại; restore theo versionId; delete một dòng snapshot.',
+        description: 'list ảnh chụp; save tài liệu hiện tại; restore theo versionId; delete một ảnh chụp.',
       },
       name: {
         type: 'string',
