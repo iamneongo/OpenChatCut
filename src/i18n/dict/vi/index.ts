@@ -1262,7 +1262,7 @@ export const VI: Record<string, string> = {
   '旋转片段': 'Xoay đoạn',
   '时间线帧': 'Khung hình dòng thời gian',
   '正在准备流畅预览…': 'Đang chuẩn bị bản xem trước mượt mà…',
-  '正在准备真实 GL 预览…': 'Đang chuẩn bị bản xem trước GL thật…',
+  '正在准备真实 GL 预览…': 'Đang chuẩn bị bản xem trước GL đầy đủ…',
   '正在加载效果预览；暂时显示回退画面': 'Đang tải bản xem trước hiệu ứng; tạm thời hiển thị hình dự phòng',
   '步长': 'Bước nhảy',
   '流畅预览暂不可用，已自动使用原画质播放（画面正常，不影响导出）': 'Bản xem trước mượt tạm thời không khả dụng; đã tự động phát ở chất lượng gốc (hình ảnh bình thường, không ảnh hưởng xuất)',
