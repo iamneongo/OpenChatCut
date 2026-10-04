@@ -198,17 +198,17 @@ export function parseProjectEnvelope(
   } catch {
     return { error: 'không phải tệp JSON hợp lệ' };
   }
-  if (!raw || typeof raw !== 'object') return { error: 'nội dung tệp không phải object' };
+  if (!raw || typeof raw !== 'object') return { error: 'nội dung tệp không phải đối tượng' };
   const r = raw as Record<string, unknown>;
   if (r.format !== PROJECT_EXPORT_FORMAT) {
     return { error: `không nhận diện được định dạng (cần ${PROJECT_EXPORT_FORMAT})` };
   }
-  if (typeof r.name !== 'string' || !r.name.trim()) return { error: 'thiếu tên project' };
+  if (typeof r.name !== 'string' || !r.name.trim()) return { error: 'thiếu tên dự án' };
   const migratedDoc = migrateProjectDoc(r.doc, migrationOptions);
-  if (!migratedDoc) return { error: 'dữ liệu project (doc) không vượt qua kiểm tra' };
+  if (!migratedDoc) return { error: 'dữ liệu dự án (doc) không vượt qua kiểm tra' };
   const doc = sanitizePortableProjectDoc(migratedDoc);
-  if (!Array.isArray(r.media)) return { error: 'gói project thiếu danh sách media' };
-  if (!r.media.every(isMediaEntry)) return { error: 'mục media trong gói project không vượt qua kiểm tra' };
+  if (!Array.isArray(r.media)) return { error: 'gói dự án thiếu danh sách tư liệu' };
+  if (!r.media.every(isMediaEntry)) return { error: 'mục tư liệu trong gói dự án không vượt qua kiểm tra' };
   const media = r.media;
   const chat = isPersistedChat(r.chat) ? sanitizePortableChat(r.chat) : undefined;
   const creativeMode = typeof r.creativeMode === 'string' && r.creativeMode ? r.creativeMode : undefined;
@@ -237,7 +237,7 @@ export interface ProjectExportResult {
 
 export async function buildProjectExport(id: string, name: string): Promise<ProjectExportResult> {
   const doc = await loadProject(id);
-  if (!doc) throw new Error('project không tồn tại hoặc đã bị hỏng');
+  if (!doc) throw new Error('dự án không tồn tại hoặc đã bị hỏng');
   const exportDoc = sanitizePortableProjectDoc(doc);
   const loadedChat = await loadChat(id);
   const chat = loadedChat ? sanitizePortableChat(loadedChat) : undefined;
@@ -349,9 +349,9 @@ async function stageLegacyEnvelope(envelope: ProjectEnvelope): Promise<StagedPro
   let mediaRestored = 0;
   try {
     for (const entry of envelope.media) {
-      if (replacements.has(entry.src)) throw new Error(`src media trong gói project bị trùng: ${entry.src}`);
+      if (replacements.has(entry.src)) throw new Error(`src tư liệu trong gói dự án bị trùng: ${entry.src}`);
       const bytes = base64ToBytes(entry.dataBase64);
-      if (bytes.byteLength !== entry.bytes) throw new Error(`kích thước media trong gói project không khớp: ${entry.name}`);
+      if (bytes.byteLength !== entry.bytes) throw new Error(`kích thước tư liệu trong gói dự án không khớp: ${entry.name}`);
       const blob = new Blob([arrayBufferBlobPart(bytes)], { type: entry.mime });
       const staged = await stageMediaBlobImport(namespace, entry.src, blob, {
         name: entry.name,
@@ -362,7 +362,7 @@ async function stageLegacyEnvelope(envelope: ProjectEnvelope): Promise<StagedPro
       });
       const sameTarget = stagedByTarget.get(staged.src);
       if (sameTarget && sameTarget.sha256 !== staged.sha256) {
-        throw new Error(`xung đột tên an toàn media trong gói project: ${staged.src}`);
+        throw new Error(`xung đột tên an toàn tư liệu trong gói dự án: ${staged.src}`);
       }
       if (!sameTarget) {
         stagedByTarget.set(staged.src, staged);
@@ -385,7 +385,7 @@ async function stageLegacyEnvelope(envelope: ProjectEnvelope): Promise<StagedPro
     try {
       await discardMediaBlobImport(namespace);
     } catch (cleanupError) {
-      throw new AggregateError([error, cleanupError], 'phân tích gói project thất bại, dọn dẹp media tạm cũng thất bại');
+      throw new AggregateError([error, cleanupError], 'phân tích gói dự án thất bại, dọn dẹp tư liệu tạm cũng thất bại');
     }
     throw error;
   }
@@ -395,14 +395,14 @@ function streamManifest(
   value: unknown,
   migrationOptions?: ProjectMigrationOptions,
 ): ProjectStreamManifest {
-  if (!value || typeof value !== 'object') throw new Error('manifest gói project không phải object');
+  if (!value || typeof value !== 'object') throw new Error('tệp kê khai gói dự án không phải đối tượng');
   const manifest = value as Partial<ProjectStreamManifest>;
   if (manifest.format !== PROJECT_STREAM_FORMAT || manifest.type !== 'manifest') {
     throw new Error(`không nhận diện được định dạng (cần ${PROJECT_STREAM_FORMAT})`);
   }
-  if (typeof manifest.name !== 'string' || !manifest.name.trim()) throw new Error('thiếu tên project');
+  if (typeof manifest.name !== 'string' || !manifest.name.trim()) throw new Error('thiếu tên dự án');
   const migratedDoc = migrateProjectDoc(manifest.doc, migrationOptions);
-  if (!migratedDoc) throw new Error('dữ liệu project (doc) không vượt qua kiểm tra');
+  if (!migratedDoc) throw new Error('dữ liệu dự án (doc) không vượt qua kiểm tra');
   const doc = sanitizePortableProjectDoc(migratedDoc);
   const proposal = portableProposalRecord(manifest.proposal);
   return {
@@ -441,7 +441,7 @@ export async function applyProjectImport(
   options: ProjectImportOptions = {},
 ): Promise<ProjectImportResult> {
   const migratedDoc = migrateProjectDoc(envelope.doc, options.migrationOptions);
-  if (!migratedDoc) throw new Error('dữ liệu project (doc) không vượt qua kiểm tra');
+  if (!migratedDoc) throw new Error('dữ liệu dự án (doc) không vượt qua kiểm tra');
   const staged = await stageLegacyEnvelope({
     ...envelope,
     doc: sanitizePortableProjectDoc(migratedDoc),
@@ -456,7 +456,7 @@ async function publishStreamProjectImport(
   options: ProjectImportOptions,
 ): Promise<ProjectImportResult> {
   const mediaImport = staged.mediaImport;
-  if (!mediaImport) throw new Error('thiếu danh sách media tạm của gói project');
+  if (!mediaImport) throw new Error('thiếu danh sách tư liệu tạm của gói dự án');
   const mediaPublication = await publishMediaBlobImport(mediaImport.namespace, mediaImport.entries);
   let meta: ProjectMeta;
   try {
@@ -465,7 +465,7 @@ async function publishStreamProjectImport(
     try {
       await rollbackMediaBlobImport(mediaPublication);
     } catch (rollbackError) {
-      throw new AggregateError([error, rollbackError], 'phát hành project thất bại, rollback media hoặc dọn dẹp tạm cũng thất bại');
+      throw new AggregateError([error, rollbackError], 'phát hành dự án thất bại, khôi phục tư liệu hoặc dọn dẹp tạm cũng thất bại');
     }
     throw error;
   }
