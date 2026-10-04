@@ -94,7 +94,7 @@ await assert.rejects(
   () => runtime.execute('hidden_internal_tool', { editSessionId: sessionId }),
   (error) => error instanceof ExternalEditorCallError
     && error.outcome === 'rejected'
-    && error.message.includes('not active'),
+    && error.message.includes('không hoạt động'),
   'tools outside the registered offline catalog fail closed',
 );
 assert.equal(persistence.checkpoint, null);

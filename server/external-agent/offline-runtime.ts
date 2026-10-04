@@ -103,10 +103,10 @@ export class OfflineExternalEditRuntime {
     const claimed = await persistence.claimProject(projectId, randomUUID());
     if (claimed.status !== 'claimed') {
       const message = claimed.status === 'missing'
-        ? `Stored project ${projectId} does not exist or is invalid.`
+        ? `Dự án đã lưu ${projectId} không tồn tại hoặc không hợp lệ.`
         : claimed.status === 'busy'
-          ? `Project ${projectId} already has an active browser or offline editor.`
-          : `Project ${projectId} has an unsupported or corrupt ownership record.`;
+          ? `Dự án ${projectId} đã có trình chỉnh sửa trong trình duyệt hoặc ngoại tuyến đang hoạt động.`
+          : `Bản ghi quyền sở hữu của dự án ${projectId} không được hỗ trợ hoặc đã hỏng.`;
       throw new ExternalEditorCallError('rejected', message);
     }
     const snapshot = { projectId, doc: claimed.doc, revision: claimed.revision };
@@ -332,7 +332,7 @@ export class OfflineExternalEditRuntime {
     try {
       await this.persistence.deleteCheckpoint?.(this.projectId, state.session.id, this.ownership);
     } catch {
-      warning = 'The applied draft checkpoint could not be removed; its stale revision prevents reuse.';
+      warning = 'Không thể xóa checkpoint bản nháp đã áp dụng; revision cũ khiến checkpoint này không thể được dùng lại.';
     }
     const applied = finishExternalEditSession(
       state.session,
@@ -380,9 +380,9 @@ export class OfflineExternalEditRuntime {
     const outcome = this.disposed ? 'cancelled' : 'stale';
     this.finishIfCurrent(state, outcome);
     const reason = result === 'browser-takeover'
-      ? `Project ${this.projectId} opened in a browser before the draft checkpoint was saved.`
-      : `Stored project ${this.projectId} changed before the draft checkpoint was saved.`;
-    throw new ExternalEditorCallError(outcome, `${reason} Start a new MCP session.`);
+      ? `Dự án ${this.projectId} đã được mở trong trình duyệt trước khi lưu checkpoint bản nháp.`
+      : `Dự án đã lưu ${this.projectId} đã thay đổi trước khi lưu checkpoint bản nháp.`;
+    throw new ExternalEditorCallError(outcome, `${reason} Hãy bắt đầu phiên MCP mới.`);
   }
 
   private runExclusive<T>(operation: () => Promise<T> | T): Promise<T> {
@@ -409,7 +409,7 @@ export class OfflineExternalEditRuntime {
       const outcome = this.disposed ? 'cancelled' : 'stale';
       throw new ExternalEditorCallError(
         outcome,
-        `Edit session ${expected.session.id} changed while an offline operation was running.`,
+        `Phiên chỉnh sửa ${expected.session.id} đã thay đổi trong khi thao tác ngoại tuyến đang chạy.`,
       );
     }
     const next = { session, generation: expected.generation + 1 };
@@ -425,7 +425,7 @@ export class OfflineExternalEditRuntime {
     const current = this.sessions.get(expected.session.id);
     if (!this.disposed || !current) {
       throw new ExternalEditorCallError('stale',
-        `Edit session ${expected.session.id} changed while an offline operation was running.`);
+        `Phiên chỉnh sửa ${expected.session.id} đã thay đổi trong khi thao tác ngoại tuyến đang chạy.`);
     }
     const next = { session, generation: current.generation + 1 };
     this.sessions.set(session.id, next);
@@ -449,7 +449,7 @@ export class OfflineExternalEditRuntime {
   private requireSession(sessionId: string): VersionedOfflineSession {
     const state = this.sessions.get(sessionId);
     if (!state) {
-      throw new ExternalEditorCallError('rejected', `Unknown edit session ${sessionId}`);
+      throw new ExternalEditorCallError('rejected', `Không tìm thấy phiên chỉnh sửa ${sessionId}`);
     }
     return state;
   }

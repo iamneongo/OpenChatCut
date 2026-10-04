@@ -172,7 +172,7 @@ async function verifyArchiveFailure(): Promise<OfflineExternalEditRuntime> {
   });
   assert(checkpointed && typeof checkpointed === 'object' && 'status' in checkpointed);
   assert.equal(checkpointed.status, 'checkpointed');
-  assert.match(String('warning' in checkpointed ? checkpointed.warning : ''), /do not retry/i);
+  assert.match(String('warning' in checkpointed ? checkpointed.warning : ''), /không chạy lại/i);
   assert(store.checkpoint, 'archive failure after checkpoint remains a successful durable edit');
   return runtime;
 }

@@ -87,7 +87,7 @@ export function validateOfflineInvocation(name: string, args: Record<string, unk
 export function requiredSessionId(args: Record<string, unknown>): string {
   const value = args.editSessionId;
   if (typeof value !== 'string' || !value.trim()) {
-    throw new ExternalEditorCallError('rejected', 'editSessionId is required');
+    throw new ExternalEditorCallError('rejected', 'Cần có editSessionId');
   }
   return value.trim();
 }

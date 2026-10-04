@@ -24,8 +24,8 @@ export function failedOfflineCommit(disposed: boolean): OfflineReviewFailure {
   return {
     outcome: disposed ? 'cancelled' : 'failed',
     message: disposed
-      ? 'The MCP transport closed before commit; the incremental draft checkpoint was preserved.'
-      : 'The offline project commit failed; start a new MCP session to resume the saved draft.',
+      ? 'Kết nối MCP đã đóng trước khi ghi nhận; checkpoint bản nháp từng phần vẫn được giữ lại.'
+      : 'Ghi nhận dự án ngoại tuyến thất bại; hãy bắt đầu phiên MCP mới để tiếp tục bản nháp đã lưu.',
     staleProposal: false,
   };
 }
@@ -43,12 +43,12 @@ export function rejectedOfflineCommit(input: {
       ? 'failed'
       : 'stale';
   const message = input.disposed
-    ? 'The MCP transport closed before commit; the incremental draft checkpoint was preserved.'
+    ? 'Kết nối MCP đã đóng trước khi ghi nhận; checkpoint bản nháp từng phần vẫn được giữ lại.'
     : result.status === 'browser-takeover'
-      ? `Project ${input.projectId} opened in a browser before commit. Start a new MCP session at ${input.editorUrl}.`
+        ? `Dự án ${input.projectId} đã được mở trong trình duyệt trước khi ghi nhận. Hãy bắt đầu phiên MCP mới tại ${input.editorUrl}.`
       : result.status === 'stale'
-        ? `Stored project ${input.projectId} changed before commit. Start a new MCP session.`
-        : 'Project metadata kept changing; no offline edits were written.';
+        ? `Dự án đã lưu ${input.projectId} đã thay đổi trước khi ghi nhận. Hãy bắt đầu phiên MCP mới.`
+        : 'Siêu dữ liệu dự án tiếp tục thay đổi; không có chỉnh sửa ngoại tuyến nào được ghi lại.';
   return { outcome, message, staleProposal: outcome === 'stale' };
 }
 
@@ -77,7 +77,7 @@ export async function publishAppliedOfflineReview(
     return cleanupWarning;
   } catch {
     return cleanupWarning
-      ? `${cleanupWarning} The applied run ledger could not be finalized.`
-      : 'The edit was applied, but the run ledger could not be finalized.';
+      ? `${cleanupWarning} Không thể hoàn tất sổ theo dõi của lượt chạy đã áp dụng.`
+      : 'Đã áp dụng chỉnh sửa nhưng không thể hoàn tất sổ theo dõi của lượt chạy.';
   }
 }
