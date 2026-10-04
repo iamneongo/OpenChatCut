@@ -6,9 +6,9 @@ import { CliError, EXIT_FAILURE, EXIT_OK, EXIT_USAGE, UsageError } from './error
 import { writeStderr, writeStdout } from './output.ts';
 import { applyGlobalOptions } from './profile.ts';
 
-const USAGE = `occ — OpenChatCut command line
+const USAGE = `occ — dòng lệnh OpenChatCut
 
-Usage
+Cách dùng
   occ project list [--all] [--json]
   occ project show [<project>] [--doc] [--json]
   occ project new <name> [--size 1920x1080] [--fps 30] [--json]
@@ -27,25 +27,25 @@ Usage
   occ edit --ops '[{"tool":"set_aspect_ratio","args":{"ratio":"9:16"}}]' [--apply] [--json]
   occ where [--json]
 
-Global flags
-  --project <id|prefix|name>   project to act on (default: most recently updated)
-  --data-dir <path>            use a specific OpenChatCut library instead of the active profile
-  --json                       machine-readable output on stdout
-  --help                       this text
+Cờ dùng chung
+  --project <id|prefix|name>   dự án cần thao tác (mặc định: dự án cập nhật gần nhất)
+  --data-dir <path>            dùng thư viện OpenChatCut cụ thể thay cho hồ sơ đang hoạt động
+  --json                       xuất dữ liệu dành cho máy trên stdout
+  --help                       hiển thị nội dung này
 
-Writes
-  Only \`occ tools call --apply\` writes. It opens one offline edit session, commits
-  atomically through the same revision check the app uses, and snapshots a pre-edit
-  version, so every committed command is undoable from the app's version history.
-  Without --apply the draft is discarded and the project is left untouched.
+Ghi dữ liệu
+  Chỉ \`occ tools call --apply\` mới ghi dữ liệu. Lệnh mở một phiên chỉnh sửa ngoại tuyến,
+  commit nguyên tử qua cùng cơ chế kiểm tra phiên bản với ứng dụng và lưu ảnh chụp trước
+  khi sửa, để mọi lệnh đã commit đều có thể hoàn tác từ lịch sử phiên bản của ứng dụng.
+  Nếu không có --apply, bản nháp sẽ bị hủy và dự án không thay đổi.
 
-Projects
-  <project> accepts a full id, a unique id prefix, or a unique name.`;
+Dự án
+  <project> chấp nhận mã đầy đủ, tiền tố mã duy nhất hoặc tên duy nhất.`;
 
 function reportError(error: unknown): number {
   if (error instanceof UsageError) {
     writeStderr(error.message);
-    writeStderr('Run `occ --help` for usage.');
+    writeStderr('Chạy `occ --help` để xem cách dùng.');
     return EXIT_USAGE;
   }
   if (error instanceof CliError) {
