@@ -19,7 +19,7 @@ const PLAN_PROPERTIES = {
   timing: {
     type: 'string',
     enum: ['auto', 'beat', 'downbeat', 'section'],
-    description: 'Timing cắt. auto chọn section/downbeat/beat một cách xác định dựa trên density và phân tích có sẵn.',
+    description: 'Thời điểm cắt. auto chọn section/downbeat/beat một cách xác định dựa trên density và phân tích có sẵn.',
   },
   density: {
     type: 'string',
@@ -52,7 +52,7 @@ const IMAGE_PLAN_PROPERTIES = {
   timing: {
     type: 'string',
     enum: ['auto', 'beat', 'downbeat', 'section'],
-    description: 'Timing đổi ảnh. auto chọn section/downbeat/beat một cách xác định dựa trên density và phân tích có sẵn.',
+    description: 'Thời điểm đổi ảnh. auto chọn section/downbeat/beat một cách xác định dựa trên density và phân tích có sẵn.',
   },
   density: {
     type: 'string',
@@ -86,7 +86,7 @@ export const MUSIC_INTELLIGENCE_TOOL_SCHEMAS: AgentToolSchema[] = [
     name: 'analyze_music',
     description: [
       'Chạy mô hình Beat This + CLAP đã cài trên thiết bị cho tư liệu trong kho hoặc đoạn trên dòng thời gian và chờ hoàn tất.',
-      'Trả về BPM, meter, độ tin cậy, tag, section và các điểm beat/downbeat giới hạn ở dạng gọn; không bao giờ lộ embedding.',
+      'Trả về BPM, nhịp, độ tin cậy, nhãn, đoạn và các điểm beat/downbeat giới hạn ở dạng gọn; không bao giờ lộ embedding.',
       'Mặc định dùng lại bộ nhớ đệm hợp lệ; đặt force để tính lại. Công cụ này không tải gói mô hình và không sửa dòng thời gian.',
     ].join(' '),
     input_schema: {
@@ -102,7 +102,7 @@ export const MUSIC_INTELLIGENCE_TOOL_SCHEMAS: AgentToolSchema[] = [
     name: 'inspect_music',
     description: [
       'Đọc phân tích Beat This + CLAP cục bộ đã lưu bộ nhớ đệm cho tư liệu trong kho hoặc đoạn trên dòng thời gian.',
-      'Trả về BPM, meter, độ tin cậy, tag, section và các điểm beat/downbeat giới hạn ở dạng gọn; không bao giờ lộ embedding.',
+      'Trả về BPM, nhịp, độ tin cậy, nhãn, đoạn và các điểm beat/downbeat giới hạn ở dạng gọn; không bao giờ lộ embedding.',
       'Công cụ này không bắt đầu phân tích và không tải mô hình. Nếu chưa có bộ nhớ đệm, công cụ giải thích cách cài gói cần thiết và phân tích trước.',
     ].join(' '),
     input_schema: {

@@ -39,7 +39,7 @@ export const EXPORT_TOOL_SCHEMAS: AgentToolSchema[] = [
         latest: { type: 'boolean', description: 'Nếu true, đọc tác vụ kết xuất mới nhất khớp điều kiện. Mặc định true khi bỏ qua renderIds.' },
         onlyActive: { type: 'boolean', description: 'Khi latest=true, chỉ trả về tác vụ đang kết xuất. Dùng false/bỏ qua để gồm cả tác vụ vừa hoàn tất hoặc thất bại.' },
         timelineId: { type: 'string', description: 'ID hoặc tiền tố dòng thời gian tùy chọn để thu hẹp tìm kiếm mới nhất.' },
-        timeoutSeconds: { type: 'number', minimum: 0, maximum: MAX_WAIT_SECONDS, description: 'Với action=wait, số giây tối đa trước khi trả về trạng thái chưa kết thúc hiện tại. Mặc định 20. Chỉ dùng 0 khi caller có deadline tool đủ dài.' },
+        timeoutSeconds: { type: 'number', minimum: 0, maximum: MAX_WAIT_SECONDS, description: 'Với action=wait, số giây tối đa trước khi trả về trạng thái chưa kết thúc hiện tại. Mặc định 20. Chỉ dùng 0 khi bên gọi có thời hạn công cụ đủ dài.' },
       },
       required: ['action'],
     },
