@@ -122,7 +122,7 @@ export const SHORTCUT_LABELS_VI: Record<string, string> = {
   'marker-modify-at-playhead': 'Sửa dấu mốc tại đầu phát', 'marker-delete-at-playhead': 'Xóa dấu mốc tại đầu phát',
   'marker-prev': 'Dấu mốc trước', 'marker-next': 'Dấu mốc tiếp theo', 'snapping': 'Bám dính',
   'selection-mode': 'Chế độ chọn (Alt)', 'zoom-in': 'Phóng to dòng thời gian', 'zoom-out': 'Thu nhỏ dòng thời gian',
-  'zoom-fit': 'Vừa dòng thời gian vào khung', 'fullscreen': 'Xem trước toàn màn hình', 'keyboard-shortcuts': 'Phím tắt',
+  'zoom-fit': 'Căn vừa dòng thời gian', 'fullscreen': 'Xem trước toàn màn hình', 'keyboard-shortcuts': 'Phím tắt',
   'ask-ai': 'Thêm vào trò chuyện với AI',
 };
 
