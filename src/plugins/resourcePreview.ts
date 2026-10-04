@@ -95,7 +95,7 @@ function resourcePayload(
 function buildMg(pack: InstalledPack): TimelineState {
   const draft = makeDraft(docFromTimeline(emptyTimeline()));
   const template = pluginTemplates([pack])[0];
-  if (!template) throw new Error('package has no mg-template item');
+  if (!template) throw new Error('Gói tài nguyên không có mẫu đồ họa chuyển động');
   const applied = applyLibraryToTrack(
     {
       state: draft.getState(),
@@ -153,7 +153,7 @@ function buildVisual(
   const itemId = addVisualClips(draft, category, coverDataUrl, targetDataUrl);
   const state = draft.getState();
   const item = state.items.find((candidate) => candidate.id === itemId);
-  if (!item) throw new Error('preview clip was not created');
+  if (!item) throw new Error('Không tạo được đoạn xem trước');
   let notice = '';
   const applied = applyLibraryToClip(
     {
@@ -171,7 +171,7 @@ function buildVisual(
     const transition = draft.getState().transitions?.find(
       (candidate) => candidate.incomingItemId === itemId,
     );
-    if (!transition) throw new Error('transition preview was not created');
+    if (!transition) throw new Error('Không tạo được chuyển cảnh xem trước');
     draft.commands.setTransition(transition.id, {
       durationInFrames: TRANSITION_EFFECT_FRAMES,
     });

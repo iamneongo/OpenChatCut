@@ -198,7 +198,7 @@ function makeFaceDetector(): FaceDetectorLike | null {
 
 /** Build an HTMLVideoElement capture path: seek → draw to a small canvas → read pixels and optionally detect a face. */
 function buildVideoCapture(video: HTMLVideoElement, opts: DetectOptions): Capture {
-  if (typeof document === 'undefined') throw new Error('auto reframe: no DOM (video sampling is browser-only)');
+  if (typeof document === 'undefined') throw new Error('Tự căn khung cần DOM; lấy mẫu video chỉ hoạt động trong trình duyệt');
   const canvas = document.createElement('canvas');
   canvas.width = SAMPLE_CANVAS_W;
   canvas.height = SAMPLE_CANVAS_H;
