@@ -22,7 +22,7 @@ export default {
   vocal: 'Có lời hát',
   instrumental: 'Nhạc không lời',
   guitar: 'Đàn ghi-ta',
-  piano: 'Dương cầm',
+  piano: 'Đàn piano',
   strings: 'Dàn dây',
   drums: 'Trống',
   synth: 'Âm thanh tổng hợp',
