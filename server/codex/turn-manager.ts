@@ -362,7 +362,7 @@ export class CodexTurnManager {
       const message = localized({
         zh: '此 OpenChatCut 工具调用不可用。它不属于本次请求（工具列表已过期、重复调用或 id 格式错误）。请让用户打开项目后重试；如果问题仍然存在，请开始新的运行。',
         en: 'This OpenChatCut tool call is unavailable. It was not part of this request (stale tool list, duplicate call, or malformed id). Tell the user to open the project and retry; if it persists, start a new run.',
-        vi: 'Lệnh gọi công cụ OpenChatCut này không khả dụng. Nó không thuộc yêu cầu hiện tại (danh sách tool đã cũ, gọi trùng hoặc id không hợp lệ). Hãy mở dự án rồi thử lại; nếu vẫn còn, hãy bắt đầu lượt chạy mới.',
+        vi: 'Lệnh gọi công cụ OpenChatCut này không khả dụng. Nó không thuộc yêu cầu hiện tại (danh sách công cụ đã cũ, gọi trùng hoặc id không hợp lệ). Hãy mở dự án rồi thử lại; nếu vẫn còn, hãy bắt đầu lượt chạy mới.',
       });
       session.rejectedToolCalls += 1;
       session.emit({

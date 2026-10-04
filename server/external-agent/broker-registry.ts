@@ -169,7 +169,7 @@ export class EditorConnectionRegistry {
       const renewed = await renewProjectEditOwnership(editor.ownership, baseRevision ?? editor.baseRevision);
       if (renewed.status !== 'renewed') {
         await this.unregister(projectId, editorInstanceId);
-        throw new ExternalEditorCallError('stale', `quyền sở hữu trình duyệt của project ${projectId} đã hết hiệu lực.`);
+        throw new ExternalEditorCallError('stale', `quyền sở hữu trình duyệt của dự án ${projectId} đã hết hiệu lực.`);
       }
       editor.ownership = renewed.claim;
       editor.ownershipEpoch = renewed.claim.epoch;

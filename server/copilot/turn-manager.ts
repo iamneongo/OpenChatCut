@@ -163,7 +163,7 @@ function hostTools(request: CopilotTurnRequest, state: () => TurnSession | undef
         const detail = object(outcome.result)?.error;
         const message = typeof detail === 'string' && detail
           ? detail
-          : localized({ zh: `工具 ${spec.name} 执行失败。`, en: `Tool ${spec.name} failed.`, vi: `Tool ${spec.name} thất bại.` });
+          : localized({ zh: `工具 ${spec.name} 执行失败。`, en: `Tool ${spec.name} failed.`, vi: `Công cụ ${spec.name} thất bại.` });
         return {
           resultType: 'failure' as const,
           error: message,
@@ -221,7 +221,7 @@ export function copilotSessionConfig(
     availableTools: new ToolSet().addCustom('*'),
     onPermissionRequest: () => ({
       kind: 'reject',
-      feedback: localized({ zh: 'OpenChatCut 仅允许使用自己的编辑工具。', en: 'OpenChatCut only permits its own editing tools.', vi: 'OpenChatCut chỉ cho phép các tool chỉnh sửa của chính ứng dụng.' }),
+      feedback: localized({ zh: 'OpenChatCut 仅允许使用自己的编辑工具。', en: 'OpenChatCut only permits its own editing tools.', vi: 'OpenChatCut chỉ cho phép các công cụ chỉnh sửa của chính ứng dụng.' }),
     }),
     enableSessionStore: false,
   };

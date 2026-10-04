@@ -320,7 +320,7 @@ async function searchFreesound(
 
 function addUnavailableWarning(warnings: string[], target: SearchTarget): void {
   const message = target.platform === 'freesound'
-    ? localized({ zh: 'Freesound 未配置，无法搜索音频或音乐', en: 'Freesound is not configured; audio or music cannot be searched', vi: 'Chưa cấu hình Freesound nên không thể tìm audio hoặc nhạc' })
+    ? localized({ zh: 'Freesound 未配置，无法搜索音频或音乐', en: 'Freesound is not configured; audio or music cannot be searched', vi: 'Chưa cấu hình Freesound nên không thể tìm âm thanh hoặc nhạc' })
     : localized({ zh: `${target.platform} 未配置，已跳过 ${target.kind} 搜索`, en: `${target.platform} is not configured; skipped ${target.kind} search`, vi: `Chưa cấu hình ${target.platform}; đã bỏ qua tìm ${target.kind}` });
   if (!warnings.includes(message)) warnings.push(message);
 }
