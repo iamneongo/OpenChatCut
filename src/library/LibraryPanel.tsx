@@ -284,7 +284,7 @@ export function LibraryPanel({ semanticScopeId, templates, onAddTemplate, onAddA
               <ResourceBrowser
                 layout="grid"
                 dragKind="transition"
-                hint="点击应用到选中音频（需同轨前一段相邻音频）。出点渐弱、入点渐强。"
+                hint={t('点击应用到选中音频（需同轨前一段相邻音频）。出点渐弱、入点渐强。')}
                 items={AUDIO_TRANSITION_ITEMS}
                 applicable={selKind === 'audio'}
                 onApply={(id) => onApplyTransition(id as TransitionType)}
@@ -297,7 +297,7 @@ export function LibraryPanel({ semanticScopeId, templates, onAddTemplate, onAddA
             <ResourceBrowser
               layout="grid"
               dragKind="transition"
-              hint="悬停预览 · 点击应用到选中画面片段（入场，需前一个相邻同轨片段）"
+              hint={t('悬停预览 · 点击应用到选中画面片段（入场，需前一个相邻同轨片段）')}
               items={transitionItems}
               applicable={selectedItem != null && selKind !== 'audio'}
               onApply={applyTransitionById}
@@ -309,7 +309,7 @@ export function LibraryPanel({ semanticScopeId, templates, onAddTemplate, onAddA
           <ResourceBrowser
             layout="grid"
             dragKind="fx"
-            hint="悬停预览 · 点击应用到选中视频/图片"
+            hint={t('悬停预览 · 点击应用到选中视频/图片')}
             items={fxItems}
             applicable={selKind === 'video' || selKind === 'image'}
             onApply={(id) => onApplyFx(id)}
@@ -319,7 +319,7 @@ export function LibraryPanel({ semanticScopeId, templates, onAddTemplate, onAddA
           <ResourceBrowser
             layout="grid"
             dragKind="zoom"
-            hint="悬停预览 · 点击应用到选中片段（默认 1.5×，属性可细调）"
+            hint={t('悬停预览 · 点击应用到选中片段（默认 1.5×，属性可细调）')}
             items={zoomItems}
             applicable={isVisual}
             onApply={applyZoomById}
@@ -337,7 +337,7 @@ export function LibraryPanel({ semanticScopeId, templates, onAddTemplate, onAddA
           <ResourceBrowser
             layout="grid"
             dragKind="lut"
-            hint="悬停预览 · 点击应用到选中视频/图片（强度可在属性细调）"
+            hint={t('悬停预览 · 点击应用到选中视频/图片（强度可在属性细调）')}
             items={lutItems}
             applicable={selKind === 'video' || selKind === 'image'}
             onApply={(id) => onApplyFx(id)}
