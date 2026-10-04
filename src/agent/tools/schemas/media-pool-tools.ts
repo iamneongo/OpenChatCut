@@ -35,16 +35,16 @@ export const MEDIA_POOL_TOOL_SCHEMAS: AgentToolSchema[] = [{
       src: {
         type: 'string',
         description:
-          'relink_asset: path media thay thế (cùng origin /media/uploads/… sau khi upload lại, hoặc URL media khác của dự án có thể truy cập). Khi thay file cục bộ, ưu tiên upload lại + finalize_uploaded_asset với cùng assetId.',
+          'relink_asset: đường dẫn tư liệu thay thế (cùng nguồn gốc /media/uploads/… sau khi tải lại, hoặc URL tư liệu khác của dự án có thể truy cập). Khi thay tệp cục bộ, ưu tiên tải lại + finalize_uploaded_asset với cùng assetId.',
       },
       durationInFrames: { type: 'number', description: 'relink_asset: thời lượng mới tính bằng frame, tùy chọn khi đã biết.' },
       width: { type: 'number', description: 'relink_asset: chiều rộng pixel, tùy chọn.' },
       height: { type: 'number', description: 'relink_asset: chiều cao pixel, tùy chọn.' },
-      sourceFilename: { type: 'string', description: 'relink_asset: tên file gốc tùy chọn để giữ identity trong NLE.' },
+      sourceFilename: { type: 'string', description: 'relink_asset: tên tệp gốc tùy chọn để giữ danh tính trong NLE.' },
       confirm: {
         type: 'boolean',
         description:
-          'delete_assets: khi asset được chọn vẫn được clip timeline tham chiếu, lần gọi đầu trả về needsConfirm; gửi lại với confirm:true để chỉ xóa entry trong pool (clip vẫn giữ media đã sao chép).',
+          'delete_assets: khi tư liệu được chọn vẫn được đoạn trên dòng thời gian tham chiếu, lần gọi đầu trả về needsConfirm; gửi lại với confirm:true để chỉ xóa mục trong kho (đoạn vẫn giữ tư liệu đã sao chép).',
       },
     },
     required: ['action'],
