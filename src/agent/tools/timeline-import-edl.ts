@@ -265,7 +265,7 @@ function lineToClips(event: EdlEvent, index: number, ctx: EventContext): ParsedC
   const from = { element: `event ${line.number}`, name, at };
   if (resolvedIn.note) ctx.sourceNotes.add(resolvedIn.note, asset.name);
   const clampedRate = Math.min(MAX_RATE, Math.max(MIN_RATE, rate));
-  if (clampedRate !== rate) report.warnings.push(`${describeSource(from)}: speed ${Number(rate.toFixed(3))}x clamped to ${clampedRate}x`);
+  if (clampedRate !== rate) report.warnings.push(`${describeSource(from)}: tốc độ ${Number(rate.toFixed(3))}x đã được giới hạn xuống ${clampedRate}x`);
   const base = {
     name,
     assetId: asset.id,

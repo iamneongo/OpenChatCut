@@ -164,7 +164,7 @@ function playbackRate(rate: Rational, still: boolean, notes: string[]): number |
   const value = toNumber(rate);
   if (still || Math.abs(value - 1) < 1e-9) return undefined;
   const clamped = Math.min(MAX_RATE, Math.max(MIN_RATE, value));
-  if (clamped !== value) notes.push(`speed ${Number(value.toFixed(3))}x clamped to ${clamped}x`);
+  if (clamped !== value) notes.push(`Tốc độ ${Number(value.toFixed(3))}x đã được giới hạn xuống ${clamped}x`);
   return clamped;
 }
 
