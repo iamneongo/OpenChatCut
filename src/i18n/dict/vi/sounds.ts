@@ -45,7 +45,7 @@ export default {
   '较长的上升铺垫声，适合悬念建立、信息揭晓、倒计时结束或大段落转场前的情绪拉升。': 'Âm dâng dài để tạo đà, phù hợp xây dựng hồi hộp, hé lộ thông tin, kết thúc đếm ngược hoặc nâng cảm xúc trước chuyển đoạn lớn.',
   '速度感更强的悬念 riser，适合短视频里快速制造期待，然后接一个答案、反转或画面切换。': 'Âm dâng tạo hồi hộp, tiết tấu nhanh, phù hợp tạo kỳ vọng trong video ngắn trước câu trả lời, cú đảo chiều hoặc chuyển hình.',
   '很短的低频上升提示，适合在冲击、切点、标题弹出前做一小段快速铺垫，也可以作为转场': 'Âm dâng tần số thấp rất ngắn, phù hợp tạo đà nhanh trước cú nhấn, điểm cắt hoặc tiêu đề bật lên; cũng có thể dùng làm chuyển cảnh.',
-  '很短的滚鼓提示，适合答案揭晓、排名公布、转折前的小悬念，也适合转场或者有重点要强调、信息要弹出。': 'Âm trống cuộn rất ngắn, phù hợp tạo hồi hộp trước khi công bố câu trả lời, thứ hạng hoặc bước ngoặt; cũng phù hợp chuyển cảnh và nhấn thông tin.',
+  '很短的滚鼓提示，适合答案揭晓、排名公布、转折前的小悬念，也适合转场或者有重点要强调、信息要弹出。': 'Âm trống dồn rất ngắn, phù hợp tạo hồi hộp trước khi công bố câu trả lời, thứ hạng hoặc bước ngoặt; cũng phù hợp chuyển cảnh và nhấn thông tin.',
   '经典低频 boom 冲击声，适合震惊、反转、夸张表情、重点字幕或画面突然停顿。': 'Âm va chạm trầm kinh điển, phù hợp với khoảnh khắc bất ngờ, đảo chiều, biểu cảm cường điệu, phụ đề chính hoặc hình ảnh dừng đột ngột.',
   '用于情绪烘托的雷声，不作为环境氛围长音使用。适合震惊反应、坏消息或悬念段落。': 'Tiếng sấm dùng để nhấn cảm xúc, không phải âm nền môi trường kéo dài; phù hợp với phản ứng bất ngờ, tin xấu hoặc đoạn hồi hộp.',
   '偏动漫/综艺的正向 wow 反应声，适合物品展示、人物亮相、隆重登场、揭幕或发现亮点的惊喜时刻。': 'Âm phản ứng ngạc nhiên tích cực kiểu hoạt hình Nhật Bản/chương trình giải trí, phù hợp khi giới thiệu vật phẩm, nhân vật xuất hiện, ra mắt long trọng, khai màn hoặc phát hiện điểm nổi bật.',
